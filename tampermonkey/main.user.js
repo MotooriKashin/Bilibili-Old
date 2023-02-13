@@ -172,23 +172,23 @@ const MODULES = `
           },
           // Convert a byte array to a base-64 string
           bytesToBase64: function(bytes) {
-            for (var base64 = [], i = 0; i < bytes.length; i += 3) {
+            for (var base642 = [], i = 0; i < bytes.length; i += 3) {
               var triplet = bytes[i] << 16 | bytes[i + 1] << 8 | bytes[i + 2];
               for (var j = 0; j < 4; j++)
                 if (i * 8 + j * 6 <= bytes.length * 8)
-                  base64.push(base64map.charAt(triplet >>> 6 * (3 - j) & 63));
+                  base642.push(base64map.charAt(triplet >>> 6 * (3 - j) & 63));
                 else
-                  base64.push("=");
+                  base642.push("=");
             }
-            return base64.join("");
+            return base642.join("");
           },
           // Convert a base-64 string to a byte array
-          base64ToBytes: function(base64) {
-            base64 = base64.replace(/[^A-Z0-9+\\/]/ig, "");
-            for (var bytes = [], i = 0, imod4 = 0; i < base64.length; imod4 = ++i % 4) {
+          base64ToBytes: function(base642) {
+            base642 = base642.replace(/[^A-Z0-9+\\/]/ig, "");
+            for (var bytes = [], i = 0, imod4 = 0; i < base642.length; imod4 = ++i % 4) {
               if (imod4 == 0)
                 continue;
-              bytes.push((base64map.indexOf(base64.charAt(i - 1)) & Math.pow(2, -2 * imod4 + 8) - 1) << imod4 * 2 | base64map.indexOf(base64.charAt(i)) >>> 6 - imod4 * 2);
+              bytes.push((base64map.indexOf(base642.charAt(i - 1)) & Math.pow(2, -2 * imod4 + 8) - 1) << imod4 * 2 | base64map.indexOf(base642.charAt(i)) >>> 6 - imod4 * 2);
             }
             return bytes;
           }
@@ -255,7 +255,7 @@ const MODULES = `
     "node_modules/md5/md5.js"(exports2, module2) {
       init_tampermonkey();
       (function() {
-        var crypt = require_crypt(), utf8 = require_charenc().utf8, isBuffer = require_is_buffer(), bin = require_charenc().bin, md52 = function(message, options) {
+        var crypt = require_crypt(), utf8 = require_charenc().utf8, isBuffer = require_is_buffer(), bin = require_charenc().bin, md53 = function(message, options) {
           if (message.constructor == String)
             if (options && options.encoding === "binary")
               message = bin.stringToBytes(message);
@@ -271,7 +271,7 @@ const MODULES = `
           }
           m[l >>> 5] |= 128 << l % 32;
           m[(l + 64 >>> 9 << 4) + 14] = l;
-          var FF = md52._ff, GG = md52._gg, HH = md52._hh, II = md52._ii;
+          var FF = md53._ff, GG = md53._gg, HH = md53._hh, II = md53._ii;
           for (var i = 0; i < m.length; i += 16) {
             var aa = a, bb = b, cc = c, dd = d;
             a = FF(a, b, c, d, m[i + 0], 7, -680876936);
@@ -345,31 +345,3955 @@ const MODULES = `
           }
           return crypt.endian([a, b, c, d]);
         };
-        md52._ff = function(a, b, c, d, x, s, t) {
+        md53._ff = function(a, b, c, d, x, s, t) {
           var n = a + (b & c | ~b & d) + (x >>> 0) + t;
           return (n << s | n >>> 32 - s) + b;
         };
-        md52._gg = function(a, b, c, d, x, s, t) {
+        md53._gg = function(a, b, c, d, x, s, t) {
           var n = a + (b & d | c & ~d) + (x >>> 0) + t;
           return (n << s | n >>> 32 - s) + b;
         };
-        md52._hh = function(a, b, c, d, x, s, t) {
+        md53._hh = function(a, b, c, d, x, s, t) {
           var n = a + (b ^ c ^ d) + (x >>> 0) + t;
           return (n << s | n >>> 32 - s) + b;
         };
-        md52._ii = function(a, b, c, d, x, s, t) {
+        md53._ii = function(a, b, c, d, x, s, t) {
           var n = a + (c ^ (b | ~d)) + (x >>> 0) + t;
           return (n << s | n >>> 32 - s) + b;
         };
-        md52._blocksize = 16;
-        md52._digestsize = 16;
+        md53._blocksize = 16;
+        md53._digestsize = 16;
         module2.exports = function(message, options) {
           if (message === void 0 || message === null)
             throw new Error("Illegal argument " + message);
-          var digestbytes = crypt.wordsToBytes(md52(message, options));
+          var digestbytes = crypt.wordsToBytes(md53(message, options));
           return options && options.asBytes ? digestbytes : options && options.asString ? bin.bytesToString(digestbytes) : crypt.bytesToHex(digestbytes);
         };
       })();
+    }
+  });
+
+  // node_modules/@protobufjs/aspromise/index.js
+  var require_aspromise = __commonJS({
+    "node_modules/@protobufjs/aspromise/index.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = asPromise;
+      function asPromise(fn, ctx) {
+        var params = new Array(arguments.length - 1), offset2 = 0, index = 2, pending = true;
+        while (index < arguments.length)
+          params[offset2++] = arguments[index++];
+        return new Promise(function executor(resolve, reject) {
+          params[offset2] = function callback(err) {
+            if (pending) {
+              pending = false;
+              if (err)
+                reject(err);
+              else {
+                var params2 = new Array(arguments.length - 1), offset3 = 0;
+                while (offset3 < params2.length)
+                  params2[offset3++] = arguments[offset3];
+                resolve.apply(null, params2);
+              }
+            }
+          };
+          try {
+            fn.apply(ctx || null, params);
+          } catch (err) {
+            if (pending) {
+              pending = false;
+              reject(err);
+            }
+          }
+        });
+      }
+    }
+  });
+
+  // node_modules/@protobufjs/base64/index.js
+  var require_base64 = __commonJS({
+    "node_modules/@protobufjs/base64/index.js"(exports2) {
+      "use strict";
+      init_tampermonkey();
+      var base642 = exports2;
+      base642.length = function length2(string) {
+        var p = string.length;
+        if (!p)
+          return 0;
+        var n = 0;
+        while (--p % 4 > 1 && string.charAt(p) === "=")
+          ++n;
+        return Math.ceil(string.length * 3) / 4 - n;
+      };
+      var b64 = new Array(64);
+      var s64 = new Array(123);
+      for (i = 0; i < 64; )
+        s64[b64[i] = i < 26 ? i + 65 : i < 52 ? i + 71 : i < 62 ? i - 4 : i - 59 | 43] = i++;
+      var i;
+      base642.encode = function encode(buffer, start, end) {
+        var parts = null, chunk = [];
+        var i2 = 0, j = 0, t;
+        while (start < end) {
+          var b = buffer[start++];
+          switch (j) {
+            case 0:
+              chunk[i2++] = b64[b >> 2];
+              t = (b & 3) << 4;
+              j = 1;
+              break;
+            case 1:
+              chunk[i2++] = b64[t | b >> 4];
+              t = (b & 15) << 2;
+              j = 2;
+              break;
+            case 2:
+              chunk[i2++] = b64[t | b >> 6];
+              chunk[i2++] = b64[b & 63];
+              j = 0;
+              break;
+          }
+          if (i2 > 8191) {
+            (parts || (parts = [])).push(String.fromCharCode.apply(String, chunk));
+            i2 = 0;
+          }
+        }
+        if (j) {
+          chunk[i2++] = b64[t];
+          chunk[i2++] = 61;
+          if (j === 1)
+            chunk[i2++] = 61;
+        }
+        if (parts) {
+          if (i2)
+            parts.push(String.fromCharCode.apply(String, chunk.slice(0, i2)));
+          return parts.join("");
+        }
+        return String.fromCharCode.apply(String, chunk.slice(0, i2));
+      };
+      var invalidEncoding = "invalid encoding";
+      base642.decode = function decode(string, buffer, offset2) {
+        var start = offset2;
+        var j = 0, t;
+        for (var i2 = 0; i2 < string.length; ) {
+          var c = string.charCodeAt(i2++);
+          if (c === 61 && j > 1)
+            break;
+          if ((c = s64[c]) === void 0)
+            throw Error(invalidEncoding);
+          switch (j) {
+            case 0:
+              t = c;
+              j = 1;
+              break;
+            case 1:
+              buffer[offset2++] = t << 2 | (c & 48) >> 4;
+              t = c;
+              j = 2;
+              break;
+            case 2:
+              buffer[offset2++] = (t & 15) << 4 | (c & 60) >> 2;
+              t = c;
+              j = 3;
+              break;
+            case 3:
+              buffer[offset2++] = (t & 3) << 6 | c;
+              j = 0;
+              break;
+          }
+        }
+        if (j === 1)
+          throw Error(invalidEncoding);
+        return offset2 - start;
+      };
+      base642.test = function test(string) {
+        return /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?\$/.test(string);
+      };
+    }
+  });
+
+  // node_modules/@protobufjs/eventemitter/index.js
+  var require_eventemitter = __commonJS({
+    "node_modules/@protobufjs/eventemitter/index.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = EventEmitter;
+      function EventEmitter() {
+        this._listeners = {};
+      }
+      EventEmitter.prototype.on = function on(evt, fn, ctx) {
+        (this._listeners[evt] || (this._listeners[evt] = [])).push({
+          fn,
+          ctx: ctx || this
+        });
+        return this;
+      };
+      EventEmitter.prototype.off = function off(evt, fn) {
+        if (evt === void 0)
+          this._listeners = {};
+        else {
+          if (fn === void 0)
+            this._listeners[evt] = [];
+          else {
+            var listeners = this._listeners[evt];
+            for (var i = 0; i < listeners.length; )
+              if (listeners[i].fn === fn)
+                listeners.splice(i, 1);
+              else
+                ++i;
+          }
+        }
+        return this;
+      };
+      EventEmitter.prototype.emit = function emit(evt) {
+        var listeners = this._listeners[evt];
+        if (listeners) {
+          var args = [], i = 1;
+          for (; i < arguments.length; )
+            args.push(arguments[i++]);
+          for (i = 0; i < listeners.length; )
+            listeners[i].fn.apply(listeners[i++].ctx, args);
+        }
+        return this;
+      };
+    }
+  });
+
+  // node_modules/@protobufjs/float/index.js
+  var require_float = __commonJS({
+    "node_modules/@protobufjs/float/index.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = factory(factory);
+      function factory(exports3) {
+        if (typeof Float32Array !== "undefined")
+          (function() {
+            var f32 = new Float32Array([-0]), f8b = new Uint8Array(f32.buffer), le = f8b[3] === 128;
+            function writeFloat_f32_cpy(val, buf, pos) {
+              f32[0] = val;
+              buf[pos] = f8b[0];
+              buf[pos + 1] = f8b[1];
+              buf[pos + 2] = f8b[2];
+              buf[pos + 3] = f8b[3];
+            }
+            function writeFloat_f32_rev(val, buf, pos) {
+              f32[0] = val;
+              buf[pos] = f8b[3];
+              buf[pos + 1] = f8b[2];
+              buf[pos + 2] = f8b[1];
+              buf[pos + 3] = f8b[0];
+            }
+            exports3.writeFloatLE = le ? writeFloat_f32_cpy : writeFloat_f32_rev;
+            exports3.writeFloatBE = le ? writeFloat_f32_rev : writeFloat_f32_cpy;
+            function readFloat_f32_cpy(buf, pos) {
+              f8b[0] = buf[pos];
+              f8b[1] = buf[pos + 1];
+              f8b[2] = buf[pos + 2];
+              f8b[3] = buf[pos + 3];
+              return f32[0];
+            }
+            function readFloat_f32_rev(buf, pos) {
+              f8b[3] = buf[pos];
+              f8b[2] = buf[pos + 1];
+              f8b[1] = buf[pos + 2];
+              f8b[0] = buf[pos + 3];
+              return f32[0];
+            }
+            exports3.readFloatLE = le ? readFloat_f32_cpy : readFloat_f32_rev;
+            exports3.readFloatBE = le ? readFloat_f32_rev : readFloat_f32_cpy;
+          })();
+        else
+          (function() {
+            function writeFloat_ieee754(writeUint, val, buf, pos) {
+              var sign = val < 0 ? 1 : 0;
+              if (sign)
+                val = -val;
+              if (val === 0)
+                writeUint(1 / val > 0 ? (
+                  /* positive */
+                  0
+                ) : (
+                  /* negative 0 */
+                  2147483648
+                ), buf, pos);
+              else if (isNaN(val))
+                writeUint(2143289344, buf, pos);
+              else if (val > 34028234663852886e22)
+                writeUint((sign << 31 | 2139095040) >>> 0, buf, pos);
+              else if (val < 11754943508222875e-54)
+                writeUint((sign << 31 | Math.round(val / 1401298464324817e-60)) >>> 0, buf, pos);
+              else {
+                var exponent = Math.floor(Math.log(val) / Math.LN2), mantissa = Math.round(val * Math.pow(2, -exponent) * 8388608) & 8388607;
+                writeUint((sign << 31 | exponent + 127 << 23 | mantissa) >>> 0, buf, pos);
+              }
+            }
+            exports3.writeFloatLE = writeFloat_ieee754.bind(null, writeUintLE);
+            exports3.writeFloatBE = writeFloat_ieee754.bind(null, writeUintBE);
+            function readFloat_ieee754(readUint, buf, pos) {
+              var uint = readUint(buf, pos), sign = (uint >> 31) * 2 + 1, exponent = uint >>> 23 & 255, mantissa = uint & 8388607;
+              return exponent === 255 ? mantissa ? NaN : sign * Infinity : exponent === 0 ? sign * 1401298464324817e-60 * mantissa : sign * Math.pow(2, exponent - 150) * (mantissa + 8388608);
+            }
+            exports3.readFloatLE = readFloat_ieee754.bind(null, readUintLE);
+            exports3.readFloatBE = readFloat_ieee754.bind(null, readUintBE);
+          })();
+        if (typeof Float64Array !== "undefined")
+          (function() {
+            var f64 = new Float64Array([-0]), f8b = new Uint8Array(f64.buffer), le = f8b[7] === 128;
+            function writeDouble_f64_cpy(val, buf, pos) {
+              f64[0] = val;
+              buf[pos] = f8b[0];
+              buf[pos + 1] = f8b[1];
+              buf[pos + 2] = f8b[2];
+              buf[pos + 3] = f8b[3];
+              buf[pos + 4] = f8b[4];
+              buf[pos + 5] = f8b[5];
+              buf[pos + 6] = f8b[6];
+              buf[pos + 7] = f8b[7];
+            }
+            function writeDouble_f64_rev(val, buf, pos) {
+              f64[0] = val;
+              buf[pos] = f8b[7];
+              buf[pos + 1] = f8b[6];
+              buf[pos + 2] = f8b[5];
+              buf[pos + 3] = f8b[4];
+              buf[pos + 4] = f8b[3];
+              buf[pos + 5] = f8b[2];
+              buf[pos + 6] = f8b[1];
+              buf[pos + 7] = f8b[0];
+            }
+            exports3.writeDoubleLE = le ? writeDouble_f64_cpy : writeDouble_f64_rev;
+            exports3.writeDoubleBE = le ? writeDouble_f64_rev : writeDouble_f64_cpy;
+            function readDouble_f64_cpy(buf, pos) {
+              f8b[0] = buf[pos];
+              f8b[1] = buf[pos + 1];
+              f8b[2] = buf[pos + 2];
+              f8b[3] = buf[pos + 3];
+              f8b[4] = buf[pos + 4];
+              f8b[5] = buf[pos + 5];
+              f8b[6] = buf[pos + 6];
+              f8b[7] = buf[pos + 7];
+              return f64[0];
+            }
+            function readDouble_f64_rev(buf, pos) {
+              f8b[7] = buf[pos];
+              f8b[6] = buf[pos + 1];
+              f8b[5] = buf[pos + 2];
+              f8b[4] = buf[pos + 3];
+              f8b[3] = buf[pos + 4];
+              f8b[2] = buf[pos + 5];
+              f8b[1] = buf[pos + 6];
+              f8b[0] = buf[pos + 7];
+              return f64[0];
+            }
+            exports3.readDoubleLE = le ? readDouble_f64_cpy : readDouble_f64_rev;
+            exports3.readDoubleBE = le ? readDouble_f64_rev : readDouble_f64_cpy;
+          })();
+        else
+          (function() {
+            function writeDouble_ieee754(writeUint, off0, off1, val, buf, pos) {
+              var sign = val < 0 ? 1 : 0;
+              if (sign)
+                val = -val;
+              if (val === 0) {
+                writeUint(0, buf, pos + off0);
+                writeUint(1 / val > 0 ? (
+                  /* positive */
+                  0
+                ) : (
+                  /* negative 0 */
+                  2147483648
+                ), buf, pos + off1);
+              } else if (isNaN(val)) {
+                writeUint(0, buf, pos + off0);
+                writeUint(2146959360, buf, pos + off1);
+              } else if (val > 17976931348623157e292) {
+                writeUint(0, buf, pos + off0);
+                writeUint((sign << 31 | 2146435072) >>> 0, buf, pos + off1);
+              } else {
+                var mantissa;
+                if (val < 22250738585072014e-324) {
+                  mantissa = val / 5e-324;
+                  writeUint(mantissa >>> 0, buf, pos + off0);
+                  writeUint((sign << 31 | mantissa / 4294967296) >>> 0, buf, pos + off1);
+                } else {
+                  var exponent = Math.floor(Math.log(val) / Math.LN2);
+                  if (exponent === 1024)
+                    exponent = 1023;
+                  mantissa = val * Math.pow(2, -exponent);
+                  writeUint(mantissa * 4503599627370496 >>> 0, buf, pos + off0);
+                  writeUint((sign << 31 | exponent + 1023 << 20 | mantissa * 1048576 & 1048575) >>> 0, buf, pos + off1);
+                }
+              }
+            }
+            exports3.writeDoubleLE = writeDouble_ieee754.bind(null, writeUintLE, 0, 4);
+            exports3.writeDoubleBE = writeDouble_ieee754.bind(null, writeUintBE, 4, 0);
+            function readDouble_ieee754(readUint, off0, off1, buf, pos) {
+              var lo = readUint(buf, pos + off0), hi = readUint(buf, pos + off1);
+              var sign = (hi >> 31) * 2 + 1, exponent = hi >>> 20 & 2047, mantissa = 4294967296 * (hi & 1048575) + lo;
+              return exponent === 2047 ? mantissa ? NaN : sign * Infinity : exponent === 0 ? sign * 5e-324 * mantissa : sign * Math.pow(2, exponent - 1075) * (mantissa + 4503599627370496);
+            }
+            exports3.readDoubleLE = readDouble_ieee754.bind(null, readUintLE, 0, 4);
+            exports3.readDoubleBE = readDouble_ieee754.bind(null, readUintBE, 4, 0);
+          })();
+        return exports3;
+      }
+      function writeUintLE(val, buf, pos) {
+        buf[pos] = val & 255;
+        buf[pos + 1] = val >>> 8 & 255;
+        buf[pos + 2] = val >>> 16 & 255;
+        buf[pos + 3] = val >>> 24;
+      }
+      function writeUintBE(val, buf, pos) {
+        buf[pos] = val >>> 24;
+        buf[pos + 1] = val >>> 16 & 255;
+        buf[pos + 2] = val >>> 8 & 255;
+        buf[pos + 3] = val & 255;
+      }
+      function readUintLE(buf, pos) {
+        return (buf[pos] | buf[pos + 1] << 8 | buf[pos + 2] << 16 | buf[pos + 3] << 24) >>> 0;
+      }
+      function readUintBE(buf, pos) {
+        return (buf[pos] << 24 | buf[pos + 1] << 16 | buf[pos + 2] << 8 | buf[pos + 3]) >>> 0;
+      }
+    }
+  });
+
+  // node_modules/@protobufjs/inquire/index.js
+  var require_inquire = __commonJS({
+    "node_modules/@protobufjs/inquire/index.js"(exports, module) {
+      "use strict";
+      init_tampermonkey();
+      module.exports = inquire;
+      function inquire(moduleName) {
+        try {
+          var mod = eval("quire".replace(/^/, "re"))(moduleName);
+          if (mod && (mod.length || Object.keys(mod).length))
+            return mod;
+        } catch (e) {
+        }
+        return null;
+      }
+    }
+  });
+
+  // node_modules/@protobufjs/utf8/index.js
+  var require_utf8 = __commonJS({
+    "node_modules/@protobufjs/utf8/index.js"(exports2) {
+      "use strict";
+      init_tampermonkey();
+      var utf8 = exports2;
+      utf8.length = function utf8_length(string) {
+        var len = 0, c = 0;
+        for (var i = 0; i < string.length; ++i) {
+          c = string.charCodeAt(i);
+          if (c < 128)
+            len += 1;
+          else if (c < 2048)
+            len += 2;
+          else if ((c & 64512) === 55296 && (string.charCodeAt(i + 1) & 64512) === 56320) {
+            ++i;
+            len += 4;
+          } else
+            len += 3;
+        }
+        return len;
+      };
+      utf8.read = function utf8_read(buffer, start, end) {
+        var len = end - start;
+        if (len < 1)
+          return "";
+        var parts = null, chunk = [], i = 0, t;
+        while (start < end) {
+          t = buffer[start++];
+          if (t < 128)
+            chunk[i++] = t;
+          else if (t > 191 && t < 224)
+            chunk[i++] = (t & 31) << 6 | buffer[start++] & 63;
+          else if (t > 239 && t < 365) {
+            t = ((t & 7) << 18 | (buffer[start++] & 63) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63) - 65536;
+            chunk[i++] = 55296 + (t >> 10);
+            chunk[i++] = 56320 + (t & 1023);
+          } else
+            chunk[i++] = (t & 15) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63;
+          if (i > 8191) {
+            (parts || (parts = [])).push(String.fromCharCode.apply(String, chunk));
+            i = 0;
+          }
+        }
+        if (parts) {
+          if (i)
+            parts.push(String.fromCharCode.apply(String, chunk.slice(0, i)));
+          return parts.join("");
+        }
+        return String.fromCharCode.apply(String, chunk.slice(0, i));
+      };
+      utf8.write = function utf8_write(string, buffer, offset2) {
+        var start = offset2, c1, c2;
+        for (var i = 0; i < string.length; ++i) {
+          c1 = string.charCodeAt(i);
+          if (c1 < 128) {
+            buffer[offset2++] = c1;
+          } else if (c1 < 2048) {
+            buffer[offset2++] = c1 >> 6 | 192;
+            buffer[offset2++] = c1 & 63 | 128;
+          } else if ((c1 & 64512) === 55296 && ((c2 = string.charCodeAt(i + 1)) & 64512) === 56320) {
+            c1 = 65536 + ((c1 & 1023) << 10) + (c2 & 1023);
+            ++i;
+            buffer[offset2++] = c1 >> 18 | 240;
+            buffer[offset2++] = c1 >> 12 & 63 | 128;
+            buffer[offset2++] = c1 >> 6 & 63 | 128;
+            buffer[offset2++] = c1 & 63 | 128;
+          } else {
+            buffer[offset2++] = c1 >> 12 | 224;
+            buffer[offset2++] = c1 >> 6 & 63 | 128;
+            buffer[offset2++] = c1 & 63 | 128;
+          }
+        }
+        return offset2 - start;
+      };
+    }
+  });
+
+  // node_modules/@protobufjs/pool/index.js
+  var require_pool = __commonJS({
+    "node_modules/@protobufjs/pool/index.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = pool;
+      function pool(alloc, slice, size) {
+        var SIZE = size || 8192;
+        var MAX = SIZE >>> 1;
+        var slab = null;
+        var offset2 = SIZE;
+        return function pool_alloc(size2) {
+          if (size2 < 1 || size2 > MAX)
+            return alloc(size2);
+          if (offset2 + size2 > SIZE) {
+            slab = alloc(SIZE);
+            offset2 = 0;
+          }
+          var buf = slice.call(slab, offset2, offset2 += size2);
+          if (offset2 & 7)
+            offset2 = (offset2 | 7) + 1;
+          return buf;
+        };
+      }
+    }
+  });
+
+  // node_modules/protobufjs/src/util/longbits.js
+  var require_longbits = __commonJS({
+    "node_modules/protobufjs/src/util/longbits.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = LongBits;
+      var util = require_minimal();
+      function LongBits(lo, hi) {
+        this.lo = lo >>> 0;
+        this.hi = hi >>> 0;
+      }
+      var zero = LongBits.zero = new LongBits(0, 0);
+      zero.toNumber = function() {
+        return 0;
+      };
+      zero.zzEncode = zero.zzDecode = function() {
+        return this;
+      };
+      zero.length = function() {
+        return 1;
+      };
+      var zeroHash = LongBits.zeroHash = "\\0\\0\\0\\0\\0\\0\\0\\0";
+      LongBits.fromNumber = function fromNumber(value) {
+        if (value === 0)
+          return zero;
+        var sign = value < 0;
+        if (sign)
+          value = -value;
+        var lo = value >>> 0, hi = (value - lo) / 4294967296 >>> 0;
+        if (sign) {
+          hi = ~hi >>> 0;
+          lo = ~lo >>> 0;
+          if (++lo > 4294967295) {
+            lo = 0;
+            if (++hi > 4294967295)
+              hi = 0;
+          }
+        }
+        return new LongBits(lo, hi);
+      };
+      LongBits.from = function from(value) {
+        if (typeof value === "number")
+          return LongBits.fromNumber(value);
+        if (util.isString(value)) {
+          if (util.Long)
+            value = util.Long.fromString(value);
+          else
+            return LongBits.fromNumber(parseInt(value, 10));
+        }
+        return value.low || value.high ? new LongBits(value.low >>> 0, value.high >>> 0) : zero;
+      };
+      LongBits.prototype.toNumber = function toNumber(unsigned) {
+        if (!unsigned && this.hi >>> 31) {
+          var lo = ~this.lo + 1 >>> 0, hi = ~this.hi >>> 0;
+          if (!lo)
+            hi = hi + 1 >>> 0;
+          return -(lo + hi * 4294967296);
+        }
+        return this.lo + this.hi * 4294967296;
+      };
+      LongBits.prototype.toLong = function toLong(unsigned) {
+        return util.Long ? new util.Long(this.lo | 0, this.hi | 0, Boolean(unsigned)) : { low: this.lo | 0, high: this.hi | 0, unsigned: Boolean(unsigned) };
+      };
+      var charCodeAt = String.prototype.charCodeAt;
+      LongBits.fromHash = function fromHash(hash) {
+        if (hash === zeroHash)
+          return zero;
+        return new LongBits(
+          (charCodeAt.call(hash, 0) | charCodeAt.call(hash, 1) << 8 | charCodeAt.call(hash, 2) << 16 | charCodeAt.call(hash, 3) << 24) >>> 0,
+          (charCodeAt.call(hash, 4) | charCodeAt.call(hash, 5) << 8 | charCodeAt.call(hash, 6) << 16 | charCodeAt.call(hash, 7) << 24) >>> 0
+        );
+      };
+      LongBits.prototype.toHash = function toHash() {
+        return String.fromCharCode(
+          this.lo & 255,
+          this.lo >>> 8 & 255,
+          this.lo >>> 16 & 255,
+          this.lo >>> 24,
+          this.hi & 255,
+          this.hi >>> 8 & 255,
+          this.hi >>> 16 & 255,
+          this.hi >>> 24
+        );
+      };
+      LongBits.prototype.zzEncode = function zzEncode() {
+        var mask = this.hi >> 31;
+        this.hi = ((this.hi << 1 | this.lo >>> 31) ^ mask) >>> 0;
+        this.lo = (this.lo << 1 ^ mask) >>> 0;
+        return this;
+      };
+      LongBits.prototype.zzDecode = function zzDecode() {
+        var mask = -(this.lo & 1);
+        this.lo = ((this.lo >>> 1 | this.hi << 31) ^ mask) >>> 0;
+        this.hi = (this.hi >>> 1 ^ mask) >>> 0;
+        return this;
+      };
+      LongBits.prototype.length = function length2() {
+        var part0 = this.lo, part1 = (this.lo >>> 28 | this.hi << 4) >>> 0, part2 = this.hi >>> 24;
+        return part2 === 0 ? part1 === 0 ? part0 < 16384 ? part0 < 128 ? 1 : 2 : part0 < 2097152 ? 3 : 4 : part1 < 16384 ? part1 < 128 ? 5 : 6 : part1 < 2097152 ? 7 : 8 : part2 < 128 ? 9 : 10;
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/util/minimal.js
+  var require_minimal = __commonJS({
+    "node_modules/protobufjs/src/util/minimal.js"(exports2) {
+      "use strict";
+      init_tampermonkey();
+      var util = exports2;
+      util.asPromise = require_aspromise();
+      util.base64 = require_base64();
+      util.EventEmitter = require_eventemitter();
+      util.float = require_float();
+      util.inquire = require_inquire();
+      util.utf8 = require_utf8();
+      util.pool = require_pool();
+      util.LongBits = require_longbits();
+      util.isNode = Boolean(typeof global !== "undefined" && global && global.process && global.process.versions && global.process.versions.node);
+      util.global = util.isNode && global || typeof window !== "undefined" && window || typeof self !== "undefined" && self || exports2;
+      util.emptyArray = Object.freeze ? Object.freeze([]) : (
+        /* istanbul ignore next */
+        []
+      );
+      util.emptyObject = Object.freeze ? Object.freeze({}) : (
+        /* istanbul ignore next */
+        {}
+      );
+      util.isInteger = Number.isInteger || /* istanbul ignore next */
+      function isInteger(value) {
+        return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
+      };
+      util.isString = function isString(value) {
+        return typeof value === "string" || value instanceof String;
+      };
+      util.isObject = function isObject2(value) {
+        return value && typeof value === "object";
+      };
+      util.isset = /**
+       * Checks if a property on a message is considered to be present.
+       * @param {Object} obj Plain object or message instance
+       * @param {string} prop Property name
+       * @returns {boolean} \`true\` if considered to be present, otherwise \`false\`
+       */
+      util.isSet = function isSet(obj, prop) {
+        var value = obj[prop];
+        if (value != null && obj.hasOwnProperty(prop))
+          return typeof value !== "object" || (Array.isArray(value) ? value.length : Object.keys(value).length) > 0;
+        return false;
+      };
+      util.Buffer = function() {
+        try {
+          var Buffer2 = util.inquire("buffer").Buffer;
+          return Buffer2.prototype.utf8Write ? Buffer2 : (
+            /* istanbul ignore next */
+            null
+          );
+        } catch (e) {
+          return null;
+        }
+      }();
+      util._Buffer_from = null;
+      util._Buffer_allocUnsafe = null;
+      util.newBuffer = function newBuffer(sizeOrArray) {
+        return typeof sizeOrArray === "number" ? util.Buffer ? util._Buffer_allocUnsafe(sizeOrArray) : new util.Array(sizeOrArray) : util.Buffer ? util._Buffer_from(sizeOrArray) : typeof Uint8Array === "undefined" ? sizeOrArray : new Uint8Array(sizeOrArray);
+      };
+      util.Array = typeof Uint8Array !== "undefined" ? Uint8Array : Array;
+      util.Long = /* istanbul ignore next */
+      util.global.dcodeIO && /* istanbul ignore next */
+      util.global.dcodeIO.Long || /* istanbul ignore next */
+      util.global.Long || util.inquire("long");
+      util.key2Re = /^true|false|0|1\$/;
+      util.key32Re = /^-?(?:0|[1-9][0-9]*)\$/;
+      util.key64Re = /^(?:[\\\\x00-\\\\xff]{8}|-?(?:0|[1-9][0-9]*))\$/;
+      util.longToHash = function longToHash(value) {
+        return value ? util.LongBits.from(value).toHash() : util.LongBits.zeroHash;
+      };
+      util.longFromHash = function longFromHash(hash, unsigned) {
+        var bits = util.LongBits.fromHash(hash);
+        if (util.Long)
+          return util.Long.fromBits(bits.lo, bits.hi, unsigned);
+        return bits.toNumber(Boolean(unsigned));
+      };
+      function merge(dst, src, ifNotSet) {
+        for (var keys = Object.keys(src), i = 0; i < keys.length; ++i)
+          if (dst[keys[i]] === void 0 || !ifNotSet)
+            dst[keys[i]] = src[keys[i]];
+        return dst;
+      }
+      util.merge = merge;
+      util.lcFirst = function lcFirst(str) {
+        return str.charAt(0).toLowerCase() + str.substring(1);
+      };
+      function newError(name) {
+        function CustomError(message, properties) {
+          if (!(this instanceof CustomError))
+            return new CustomError(message, properties);
+          Object.defineProperty(this, "message", { get: function() {
+            return message;
+          } });
+          if (Error.captureStackTrace)
+            Error.captureStackTrace(this, CustomError);
+          else
+            Object.defineProperty(this, "stack", { value: new Error().stack || "" });
+          if (properties)
+            merge(this, properties);
+        }
+        CustomError.prototype = Object.create(Error.prototype, {
+          constructor: {
+            value: CustomError,
+            writable: true,
+            enumerable: false,
+            configurable: true
+          },
+          name: {
+            get: function get() {
+              return name;
+            },
+            set: void 0,
+            enumerable: false,
+            // configurable: false would accurately preserve the behavior of
+            // the original, but I'm guessing that was not intentional.
+            // For an actual error subclass, this property would
+            // be configurable.
+            configurable: true
+          },
+          toString: {
+            value: function value() {
+              return this.name + ": " + this.message;
+            },
+            writable: true,
+            enumerable: false,
+            configurable: true
+          }
+        });
+        return CustomError;
+      }
+      util.newError = newError;
+      util.ProtocolError = newError("ProtocolError");
+      util.oneOfGetter = function getOneOf(fieldNames) {
+        var fieldMap = {};
+        for (var i = 0; i < fieldNames.length; ++i)
+          fieldMap[fieldNames[i]] = 1;
+        return function() {
+          for (var keys = Object.keys(this), i2 = keys.length - 1; i2 > -1; --i2)
+            if (fieldMap[keys[i2]] === 1 && this[keys[i2]] !== void 0 && this[keys[i2]] !== null)
+              return keys[i2];
+        };
+      };
+      util.oneOfSetter = function setOneOf(fieldNames) {
+        return function(name) {
+          for (var i = 0; i < fieldNames.length; ++i)
+            if (fieldNames[i] !== name)
+              delete this[fieldNames[i]];
+        };
+      };
+      util.toJSONOptions = {
+        longs: String,
+        enums: String,
+        bytes: String,
+        json: true
+      };
+      util._configure = function() {
+        var Buffer2 = util.Buffer;
+        if (!Buffer2) {
+          util._Buffer_from = util._Buffer_allocUnsafe = null;
+          return;
+        }
+        util._Buffer_from = Buffer2.from !== Uint8Array.from && Buffer2.from || /* istanbul ignore next */
+        function Buffer_from(value, encoding) {
+          return new Buffer2(value, encoding);
+        };
+        util._Buffer_allocUnsafe = Buffer2.allocUnsafe || /* istanbul ignore next */
+        function Buffer_allocUnsafe(size) {
+          return new Buffer2(size);
+        };
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/writer.js
+  var require_writer = __commonJS({
+    "node_modules/protobufjs/src/writer.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = Writer;
+      var util = require_minimal();
+      var BufferWriter;
+      var LongBits = util.LongBits;
+      var base642 = util.base64;
+      var utf8 = util.utf8;
+      function Op(fn, len, val) {
+        this.fn = fn;
+        this.len = len;
+        this.next = void 0;
+        this.val = val;
+      }
+      function noop() {
+      }
+      function State(writer) {
+        this.head = writer.head;
+        this.tail = writer.tail;
+        this.len = writer.len;
+        this.next = writer.states;
+      }
+      function Writer() {
+        this.len = 0;
+        this.head = new Op(noop, 0, 0);
+        this.tail = this.head;
+        this.states = null;
+      }
+      var create = function create2() {
+        return util.Buffer ? function create_buffer_setup() {
+          return (Writer.create = function create_buffer() {
+            return new BufferWriter();
+          })();
+        } : function create_array() {
+          return new Writer();
+        };
+      };
+      Writer.create = create();
+      Writer.alloc = function alloc(size) {
+        return new util.Array(size);
+      };
+      if (util.Array !== Array)
+        Writer.alloc = util.pool(Writer.alloc, util.Array.prototype.subarray);
+      Writer.prototype._push = function push(fn, len, val) {
+        this.tail = this.tail.next = new Op(fn, len, val);
+        this.len += len;
+        return this;
+      };
+      function writeByte(val, buf, pos) {
+        buf[pos] = val & 255;
+      }
+      function writeVarint32(val, buf, pos) {
+        while (val > 127) {
+          buf[pos++] = val & 127 | 128;
+          val >>>= 7;
+        }
+        buf[pos] = val;
+      }
+      function VarintOp(len, val) {
+        this.len = len;
+        this.next = void 0;
+        this.val = val;
+      }
+      VarintOp.prototype = Object.create(Op.prototype);
+      VarintOp.prototype.fn = writeVarint32;
+      Writer.prototype.uint32 = function write_uint32(value) {
+        this.len += (this.tail = this.tail.next = new VarintOp(
+          (value = value >>> 0) < 128 ? 1 : value < 16384 ? 2 : value < 2097152 ? 3 : value < 268435456 ? 4 : 5,
+          value
+        )).len;
+        return this;
+      };
+      Writer.prototype.int32 = function write_int32(value) {
+        return value < 0 ? this._push(writeVarint64, 10, LongBits.fromNumber(value)) : this.uint32(value);
+      };
+      Writer.prototype.sint32 = function write_sint32(value) {
+        return this.uint32((value << 1 ^ value >> 31) >>> 0);
+      };
+      function writeVarint64(val, buf, pos) {
+        while (val.hi) {
+          buf[pos++] = val.lo & 127 | 128;
+          val.lo = (val.lo >>> 7 | val.hi << 25) >>> 0;
+          val.hi >>>= 7;
+        }
+        while (val.lo > 127) {
+          buf[pos++] = val.lo & 127 | 128;
+          val.lo = val.lo >>> 7;
+        }
+        buf[pos++] = val.lo;
+      }
+      Writer.prototype.uint64 = function write_uint64(value) {
+        var bits = LongBits.from(value);
+        return this._push(writeVarint64, bits.length(), bits);
+      };
+      Writer.prototype.int64 = Writer.prototype.uint64;
+      Writer.prototype.sint64 = function write_sint64(value) {
+        var bits = LongBits.from(value).zzEncode();
+        return this._push(writeVarint64, bits.length(), bits);
+      };
+      Writer.prototype.bool = function write_bool(value) {
+        return this._push(writeByte, 1, value ? 1 : 0);
+      };
+      function writeFixed32(val, buf, pos) {
+        buf[pos] = val & 255;
+        buf[pos + 1] = val >>> 8 & 255;
+        buf[pos + 2] = val >>> 16 & 255;
+        buf[pos + 3] = val >>> 24;
+      }
+      Writer.prototype.fixed32 = function write_fixed32(value) {
+        return this._push(writeFixed32, 4, value >>> 0);
+      };
+      Writer.prototype.sfixed32 = Writer.prototype.fixed32;
+      Writer.prototype.fixed64 = function write_fixed64(value) {
+        var bits = LongBits.from(value);
+        return this._push(writeFixed32, 4, bits.lo)._push(writeFixed32, 4, bits.hi);
+      };
+      Writer.prototype.sfixed64 = Writer.prototype.fixed64;
+      Writer.prototype.float = function write_float(value) {
+        return this._push(util.float.writeFloatLE, 4, value);
+      };
+      Writer.prototype.double = function write_double(value) {
+        return this._push(util.float.writeDoubleLE, 8, value);
+      };
+      var writeBytes = util.Array.prototype.set ? function writeBytes_set(val, buf, pos) {
+        buf.set(val, pos);
+      } : function writeBytes_for(val, buf, pos) {
+        for (var i = 0; i < val.length; ++i)
+          buf[pos + i] = val[i];
+      };
+      Writer.prototype.bytes = function write_bytes(value) {
+        var len = value.length >>> 0;
+        if (!len)
+          return this._push(writeByte, 1, 0);
+        if (util.isString(value)) {
+          var buf = Writer.alloc(len = base642.length(value));
+          base642.decode(value, buf, 0);
+          value = buf;
+        }
+        return this.uint32(len)._push(writeBytes, len, value);
+      };
+      Writer.prototype.string = function write_string(value) {
+        var len = utf8.length(value);
+        return len ? this.uint32(len)._push(utf8.write, len, value) : this._push(writeByte, 1, 0);
+      };
+      Writer.prototype.fork = function fork() {
+        this.states = new State(this);
+        this.head = this.tail = new Op(noop, 0, 0);
+        this.len = 0;
+        return this;
+      };
+      Writer.prototype.reset = function reset() {
+        if (this.states) {
+          this.head = this.states.head;
+          this.tail = this.states.tail;
+          this.len = this.states.len;
+          this.states = this.states.next;
+        } else {
+          this.head = this.tail = new Op(noop, 0, 0);
+          this.len = 0;
+        }
+        return this;
+      };
+      Writer.prototype.ldelim = function ldelim() {
+        var head = this.head, tail = this.tail, len = this.len;
+        this.reset().uint32(len);
+        if (len) {
+          this.tail.next = head.next;
+          this.tail = tail;
+          this.len += len;
+        }
+        return this;
+      };
+      Writer.prototype.finish = function finish() {
+        var head = this.head.next, buf = this.constructor.alloc(this.len), pos = 0;
+        while (head) {
+          head.fn(head.val, buf, pos);
+          pos += head.len;
+          head = head.next;
+        }
+        return buf;
+      };
+      Writer._configure = function(BufferWriter_) {
+        BufferWriter = BufferWriter_;
+        Writer.create = create();
+        BufferWriter._configure();
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/writer_buffer.js
+  var require_writer_buffer = __commonJS({
+    "node_modules/protobufjs/src/writer_buffer.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = BufferWriter;
+      var Writer = require_writer();
+      (BufferWriter.prototype = Object.create(Writer.prototype)).constructor = BufferWriter;
+      var util = require_minimal();
+      function BufferWriter() {
+        Writer.call(this);
+      }
+      BufferWriter._configure = function() {
+        BufferWriter.alloc = util._Buffer_allocUnsafe;
+        BufferWriter.writeBytesBuffer = util.Buffer && util.Buffer.prototype instanceof Uint8Array && util.Buffer.prototype.set.name === "set" ? function writeBytesBuffer_set(val, buf, pos) {
+          buf.set(val, pos);
+        } : function writeBytesBuffer_copy(val, buf, pos) {
+          if (val.copy)
+            val.copy(buf, pos, 0, val.length);
+          else
+            for (var i = 0; i < val.length; )
+              buf[pos++] = val[i++];
+        };
+      };
+      BufferWriter.prototype.bytes = function write_bytes_buffer(value) {
+        if (util.isString(value))
+          value = util._Buffer_from(value, "base64");
+        var len = value.length >>> 0;
+        this.uint32(len);
+        if (len)
+          this._push(BufferWriter.writeBytesBuffer, len, value);
+        return this;
+      };
+      function writeStringBuffer(val, buf, pos) {
+        if (val.length < 40)
+          util.utf8.write(val, buf, pos);
+        else if (buf.utf8Write)
+          buf.utf8Write(val, pos);
+        else
+          buf.write(val, pos);
+      }
+      BufferWriter.prototype.string = function write_string_buffer(value) {
+        var len = util.Buffer.byteLength(value);
+        this.uint32(len);
+        if (len)
+          this._push(writeStringBuffer, len, value);
+        return this;
+      };
+      BufferWriter._configure();
+    }
+  });
+
+  // node_modules/protobufjs/src/reader.js
+  var require_reader = __commonJS({
+    "node_modules/protobufjs/src/reader.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = Reader;
+      var util = require_minimal();
+      var BufferReader;
+      var LongBits = util.LongBits;
+      var utf8 = util.utf8;
+      function indexOutOfRange(reader, writeLength) {
+        return RangeError("index out of range: " + reader.pos + " + " + (writeLength || 1) + " > " + reader.len);
+      }
+      function Reader(buffer) {
+        this.buf = buffer;
+        this.pos = 0;
+        this.len = buffer.length;
+      }
+      var create_array = typeof Uint8Array !== "undefined" ? function create_typed_array(buffer) {
+        if (buffer instanceof Uint8Array || Array.isArray(buffer))
+          return new Reader(buffer);
+        throw Error("illegal buffer");
+      } : function create_array2(buffer) {
+        if (Array.isArray(buffer))
+          return new Reader(buffer);
+        throw Error("illegal buffer");
+      };
+      var create = function create2() {
+        return util.Buffer ? function create_buffer_setup(buffer) {
+          return (Reader.create = function create_buffer(buffer2) {
+            return util.Buffer.isBuffer(buffer2) ? new BufferReader(buffer2) : create_array(buffer2);
+          })(buffer);
+        } : create_array;
+      };
+      Reader.create = create();
+      Reader.prototype._slice = util.Array.prototype.subarray || /* istanbul ignore next */
+      util.Array.prototype.slice;
+      Reader.prototype.uint32 = function read_uint32_setup() {
+        var value = 4294967295;
+        return function read_uint32() {
+          value = (this.buf[this.pos] & 127) >>> 0;
+          if (this.buf[this.pos++] < 128)
+            return value;
+          value = (value | (this.buf[this.pos] & 127) << 7) >>> 0;
+          if (this.buf[this.pos++] < 128)
+            return value;
+          value = (value | (this.buf[this.pos] & 127) << 14) >>> 0;
+          if (this.buf[this.pos++] < 128)
+            return value;
+          value = (value | (this.buf[this.pos] & 127) << 21) >>> 0;
+          if (this.buf[this.pos++] < 128)
+            return value;
+          value = (value | (this.buf[this.pos] & 15) << 28) >>> 0;
+          if (this.buf[this.pos++] < 128)
+            return value;
+          if ((this.pos += 5) > this.len) {
+            this.pos = this.len;
+            throw indexOutOfRange(this, 10);
+          }
+          return value;
+        };
+      }();
+      Reader.prototype.int32 = function read_int32() {
+        return this.uint32() | 0;
+      };
+      Reader.prototype.sint32 = function read_sint32() {
+        var value = this.uint32();
+        return value >>> 1 ^ -(value & 1) | 0;
+      };
+      function readLongVarint() {
+        var bits = new LongBits(0, 0);
+        var i = 0;
+        if (this.len - this.pos > 4) {
+          for (; i < 4; ++i) {
+            bits.lo = (bits.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
+            if (this.buf[this.pos++] < 128)
+              return bits;
+          }
+          bits.lo = (bits.lo | (this.buf[this.pos] & 127) << 28) >>> 0;
+          bits.hi = (bits.hi | (this.buf[this.pos] & 127) >> 4) >>> 0;
+          if (this.buf[this.pos++] < 128)
+            return bits;
+          i = 0;
+        } else {
+          for (; i < 3; ++i) {
+            if (this.pos >= this.len)
+              throw indexOutOfRange(this);
+            bits.lo = (bits.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
+            if (this.buf[this.pos++] < 128)
+              return bits;
+          }
+          bits.lo = (bits.lo | (this.buf[this.pos++] & 127) << i * 7) >>> 0;
+          return bits;
+        }
+        if (this.len - this.pos > 4) {
+          for (; i < 5; ++i) {
+            bits.hi = (bits.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
+            if (this.buf[this.pos++] < 128)
+              return bits;
+          }
+        } else {
+          for (; i < 5; ++i) {
+            if (this.pos >= this.len)
+              throw indexOutOfRange(this);
+            bits.hi = (bits.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
+            if (this.buf[this.pos++] < 128)
+              return bits;
+          }
+        }
+        throw Error("invalid varint encoding");
+      }
+      Reader.prototype.bool = function read_bool() {
+        return this.uint32() !== 0;
+      };
+      function readFixed32_end(buf, end) {
+        return (buf[end - 4] | buf[end - 3] << 8 | buf[end - 2] << 16 | buf[end - 1] << 24) >>> 0;
+      }
+      Reader.prototype.fixed32 = function read_fixed32() {
+        if (this.pos + 4 > this.len)
+          throw indexOutOfRange(this, 4);
+        return readFixed32_end(this.buf, this.pos += 4);
+      };
+      Reader.prototype.sfixed32 = function read_sfixed32() {
+        if (this.pos + 4 > this.len)
+          throw indexOutOfRange(this, 4);
+        return readFixed32_end(this.buf, this.pos += 4) | 0;
+      };
+      function readFixed64() {
+        if (this.pos + 8 > this.len)
+          throw indexOutOfRange(this, 8);
+        return new LongBits(readFixed32_end(this.buf, this.pos += 4), readFixed32_end(this.buf, this.pos += 4));
+      }
+      Reader.prototype.float = function read_float() {
+        if (this.pos + 4 > this.len)
+          throw indexOutOfRange(this, 4);
+        var value = util.float.readFloatLE(this.buf, this.pos);
+        this.pos += 4;
+        return value;
+      };
+      Reader.prototype.double = function read_double() {
+        if (this.pos + 8 > this.len)
+          throw indexOutOfRange(this, 4);
+        var value = util.float.readDoubleLE(this.buf, this.pos);
+        this.pos += 8;
+        return value;
+      };
+      Reader.prototype.bytes = function read_bytes() {
+        var length2 = this.uint32(), start = this.pos, end = this.pos + length2;
+        if (end > this.len)
+          throw indexOutOfRange(this, length2);
+        this.pos += length2;
+        if (Array.isArray(this.buf))
+          return this.buf.slice(start, end);
+        return start === end ? new this.buf.constructor(0) : this._slice.call(this.buf, start, end);
+      };
+      Reader.prototype.string = function read_string() {
+        var bytes = this.bytes();
+        return utf8.read(bytes, 0, bytes.length);
+      };
+      Reader.prototype.skip = function skip(length2) {
+        if (typeof length2 === "number") {
+          if (this.pos + length2 > this.len)
+            throw indexOutOfRange(this, length2);
+          this.pos += length2;
+        } else {
+          do {
+            if (this.pos >= this.len)
+              throw indexOutOfRange(this);
+          } while (this.buf[this.pos++] & 128);
+        }
+        return this;
+      };
+      Reader.prototype.skipType = function(wireType) {
+        switch (wireType) {
+          case 0:
+            this.skip();
+            break;
+          case 1:
+            this.skip(8);
+            break;
+          case 2:
+            this.skip(this.uint32());
+            break;
+          case 3:
+            while ((wireType = this.uint32() & 7) !== 4) {
+              this.skipType(wireType);
+            }
+            break;
+          case 5:
+            this.skip(4);
+            break;
+          default:
+            throw Error("invalid wire type " + wireType + " at offset " + this.pos);
+        }
+        return this;
+      };
+      Reader._configure = function(BufferReader_) {
+        BufferReader = BufferReader_;
+        Reader.create = create();
+        BufferReader._configure();
+        var fn = util.Long ? "toLong" : (
+          /* istanbul ignore next */
+          "toNumber"
+        );
+        util.merge(Reader.prototype, {
+          int64: function read_int64() {
+            return readLongVarint.call(this)[fn](false);
+          },
+          uint64: function read_uint64() {
+            return readLongVarint.call(this)[fn](true);
+          },
+          sint64: function read_sint64() {
+            return readLongVarint.call(this).zzDecode()[fn](false);
+          },
+          fixed64: function read_fixed64() {
+            return readFixed64.call(this)[fn](true);
+          },
+          sfixed64: function read_sfixed64() {
+            return readFixed64.call(this)[fn](false);
+          }
+        });
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/reader_buffer.js
+  var require_reader_buffer = __commonJS({
+    "node_modules/protobufjs/src/reader_buffer.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = BufferReader;
+      var Reader = require_reader();
+      (BufferReader.prototype = Object.create(Reader.prototype)).constructor = BufferReader;
+      var util = require_minimal();
+      function BufferReader(buffer) {
+        Reader.call(this, buffer);
+      }
+      BufferReader._configure = function() {
+        if (util.Buffer)
+          BufferReader.prototype._slice = util.Buffer.prototype.slice;
+      };
+      BufferReader.prototype.string = function read_string_buffer() {
+        var len = this.uint32();
+        return this.buf.utf8Slice ? this.buf.utf8Slice(this.pos, this.pos = Math.min(this.pos + len, this.len)) : this.buf.toString("utf-8", this.pos, this.pos = Math.min(this.pos + len, this.len));
+      };
+      BufferReader._configure();
+    }
+  });
+
+  // node_modules/protobufjs/src/rpc/service.js
+  var require_service = __commonJS({
+    "node_modules/protobufjs/src/rpc/service.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = Service;
+      var util = require_minimal();
+      (Service.prototype = Object.create(util.EventEmitter.prototype)).constructor = Service;
+      function Service(rpcImpl, requestDelimited, responseDelimited) {
+        if (typeof rpcImpl !== "function")
+          throw TypeError("rpcImpl must be a function");
+        util.EventEmitter.call(this);
+        this.rpcImpl = rpcImpl;
+        this.requestDelimited = Boolean(requestDelimited);
+        this.responseDelimited = Boolean(responseDelimited);
+      }
+      Service.prototype.rpcCall = function rpcCall(method, requestCtor, responseCtor, request, callback) {
+        if (!request)
+          throw TypeError("request must be specified");
+        var self2 = this;
+        if (!callback)
+          return util.asPromise(rpcCall, self2, method, requestCtor, responseCtor, request);
+        if (!self2.rpcImpl) {
+          setTimeout(function() {
+            callback(Error("already ended"));
+          }, 0);
+          return void 0;
+        }
+        try {
+          return self2.rpcImpl(
+            method,
+            requestCtor[self2.requestDelimited ? "encodeDelimited" : "encode"](request).finish(),
+            function rpcCallback(err, response) {
+              if (err) {
+                self2.emit("error", err, method);
+                return callback(err);
+              }
+              if (response === null) {
+                self2.end(
+                  /* endedByRPC */
+                  true
+                );
+                return void 0;
+              }
+              if (!(response instanceof responseCtor)) {
+                try {
+                  response = responseCtor[self2.responseDelimited ? "decodeDelimited" : "decode"](response);
+                } catch (err2) {
+                  self2.emit("error", err2, method);
+                  return callback(err2);
+                }
+              }
+              self2.emit("data", response, method);
+              return callback(null, response);
+            }
+          );
+        } catch (err) {
+          self2.emit("error", err, method);
+          setTimeout(function() {
+            callback(err);
+          }, 0);
+          return void 0;
+        }
+      };
+      Service.prototype.end = function end(endedByRPC) {
+        if (this.rpcImpl) {
+          if (!endedByRPC)
+            this.rpcImpl(null, null, null);
+          this.rpcImpl = null;
+          this.emit("end").off();
+        }
+        return this;
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/rpc.js
+  var require_rpc = __commonJS({
+    "node_modules/protobufjs/src/rpc.js"(exports2) {
+      "use strict";
+      init_tampermonkey();
+      var rpc = exports2;
+      rpc.Service = require_service();
+    }
+  });
+
+  // node_modules/protobufjs/src/roots.js
+  var require_roots = __commonJS({
+    "node_modules/protobufjs/src/roots.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = {};
+    }
+  });
+
+  // node_modules/protobufjs/src/index-minimal.js
+  var require_index_minimal = __commonJS({
+    "node_modules/protobufjs/src/index-minimal.js"(exports2) {
+      "use strict";
+      init_tampermonkey();
+      var protobuf = exports2;
+      protobuf.build = "minimal";
+      protobuf.Writer = require_writer();
+      protobuf.BufferWriter = require_writer_buffer();
+      protobuf.Reader = require_reader();
+      protobuf.BufferReader = require_reader_buffer();
+      protobuf.util = require_minimal();
+      protobuf.rpc = require_rpc();
+      protobuf.roots = require_roots();
+      protobuf.configure = configure;
+      function configure() {
+        protobuf.util._configure();
+        protobuf.Writer._configure(protobuf.BufferWriter);
+        protobuf.Reader._configure(protobuf.BufferReader);
+      }
+      configure();
+    }
+  });
+
+  // node_modules/@protobufjs/codegen/index.js
+  var require_codegen = __commonJS({
+    "node_modules/@protobufjs/codegen/index.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = codegen;
+      function codegen(functionParams, functionName) {
+        if (typeof functionParams === "string") {
+          functionName = functionParams;
+          functionParams = void 0;
+        }
+        var body = [];
+        function Codegen(formatStringOrScope) {
+          if (typeof formatStringOrScope !== "string") {
+            var source = toString2();
+            if (codegen.verbose)
+              console.log("codegen: " + source);
+            source = "return " + source;
+            if (formatStringOrScope) {
+              var scopeKeys = Object.keys(formatStringOrScope), scopeParams = new Array(scopeKeys.length + 1), scopeValues = new Array(scopeKeys.length), scopeOffset = 0;
+              while (scopeOffset < scopeKeys.length) {
+                scopeParams[scopeOffset] = scopeKeys[scopeOffset];
+                scopeValues[scopeOffset] = formatStringOrScope[scopeKeys[scopeOffset++]];
+              }
+              scopeParams[scopeOffset] = source;
+              return Function.apply(null, scopeParams).apply(null, scopeValues);
+            }
+            return Function(source)();
+          }
+          var formatParams = new Array(arguments.length - 1), formatOffset = 0;
+          while (formatOffset < formatParams.length)
+            formatParams[formatOffset] = arguments[++formatOffset];
+          formatOffset = 0;
+          formatStringOrScope = formatStringOrScope.replace(/%([%dfijs])/g, function replace(\$0, \$1) {
+            var value = formatParams[formatOffset++];
+            switch (\$1) {
+              case "d":
+              case "f":
+                return String(Number(value));
+              case "i":
+                return String(Math.floor(value));
+              case "j":
+                return JSON.stringify(value);
+              case "s":
+                return String(value);
+            }
+            return "%";
+          });
+          if (formatOffset !== formatParams.length)
+            throw Error("parameter count mismatch");
+          body.push(formatStringOrScope);
+          return Codegen;
+        }
+        function toString2(functionNameOverride) {
+          return "function " + (functionNameOverride || functionName || "") + "(" + (functionParams && functionParams.join(",") || "") + "){\\n  " + body.join("\\n  ") + "\\n}";
+        }
+        Codegen.toString = toString2;
+        return Codegen;
+      }
+      codegen.verbose = false;
+    }
+  });
+
+  // node_modules/@protobufjs/fetch/index.js
+  var require_fetch = __commonJS({
+    "node_modules/@protobufjs/fetch/index.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = fetch2;
+      var asPromise = require_aspromise();
+      var inquire2 = require_inquire();
+      var fs = inquire2("fs");
+      function fetch2(filename, options, callback) {
+        if (typeof options === "function") {
+          callback = options;
+          options = {};
+        } else if (!options)
+          options = {};
+        if (!callback)
+          return asPromise(fetch2, this, filename, options);
+        if (!options.xhr && fs && fs.readFile)
+          return fs.readFile(filename, function fetchReadFileCallback(err, contents) {
+            return err && typeof XMLHttpRequest !== "undefined" ? fetch2.xhr(filename, options, callback) : err ? callback(err) : callback(null, options.binary ? contents : contents.toString("utf8"));
+          });
+        return fetch2.xhr(filename, options, callback);
+      }
+      fetch2.xhr = function fetch_xhr(filename, options, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function fetchOnReadyStateChange() {
+          if (xhr.readyState !== 4)
+            return void 0;
+          if (xhr.status !== 0 && xhr.status !== 200)
+            return callback(Error("status " + xhr.status));
+          if (options.binary) {
+            var buffer = xhr.response;
+            if (!buffer) {
+              buffer = [];
+              for (var i = 0; i < xhr.responseText.length; ++i)
+                buffer.push(xhr.responseText.charCodeAt(i) & 255);
+            }
+            return callback(null, typeof Uint8Array !== "undefined" ? new Uint8Array(buffer) : buffer);
+          }
+          return callback(null, xhr.responseText);
+        };
+        if (options.binary) {
+          if ("overrideMimeType" in xhr)
+            xhr.overrideMimeType("text/plain; charset=x-user-defined");
+          xhr.responseType = "arraybuffer";
+        }
+        xhr.open("GET", filename);
+        xhr.send();
+      };
+    }
+  });
+
+  // node_modules/@protobufjs/path/index.js
+  var require_path = __commonJS({
+    "node_modules/@protobufjs/path/index.js"(exports2) {
+      "use strict";
+      init_tampermonkey();
+      var path = exports2;
+      var isAbsolute = (
+        /**
+         * Tests if the specified path is absolute.
+         * @param {string} path Path to test
+         * @returns {boolean} \`true\` if path is absolute
+         */
+        path.isAbsolute = function isAbsolute2(path2) {
+          return /^(?:\\/|\\w+:)/.test(path2);
+        }
+      );
+      var normalize = (
+        /**
+         * Normalizes the specified path.
+         * @param {string} path Path to normalize
+         * @returns {string} Normalized path
+         */
+        path.normalize = function normalize2(path2) {
+          path2 = path2.replace(/\\\\/g, "/").replace(/\\/{2,}/g, "/");
+          var parts = path2.split("/"), absolute = isAbsolute(path2), prefix = "";
+          if (absolute)
+            prefix = parts.shift() + "/";
+          for (var i = 0; i < parts.length; ) {
+            if (parts[i] === "..") {
+              if (i > 0 && parts[i - 1] !== "..")
+                parts.splice(--i, 2);
+              else if (absolute)
+                parts.splice(i, 1);
+              else
+                ++i;
+            } else if (parts[i] === ".")
+              parts.splice(i, 1);
+            else
+              ++i;
+          }
+          return prefix + parts.join("/");
+        }
+      );
+      path.resolve = function resolve(originPath, includePath, alreadyNormalized) {
+        if (!alreadyNormalized)
+          includePath = normalize(includePath);
+        if (isAbsolute(includePath))
+          return includePath;
+        if (!alreadyNormalized)
+          originPath = normalize(originPath);
+        return (originPath = originPath.replace(/(?:\\/|^)[^/]+\$/, "")).length ? normalize(originPath + "/" + includePath) : includePath;
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/types.js
+  var require_types = __commonJS({
+    "node_modules/protobufjs/src/types.js"(exports2) {
+      "use strict";
+      init_tampermonkey();
+      var types = exports2;
+      var util = require_util();
+      var s = [
+        "double",
+        // 0
+        "float",
+        // 1
+        "int32",
+        // 2
+        "uint32",
+        // 3
+        "sint32",
+        // 4
+        "fixed32",
+        // 5
+        "sfixed32",
+        // 6
+        "int64",
+        // 7
+        "uint64",
+        // 8
+        "sint64",
+        // 9
+        "fixed64",
+        // 10
+        "sfixed64",
+        // 11
+        "bool",
+        // 12
+        "string",
+        // 13
+        "bytes"
+        // 14
+      ];
+      function bake(values, offset2) {
+        var i = 0, o = {};
+        offset2 |= 0;
+        while (i < values.length)
+          o[s[i + offset2]] = values[i++];
+        return o;
+      }
+      types.basic = bake([
+        /* double   */
+        1,
+        /* float    */
+        5,
+        /* int32    */
+        0,
+        /* uint32   */
+        0,
+        /* sint32   */
+        0,
+        /* fixed32  */
+        5,
+        /* sfixed32 */
+        5,
+        /* int64    */
+        0,
+        /* uint64   */
+        0,
+        /* sint64   */
+        0,
+        /* fixed64  */
+        1,
+        /* sfixed64 */
+        1,
+        /* bool     */
+        0,
+        /* string   */
+        2,
+        /* bytes    */
+        2
+      ]);
+      types.defaults = bake([
+        /* double   */
+        0,
+        /* float    */
+        0,
+        /* int32    */
+        0,
+        /* uint32   */
+        0,
+        /* sint32   */
+        0,
+        /* fixed32  */
+        0,
+        /* sfixed32 */
+        0,
+        /* int64    */
+        0,
+        /* uint64   */
+        0,
+        /* sint64   */
+        0,
+        /* fixed64  */
+        0,
+        /* sfixed64 */
+        0,
+        /* bool     */
+        false,
+        /* string   */
+        "",
+        /* bytes    */
+        util.emptyArray,
+        /* message  */
+        null
+      ]);
+      types.long = bake([
+        /* int64    */
+        0,
+        /* uint64   */
+        0,
+        /* sint64   */
+        0,
+        /* fixed64  */
+        1,
+        /* sfixed64 */
+        1
+      ], 7);
+      types.mapKey = bake([
+        /* int32    */
+        0,
+        /* uint32   */
+        0,
+        /* sint32   */
+        0,
+        /* fixed32  */
+        5,
+        /* sfixed32 */
+        5,
+        /* int64    */
+        0,
+        /* uint64   */
+        0,
+        /* sint64   */
+        0,
+        /* fixed64  */
+        1,
+        /* sfixed64 */
+        1,
+        /* bool     */
+        0,
+        /* string   */
+        2
+      ], 2);
+      types.packed = bake([
+        /* double   */
+        1,
+        /* float    */
+        5,
+        /* int32    */
+        0,
+        /* uint32   */
+        0,
+        /* sint32   */
+        0,
+        /* fixed32  */
+        5,
+        /* sfixed32 */
+        5,
+        /* int64    */
+        0,
+        /* uint64   */
+        0,
+        /* sint64   */
+        0,
+        /* fixed64  */
+        1,
+        /* sfixed64 */
+        1,
+        /* bool     */
+        0
+      ]);
+    }
+  });
+
+  // node_modules/protobufjs/src/field.js
+  var require_field = __commonJS({
+    "node_modules/protobufjs/src/field.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = Field;
+      var ReflectionObject = require_object();
+      ((Field.prototype = Object.create(ReflectionObject.prototype)).constructor = Field).className = "Field";
+      var Enum = require_enum();
+      var types = require_types();
+      var util = require_util();
+      var Type2;
+      var ruleRe = /^required|optional|repeated\$/;
+      Field.fromJSON = function fromJSON(name, json) {
+        return new Field(name, json.id, json.type, json.rule, json.extend, json.options, json.comment);
+      };
+      function Field(name, id, type, rule, extend, options, comment) {
+        if (util.isObject(rule)) {
+          comment = extend;
+          options = rule;
+          rule = extend = void 0;
+        } else if (util.isObject(extend)) {
+          comment = options;
+          options = extend;
+          extend = void 0;
+        }
+        ReflectionObject.call(this, name, options);
+        if (!util.isInteger(id) || id < 0)
+          throw TypeError("id must be a non-negative integer");
+        if (!util.isString(type))
+          throw TypeError("type must be a string");
+        if (rule !== void 0 && !ruleRe.test(rule = rule.toString().toLowerCase()))
+          throw TypeError("rule must be a string rule");
+        if (extend !== void 0 && !util.isString(extend))
+          throw TypeError("extend must be a string");
+        if (rule === "proto3_optional") {
+          rule = "optional";
+        }
+        this.rule = rule && rule !== "optional" ? rule : void 0;
+        this.type = type;
+        this.id = id;
+        this.extend = extend || void 0;
+        this.required = rule === "required";
+        this.optional = !this.required;
+        this.repeated = rule === "repeated";
+        this.map = false;
+        this.message = null;
+        this.partOf = null;
+        this.typeDefault = null;
+        this.defaultValue = null;
+        this.long = util.Long ? types.long[type] !== void 0 : (
+          /* istanbul ignore next */
+          false
+        );
+        this.bytes = type === "bytes";
+        this.resolvedType = null;
+        this.extensionField = null;
+        this.declaringField = null;
+        this._packed = null;
+        this.comment = comment;
+      }
+      Object.defineProperty(Field.prototype, "packed", {
+        get: function() {
+          if (this._packed === null)
+            this._packed = this.getOption("packed") !== false;
+          return this._packed;
+        }
+      });
+      Field.prototype.setOption = function setOption(name, value, ifNotSet) {
+        if (name === "packed")
+          this._packed = null;
+        return ReflectionObject.prototype.setOption.call(this, name, value, ifNotSet);
+      };
+      Field.prototype.toJSON = function toJSON(toJSONOptions) {
+        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
+        return util.toObject([
+          "rule",
+          this.rule !== "optional" && this.rule || void 0,
+          "type",
+          this.type,
+          "id",
+          this.id,
+          "extend",
+          this.extend,
+          "options",
+          this.options,
+          "comment",
+          keepComments ? this.comment : void 0
+        ]);
+      };
+      Field.prototype.resolve = function resolve() {
+        if (this.resolved)
+          return this;
+        if ((this.typeDefault = types.defaults[this.type]) === void 0) {
+          this.resolvedType = (this.declaringField ? this.declaringField.parent : this.parent).lookupTypeOrEnum(this.type);
+          if (this.resolvedType instanceof Type2)
+            this.typeDefault = null;
+          else
+            this.typeDefault = this.resolvedType.values[Object.keys(this.resolvedType.values)[0]];
+        } else if (this.options && this.options.proto3_optional) {
+          this.typeDefault = null;
+        }
+        if (this.options && this.options["default"] != null) {
+          this.typeDefault = this.options["default"];
+          if (this.resolvedType instanceof Enum && typeof this.typeDefault === "string")
+            this.typeDefault = this.resolvedType.values[this.typeDefault];
+        }
+        if (this.options) {
+          if (this.options.packed === true || this.options.packed !== void 0 && this.resolvedType && !(this.resolvedType instanceof Enum))
+            delete this.options.packed;
+          if (!Object.keys(this.options).length)
+            this.options = void 0;
+        }
+        if (this.long) {
+          this.typeDefault = util.Long.fromNumber(this.typeDefault, this.type.charAt(0) === "u");
+          if (Object.freeze)
+            Object.freeze(this.typeDefault);
+        } else if (this.bytes && typeof this.typeDefault === "string") {
+          var buf;
+          if (util.base64.test(this.typeDefault))
+            util.base64.decode(this.typeDefault, buf = util.newBuffer(util.base64.length(this.typeDefault)), 0);
+          else
+            util.utf8.write(this.typeDefault, buf = util.newBuffer(util.utf8.length(this.typeDefault)), 0);
+          this.typeDefault = buf;
+        }
+        if (this.map)
+          this.defaultValue = util.emptyObject;
+        else if (this.repeated)
+          this.defaultValue = util.emptyArray;
+        else
+          this.defaultValue = this.typeDefault;
+        if (this.parent instanceof Type2)
+          this.parent.ctor.prototype[this.name] = this.defaultValue;
+        return ReflectionObject.prototype.resolve.call(this);
+      };
+      Field.d = function decorateField(fieldId, fieldType, fieldRule, defaultValue) {
+        if (typeof fieldType === "function")
+          fieldType = util.decorateType(fieldType).name;
+        else if (fieldType && typeof fieldType === "object")
+          fieldType = util.decorateEnum(fieldType).name;
+        return function fieldDecorator(prototype, fieldName) {
+          util.decorateType(prototype.constructor).add(new Field(fieldName, fieldId, fieldType, fieldRule, { "default": defaultValue }));
+        };
+      };
+      Field._configure = function configure(Type_) {
+        Type2 = Type_;
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/oneof.js
+  var require_oneof = __commonJS({
+    "node_modules/protobufjs/src/oneof.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = OneOf;
+      var ReflectionObject = require_object();
+      ((OneOf.prototype = Object.create(ReflectionObject.prototype)).constructor = OneOf).className = "OneOf";
+      var Field = require_field();
+      var util = require_util();
+      function OneOf(name, fieldNames, options, comment) {
+        if (!Array.isArray(fieldNames)) {
+          options = fieldNames;
+          fieldNames = void 0;
+        }
+        ReflectionObject.call(this, name, options);
+        if (!(fieldNames === void 0 || Array.isArray(fieldNames)))
+          throw TypeError("fieldNames must be an Array");
+        this.oneof = fieldNames || [];
+        this.fieldsArray = [];
+        this.comment = comment;
+      }
+      OneOf.fromJSON = function fromJSON(name, json) {
+        return new OneOf(name, json.oneof, json.options, json.comment);
+      };
+      OneOf.prototype.toJSON = function toJSON(toJSONOptions) {
+        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
+        return util.toObject([
+          "options",
+          this.options,
+          "oneof",
+          this.oneof,
+          "comment",
+          keepComments ? this.comment : void 0
+        ]);
+      };
+      function addFieldsToParent(oneof) {
+        if (oneof.parent) {
+          for (var i = 0; i < oneof.fieldsArray.length; ++i)
+            if (!oneof.fieldsArray[i].parent)
+              oneof.parent.add(oneof.fieldsArray[i]);
+        }
+      }
+      OneOf.prototype.add = function add(field) {
+        if (!(field instanceof Field))
+          throw TypeError("field must be a Field");
+        if (field.parent && field.parent !== this.parent)
+          field.parent.remove(field);
+        this.oneof.push(field.name);
+        this.fieldsArray.push(field);
+        field.partOf = this;
+        addFieldsToParent(this);
+        return this;
+      };
+      OneOf.prototype.remove = function remove(field) {
+        if (!(field instanceof Field))
+          throw TypeError("field must be a Field");
+        var index = this.fieldsArray.indexOf(field);
+        if (index < 0)
+          throw Error(field + " is not a member of " + this);
+        this.fieldsArray.splice(index, 1);
+        index = this.oneof.indexOf(field.name);
+        if (index > -1)
+          this.oneof.splice(index, 1);
+        field.partOf = null;
+        return this;
+      };
+      OneOf.prototype.onAdd = function onAdd(parent) {
+        ReflectionObject.prototype.onAdd.call(this, parent);
+        var self2 = this;
+        for (var i = 0; i < this.oneof.length; ++i) {
+          var field = parent.get(this.oneof[i]);
+          if (field && !field.partOf) {
+            field.partOf = self2;
+            self2.fieldsArray.push(field);
+          }
+        }
+        addFieldsToParent(this);
+      };
+      OneOf.prototype.onRemove = function onRemove(parent) {
+        for (var i = 0, field; i < this.fieldsArray.length; ++i)
+          if ((field = this.fieldsArray[i]).parent)
+            field.parent.remove(field);
+        ReflectionObject.prototype.onRemove.call(this, parent);
+      };
+      OneOf.d = function decorateOneOf() {
+        var fieldNames = new Array(arguments.length), index = 0;
+        while (index < arguments.length)
+          fieldNames[index] = arguments[index++];
+        return function oneOfDecorator(prototype, oneofName) {
+          util.decorateType(prototype.constructor).add(new OneOf(oneofName, fieldNames));
+          Object.defineProperty(prototype, oneofName, {
+            get: util.oneOfGetter(fieldNames),
+            set: util.oneOfSetter(fieldNames)
+          });
+        };
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/namespace.js
+  var require_namespace = __commonJS({
+    "node_modules/protobufjs/src/namespace.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = Namespace;
+      var ReflectionObject = require_object();
+      ((Namespace.prototype = Object.create(ReflectionObject.prototype)).constructor = Namespace).className = "Namespace";
+      var Field = require_field();
+      var util = require_util();
+      var OneOf = require_oneof();
+      var Type2;
+      var Service;
+      var Enum;
+      Namespace.fromJSON = function fromJSON(name, json) {
+        return new Namespace(name, json.options).addJSON(json.nested);
+      };
+      function arrayToJSON(array, toJSONOptions) {
+        if (!(array && array.length))
+          return void 0;
+        var obj = {};
+        for (var i = 0; i < array.length; ++i)
+          obj[array[i].name] = array[i].toJSON(toJSONOptions);
+        return obj;
+      }
+      Namespace.arrayToJSON = arrayToJSON;
+      Namespace.isReservedId = function isReservedId(reserved, id) {
+        if (reserved) {
+          for (var i = 0; i < reserved.length; ++i)
+            if (typeof reserved[i] !== "string" && reserved[i][0] <= id && reserved[i][1] > id)
+              return true;
+        }
+        return false;
+      };
+      Namespace.isReservedName = function isReservedName(reserved, name) {
+        if (reserved) {
+          for (var i = 0; i < reserved.length; ++i)
+            if (reserved[i] === name)
+              return true;
+        }
+        return false;
+      };
+      function Namespace(name, options) {
+        ReflectionObject.call(this, name, options);
+        this.nested = void 0;
+        this._nestedArray = null;
+      }
+      function clearCache(namespace) {
+        namespace._nestedArray = null;
+        return namespace;
+      }
+      Object.defineProperty(Namespace.prototype, "nestedArray", {
+        get: function() {
+          return this._nestedArray || (this._nestedArray = util.toArray(this.nested));
+        }
+      });
+      Namespace.prototype.toJSON = function toJSON(toJSONOptions) {
+        return util.toObject([
+          "options",
+          this.options,
+          "nested",
+          arrayToJSON(this.nestedArray, toJSONOptions)
+        ]);
+      };
+      Namespace.prototype.addJSON = function addJSON(nestedJson) {
+        var ns = this;
+        if (nestedJson) {
+          for (var names = Object.keys(nestedJson), i = 0, nested; i < names.length; ++i) {
+            nested = nestedJson[names[i]];
+            ns.add(
+              // most to least likely
+              (nested.fields !== void 0 ? Type2.fromJSON : nested.values !== void 0 ? Enum.fromJSON : nested.methods !== void 0 ? Service.fromJSON : nested.id !== void 0 ? Field.fromJSON : Namespace.fromJSON)(names[i], nested)
+            );
+          }
+        }
+        return this;
+      };
+      Namespace.prototype.get = function get(name) {
+        return this.nested && this.nested[name] || null;
+      };
+      Namespace.prototype.getEnum = function getEnum(name) {
+        if (this.nested && this.nested[name] instanceof Enum)
+          return this.nested[name].values;
+        throw Error("no such enum: " + name);
+      };
+      Namespace.prototype.add = function add(object) {
+        if (!(object instanceof Field && object.extend !== void 0 || object instanceof Type2 || object instanceof OneOf || object instanceof Enum || object instanceof Service || object instanceof Namespace))
+          throw TypeError("object must be a valid nested object");
+        if (!this.nested)
+          this.nested = {};
+        else {
+          var prev = this.get(object.name);
+          if (prev) {
+            if (prev instanceof Namespace && object instanceof Namespace && !(prev instanceof Type2 || prev instanceof Service)) {
+              var nested = prev.nestedArray;
+              for (var i = 0; i < nested.length; ++i)
+                object.add(nested[i]);
+              this.remove(prev);
+              if (!this.nested)
+                this.nested = {};
+              object.setOptions(prev.options, true);
+            } else
+              throw Error("duplicate name '" + object.name + "' in " + this);
+          }
+        }
+        this.nested[object.name] = object;
+        object.onAdd(this);
+        return clearCache(this);
+      };
+      Namespace.prototype.remove = function remove(object) {
+        if (!(object instanceof ReflectionObject))
+          throw TypeError("object must be a ReflectionObject");
+        if (object.parent !== this)
+          throw Error(object + " is not a member of " + this);
+        delete this.nested[object.name];
+        if (!Object.keys(this.nested).length)
+          this.nested = void 0;
+        object.onRemove(this);
+        return clearCache(this);
+      };
+      Namespace.prototype.define = function define(path, json) {
+        if (util.isString(path))
+          path = path.split(".");
+        else if (!Array.isArray(path))
+          throw TypeError("illegal path");
+        if (path && path.length && path[0] === "")
+          throw Error("path must be relative");
+        var ptr = this;
+        while (path.length > 0) {
+          var part = path.shift();
+          if (ptr.nested && ptr.nested[part]) {
+            ptr = ptr.nested[part];
+            if (!(ptr instanceof Namespace))
+              throw Error("path conflicts with non-namespace objects");
+          } else
+            ptr.add(ptr = new Namespace(part));
+        }
+        if (json)
+          ptr.addJSON(json);
+        return ptr;
+      };
+      Namespace.prototype.resolveAll = function resolveAll() {
+        var nested = this.nestedArray, i = 0;
+        while (i < nested.length)
+          if (nested[i] instanceof Namespace)
+            nested[i++].resolveAll();
+          else
+            nested[i++].resolve();
+        return this.resolve();
+      };
+      Namespace.prototype.lookup = function lookup(path, filterTypes, parentAlreadyChecked) {
+        if (typeof filterTypes === "boolean") {
+          parentAlreadyChecked = filterTypes;
+          filterTypes = void 0;
+        } else if (filterTypes && !Array.isArray(filterTypes))
+          filterTypes = [filterTypes];
+        if (util.isString(path) && path.length) {
+          if (path === ".")
+            return this.root;
+          path = path.split(".");
+        } else if (!path.length)
+          return this;
+        if (path[0] === "")
+          return this.root.lookup(path.slice(1), filterTypes);
+        var found = this.get(path[0]);
+        if (found) {
+          if (path.length === 1) {
+            if (!filterTypes || filterTypes.indexOf(found.constructor) > -1)
+              return found;
+          } else if (found instanceof Namespace && (found = found.lookup(path.slice(1), filterTypes, true)))
+            return found;
+        } else
+          for (var i = 0; i < this.nestedArray.length; ++i)
+            if (this._nestedArray[i] instanceof Namespace && (found = this._nestedArray[i].lookup(path, filterTypes, true)))
+              return found;
+        if (this.parent === null || parentAlreadyChecked)
+          return null;
+        return this.parent.lookup(path, filterTypes);
+      };
+      Namespace.prototype.lookupType = function lookupType(path) {
+        var found = this.lookup(path, [Type2]);
+        if (!found)
+          throw Error("no such type: " + path);
+        return found;
+      };
+      Namespace.prototype.lookupEnum = function lookupEnum(path) {
+        var found = this.lookup(path, [Enum]);
+        if (!found)
+          throw Error("no such Enum '" + path + "' in " + this);
+        return found;
+      };
+      Namespace.prototype.lookupTypeOrEnum = function lookupTypeOrEnum(path) {
+        var found = this.lookup(path, [Type2, Enum]);
+        if (!found)
+          throw Error("no such Type or Enum '" + path + "' in " + this);
+        return found;
+      };
+      Namespace.prototype.lookupService = function lookupService(path) {
+        var found = this.lookup(path, [Service]);
+        if (!found)
+          throw Error("no such Service '" + path + "' in " + this);
+        return found;
+      };
+      Namespace._configure = function(Type_, Service_, Enum_) {
+        Type2 = Type_;
+        Service = Service_;
+        Enum = Enum_;
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/mapfield.js
+  var require_mapfield = __commonJS({
+    "node_modules/protobufjs/src/mapfield.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = MapField;
+      var Field = require_field();
+      ((MapField.prototype = Object.create(Field.prototype)).constructor = MapField).className = "MapField";
+      var types = require_types();
+      var util = require_util();
+      function MapField(name, id, keyType, type, options, comment) {
+        Field.call(this, name, id, type, void 0, void 0, options, comment);
+        if (!util.isString(keyType))
+          throw TypeError("keyType must be a string");
+        this.keyType = keyType;
+        this.resolvedKeyType = null;
+        this.map = true;
+      }
+      MapField.fromJSON = function fromJSON(name, json) {
+        return new MapField(name, json.id, json.keyType, json.type, json.options, json.comment);
+      };
+      MapField.prototype.toJSON = function toJSON(toJSONOptions) {
+        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
+        return util.toObject([
+          "keyType",
+          this.keyType,
+          "type",
+          this.type,
+          "id",
+          this.id,
+          "extend",
+          this.extend,
+          "options",
+          this.options,
+          "comment",
+          keepComments ? this.comment : void 0
+        ]);
+      };
+      MapField.prototype.resolve = function resolve() {
+        if (this.resolved)
+          return this;
+        if (types.mapKey[this.keyType] === void 0)
+          throw Error("invalid key type: " + this.keyType);
+        return Field.prototype.resolve.call(this);
+      };
+      MapField.d = function decorateMapField(fieldId, fieldKeyType, fieldValueType) {
+        if (typeof fieldValueType === "function")
+          fieldValueType = util.decorateType(fieldValueType).name;
+        else if (fieldValueType && typeof fieldValueType === "object")
+          fieldValueType = util.decorateEnum(fieldValueType).name;
+        return function mapFieldDecorator(prototype, fieldName) {
+          util.decorateType(prototype.constructor).add(new MapField(fieldName, fieldId, fieldKeyType, fieldValueType));
+        };
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/method.js
+  var require_method = __commonJS({
+    "node_modules/protobufjs/src/method.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = Method;
+      var ReflectionObject = require_object();
+      ((Method.prototype = Object.create(ReflectionObject.prototype)).constructor = Method).className = "Method";
+      var util = require_util();
+      function Method(name, type, requestType, responseType, requestStream, responseStream, options, comment, parsedOptions) {
+        if (util.isObject(requestStream)) {
+          options = requestStream;
+          requestStream = responseStream = void 0;
+        } else if (util.isObject(responseStream)) {
+          options = responseStream;
+          responseStream = void 0;
+        }
+        if (!(type === void 0 || util.isString(type)))
+          throw TypeError("type must be a string");
+        if (!util.isString(requestType))
+          throw TypeError("requestType must be a string");
+        if (!util.isString(responseType))
+          throw TypeError("responseType must be a string");
+        ReflectionObject.call(this, name, options);
+        this.type = type || "rpc";
+        this.requestType = requestType;
+        this.requestStream = requestStream ? true : void 0;
+        this.responseType = responseType;
+        this.responseStream = responseStream ? true : void 0;
+        this.resolvedRequestType = null;
+        this.resolvedResponseType = null;
+        this.comment = comment;
+        this.parsedOptions = parsedOptions;
+      }
+      Method.fromJSON = function fromJSON(name, json) {
+        return new Method(name, json.type, json.requestType, json.responseType, json.requestStream, json.responseStream, json.options, json.comment, json.parsedOptions);
+      };
+      Method.prototype.toJSON = function toJSON(toJSONOptions) {
+        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
+        return util.toObject([
+          "type",
+          this.type !== "rpc" && /* istanbul ignore next */
+          this.type || void 0,
+          "requestType",
+          this.requestType,
+          "requestStream",
+          this.requestStream,
+          "responseType",
+          this.responseType,
+          "responseStream",
+          this.responseStream,
+          "options",
+          this.options,
+          "comment",
+          keepComments ? this.comment : void 0,
+          "parsedOptions",
+          this.parsedOptions
+        ]);
+      };
+      Method.prototype.resolve = function resolve() {
+        if (this.resolved)
+          return this;
+        this.resolvedRequestType = this.parent.lookupType(this.requestType);
+        this.resolvedResponseType = this.parent.lookupType(this.responseType);
+        return ReflectionObject.prototype.resolve.call(this);
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/service.js
+  var require_service2 = __commonJS({
+    "node_modules/protobufjs/src/service.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = Service;
+      var Namespace = require_namespace();
+      ((Service.prototype = Object.create(Namespace.prototype)).constructor = Service).className = "Service";
+      var Method = require_method();
+      var util = require_util();
+      var rpc = require_rpc();
+      function Service(name, options) {
+        Namespace.call(this, name, options);
+        this.methods = {};
+        this._methodsArray = null;
+      }
+      Service.fromJSON = function fromJSON(name, json) {
+        var service = new Service(name, json.options);
+        if (json.methods)
+          for (var names = Object.keys(json.methods), i = 0; i < names.length; ++i)
+            service.add(Method.fromJSON(names[i], json.methods[names[i]]));
+        if (json.nested)
+          service.addJSON(json.nested);
+        service.comment = json.comment;
+        return service;
+      };
+      Service.prototype.toJSON = function toJSON(toJSONOptions) {
+        var inherited = Namespace.prototype.toJSON.call(this, toJSONOptions);
+        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
+        return util.toObject([
+          "options",
+          inherited && inherited.options || void 0,
+          "methods",
+          Namespace.arrayToJSON(this.methodsArray, toJSONOptions) || /* istanbul ignore next */
+          {},
+          "nested",
+          inherited && inherited.nested || void 0,
+          "comment",
+          keepComments ? this.comment : void 0
+        ]);
+      };
+      Object.defineProperty(Service.prototype, "methodsArray", {
+        get: function() {
+          return this._methodsArray || (this._methodsArray = util.toArray(this.methods));
+        }
+      });
+      function clearCache(service) {
+        service._methodsArray = null;
+        return service;
+      }
+      Service.prototype.get = function get(name) {
+        return this.methods[name] || Namespace.prototype.get.call(this, name);
+      };
+      Service.prototype.resolveAll = function resolveAll() {
+        var methods = this.methodsArray;
+        for (var i = 0; i < methods.length; ++i)
+          methods[i].resolve();
+        return Namespace.prototype.resolve.call(this);
+      };
+      Service.prototype.add = function add(object) {
+        if (this.get(object.name))
+          throw Error("duplicate name '" + object.name + "' in " + this);
+        if (object instanceof Method) {
+          this.methods[object.name] = object;
+          object.parent = this;
+          return clearCache(this);
+        }
+        return Namespace.prototype.add.call(this, object);
+      };
+      Service.prototype.remove = function remove(object) {
+        if (object instanceof Method) {
+          if (this.methods[object.name] !== object)
+            throw Error(object + " is not a member of " + this);
+          delete this.methods[object.name];
+          object.parent = null;
+          return clearCache(this);
+        }
+        return Namespace.prototype.remove.call(this, object);
+      };
+      Service.prototype.create = function create(rpcImpl, requestDelimited, responseDelimited) {
+        var rpcService = new rpc.Service(rpcImpl, requestDelimited, responseDelimited);
+        for (var i = 0, method; i < /* initializes */
+        this.methodsArray.length; ++i) {
+          var methodName = util.lcFirst((method = this._methodsArray[i]).resolve().name).replace(/[^\$\\w_]/g, "");
+          rpcService[methodName] = util.codegen(["r", "c"], util.isReserved(methodName) ? methodName + "_" : methodName)("return this.rpcCall(m,q,s,r,c)")({
+            m: method,
+            q: method.resolvedRequestType.ctor,
+            s: method.resolvedResponseType.ctor
+          });
+        }
+        return rpcService;
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/message.js
+  var require_message = __commonJS({
+    "node_modules/protobufjs/src/message.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = Message;
+      var util = require_minimal();
+      function Message(properties) {
+        if (properties)
+          for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+            this[keys[i]] = properties[keys[i]];
+      }
+      Message.create = function create(properties) {
+        return this.\$type.create(properties);
+      };
+      Message.encode = function encode(message, writer) {
+        return this.\$type.encode(message, writer);
+      };
+      Message.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.\$type.encodeDelimited(message, writer);
+      };
+      Message.decode = function decode(reader) {
+        return this.\$type.decode(reader);
+      };
+      Message.decodeDelimited = function decodeDelimited(reader) {
+        return this.\$type.decodeDelimited(reader);
+      };
+      Message.verify = function verify(message) {
+        return this.\$type.verify(message);
+      };
+      Message.fromObject = function fromObject(object) {
+        return this.\$type.fromObject(object);
+      };
+      Message.toObject = function toObject2(message, options) {
+        return this.\$type.toObject(message, options);
+      };
+      Message.prototype.toJSON = function toJSON() {
+        return this.\$type.toObject(this, util.toJSONOptions);
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/decoder.js
+  var require_decoder = __commonJS({
+    "node_modules/protobufjs/src/decoder.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = decoder;
+      var Enum = require_enum();
+      var types = require_types();
+      var util = require_util();
+      function missing(field) {
+        return "missing required '" + field.name + "'";
+      }
+      function decoder(mtype) {
+        var gen = util.codegen(["r", "l"], mtype.name + "\$decode")("if(!(r instanceof Reader))")("r=Reader.create(r)")("var c=l===undefined?r.len:r.pos+l,m=new this.ctor" + (mtype.fieldsArray.filter(function(field2) {
+          return field2.map;
+        }).length ? ",k,value" : ""))("while(r.pos<c){")("var t=r.uint32()");
+        if (mtype.group)
+          gen("if((t&7)===4)")("break");
+        gen("switch(t>>>3){");
+        var i = 0;
+        for (; i < /* initializes */
+        mtype.fieldsArray.length; ++i) {
+          var field = mtype._fieldsArray[i].resolve(), type = field.resolvedType instanceof Enum ? "int32" : field.type, ref = "m" + util.safeProp(field.name);
+          gen("case %i: {", field.id);
+          if (field.map) {
+            gen("if(%s===util.emptyObject)", ref)("%s={}", ref)("var c2 = r.uint32()+r.pos");
+            if (types.defaults[field.keyType] !== void 0)
+              gen("k=%j", types.defaults[field.keyType]);
+            else
+              gen("k=null");
+            if (types.defaults[type] !== void 0)
+              gen("value=%j", types.defaults[type]);
+            else
+              gen("value=null");
+            gen("while(r.pos<c2){")("var tag2=r.uint32()")("switch(tag2>>>3){")("case 1: k=r.%s(); break", field.keyType)("case 2:");
+            if (types.basic[type] === void 0)
+              gen("value=types[%i].decode(r,r.uint32())", i);
+            else
+              gen("value=r.%s()", type);
+            gen("break")("default:")("r.skipType(tag2&7)")("break")("}")("}");
+            if (types.long[field.keyType] !== void 0)
+              gen('%s[typeof k==="object"?util.longToHash(k):k]=value', ref);
+            else
+              gen("%s[k]=value", ref);
+          } else if (field.repeated) {
+            gen("if(!(%s&&%s.length))", ref, ref)("%s=[]", ref);
+            if (types.packed[type] !== void 0)
+              gen("if((t&7)===2){")("var c2=r.uint32()+r.pos")("while(r.pos<c2)")("%s.push(r.%s())", ref, type)("}else");
+            if (types.basic[type] === void 0)
+              gen(field.resolvedType.group ? "%s.push(types[%i].decode(r))" : "%s.push(types[%i].decode(r,r.uint32()))", ref, i);
+            else
+              gen("%s.push(r.%s())", ref, type);
+          } else if (types.basic[type] === void 0)
+            gen(field.resolvedType.group ? "%s=types[%i].decode(r)" : "%s=types[%i].decode(r,r.uint32())", ref, i);
+          else
+            gen("%s=r.%s()", ref, type);
+          gen("break")("}");
+        }
+        gen("default:")("r.skipType(t&7)")("break")("}")("}");
+        for (i = 0; i < mtype._fieldsArray.length; ++i) {
+          var rfield = mtype._fieldsArray[i];
+          if (rfield.required)
+            gen("if(!m.hasOwnProperty(%j))", rfield.name)("throw util.ProtocolError(%j,{instance:m})", missing(rfield));
+        }
+        return gen("return m");
+      }
+    }
+  });
+
+  // node_modules/protobufjs/src/verifier.js
+  var require_verifier = __commonJS({
+    "node_modules/protobufjs/src/verifier.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = verifier;
+      var Enum = require_enum();
+      var util = require_util();
+      function invalid(field, expected) {
+        return field.name + ": " + expected + (field.repeated && expected !== "array" ? "[]" : field.map && expected !== "object" ? "{k:" + field.keyType + "}" : "") + " expected";
+      }
+      function genVerifyValue(gen, field, fieldIndex, ref) {
+        if (field.resolvedType) {
+          if (field.resolvedType instanceof Enum) {
+            gen("switch(%s){", ref)("default:")("return%j", invalid(field, "enum value"));
+            for (var keys = Object.keys(field.resolvedType.values), j = 0; j < keys.length; ++j)
+              gen("case %i:", field.resolvedType.values[keys[j]]);
+            gen("break")("}");
+          } else {
+            gen("{")("var e=types[%i].verify(%s);", fieldIndex, ref)("if(e)")("return%j+e", field.name + ".")("}");
+          }
+        } else {
+          switch (field.type) {
+            case "int32":
+            case "uint32":
+            case "sint32":
+            case "fixed32":
+            case "sfixed32":
+              gen("if(!util.isInteger(%s))", ref)("return%j", invalid(field, "integer"));
+              break;
+            case "int64":
+            case "uint64":
+            case "sint64":
+            case "fixed64":
+            case "sfixed64":
+              gen("if(!util.isInteger(%s)&&!(%s&&util.isInteger(%s.low)&&util.isInteger(%s.high)))", ref, ref, ref, ref)("return%j", invalid(field, "integer|Long"));
+              break;
+            case "float":
+            case "double":
+              gen('if(typeof %s!=="number")', ref)("return%j", invalid(field, "number"));
+              break;
+            case "bool":
+              gen('if(typeof %s!=="boolean")', ref)("return%j", invalid(field, "boolean"));
+              break;
+            case "string":
+              gen("if(!util.isString(%s))", ref)("return%j", invalid(field, "string"));
+              break;
+            case "bytes":
+              gen('if(!(%s&&typeof %s.length==="number"||util.isString(%s)))', ref, ref, ref)("return%j", invalid(field, "buffer"));
+              break;
+          }
+        }
+        return gen;
+      }
+      function genVerifyKey(gen, field, ref) {
+        switch (field.keyType) {
+          case "int32":
+          case "uint32":
+          case "sint32":
+          case "fixed32":
+          case "sfixed32":
+            gen("if(!util.key32Re.test(%s))", ref)("return%j", invalid(field, "integer key"));
+            break;
+          case "int64":
+          case "uint64":
+          case "sint64":
+          case "fixed64":
+          case "sfixed64":
+            gen("if(!util.key64Re.test(%s))", ref)("return%j", invalid(field, "integer|Long key"));
+            break;
+          case "bool":
+            gen("if(!util.key2Re.test(%s))", ref)("return%j", invalid(field, "boolean key"));
+            break;
+        }
+        return gen;
+      }
+      function verifier(mtype) {
+        var gen = util.codegen(["m"], mtype.name + "\$verify")('if(typeof m!=="object"||m===null)')("return%j", "object expected");
+        var oneofs = mtype.oneofsArray, seenFirstField = {};
+        if (oneofs.length)
+          gen("var p={}");
+        for (var i = 0; i < /* initializes */
+        mtype.fieldsArray.length; ++i) {
+          var field = mtype._fieldsArray[i].resolve(), ref = "m" + util.safeProp(field.name);
+          if (field.optional)
+            gen("if(%s!=null&&m.hasOwnProperty(%j)){", ref, field.name);
+          if (field.map) {
+            gen("if(!util.isObject(%s))", ref)("return%j", invalid(field, "object"))("var k=Object.keys(%s)", ref)("for(var i=0;i<k.length;++i){");
+            genVerifyKey(gen, field, "k[i]");
+            genVerifyValue(gen, field, i, ref + "[k[i]]")("}");
+          } else if (field.repeated) {
+            gen("if(!Array.isArray(%s))", ref)("return%j", invalid(field, "array"))("for(var i=0;i<%s.length;++i){", ref);
+            genVerifyValue(gen, field, i, ref + "[i]")("}");
+          } else {
+            if (field.partOf) {
+              var oneofProp = util.safeProp(field.partOf.name);
+              if (seenFirstField[field.partOf.name] === 1)
+                gen("if(p%s===1)", oneofProp)("return%j", field.partOf.name + ": multiple values");
+              seenFirstField[field.partOf.name] = 1;
+              gen("p%s=1", oneofProp);
+            }
+            genVerifyValue(gen, field, i, ref);
+          }
+          if (field.optional)
+            gen("}");
+        }
+        return gen("return null");
+      }
+    }
+  });
+
+  // node_modules/protobufjs/src/converter.js
+  var require_converter = __commonJS({
+    "node_modules/protobufjs/src/converter.js"(exports2) {
+      "use strict";
+      init_tampermonkey();
+      var converter = exports2;
+      var Enum = require_enum();
+      var util = require_util();
+      function genValuePartial_fromObject(gen, field, fieldIndex, prop) {
+        var defaultAlreadyEmitted = false;
+        if (field.resolvedType) {
+          if (field.resolvedType instanceof Enum) {
+            gen("switch(d%s){", prop);
+            for (var values = field.resolvedType.values, keys = Object.keys(values), i = 0; i < keys.length; ++i) {
+              if (values[keys[i]] === field.typeDefault && !defaultAlreadyEmitted) {
+                gen("default:")('if(typeof(d%s)==="number"){m%s=d%s;break}', prop, prop, prop);
+                if (!field.repeated)
+                  gen("break");
+                defaultAlreadyEmitted = true;
+              }
+              gen("case%j:", keys[i])("case %i:", values[keys[i]])("m%s=%j", prop, values[keys[i]])("break");
+            }
+            gen("}");
+          } else
+            gen('if(typeof d%s!=="object")', prop)("throw TypeError(%j)", field.fullName + ": object expected")("m%s=types[%i].fromObject(d%s)", prop, fieldIndex, prop);
+        } else {
+          var isUnsigned = false;
+          switch (field.type) {
+            case "double":
+            case "float":
+              gen("m%s=Number(d%s)", prop, prop);
+              break;
+            case "uint32":
+            case "fixed32":
+              gen("m%s=d%s>>>0", prop, prop);
+              break;
+            case "int32":
+            case "sint32":
+            case "sfixed32":
+              gen("m%s=d%s|0", prop, prop);
+              break;
+            case "uint64":
+              isUnsigned = true;
+            case "int64":
+            case "sint64":
+            case "fixed64":
+            case "sfixed64":
+              gen("if(util.Long)")("(m%s=util.Long.fromValue(d%s)).unsigned=%j", prop, prop, isUnsigned)('else if(typeof d%s==="string")', prop)("m%s=parseInt(d%s,10)", prop, prop)('else if(typeof d%s==="number")', prop)("m%s=d%s", prop, prop)('else if(typeof d%s==="object")', prop)("m%s=new util.LongBits(d%s.low>>>0,d%s.high>>>0).toNumber(%s)", prop, prop, prop, isUnsigned ? "true" : "");
+              break;
+            case "bytes":
+              gen('if(typeof d%s==="string")', prop)("util.base64.decode(d%s,m%s=util.newBuffer(util.base64.length(d%s)),0)", prop, prop, prop)("else if(d%s.length >= 0)", prop)("m%s=d%s", prop, prop);
+              break;
+            case "string":
+              gen("m%s=String(d%s)", prop, prop);
+              break;
+            case "bool":
+              gen("m%s=Boolean(d%s)", prop, prop);
+              break;
+          }
+        }
+        return gen;
+      }
+      converter.fromObject = function fromObject(mtype) {
+        var fields = mtype.fieldsArray;
+        var gen = util.codegen(["d"], mtype.name + "\$fromObject")("if(d instanceof this.ctor)")("return d");
+        if (!fields.length)
+          return gen("return new this.ctor");
+        gen("var m=new this.ctor");
+        for (var i = 0; i < fields.length; ++i) {
+          var field = fields[i].resolve(), prop = util.safeProp(field.name);
+          if (field.map) {
+            gen("if(d%s){", prop)('if(typeof d%s!=="object")', prop)("throw TypeError(%j)", field.fullName + ": object expected")("m%s={}", prop)("for(var ks=Object.keys(d%s),i=0;i<ks.length;++i){", prop);
+            genValuePartial_fromObject(
+              gen,
+              field,
+              /* not sorted */
+              i,
+              prop + "[ks[i]]"
+            )("}")("}");
+          } else if (field.repeated) {
+            gen("if(d%s){", prop)("if(!Array.isArray(d%s))", prop)("throw TypeError(%j)", field.fullName + ": array expected")("m%s=[]", prop)("for(var i=0;i<d%s.length;++i){", prop);
+            genValuePartial_fromObject(
+              gen,
+              field,
+              /* not sorted */
+              i,
+              prop + "[i]"
+            )("}")("}");
+          } else {
+            if (!(field.resolvedType instanceof Enum))
+              gen("if(d%s!=null){", prop);
+            genValuePartial_fromObject(
+              gen,
+              field,
+              /* not sorted */
+              i,
+              prop
+            );
+            if (!(field.resolvedType instanceof Enum))
+              gen("}");
+          }
+        }
+        return gen("return m");
+      };
+      function genValuePartial_toObject(gen, field, fieldIndex, prop) {
+        if (field.resolvedType) {
+          if (field.resolvedType instanceof Enum)
+            gen("d%s=o.enums===String?(types[%i].values[m%s]===undefined?m%s:types[%i].values[m%s]):m%s", prop, fieldIndex, prop, prop, fieldIndex, prop, prop);
+          else
+            gen("d%s=types[%i].toObject(m%s,o)", prop, fieldIndex, prop);
+        } else {
+          var isUnsigned = false;
+          switch (field.type) {
+            case "double":
+            case "float":
+              gen("d%s=o.json&&!isFinite(m%s)?String(m%s):m%s", prop, prop, prop, prop);
+              break;
+            case "uint64":
+              isUnsigned = true;
+            case "int64":
+            case "sint64":
+            case "fixed64":
+            case "sfixed64":
+              gen('if(typeof m%s==="number")', prop)("d%s=o.longs===String?String(m%s):m%s", prop, prop, prop)("else")("d%s=o.longs===String?util.Long.prototype.toString.call(m%s):o.longs===Number?new util.LongBits(m%s.low>>>0,m%s.high>>>0).toNumber(%s):m%s", prop, prop, prop, prop, isUnsigned ? "true" : "", prop);
+              break;
+            case "bytes":
+              gen("d%s=o.bytes===String?util.base64.encode(m%s,0,m%s.length):o.bytes===Array?Array.prototype.slice.call(m%s):m%s", prop, prop, prop, prop, prop);
+              break;
+            default:
+              gen("d%s=m%s", prop, prop);
+              break;
+          }
+        }
+        return gen;
+      }
+      converter.toObject = function toObject2(mtype) {
+        var fields = mtype.fieldsArray.slice().sort(util.compareFieldsById);
+        if (!fields.length)
+          return util.codegen()("return {}");
+        var gen = util.codegen(["m", "o"], mtype.name + "\$toObject")("if(!o)")("o={}")("var d={}");
+        var repeatedFields = [], mapFields = [], normalFields = [], i = 0;
+        for (; i < fields.length; ++i)
+          if (!fields[i].partOf)
+            (fields[i].resolve().repeated ? repeatedFields : fields[i].map ? mapFields : normalFields).push(fields[i]);
+        if (repeatedFields.length) {
+          gen("if(o.arrays||o.defaults){");
+          for (i = 0; i < repeatedFields.length; ++i)
+            gen("d%s=[]", util.safeProp(repeatedFields[i].name));
+          gen("}");
+        }
+        if (mapFields.length) {
+          gen("if(o.objects||o.defaults){");
+          for (i = 0; i < mapFields.length; ++i)
+            gen("d%s={}", util.safeProp(mapFields[i].name));
+          gen("}");
+        }
+        if (normalFields.length) {
+          gen("if(o.defaults){");
+          for (i = 0; i < normalFields.length; ++i) {
+            var field = normalFields[i], prop = util.safeProp(field.name);
+            if (field.resolvedType instanceof Enum)
+              gen("d%s=o.enums===String?%j:%j", prop, field.resolvedType.valuesById[field.typeDefault], field.typeDefault);
+            else if (field.long)
+              gen("if(util.Long){")("var n=new util.Long(%i,%i,%j)", field.typeDefault.low, field.typeDefault.high, field.typeDefault.unsigned)("d%s=o.longs===String?n.toString():o.longs===Number?n.toNumber():n", prop)("}else")("d%s=o.longs===String?%j:%i", prop, field.typeDefault.toString(), field.typeDefault.toNumber());
+            else if (field.bytes) {
+              var arrayDefault = "[" + Array.prototype.slice.call(field.typeDefault).join(",") + "]";
+              gen("if(o.bytes===String)d%s=%j", prop, String.fromCharCode.apply(String, field.typeDefault))("else{")("d%s=%s", prop, arrayDefault)("if(o.bytes!==Array)d%s=util.newBuffer(d%s)", prop, prop)("}");
+            } else
+              gen("d%s=%j", prop, field.typeDefault);
+          }
+          gen("}");
+        }
+        var hasKs2 = false;
+        for (i = 0; i < fields.length; ++i) {
+          var field = fields[i], index = mtype._fieldsArray.indexOf(field), prop = util.safeProp(field.name);
+          if (field.map) {
+            if (!hasKs2) {
+              hasKs2 = true;
+              gen("var ks2");
+            }
+            gen("if(m%s&&(ks2=Object.keys(m%s)).length){", prop, prop)("d%s={}", prop)("for(var j=0;j<ks2.length;++j){");
+            genValuePartial_toObject(
+              gen,
+              field,
+              /* sorted */
+              index,
+              prop + "[ks2[j]]"
+            )("}");
+          } else if (field.repeated) {
+            gen("if(m%s&&m%s.length){", prop, prop)("d%s=[]", prop)("for(var j=0;j<m%s.length;++j){", prop);
+            genValuePartial_toObject(
+              gen,
+              field,
+              /* sorted */
+              index,
+              prop + "[j]"
+            )("}");
+          } else {
+            gen("if(m%s!=null&&m.hasOwnProperty(%j)){", prop, field.name);
+            genValuePartial_toObject(
+              gen,
+              field,
+              /* sorted */
+              index,
+              prop
+            );
+            if (field.partOf)
+              gen("if(o.oneofs)")("d%s=%j", util.safeProp(field.partOf.name), field.name);
+          }
+          gen("}");
+        }
+        return gen("return d");
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/wrappers.js
+  var require_wrappers = __commonJS({
+    "node_modules/protobufjs/src/wrappers.js"(exports2) {
+      "use strict";
+      init_tampermonkey();
+      var wrappers = exports2;
+      var Message = require_message();
+      wrappers[".google.protobuf.Any"] = {
+        fromObject: function(object) {
+          if (object && object["@type"]) {
+            var name = object["@type"].substring(object["@type"].lastIndexOf("/") + 1);
+            var type = this.lookup(name);
+            if (type) {
+              var type_url = object["@type"].charAt(0) === "." ? object["@type"].slice(1) : object["@type"];
+              if (type_url.indexOf("/") === -1) {
+                type_url = "/" + type_url;
+              }
+              return this.create({
+                type_url,
+                value: type.encode(type.fromObject(object)).finish()
+              });
+            }
+          }
+          return this.fromObject(object);
+        },
+        toObject: function(message, options) {
+          var googleApi = "type.googleapis.com/";
+          var prefix = "";
+          var name = "";
+          if (options && options.json && message.type_url && message.value) {
+            name = message.type_url.substring(message.type_url.lastIndexOf("/") + 1);
+            prefix = message.type_url.substring(0, message.type_url.lastIndexOf("/") + 1);
+            var type = this.lookup(name);
+            if (type)
+              message = type.decode(message.value);
+          }
+          if (!(message instanceof this.ctor) && message instanceof Message) {
+            var object = message.\$type.toObject(message, options);
+            var messageName = message.\$type.fullName[0] === "." ? message.\$type.fullName.slice(1) : message.\$type.fullName;
+            if (prefix === "") {
+              prefix = googleApi;
+            }
+            name = prefix + messageName;
+            object["@type"] = name;
+            return object;
+          }
+          return this.toObject(message, options);
+        }
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/type.js
+  var require_type = __commonJS({
+    "node_modules/protobufjs/src/type.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = Type2;
+      var Namespace = require_namespace();
+      ((Type2.prototype = Object.create(Namespace.prototype)).constructor = Type2).className = "Type";
+      var Enum = require_enum();
+      var OneOf = require_oneof();
+      var Field = require_field();
+      var MapField = require_mapfield();
+      var Service = require_service2();
+      var Message = require_message();
+      var Reader = require_reader();
+      var Writer = require_writer();
+      var util = require_util();
+      var encoder = require_encoder();
+      var decoder = require_decoder();
+      var verifier = require_verifier();
+      var converter = require_converter();
+      var wrappers = require_wrappers();
+      function Type2(name, options) {
+        Namespace.call(this, name, options);
+        this.fields = {};
+        this.oneofs = void 0;
+        this.extensions = void 0;
+        this.reserved = void 0;
+        this.group = void 0;
+        this._fieldsById = null;
+        this._fieldsArray = null;
+        this._oneofsArray = null;
+        this._ctor = null;
+      }
+      Object.defineProperties(Type2.prototype, {
+        /**
+         * Message fields by id.
+         * @name Type#fieldsById
+         * @type {Object.<number,Field>}
+         * @readonly
+         */
+        fieldsById: {
+          get: function() {
+            if (this._fieldsById)
+              return this._fieldsById;
+            this._fieldsById = {};
+            for (var names = Object.keys(this.fields), i = 0; i < names.length; ++i) {
+              var field = this.fields[names[i]], id = field.id;
+              if (this._fieldsById[id])
+                throw Error("duplicate id " + id + " in " + this);
+              this._fieldsById[id] = field;
+            }
+            return this._fieldsById;
+          }
+        },
+        /**
+         * Fields of this message as an array for iteration.
+         * @name Type#fieldsArray
+         * @type {Field[]}
+         * @readonly
+         */
+        fieldsArray: {
+          get: function() {
+            return this._fieldsArray || (this._fieldsArray = util.toArray(this.fields));
+          }
+        },
+        /**
+         * Oneofs of this message as an array for iteration.
+         * @name Type#oneofsArray
+         * @type {OneOf[]}
+         * @readonly
+         */
+        oneofsArray: {
+          get: function() {
+            return this._oneofsArray || (this._oneofsArray = util.toArray(this.oneofs));
+          }
+        },
+        /**
+         * The registered constructor, if any registered, otherwise a generic constructor.
+         * Assigning a function replaces the internal constructor. If the function does not extend {@link Message} yet, its prototype will be setup accordingly and static methods will be populated. If it already extends {@link Message}, it will just replace the internal constructor.
+         * @name Type#ctor
+         * @type {Constructor<{}>}
+         */
+        ctor: {
+          get: function() {
+            return this._ctor || (this.ctor = Type2.generateConstructor(this)());
+          },
+          set: function(ctor) {
+            var prototype = ctor.prototype;
+            if (!(prototype instanceof Message)) {
+              (ctor.prototype = new Message()).constructor = ctor;
+              util.merge(ctor.prototype, prototype);
+            }
+            ctor.\$type = ctor.prototype.\$type = this;
+            util.merge(ctor, Message, true);
+            this._ctor = ctor;
+            var i = 0;
+            for (; i < /* initializes */
+            this.fieldsArray.length; ++i)
+              this._fieldsArray[i].resolve();
+            var ctorProperties = {};
+            for (i = 0; i < /* initializes */
+            this.oneofsArray.length; ++i)
+              ctorProperties[this._oneofsArray[i].resolve().name] = {
+                get: util.oneOfGetter(this._oneofsArray[i].oneof),
+                set: util.oneOfSetter(this._oneofsArray[i].oneof)
+              };
+            if (i)
+              Object.defineProperties(ctor.prototype, ctorProperties);
+          }
+        }
+      });
+      Type2.generateConstructor = function generateConstructor(mtype) {
+        var gen = util.codegen(["p"], mtype.name);
+        for (var i = 0, field; i < mtype.fieldsArray.length; ++i)
+          if ((field = mtype._fieldsArray[i]).map)
+            gen("this%s={}", util.safeProp(field.name));
+          else if (field.repeated)
+            gen("this%s=[]", util.safeProp(field.name));
+        return gen("if(p)for(var ks=Object.keys(p),i=0;i<ks.length;++i)if(p[ks[i]]!=null)")("this[ks[i]]=p[ks[i]]");
+      };
+      function clearCache(type) {
+        type._fieldsById = type._fieldsArray = type._oneofsArray = null;
+        delete type.encode;
+        delete type.decode;
+        delete type.verify;
+        return type;
+      }
+      Type2.fromJSON = function fromJSON(name, json) {
+        var type = new Type2(name, json.options);
+        type.extensions = json.extensions;
+        type.reserved = json.reserved;
+        var names = Object.keys(json.fields), i = 0;
+        for (; i < names.length; ++i)
+          type.add(
+            (typeof json.fields[names[i]].keyType !== "undefined" ? MapField.fromJSON : Field.fromJSON)(names[i], json.fields[names[i]])
+          );
+        if (json.oneofs)
+          for (names = Object.keys(json.oneofs), i = 0; i < names.length; ++i)
+            type.add(OneOf.fromJSON(names[i], json.oneofs[names[i]]));
+        if (json.nested)
+          for (names = Object.keys(json.nested), i = 0; i < names.length; ++i) {
+            var nested = json.nested[names[i]];
+            type.add(
+              // most to least likely
+              (nested.id !== void 0 ? Field.fromJSON : nested.fields !== void 0 ? Type2.fromJSON : nested.values !== void 0 ? Enum.fromJSON : nested.methods !== void 0 ? Service.fromJSON : Namespace.fromJSON)(names[i], nested)
+            );
+          }
+        if (json.extensions && json.extensions.length)
+          type.extensions = json.extensions;
+        if (json.reserved && json.reserved.length)
+          type.reserved = json.reserved;
+        if (json.group)
+          type.group = true;
+        if (json.comment)
+          type.comment = json.comment;
+        return type;
+      };
+      Type2.prototype.toJSON = function toJSON(toJSONOptions) {
+        var inherited = Namespace.prototype.toJSON.call(this, toJSONOptions);
+        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
+        return util.toObject([
+          "options",
+          inherited && inherited.options || void 0,
+          "oneofs",
+          Namespace.arrayToJSON(this.oneofsArray, toJSONOptions),
+          "fields",
+          Namespace.arrayToJSON(this.fieldsArray.filter(function(obj) {
+            return !obj.declaringField;
+          }), toJSONOptions) || {},
+          "extensions",
+          this.extensions && this.extensions.length ? this.extensions : void 0,
+          "reserved",
+          this.reserved && this.reserved.length ? this.reserved : void 0,
+          "group",
+          this.group || void 0,
+          "nested",
+          inherited && inherited.nested || void 0,
+          "comment",
+          keepComments ? this.comment : void 0
+        ]);
+      };
+      Type2.prototype.resolveAll = function resolveAll() {
+        var fields = this.fieldsArray, i = 0;
+        while (i < fields.length)
+          fields[i++].resolve();
+        var oneofs = this.oneofsArray;
+        i = 0;
+        while (i < oneofs.length)
+          oneofs[i++].resolve();
+        return Namespace.prototype.resolveAll.call(this);
+      };
+      Type2.prototype.get = function get(name) {
+        return this.fields[name] || this.oneofs && this.oneofs[name] || this.nested && this.nested[name] || null;
+      };
+      Type2.prototype.add = function add(object) {
+        if (this.get(object.name))
+          throw Error("duplicate name '" + object.name + "' in " + this);
+        if (object instanceof Field && object.extend === void 0) {
+          if (this._fieldsById ? (
+            /* istanbul ignore next */
+            this._fieldsById[object.id]
+          ) : this.fieldsById[object.id])
+            throw Error("duplicate id " + object.id + " in " + this);
+          if (this.isReservedId(object.id))
+            throw Error("id " + object.id + " is reserved in " + this);
+          if (this.isReservedName(object.name))
+            throw Error("name '" + object.name + "' is reserved in " + this);
+          if (object.parent)
+            object.parent.remove(object);
+          this.fields[object.name] = object;
+          object.message = this;
+          object.onAdd(this);
+          return clearCache(this);
+        }
+        if (object instanceof OneOf) {
+          if (!this.oneofs)
+            this.oneofs = {};
+          this.oneofs[object.name] = object;
+          object.onAdd(this);
+          return clearCache(this);
+        }
+        return Namespace.prototype.add.call(this, object);
+      };
+      Type2.prototype.remove = function remove(object) {
+        if (object instanceof Field && object.extend === void 0) {
+          if (!this.fields || this.fields[object.name] !== object)
+            throw Error(object + " is not a member of " + this);
+          delete this.fields[object.name];
+          object.parent = null;
+          object.onRemove(this);
+          return clearCache(this);
+        }
+        if (object instanceof OneOf) {
+          if (!this.oneofs || this.oneofs[object.name] !== object)
+            throw Error(object + " is not a member of " + this);
+          delete this.oneofs[object.name];
+          object.parent = null;
+          object.onRemove(this);
+          return clearCache(this);
+        }
+        return Namespace.prototype.remove.call(this, object);
+      };
+      Type2.prototype.isReservedId = function isReservedId(id) {
+        return Namespace.isReservedId(this.reserved, id);
+      };
+      Type2.prototype.isReservedName = function isReservedName(name) {
+        return Namespace.isReservedName(this.reserved, name);
+      };
+      Type2.prototype.create = function create(properties) {
+        return new this.ctor(properties);
+      };
+      Type2.prototype.setup = function setup() {
+        var fullName = this.fullName, types = [];
+        for (var i = 0; i < /* initializes */
+        this.fieldsArray.length; ++i)
+          types.push(this._fieldsArray[i].resolve().resolvedType);
+        this.encode = encoder(this)({
+          Writer,
+          types,
+          util
+        });
+        this.decode = decoder(this)({
+          Reader,
+          types,
+          util
+        });
+        this.verify = verifier(this)({
+          types,
+          util
+        });
+        this.fromObject = converter.fromObject(this)({
+          types,
+          util
+        });
+        this.toObject = converter.toObject(this)({
+          types,
+          util
+        });
+        var wrapper = wrappers[fullName];
+        if (wrapper) {
+          var originalThis = Object.create(this);
+          originalThis.fromObject = this.fromObject;
+          this.fromObject = wrapper.fromObject.bind(originalThis);
+          originalThis.toObject = this.toObject;
+          this.toObject = wrapper.toObject.bind(originalThis);
+        }
+        return this;
+      };
+      Type2.prototype.encode = function encode_setup(message, writer) {
+        return this.setup().encode(message, writer);
+      };
+      Type2.prototype.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer && writer.len ? writer.fork() : writer).ldelim();
+      };
+      Type2.prototype.decode = function decode_setup(reader, length2) {
+        return this.setup().decode(reader, length2);
+      };
+      Type2.prototype.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof Reader))
+          reader = Reader.create(reader);
+        return this.decode(reader, reader.uint32());
+      };
+      Type2.prototype.verify = function verify_setup(message) {
+        return this.setup().verify(message);
+      };
+      Type2.prototype.fromObject = function fromObject(object) {
+        return this.setup().fromObject(object);
+      };
+      Type2.prototype.toObject = function toObject2(message, options) {
+        return this.setup().toObject(message, options);
+      };
+      Type2.d = function decorateType(typeName) {
+        return function typeDecorator(target) {
+          util.decorateType(target, typeName);
+        };
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/root.js
+  var require_root = __commonJS({
+    "node_modules/protobufjs/src/root.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = Root2;
+      var Namespace = require_namespace();
+      ((Root2.prototype = Object.create(Namespace.prototype)).constructor = Root2).className = "Root";
+      var Field = require_field();
+      var Enum = require_enum();
+      var OneOf = require_oneof();
+      var util = require_util();
+      var Type2;
+      var parse;
+      var common;
+      function Root2(options) {
+        Namespace.call(this, "", options);
+        this.deferred = [];
+        this.files = [];
+      }
+      Root2.fromJSON = function fromJSON(json, root) {
+        if (!root)
+          root = new Root2();
+        if (json.options)
+          root.setOptions(json.options);
+        return root.addJSON(json.nested);
+      };
+      Root2.prototype.resolvePath = util.path.resolve;
+      Root2.prototype.fetch = util.fetch;
+      function SYNC() {
+      }
+      Root2.prototype.load = function load2(filename, options, callback) {
+        if (typeof options === "function") {
+          callback = options;
+          options = void 0;
+        }
+        var self2 = this;
+        if (!callback)
+          return util.asPromise(load2, self2, filename, options);
+        var sync = callback === SYNC;
+        function finish(err, root) {
+          if (!callback)
+            return;
+          var cb = callback;
+          callback = null;
+          if (sync)
+            throw err;
+          cb(err, root);
+        }
+        function getBundledFileName(filename2) {
+          var idx = filename2.lastIndexOf("google/protobuf/");
+          if (idx > -1) {
+            var altname = filename2.substring(idx);
+            if (altname in common)
+              return altname;
+          }
+          return null;
+        }
+        function process(filename2, source) {
+          try {
+            if (util.isString(source) && source.charAt(0) === "{")
+              source = JSON.parse(source);
+            if (!util.isString(source))
+              self2.setOptions(source.options).addJSON(source.nested);
+            else {
+              parse.filename = filename2;
+              var parsed = parse(source, self2, options), resolved2, i2 = 0;
+              if (parsed.imports) {
+                for (; i2 < parsed.imports.length; ++i2)
+                  if (resolved2 = getBundledFileName(parsed.imports[i2]) || self2.resolvePath(filename2, parsed.imports[i2]))
+                    fetch2(resolved2);
+              }
+              if (parsed.weakImports) {
+                for (i2 = 0; i2 < parsed.weakImports.length; ++i2)
+                  if (resolved2 = getBundledFileName(parsed.weakImports[i2]) || self2.resolvePath(filename2, parsed.weakImports[i2]))
+                    fetch2(resolved2, true);
+              }
+            }
+          } catch (err) {
+            finish(err);
+          }
+          if (!sync && !queued)
+            finish(null, self2);
+        }
+        function fetch2(filename2, weak) {
+          filename2 = getBundledFileName(filename2) || filename2;
+          if (self2.files.indexOf(filename2) > -1)
+            return;
+          self2.files.push(filename2);
+          if (filename2 in common) {
+            if (sync)
+              process(filename2, common[filename2]);
+            else {
+              ++queued;
+              setTimeout(function() {
+                --queued;
+                process(filename2, common[filename2]);
+              });
+            }
+            return;
+          }
+          if (sync) {
+            var source;
+            try {
+              source = util.fs.readFileSync(filename2).toString("utf8");
+            } catch (err) {
+              if (!weak)
+                finish(err);
+              return;
+            }
+            process(filename2, source);
+          } else {
+            ++queued;
+            self2.fetch(filename2, function(err, source2) {
+              --queued;
+              if (!callback)
+                return;
+              if (err) {
+                if (!weak)
+                  finish(err);
+                else if (!queued)
+                  finish(null, self2);
+                return;
+              }
+              process(filename2, source2);
+            });
+          }
+        }
+        var queued = 0;
+        if (util.isString(filename))
+          filename = [filename];
+        for (var i = 0, resolved; i < filename.length; ++i)
+          if (resolved = self2.resolvePath("", filename[i]))
+            fetch2(resolved);
+        if (sync)
+          return self2;
+        if (!queued)
+          finish(null, self2);
+        return void 0;
+      };
+      Root2.prototype.loadSync = function loadSync(filename, options) {
+        if (!util.isNode)
+          throw Error("not supported");
+        return this.load(filename, options, SYNC);
+      };
+      Root2.prototype.resolveAll = function resolveAll() {
+        if (this.deferred.length)
+          throw Error("unresolvable extensions: " + this.deferred.map(function(field) {
+            return "'extend " + field.extend + "' in " + field.parent.fullName;
+          }).join(", "));
+        return Namespace.prototype.resolveAll.call(this);
+      };
+      var exposeRe = /^[A-Z]/;
+      function tryHandleExtension(root, field) {
+        var extendedType = field.parent.lookup(field.extend);
+        if (extendedType) {
+          var sisterField = new Field(field.fullName, field.id, field.type, field.rule, void 0, field.options);
+          if (extendedType.get(sisterField.name)) {
+            return true;
+          }
+          sisterField.declaringField = field;
+          field.extensionField = sisterField;
+          extendedType.add(sisterField);
+          return true;
+        }
+        return false;
+      }
+      Root2.prototype._handleAdd = function _handleAdd(object) {
+        if (object instanceof Field) {
+          if (
+            /* an extension field (implies not part of a oneof) */
+            object.extend !== void 0 && /* not already handled */
+            !object.extensionField
+          ) {
+            if (!tryHandleExtension(this, object))
+              this.deferred.push(object);
+          }
+        } else if (object instanceof Enum) {
+          if (exposeRe.test(object.name))
+            object.parent[object.name] = object.values;
+        } else if (!(object instanceof OneOf)) {
+          if (object instanceof Type2)
+            for (var i = 0; i < this.deferred.length; )
+              if (tryHandleExtension(this, this.deferred[i]))
+                this.deferred.splice(i, 1);
+              else
+                ++i;
+          for (var j = 0; j < /* initializes */
+          object.nestedArray.length; ++j)
+            this._handleAdd(object._nestedArray[j]);
+          if (exposeRe.test(object.name))
+            object.parent[object.name] = object;
+        }
+      };
+      Root2.prototype._handleRemove = function _handleRemove(object) {
+        if (object instanceof Field) {
+          if (
+            /* an extension field */
+            object.extend !== void 0
+          ) {
+            if (
+              /* already handled */
+              object.extensionField
+            ) {
+              object.extensionField.parent.remove(object.extensionField);
+              object.extensionField = null;
+            } else {
+              var index = this.deferred.indexOf(object);
+              if (index > -1)
+                this.deferred.splice(index, 1);
+            }
+          }
+        } else if (object instanceof Enum) {
+          if (exposeRe.test(object.name))
+            delete object.parent[object.name];
+        } else if (object instanceof Namespace) {
+          for (var i = 0; i < /* initializes */
+          object.nestedArray.length; ++i)
+            this._handleRemove(object._nestedArray[i]);
+          if (exposeRe.test(object.name))
+            delete object.parent[object.name];
+        }
+      };
+      Root2._configure = function(Type_, parse_, common_) {
+        Type2 = Type_;
+        parse = parse_;
+        common = common_;
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/util.js
+  var require_util = __commonJS({
+    "node_modules/protobufjs/src/util.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      var util = module2.exports = require_minimal();
+      var roots = require_roots();
+      var Type2;
+      var Enum;
+      util.codegen = require_codegen();
+      util.fetch = require_fetch();
+      util.path = require_path();
+      util.fs = util.inquire("fs");
+      util.toArray = function toArray(object) {
+        if (object) {
+          var keys = Object.keys(object), array = new Array(keys.length), index = 0;
+          while (index < keys.length)
+            array[index] = object[keys[index++]];
+          return array;
+        }
+        return [];
+      };
+      util.toObject = function toObject2(array) {
+        var object = {}, index = 0;
+        while (index < array.length) {
+          var key = array[index++], val = array[index++];
+          if (val !== void 0)
+            object[key] = val;
+        }
+        return object;
+      };
+      var safePropBackslashRe = /\\\\/g;
+      var safePropQuoteRe = /"/g;
+      util.isReserved = function isReserved(name) {
+        return /^(?:do|if|in|for|let|new|try|var|case|else|enum|eval|false|null|this|true|void|with|break|catch|class|const|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)\$/.test(name);
+      };
+      util.safeProp = function safeProp(prop) {
+        if (!/^[\$\\w_]+\$/.test(prop) || util.isReserved(prop))
+          return '["' + prop.replace(safePropBackslashRe, "\\\\\\\\").replace(safePropQuoteRe, '\\\\"') + '"]';
+        return "." + prop;
+      };
+      util.ucFirst = function ucFirst(str) {
+        return str.charAt(0).toUpperCase() + str.substring(1);
+      };
+      var camelCaseRe = /_([a-z])/g;
+      util.camelCase = function camelCase(str) {
+        return str.substring(0, 1) + str.substring(1).replace(camelCaseRe, function(\$0, \$1) {
+          return \$1.toUpperCase();
+        });
+      };
+      util.compareFieldsById = function compareFieldsById(a, b) {
+        return a.id - b.id;
+      };
+      util.decorateType = function decorateType(ctor, typeName) {
+        if (ctor.\$type) {
+          if (typeName && ctor.\$type.name !== typeName) {
+            util.decorateRoot.remove(ctor.\$type);
+            ctor.\$type.name = typeName;
+            util.decorateRoot.add(ctor.\$type);
+          }
+          return ctor.\$type;
+        }
+        if (!Type2)
+          Type2 = require_type();
+        var type = new Type2(typeName || ctor.name);
+        util.decorateRoot.add(type);
+        type.ctor = ctor;
+        Object.defineProperty(ctor, "\$type", { value: type, enumerable: false });
+        Object.defineProperty(ctor.prototype, "\$type", { value: type, enumerable: false });
+        return type;
+      };
+      var decorateEnumIndex = 0;
+      util.decorateEnum = function decorateEnum(object) {
+        if (object.\$type)
+          return object.\$type;
+        if (!Enum)
+          Enum = require_enum();
+        var enm = new Enum("Enum" + decorateEnumIndex++, object);
+        util.decorateRoot.add(enm);
+        Object.defineProperty(object, "\$type", { value: enm, enumerable: false });
+        return enm;
+      };
+      util.setProperty = function setProperty(dst, path, value) {
+        function setProp(dst2, path2, value2) {
+          var part = path2.shift();
+          if (part === "__proto__") {
+            return dst2;
+          }
+          if (path2.length > 0) {
+            dst2[part] = setProp(dst2[part] || {}, path2, value2);
+          } else {
+            var prevValue = dst2[part];
+            if (prevValue)
+              value2 = [].concat(prevValue).concat(value2);
+            dst2[part] = value2;
+          }
+          return dst2;
+        }
+        if (typeof dst !== "object")
+          throw TypeError("dst must be an object");
+        if (!path)
+          throw TypeError("path must be specified");
+        path = path.split(".");
+        return setProp(dst, path, value);
+      };
+      Object.defineProperty(util, "decorateRoot", {
+        get: function() {
+          return roots["decorated"] || (roots["decorated"] = new (require_root())());
+        }
+      });
+    }
+  });
+
+  // node_modules/protobufjs/src/object.js
+  var require_object = __commonJS({
+    "node_modules/protobufjs/src/object.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = ReflectionObject;
+      ReflectionObject.className = "ReflectionObject";
+      var util = require_util();
+      var Root2;
+      function ReflectionObject(name, options) {
+        if (!util.isString(name))
+          throw TypeError("name must be a string");
+        if (options && !util.isObject(options))
+          throw TypeError("options must be an object");
+        this.options = options;
+        this.parsedOptions = null;
+        this.name = name;
+        this.parent = null;
+        this.resolved = false;
+        this.comment = null;
+        this.filename = null;
+      }
+      Object.defineProperties(ReflectionObject.prototype, {
+        /**
+         * Reference to the root namespace.
+         * @name ReflectionObject#root
+         * @type {Root}
+         * @readonly
+         */
+        root: {
+          get: function() {
+            var ptr = this;
+            while (ptr.parent !== null)
+              ptr = ptr.parent;
+            return ptr;
+          }
+        },
+        /**
+         * Full name including leading dot.
+         * @name ReflectionObject#fullName
+         * @type {string}
+         * @readonly
+         */
+        fullName: {
+          get: function() {
+            var path = [this.name], ptr = this.parent;
+            while (ptr) {
+              path.unshift(ptr.name);
+              ptr = ptr.parent;
+            }
+            return path.join(".");
+          }
+        }
+      });
+      ReflectionObject.prototype.toJSON = /* istanbul ignore next */
+      function toJSON() {
+        throw Error();
+      };
+      ReflectionObject.prototype.onAdd = function onAdd(parent) {
+        if (this.parent && this.parent !== parent)
+          this.parent.remove(this);
+        this.parent = parent;
+        this.resolved = false;
+        var root = parent.root;
+        if (root instanceof Root2)
+          root._handleAdd(this);
+      };
+      ReflectionObject.prototype.onRemove = function onRemove(parent) {
+        var root = parent.root;
+        if (root instanceof Root2)
+          root._handleRemove(this);
+        this.parent = null;
+        this.resolved = false;
+      };
+      ReflectionObject.prototype.resolve = function resolve() {
+        if (this.resolved)
+          return this;
+        if (this.root instanceof Root2)
+          this.resolved = true;
+        return this;
+      };
+      ReflectionObject.prototype.getOption = function getOption(name) {
+        if (this.options)
+          return this.options[name];
+        return void 0;
+      };
+      ReflectionObject.prototype.setOption = function setOption(name, value, ifNotSet) {
+        if (!ifNotSet || !this.options || this.options[name] === void 0)
+          (this.options || (this.options = {}))[name] = value;
+        return this;
+      };
+      ReflectionObject.prototype.setParsedOption = function setParsedOption(name, value, propName) {
+        if (!this.parsedOptions) {
+          this.parsedOptions = [];
+        }
+        var parsedOptions = this.parsedOptions;
+        if (propName) {
+          var opt = parsedOptions.find(function(opt2) {
+            return Object.prototype.hasOwnProperty.call(opt2, name);
+          });
+          if (opt) {
+            var newValue = opt[name];
+            util.setProperty(newValue, propName, value);
+          } else {
+            opt = {};
+            opt[name] = util.setProperty({}, propName, value);
+            parsedOptions.push(opt);
+          }
+        } else {
+          var newOpt = {};
+          newOpt[name] = value;
+          parsedOptions.push(newOpt);
+        }
+        return this;
+      };
+      ReflectionObject.prototype.setOptions = function setOptions(options, ifNotSet) {
+        if (options)
+          for (var keys = Object.keys(options), i = 0; i < keys.length; ++i)
+            this.setOption(keys[i], options[keys[i]], ifNotSet);
+        return this;
+      };
+      ReflectionObject.prototype.toString = function toString2() {
+        var className = this.constructor.className, fullName = this.fullName;
+        if (fullName.length)
+          return className + " " + fullName;
+        return className;
+      };
+      ReflectionObject._configure = function(Root_) {
+        Root2 = Root_;
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/enum.js
+  var require_enum = __commonJS({
+    "node_modules/protobufjs/src/enum.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = Enum;
+      var ReflectionObject = require_object();
+      ((Enum.prototype = Object.create(ReflectionObject.prototype)).constructor = Enum).className = "Enum";
+      var Namespace = require_namespace();
+      var util = require_util();
+      function Enum(name, values, options, comment, comments, valuesOptions) {
+        ReflectionObject.call(this, name, options);
+        if (values && typeof values !== "object")
+          throw TypeError("values must be an object");
+        this.valuesById = {};
+        this.values = Object.create(this.valuesById);
+        this.comment = comment;
+        this.comments = comments || {};
+        this.valuesOptions = valuesOptions;
+        this.reserved = void 0;
+        if (values) {
+          for (var keys = Object.keys(values), i = 0; i < keys.length; ++i)
+            if (typeof values[keys[i]] === "number")
+              this.valuesById[this.values[keys[i]] = values[keys[i]]] = keys[i];
+        }
+      }
+      Enum.fromJSON = function fromJSON(name, json) {
+        var enm = new Enum(name, json.values, json.options, json.comment, json.comments);
+        enm.reserved = json.reserved;
+        return enm;
+      };
+      Enum.prototype.toJSON = function toJSON(toJSONOptions) {
+        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
+        return util.toObject([
+          "options",
+          this.options,
+          "valuesOptions",
+          this.valuesOptions,
+          "values",
+          this.values,
+          "reserved",
+          this.reserved && this.reserved.length ? this.reserved : void 0,
+          "comment",
+          keepComments ? this.comment : void 0,
+          "comments",
+          keepComments ? this.comments : void 0
+        ]);
+      };
+      Enum.prototype.add = function add(name, id, comment, options) {
+        if (!util.isString(name))
+          throw TypeError("name must be a string");
+        if (!util.isInteger(id))
+          throw TypeError("id must be an integer");
+        if (this.values[name] !== void 0)
+          throw Error("duplicate name '" + name + "' in " + this);
+        if (this.isReservedId(id))
+          throw Error("id " + id + " is reserved in " + this);
+        if (this.isReservedName(name))
+          throw Error("name '" + name + "' is reserved in " + this);
+        if (this.valuesById[id] !== void 0) {
+          if (!(this.options && this.options.allow_alias))
+            throw Error("duplicate id " + id + " in " + this);
+          this.values[name] = id;
+        } else
+          this.valuesById[this.values[name] = id] = name;
+        if (options) {
+          if (this.valuesOptions === void 0)
+            this.valuesOptions = {};
+          this.valuesOptions[name] = options || null;
+        }
+        this.comments[name] = comment || null;
+        return this;
+      };
+      Enum.prototype.remove = function remove(name) {
+        if (!util.isString(name))
+          throw TypeError("name must be a string");
+        var val = this.values[name];
+        if (val == null)
+          throw Error("name '" + name + "' does not exist in " + this);
+        delete this.valuesById[val];
+        delete this.values[name];
+        delete this.comments[name];
+        if (this.valuesOptions)
+          delete this.valuesOptions[name];
+        return this;
+      };
+      Enum.prototype.isReservedId = function isReservedId(id) {
+        return Namespace.isReservedId(this.reserved, id);
+      };
+      Enum.prototype.isReservedName = function isReservedName(name) {
+        return Namespace.isReservedName(this.reserved, name);
+      };
+    }
+  });
+
+  // node_modules/protobufjs/src/encoder.js
+  var require_encoder = __commonJS({
+    "node_modules/protobufjs/src/encoder.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = encoder;
+      var Enum = require_enum();
+      var types = require_types();
+      var util = require_util();
+      function genTypePartial(gen, field, fieldIndex, ref) {
+        return field.resolvedType.group ? gen("types[%i].encode(%s,w.uint32(%i)).uint32(%i)", fieldIndex, ref, (field.id << 3 | 3) >>> 0, (field.id << 3 | 4) >>> 0) : gen("types[%i].encode(%s,w.uint32(%i).fork()).ldelim()", fieldIndex, ref, (field.id << 3 | 2) >>> 0);
+      }
+      function encoder(mtype) {
+        var gen = util.codegen(["m", "w"], mtype.name + "\$encode")("if(!w)")("w=Writer.create()");
+        var i, ref;
+        var fields = (
+          /* initializes */
+          mtype.fieldsArray.slice().sort(util.compareFieldsById)
+        );
+        for (var i = 0; i < fields.length; ++i) {
+          var field = fields[i].resolve(), index = mtype._fieldsArray.indexOf(field), type = field.resolvedType instanceof Enum ? "int32" : field.type, wireType = types.basic[type];
+          ref = "m" + util.safeProp(field.name);
+          if (field.map) {
+            gen("if(%s!=null&&Object.hasOwnProperty.call(m,%j)){", ref, field.name)("for(var ks=Object.keys(%s),i=0;i<ks.length;++i){", ref)("w.uint32(%i).fork().uint32(%i).%s(ks[i])", (field.id << 3 | 2) >>> 0, 8 | types.mapKey[field.keyType], field.keyType);
+            if (wireType === void 0)
+              gen("types[%i].encode(%s[ks[i]],w.uint32(18).fork()).ldelim().ldelim()", index, ref);
+            else
+              gen(".uint32(%i).%s(%s[ks[i]]).ldelim()", 16 | wireType, type, ref);
+            gen("}")("}");
+          } else if (field.repeated) {
+            gen("if(%s!=null&&%s.length){", ref, ref);
+            if (field.packed && types.packed[type] !== void 0) {
+              gen("w.uint32(%i).fork()", (field.id << 3 | 2) >>> 0)("for(var i=0;i<%s.length;++i)", ref)("w.%s(%s[i])", type, ref)("w.ldelim()");
+            } else {
+              gen("for(var i=0;i<%s.length;++i)", ref);
+              if (wireType === void 0)
+                genTypePartial(gen, field, index, ref + "[i]");
+              else
+                gen("w.uint32(%i).%s(%s[i])", (field.id << 3 | wireType) >>> 0, type, ref);
+            }
+            gen("}");
+          } else {
+            if (field.optional)
+              gen("if(%s!=null&&Object.hasOwnProperty.call(m,%j))", ref, field.name);
+            if (wireType === void 0)
+              genTypePartial(gen, field, index, ref);
+            else
+              gen("w.uint32(%i).%s(%s)", (field.id << 3 | wireType) >>> 0, type, ref);
+          }
+        }
+        return gen("return w");
+      }
+    }
+  });
+
+  // node_modules/protobufjs/src/index-light.js
+  var require_index_light = __commonJS({
+    "node_modules/protobufjs/src/index-light.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      var protobuf = module2.exports = require_index_minimal();
+      protobuf.build = "light";
+      function load2(filename, root, callback) {
+        if (typeof root === "function") {
+          callback = root;
+          root = new protobuf.Root();
+        } else if (!root)
+          root = new protobuf.Root();
+        return root.load(filename, callback);
+      }
+      protobuf.load = load2;
+      function loadSync(filename, root) {
+        if (!root)
+          root = new protobuf.Root();
+        return root.loadSync(filename);
+      }
+      protobuf.loadSync = loadSync;
+      protobuf.encoder = require_encoder();
+      protobuf.decoder = require_decoder();
+      protobuf.verifier = require_verifier();
+      protobuf.converter = require_converter();
+      protobuf.ReflectionObject = require_object();
+      protobuf.Namespace = require_namespace();
+      protobuf.Root = require_root();
+      protobuf.Enum = require_enum();
+      protobuf.Type = require_type();
+      protobuf.Field = require_field();
+      protobuf.OneOf = require_oneof();
+      protobuf.MapField = require_mapfield();
+      protobuf.Service = require_service2();
+      protobuf.Method = require_method();
+      protobuf.Message = require_message();
+      protobuf.wrappers = require_wrappers();
+      protobuf.types = require_types();
+      protobuf.util = require_util();
+      protobuf.ReflectionObject._configure(protobuf.Root);
+      protobuf.Namespace._configure(protobuf.Type, protobuf.Service, protobuf.Enum);
+      protobuf.Root._configure(protobuf.Type);
+      protobuf.Field._configure(protobuf.Type);
+    }
+  });
+
+  // node_modules/protobufjs/light.js
+  var require_light = __commonJS({
+    "node_modules/protobufjs/light.js"(exports2, module2) {
+      "use strict";
+      init_tampermonkey();
+      module2.exports = require_index_light();
     }
   });
 
@@ -1726,7 +5650,7 @@ const MODULES = `
   });
 
   // node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/object.js
-  var require_object = __commonJS({
+  var require_object2 = __commonJS({
     "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/object.js"(exports2) {
       "use strict";
       init_tampermonkey();
@@ -1776,7 +5700,7 @@ const MODULES = `
       Object.defineProperty(exports2, "__esModule", { value: true });
       var value_types_1 = require_value_types();
       var str = __importStar(require_string());
-      var obj = __importStar(require_object());
+      var obj = __importStar(require_object2());
       var InsertOpDenormalizer = function() {
         function InsertOpDenormalizer2() {
         }
@@ -1881,7 +5805,7 @@ const MODULES = `
       Object.defineProperty(exports2, "__esModule", { value: true });
       var funcs_html_1 = require_funcs_html();
       var value_types_1 = require_value_types();
-      var obj = __importStar(require_object());
+      var obj = __importStar(require_object2());
       var arr2 = __importStar(require_array());
       var OpAttributeSanitizer_1 = require_OpAttributeSanitizer();
       var DEFAULT_INLINE_FONTS = {
@@ -2548,7 +6472,7 @@ const MODULES = `
       var group_types_1 = require_group_types();
       var ListNester_1 = require_ListNester();
       var funcs_html_1 = require_funcs_html();
-      var obj = __importStar(require_object());
+      var obj = __importStar(require_object2());
       var value_types_1 = require_value_types();
       var TableGrouper_1 = require_TableGrouper();
       var BrTag = "<br/>";
@@ -2799,3973 +6723,230 @@ const MODULES = `
     }
   });
 
-  // node_modules/@protobufjs/aspromise/index.js
-  var require_aspromise = __commonJS({
-    "node_modules/@protobufjs/aspromise/index.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = asPromise;
-      function asPromise(fn, ctx) {
-        var params = new Array(arguments.length - 1), offset2 = 0, index = 2, pending = true;
-        while (index < arguments.length)
-          params[offset2++] = arguments[index++];
-        return new Promise(function executor(resolve, reject) {
-          params[offset2] = function callback(err) {
-            if (pending) {
-              pending = false;
-              if (err)
-                reject(err);
-              else {
-                var params2 = new Array(arguments.length - 1), offset3 = 0;
-                while (offset3 < params2.length)
-                  params2[offset3++] = arguments[offset3];
-                resolve.apply(null, params2);
-              }
-            }
-          };
-          try {
-            fn.apply(ctx || null, params);
-          } catch (err) {
-            if (pending) {
-              pending = false;
-              reject(err);
-            }
-          }
-        });
-      }
-    }
-  });
-
-  // node_modules/@protobufjs/base64/index.js
-  var require_base64 = __commonJS({
-    "node_modules/@protobufjs/base64/index.js"(exports2) {
-      "use strict";
-      init_tampermonkey();
-      var base64 = exports2;
-      base64.length = function length2(string) {
-        var p = string.length;
-        if (!p)
-          return 0;
-        var n = 0;
-        while (--p % 4 > 1 && string.charAt(p) === "=")
-          ++n;
-        return Math.ceil(string.length * 3) / 4 - n;
-      };
-      var b64 = new Array(64);
-      var s64 = new Array(123);
-      for (i = 0; i < 64; )
-        s64[b64[i] = i < 26 ? i + 65 : i < 52 ? i + 71 : i < 62 ? i - 4 : i - 59 | 43] = i++;
-      var i;
-      base64.encode = function encode(buffer, start, end) {
-        var parts = null, chunk = [];
-        var i2 = 0, j = 0, t;
-        while (start < end) {
-          var b = buffer[start++];
-          switch (j) {
-            case 0:
-              chunk[i2++] = b64[b >> 2];
-              t = (b & 3) << 4;
-              j = 1;
-              break;
-            case 1:
-              chunk[i2++] = b64[t | b >> 4];
-              t = (b & 15) << 2;
-              j = 2;
-              break;
-            case 2:
-              chunk[i2++] = b64[t | b >> 6];
-              chunk[i2++] = b64[b & 63];
-              j = 0;
-              break;
-          }
-          if (i2 > 8191) {
-            (parts || (parts = [])).push(String.fromCharCode.apply(String, chunk));
-            i2 = 0;
-          }
-        }
-        if (j) {
-          chunk[i2++] = b64[t];
-          chunk[i2++] = 61;
-          if (j === 1)
-            chunk[i2++] = 61;
-        }
-        if (parts) {
-          if (i2)
-            parts.push(String.fromCharCode.apply(String, chunk.slice(0, i2)));
-          return parts.join("");
-        }
-        return String.fromCharCode.apply(String, chunk.slice(0, i2));
-      };
-      var invalidEncoding = "invalid encoding";
-      base64.decode = function decode(string, buffer, offset2) {
-        var start = offset2;
-        var j = 0, t;
-        for (var i2 = 0; i2 < string.length; ) {
-          var c = string.charCodeAt(i2++);
-          if (c === 61 && j > 1)
-            break;
-          if ((c = s64[c]) === void 0)
-            throw Error(invalidEncoding);
-          switch (j) {
-            case 0:
-              t = c;
-              j = 1;
-              break;
-            case 1:
-              buffer[offset2++] = t << 2 | (c & 48) >> 4;
-              t = c;
-              j = 2;
-              break;
-            case 2:
-              buffer[offset2++] = (t & 15) << 4 | (c & 60) >> 2;
-              t = c;
-              j = 3;
-              break;
-            case 3:
-              buffer[offset2++] = (t & 3) << 6 | c;
-              j = 0;
-              break;
-          }
-        }
-        if (j === 1)
-          throw Error(invalidEncoding);
-        return offset2 - start;
-      };
-      base64.test = function test(string) {
-        return /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?\$/.test(string);
-      };
-    }
-  });
-
-  // node_modules/@protobufjs/eventemitter/index.js
-  var require_eventemitter = __commonJS({
-    "node_modules/@protobufjs/eventemitter/index.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = EventEmitter;
-      function EventEmitter() {
-        this._listeners = {};
-      }
-      EventEmitter.prototype.on = function on(evt, fn, ctx) {
-        (this._listeners[evt] || (this._listeners[evt] = [])).push({
-          fn,
-          ctx: ctx || this
-        });
-        return this;
-      };
-      EventEmitter.prototype.off = function off(evt, fn) {
-        if (evt === void 0)
-          this._listeners = {};
-        else {
-          if (fn === void 0)
-            this._listeners[evt] = [];
-          else {
-            var listeners = this._listeners[evt];
-            for (var i = 0; i < listeners.length; )
-              if (listeners[i].fn === fn)
-                listeners.splice(i, 1);
-              else
-                ++i;
-          }
-        }
-        return this;
-      };
-      EventEmitter.prototype.emit = function emit(evt) {
-        var listeners = this._listeners[evt];
-        if (listeners) {
-          var args = [], i = 1;
-          for (; i < arguments.length; )
-            args.push(arguments[i++]);
-          for (i = 0; i < listeners.length; )
-            listeners[i].fn.apply(listeners[i++].ctx, args);
-        }
-        return this;
-      };
-    }
-  });
-
-  // node_modules/@protobufjs/float/index.js
-  var require_float = __commonJS({
-    "node_modules/@protobufjs/float/index.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = factory(factory);
-      function factory(exports3) {
-        if (typeof Float32Array !== "undefined")
-          (function() {
-            var f32 = new Float32Array([-0]), f8b = new Uint8Array(f32.buffer), le = f8b[3] === 128;
-            function writeFloat_f32_cpy(val, buf, pos) {
-              f32[0] = val;
-              buf[pos] = f8b[0];
-              buf[pos + 1] = f8b[1];
-              buf[pos + 2] = f8b[2];
-              buf[pos + 3] = f8b[3];
-            }
-            function writeFloat_f32_rev(val, buf, pos) {
-              f32[0] = val;
-              buf[pos] = f8b[3];
-              buf[pos + 1] = f8b[2];
-              buf[pos + 2] = f8b[1];
-              buf[pos + 3] = f8b[0];
-            }
-            exports3.writeFloatLE = le ? writeFloat_f32_cpy : writeFloat_f32_rev;
-            exports3.writeFloatBE = le ? writeFloat_f32_rev : writeFloat_f32_cpy;
-            function readFloat_f32_cpy(buf, pos) {
-              f8b[0] = buf[pos];
-              f8b[1] = buf[pos + 1];
-              f8b[2] = buf[pos + 2];
-              f8b[3] = buf[pos + 3];
-              return f32[0];
-            }
-            function readFloat_f32_rev(buf, pos) {
-              f8b[3] = buf[pos];
-              f8b[2] = buf[pos + 1];
-              f8b[1] = buf[pos + 2];
-              f8b[0] = buf[pos + 3];
-              return f32[0];
-            }
-            exports3.readFloatLE = le ? readFloat_f32_cpy : readFloat_f32_rev;
-            exports3.readFloatBE = le ? readFloat_f32_rev : readFloat_f32_cpy;
-          })();
-        else
-          (function() {
-            function writeFloat_ieee754(writeUint, val, buf, pos) {
-              var sign = val < 0 ? 1 : 0;
-              if (sign)
-                val = -val;
-              if (val === 0)
-                writeUint(1 / val > 0 ? (
-                  /* positive */
-                  0
-                ) : (
-                  /* negative 0 */
-                  2147483648
-                ), buf, pos);
-              else if (isNaN(val))
-                writeUint(2143289344, buf, pos);
-              else if (val > 34028234663852886e22)
-                writeUint((sign << 31 | 2139095040) >>> 0, buf, pos);
-              else if (val < 11754943508222875e-54)
-                writeUint((sign << 31 | Math.round(val / 1401298464324817e-60)) >>> 0, buf, pos);
-              else {
-                var exponent = Math.floor(Math.log(val) / Math.LN2), mantissa = Math.round(val * Math.pow(2, -exponent) * 8388608) & 8388607;
-                writeUint((sign << 31 | exponent + 127 << 23 | mantissa) >>> 0, buf, pos);
-              }
-            }
-            exports3.writeFloatLE = writeFloat_ieee754.bind(null, writeUintLE);
-            exports3.writeFloatBE = writeFloat_ieee754.bind(null, writeUintBE);
-            function readFloat_ieee754(readUint, buf, pos) {
-              var uint = readUint(buf, pos), sign = (uint >> 31) * 2 + 1, exponent = uint >>> 23 & 255, mantissa = uint & 8388607;
-              return exponent === 255 ? mantissa ? NaN : sign * Infinity : exponent === 0 ? sign * 1401298464324817e-60 * mantissa : sign * Math.pow(2, exponent - 150) * (mantissa + 8388608);
-            }
-            exports3.readFloatLE = readFloat_ieee754.bind(null, readUintLE);
-            exports3.readFloatBE = readFloat_ieee754.bind(null, readUintBE);
-          })();
-        if (typeof Float64Array !== "undefined")
-          (function() {
-            var f64 = new Float64Array([-0]), f8b = new Uint8Array(f64.buffer), le = f8b[7] === 128;
-            function writeDouble_f64_cpy(val, buf, pos) {
-              f64[0] = val;
-              buf[pos] = f8b[0];
-              buf[pos + 1] = f8b[1];
-              buf[pos + 2] = f8b[2];
-              buf[pos + 3] = f8b[3];
-              buf[pos + 4] = f8b[4];
-              buf[pos + 5] = f8b[5];
-              buf[pos + 6] = f8b[6];
-              buf[pos + 7] = f8b[7];
-            }
-            function writeDouble_f64_rev(val, buf, pos) {
-              f64[0] = val;
-              buf[pos] = f8b[7];
-              buf[pos + 1] = f8b[6];
-              buf[pos + 2] = f8b[5];
-              buf[pos + 3] = f8b[4];
-              buf[pos + 4] = f8b[3];
-              buf[pos + 5] = f8b[2];
-              buf[pos + 6] = f8b[1];
-              buf[pos + 7] = f8b[0];
-            }
-            exports3.writeDoubleLE = le ? writeDouble_f64_cpy : writeDouble_f64_rev;
-            exports3.writeDoubleBE = le ? writeDouble_f64_rev : writeDouble_f64_cpy;
-            function readDouble_f64_cpy(buf, pos) {
-              f8b[0] = buf[pos];
-              f8b[1] = buf[pos + 1];
-              f8b[2] = buf[pos + 2];
-              f8b[3] = buf[pos + 3];
-              f8b[4] = buf[pos + 4];
-              f8b[5] = buf[pos + 5];
-              f8b[6] = buf[pos + 6];
-              f8b[7] = buf[pos + 7];
-              return f64[0];
-            }
-            function readDouble_f64_rev(buf, pos) {
-              f8b[7] = buf[pos];
-              f8b[6] = buf[pos + 1];
-              f8b[5] = buf[pos + 2];
-              f8b[4] = buf[pos + 3];
-              f8b[3] = buf[pos + 4];
-              f8b[2] = buf[pos + 5];
-              f8b[1] = buf[pos + 6];
-              f8b[0] = buf[pos + 7];
-              return f64[0];
-            }
-            exports3.readDoubleLE = le ? readDouble_f64_cpy : readDouble_f64_rev;
-            exports3.readDoubleBE = le ? readDouble_f64_rev : readDouble_f64_cpy;
-          })();
-        else
-          (function() {
-            function writeDouble_ieee754(writeUint, off0, off1, val, buf, pos) {
-              var sign = val < 0 ? 1 : 0;
-              if (sign)
-                val = -val;
-              if (val === 0) {
-                writeUint(0, buf, pos + off0);
-                writeUint(1 / val > 0 ? (
-                  /* positive */
-                  0
-                ) : (
-                  /* negative 0 */
-                  2147483648
-                ), buf, pos + off1);
-              } else if (isNaN(val)) {
-                writeUint(0, buf, pos + off0);
-                writeUint(2146959360, buf, pos + off1);
-              } else if (val > 17976931348623157e292) {
-                writeUint(0, buf, pos + off0);
-                writeUint((sign << 31 | 2146435072) >>> 0, buf, pos + off1);
-              } else {
-                var mantissa;
-                if (val < 22250738585072014e-324) {
-                  mantissa = val / 5e-324;
-                  writeUint(mantissa >>> 0, buf, pos + off0);
-                  writeUint((sign << 31 | mantissa / 4294967296) >>> 0, buf, pos + off1);
-                } else {
-                  var exponent = Math.floor(Math.log(val) / Math.LN2);
-                  if (exponent === 1024)
-                    exponent = 1023;
-                  mantissa = val * Math.pow(2, -exponent);
-                  writeUint(mantissa * 4503599627370496 >>> 0, buf, pos + off0);
-                  writeUint((sign << 31 | exponent + 1023 << 20 | mantissa * 1048576 & 1048575) >>> 0, buf, pos + off1);
-                }
-              }
-            }
-            exports3.writeDoubleLE = writeDouble_ieee754.bind(null, writeUintLE, 0, 4);
-            exports3.writeDoubleBE = writeDouble_ieee754.bind(null, writeUintBE, 4, 0);
-            function readDouble_ieee754(readUint, off0, off1, buf, pos) {
-              var lo = readUint(buf, pos + off0), hi = readUint(buf, pos + off1);
-              var sign = (hi >> 31) * 2 + 1, exponent = hi >>> 20 & 2047, mantissa = 4294967296 * (hi & 1048575) + lo;
-              return exponent === 2047 ? mantissa ? NaN : sign * Infinity : exponent === 0 ? sign * 5e-324 * mantissa : sign * Math.pow(2, exponent - 1075) * (mantissa + 4503599627370496);
-            }
-            exports3.readDoubleLE = readDouble_ieee754.bind(null, readUintLE, 0, 4);
-            exports3.readDoubleBE = readDouble_ieee754.bind(null, readUintBE, 4, 0);
-          })();
-        return exports3;
-      }
-      function writeUintLE(val, buf, pos) {
-        buf[pos] = val & 255;
-        buf[pos + 1] = val >>> 8 & 255;
-        buf[pos + 2] = val >>> 16 & 255;
-        buf[pos + 3] = val >>> 24;
-      }
-      function writeUintBE(val, buf, pos) {
-        buf[pos] = val >>> 24;
-        buf[pos + 1] = val >>> 16 & 255;
-        buf[pos + 2] = val >>> 8 & 255;
-        buf[pos + 3] = val & 255;
-      }
-      function readUintLE(buf, pos) {
-        return (buf[pos] | buf[pos + 1] << 8 | buf[pos + 2] << 16 | buf[pos + 3] << 24) >>> 0;
-      }
-      function readUintBE(buf, pos) {
-        return (buf[pos] << 24 | buf[pos + 1] << 16 | buf[pos + 2] << 8 | buf[pos + 3]) >>> 0;
-      }
-    }
-  });
-
-  // node_modules/@protobufjs/inquire/index.js
-  var require_inquire = __commonJS({
-    "node_modules/@protobufjs/inquire/index.js"(exports, module) {
-      "use strict";
-      init_tampermonkey();
-      module.exports = inquire;
-      function inquire(moduleName) {
-        try {
-          var mod = eval("quire".replace(/^/, "re"))(moduleName);
-          if (mod && (mod.length || Object.keys(mod).length))
-            return mod;
-        } catch (e) {
-        }
-        return null;
-      }
-    }
-  });
-
-  // node_modules/@protobufjs/utf8/index.js
-  var require_utf8 = __commonJS({
-    "node_modules/@protobufjs/utf8/index.js"(exports2) {
-      "use strict";
-      init_tampermonkey();
-      var utf8 = exports2;
-      utf8.length = function utf8_length(string) {
-        var len = 0, c = 0;
-        for (var i = 0; i < string.length; ++i) {
-          c = string.charCodeAt(i);
-          if (c < 128)
-            len += 1;
-          else if (c < 2048)
-            len += 2;
-          else if ((c & 64512) === 55296 && (string.charCodeAt(i + 1) & 64512) === 56320) {
-            ++i;
-            len += 4;
-          } else
-            len += 3;
-        }
-        return len;
-      };
-      utf8.read = function utf8_read(buffer, start, end) {
-        var len = end - start;
-        if (len < 1)
-          return "";
-        var parts = null, chunk = [], i = 0, t;
-        while (start < end) {
-          t = buffer[start++];
-          if (t < 128)
-            chunk[i++] = t;
-          else if (t > 191 && t < 224)
-            chunk[i++] = (t & 31) << 6 | buffer[start++] & 63;
-          else if (t > 239 && t < 365) {
-            t = ((t & 7) << 18 | (buffer[start++] & 63) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63) - 65536;
-            chunk[i++] = 55296 + (t >> 10);
-            chunk[i++] = 56320 + (t & 1023);
-          } else
-            chunk[i++] = (t & 15) << 12 | (buffer[start++] & 63) << 6 | buffer[start++] & 63;
-          if (i > 8191) {
-            (parts || (parts = [])).push(String.fromCharCode.apply(String, chunk));
-            i = 0;
-          }
-        }
-        if (parts) {
-          if (i)
-            parts.push(String.fromCharCode.apply(String, chunk.slice(0, i)));
-          return parts.join("");
-        }
-        return String.fromCharCode.apply(String, chunk.slice(0, i));
-      };
-      utf8.write = function utf8_write(string, buffer, offset2) {
-        var start = offset2, c1, c2;
-        for (var i = 0; i < string.length; ++i) {
-          c1 = string.charCodeAt(i);
-          if (c1 < 128) {
-            buffer[offset2++] = c1;
-          } else if (c1 < 2048) {
-            buffer[offset2++] = c1 >> 6 | 192;
-            buffer[offset2++] = c1 & 63 | 128;
-          } else if ((c1 & 64512) === 55296 && ((c2 = string.charCodeAt(i + 1)) & 64512) === 56320) {
-            c1 = 65536 + ((c1 & 1023) << 10) + (c2 & 1023);
-            ++i;
-            buffer[offset2++] = c1 >> 18 | 240;
-            buffer[offset2++] = c1 >> 12 & 63 | 128;
-            buffer[offset2++] = c1 >> 6 & 63 | 128;
-            buffer[offset2++] = c1 & 63 | 128;
-          } else {
-            buffer[offset2++] = c1 >> 12 | 224;
-            buffer[offset2++] = c1 >> 6 & 63 | 128;
-            buffer[offset2++] = c1 & 63 | 128;
-          }
-        }
-        return offset2 - start;
-      };
-    }
-  });
-
-  // node_modules/@protobufjs/pool/index.js
-  var require_pool = __commonJS({
-    "node_modules/@protobufjs/pool/index.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = pool;
-      function pool(alloc, slice, size) {
-        var SIZE = size || 8192;
-        var MAX = SIZE >>> 1;
-        var slab = null;
-        var offset2 = SIZE;
-        return function pool_alloc(size2) {
-          if (size2 < 1 || size2 > MAX)
-            return alloc(size2);
-          if (offset2 + size2 > SIZE) {
-            slab = alloc(SIZE);
-            offset2 = 0;
-          }
-          var buf = slice.call(slab, offset2, offset2 += size2);
-          if (offset2 & 7)
-            offset2 = (offset2 | 7) + 1;
-          return buf;
-        };
-      }
-    }
-  });
-
-  // node_modules/protobufjs/src/util/longbits.js
-  var require_longbits = __commonJS({
-    "node_modules/protobufjs/src/util/longbits.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = LongBits;
-      var util = require_minimal();
-      function LongBits(lo, hi) {
-        this.lo = lo >>> 0;
-        this.hi = hi >>> 0;
-      }
-      var zero = LongBits.zero = new LongBits(0, 0);
-      zero.toNumber = function() {
-        return 0;
-      };
-      zero.zzEncode = zero.zzDecode = function() {
-        return this;
-      };
-      zero.length = function() {
-        return 1;
-      };
-      var zeroHash = LongBits.zeroHash = "\\0\\0\\0\\0\\0\\0\\0\\0";
-      LongBits.fromNumber = function fromNumber(value) {
-        if (value === 0)
-          return zero;
-        var sign = value < 0;
-        if (sign)
-          value = -value;
-        var lo = value >>> 0, hi = (value - lo) / 4294967296 >>> 0;
-        if (sign) {
-          hi = ~hi >>> 0;
-          lo = ~lo >>> 0;
-          if (++lo > 4294967295) {
-            lo = 0;
-            if (++hi > 4294967295)
-              hi = 0;
-          }
-        }
-        return new LongBits(lo, hi);
-      };
-      LongBits.from = function from(value) {
-        if (typeof value === "number")
-          return LongBits.fromNumber(value);
-        if (util.isString(value)) {
-          if (util.Long)
-            value = util.Long.fromString(value);
-          else
-            return LongBits.fromNumber(parseInt(value, 10));
-        }
-        return value.low || value.high ? new LongBits(value.low >>> 0, value.high >>> 0) : zero;
-      };
-      LongBits.prototype.toNumber = function toNumber(unsigned) {
-        if (!unsigned && this.hi >>> 31) {
-          var lo = ~this.lo + 1 >>> 0, hi = ~this.hi >>> 0;
-          if (!lo)
-            hi = hi + 1 >>> 0;
-          return -(lo + hi * 4294967296);
-        }
-        return this.lo + this.hi * 4294967296;
-      };
-      LongBits.prototype.toLong = function toLong(unsigned) {
-        return util.Long ? new util.Long(this.lo | 0, this.hi | 0, Boolean(unsigned)) : { low: this.lo | 0, high: this.hi | 0, unsigned: Boolean(unsigned) };
-      };
-      var charCodeAt = String.prototype.charCodeAt;
-      LongBits.fromHash = function fromHash(hash) {
-        if (hash === zeroHash)
-          return zero;
-        return new LongBits(
-          (charCodeAt.call(hash, 0) | charCodeAt.call(hash, 1) << 8 | charCodeAt.call(hash, 2) << 16 | charCodeAt.call(hash, 3) << 24) >>> 0,
-          (charCodeAt.call(hash, 4) | charCodeAt.call(hash, 5) << 8 | charCodeAt.call(hash, 6) << 16 | charCodeAt.call(hash, 7) << 24) >>> 0
-        );
-      };
-      LongBits.prototype.toHash = function toHash() {
-        return String.fromCharCode(
-          this.lo & 255,
-          this.lo >>> 8 & 255,
-          this.lo >>> 16 & 255,
-          this.lo >>> 24,
-          this.hi & 255,
-          this.hi >>> 8 & 255,
-          this.hi >>> 16 & 255,
-          this.hi >>> 24
-        );
-      };
-      LongBits.prototype.zzEncode = function zzEncode() {
-        var mask = this.hi >> 31;
-        this.hi = ((this.hi << 1 | this.lo >>> 31) ^ mask) >>> 0;
-        this.lo = (this.lo << 1 ^ mask) >>> 0;
-        return this;
-      };
-      LongBits.prototype.zzDecode = function zzDecode() {
-        var mask = -(this.lo & 1);
-        this.lo = ((this.lo >>> 1 | this.hi << 31) ^ mask) >>> 0;
-        this.hi = (this.hi >>> 1 ^ mask) >>> 0;
-        return this;
-      };
-      LongBits.prototype.length = function length2() {
-        var part0 = this.lo, part1 = (this.lo >>> 28 | this.hi << 4) >>> 0, part2 = this.hi >>> 24;
-        return part2 === 0 ? part1 === 0 ? part0 < 16384 ? part0 < 128 ? 1 : 2 : part0 < 2097152 ? 3 : 4 : part1 < 16384 ? part1 < 128 ? 5 : 6 : part1 < 2097152 ? 7 : 8 : part2 < 128 ? 9 : 10;
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/util/minimal.js
-  var require_minimal = __commonJS({
-    "node_modules/protobufjs/src/util/minimal.js"(exports2) {
-      "use strict";
-      init_tampermonkey();
-      var util = exports2;
-      util.asPromise = require_aspromise();
-      util.base64 = require_base64();
-      util.EventEmitter = require_eventemitter();
-      util.float = require_float();
-      util.inquire = require_inquire();
-      util.utf8 = require_utf8();
-      util.pool = require_pool();
-      util.LongBits = require_longbits();
-      util.isNode = Boolean(typeof global !== "undefined" && global && global.process && global.process.versions && global.process.versions.node);
-      util.global = util.isNode && global || typeof window !== "undefined" && window || typeof self !== "undefined" && self || exports2;
-      util.emptyArray = Object.freeze ? Object.freeze([]) : (
-        /* istanbul ignore next */
-        []
-      );
-      util.emptyObject = Object.freeze ? Object.freeze({}) : (
-        /* istanbul ignore next */
-        {}
-      );
-      util.isInteger = Number.isInteger || /* istanbul ignore next */
-      function isInteger(value) {
-        return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
-      };
-      util.isString = function isString(value) {
-        return typeof value === "string" || value instanceof String;
-      };
-      util.isObject = function isObject2(value) {
-        return value && typeof value === "object";
-      };
-      util.isset = /**
-       * Checks if a property on a message is considered to be present.
-       * @param {Object} obj Plain object or message instance
-       * @param {string} prop Property name
-       * @returns {boolean} \`true\` if considered to be present, otherwise \`false\`
-       */
-      util.isSet = function isSet(obj, prop) {
-        var value = obj[prop];
-        if (value != null && obj.hasOwnProperty(prop))
-          return typeof value !== "object" || (Array.isArray(value) ? value.length : Object.keys(value).length) > 0;
-        return false;
-      };
-      util.Buffer = function() {
-        try {
-          var Buffer2 = util.inquire("buffer").Buffer;
-          return Buffer2.prototype.utf8Write ? Buffer2 : (
-            /* istanbul ignore next */
-            null
-          );
-        } catch (e) {
-          return null;
-        }
-      }();
-      util._Buffer_from = null;
-      util._Buffer_allocUnsafe = null;
-      util.newBuffer = function newBuffer(sizeOrArray) {
-        return typeof sizeOrArray === "number" ? util.Buffer ? util._Buffer_allocUnsafe(sizeOrArray) : new util.Array(sizeOrArray) : util.Buffer ? util._Buffer_from(sizeOrArray) : typeof Uint8Array === "undefined" ? sizeOrArray : new Uint8Array(sizeOrArray);
-      };
-      util.Array = typeof Uint8Array !== "undefined" ? Uint8Array : Array;
-      util.Long = /* istanbul ignore next */
-      util.global.dcodeIO && /* istanbul ignore next */
-      util.global.dcodeIO.Long || /* istanbul ignore next */
-      util.global.Long || util.inquire("long");
-      util.key2Re = /^true|false|0|1\$/;
-      util.key32Re = /^-?(?:0|[1-9][0-9]*)\$/;
-      util.key64Re = /^(?:[\\\\x00-\\\\xff]{8}|-?(?:0|[1-9][0-9]*))\$/;
-      util.longToHash = function longToHash(value) {
-        return value ? util.LongBits.from(value).toHash() : util.LongBits.zeroHash;
-      };
-      util.longFromHash = function longFromHash(hash, unsigned) {
-        var bits = util.LongBits.fromHash(hash);
-        if (util.Long)
-          return util.Long.fromBits(bits.lo, bits.hi, unsigned);
-        return bits.toNumber(Boolean(unsigned));
-      };
-      function merge(dst, src, ifNotSet) {
-        for (var keys = Object.keys(src), i = 0; i < keys.length; ++i)
-          if (dst[keys[i]] === void 0 || !ifNotSet)
-            dst[keys[i]] = src[keys[i]];
-        return dst;
-      }
-      util.merge = merge;
-      util.lcFirst = function lcFirst(str) {
-        return str.charAt(0).toLowerCase() + str.substring(1);
-      };
-      function newError(name) {
-        function CustomError(message, properties) {
-          if (!(this instanceof CustomError))
-            return new CustomError(message, properties);
-          Object.defineProperty(this, "message", { get: function() {
-            return message;
-          } });
-          if (Error.captureStackTrace)
-            Error.captureStackTrace(this, CustomError);
-          else
-            Object.defineProperty(this, "stack", { value: new Error().stack || "" });
-          if (properties)
-            merge(this, properties);
-        }
-        CustomError.prototype = Object.create(Error.prototype, {
-          constructor: {
-            value: CustomError,
-            writable: true,
-            enumerable: false,
-            configurable: true
-          },
-          name: {
-            get: function get() {
-              return name;
-            },
-            set: void 0,
-            enumerable: false,
-            // configurable: false would accurately preserve the behavior of
-            // the original, but I'm guessing that was not intentional.
-            // For an actual error subclass, this property would
-            // be configurable.
-            configurable: true
-          },
-          toString: {
-            value: function value() {
-              return this.name + ": " + this.message;
-            },
-            writable: true,
-            enumerable: false,
-            configurable: true
-          }
-        });
-        return CustomError;
-      }
-      util.newError = newError;
-      util.ProtocolError = newError("ProtocolError");
-      util.oneOfGetter = function getOneOf(fieldNames) {
-        var fieldMap = {};
-        for (var i = 0; i < fieldNames.length; ++i)
-          fieldMap[fieldNames[i]] = 1;
-        return function() {
-          for (var keys = Object.keys(this), i2 = keys.length - 1; i2 > -1; --i2)
-            if (fieldMap[keys[i2]] === 1 && this[keys[i2]] !== void 0 && this[keys[i2]] !== null)
-              return keys[i2];
-        };
-      };
-      util.oneOfSetter = function setOneOf(fieldNames) {
-        return function(name) {
-          for (var i = 0; i < fieldNames.length; ++i)
-            if (fieldNames[i] !== name)
-              delete this[fieldNames[i]];
-        };
-      };
-      util.toJSONOptions = {
-        longs: String,
-        enums: String,
-        bytes: String,
-        json: true
-      };
-      util._configure = function() {
-        var Buffer2 = util.Buffer;
-        if (!Buffer2) {
-          util._Buffer_from = util._Buffer_allocUnsafe = null;
-          return;
-        }
-        util._Buffer_from = Buffer2.from !== Uint8Array.from && Buffer2.from || /* istanbul ignore next */
-        function Buffer_from(value, encoding) {
-          return new Buffer2(value, encoding);
-        };
-        util._Buffer_allocUnsafe = Buffer2.allocUnsafe || /* istanbul ignore next */
-        function Buffer_allocUnsafe(size) {
-          return new Buffer2(size);
-        };
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/writer.js
-  var require_writer = __commonJS({
-    "node_modules/protobufjs/src/writer.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = Writer;
-      var util = require_minimal();
-      var BufferWriter;
-      var LongBits = util.LongBits;
-      var base64 = util.base64;
-      var utf8 = util.utf8;
-      function Op(fn, len, val) {
-        this.fn = fn;
-        this.len = len;
-        this.next = void 0;
-        this.val = val;
-      }
-      function noop() {
-      }
-      function State(writer) {
-        this.head = writer.head;
-        this.tail = writer.tail;
-        this.len = writer.len;
-        this.next = writer.states;
-      }
-      function Writer() {
-        this.len = 0;
-        this.head = new Op(noop, 0, 0);
-        this.tail = this.head;
-        this.states = null;
-      }
-      var create = function create2() {
-        return util.Buffer ? function create_buffer_setup() {
-          return (Writer.create = function create_buffer() {
-            return new BufferWriter();
-          })();
-        } : function create_array() {
-          return new Writer();
-        };
-      };
-      Writer.create = create();
-      Writer.alloc = function alloc(size) {
-        return new util.Array(size);
-      };
-      if (util.Array !== Array)
-        Writer.alloc = util.pool(Writer.alloc, util.Array.prototype.subarray);
-      Writer.prototype._push = function push(fn, len, val) {
-        this.tail = this.tail.next = new Op(fn, len, val);
-        this.len += len;
-        return this;
-      };
-      function writeByte(val, buf, pos) {
-        buf[pos] = val & 255;
-      }
-      function writeVarint32(val, buf, pos) {
-        while (val > 127) {
-          buf[pos++] = val & 127 | 128;
-          val >>>= 7;
-        }
-        buf[pos] = val;
-      }
-      function VarintOp(len, val) {
-        this.len = len;
-        this.next = void 0;
-        this.val = val;
-      }
-      VarintOp.prototype = Object.create(Op.prototype);
-      VarintOp.prototype.fn = writeVarint32;
-      Writer.prototype.uint32 = function write_uint32(value) {
-        this.len += (this.tail = this.tail.next = new VarintOp(
-          (value = value >>> 0) < 128 ? 1 : value < 16384 ? 2 : value < 2097152 ? 3 : value < 268435456 ? 4 : 5,
-          value
-        )).len;
-        return this;
-      };
-      Writer.prototype.int32 = function write_int32(value) {
-        return value < 0 ? this._push(writeVarint64, 10, LongBits.fromNumber(value)) : this.uint32(value);
-      };
-      Writer.prototype.sint32 = function write_sint32(value) {
-        return this.uint32((value << 1 ^ value >> 31) >>> 0);
-      };
-      function writeVarint64(val, buf, pos) {
-        while (val.hi) {
-          buf[pos++] = val.lo & 127 | 128;
-          val.lo = (val.lo >>> 7 | val.hi << 25) >>> 0;
-          val.hi >>>= 7;
-        }
-        while (val.lo > 127) {
-          buf[pos++] = val.lo & 127 | 128;
-          val.lo = val.lo >>> 7;
-        }
-        buf[pos++] = val.lo;
-      }
-      Writer.prototype.uint64 = function write_uint64(value) {
-        var bits = LongBits.from(value);
-        return this._push(writeVarint64, bits.length(), bits);
-      };
-      Writer.prototype.int64 = Writer.prototype.uint64;
-      Writer.prototype.sint64 = function write_sint64(value) {
-        var bits = LongBits.from(value).zzEncode();
-        return this._push(writeVarint64, bits.length(), bits);
-      };
-      Writer.prototype.bool = function write_bool(value) {
-        return this._push(writeByte, 1, value ? 1 : 0);
-      };
-      function writeFixed32(val, buf, pos) {
-        buf[pos] = val & 255;
-        buf[pos + 1] = val >>> 8 & 255;
-        buf[pos + 2] = val >>> 16 & 255;
-        buf[pos + 3] = val >>> 24;
-      }
-      Writer.prototype.fixed32 = function write_fixed32(value) {
-        return this._push(writeFixed32, 4, value >>> 0);
-      };
-      Writer.prototype.sfixed32 = Writer.prototype.fixed32;
-      Writer.prototype.fixed64 = function write_fixed64(value) {
-        var bits = LongBits.from(value);
-        return this._push(writeFixed32, 4, bits.lo)._push(writeFixed32, 4, bits.hi);
-      };
-      Writer.prototype.sfixed64 = Writer.prototype.fixed64;
-      Writer.prototype.float = function write_float(value) {
-        return this._push(util.float.writeFloatLE, 4, value);
-      };
-      Writer.prototype.double = function write_double(value) {
-        return this._push(util.float.writeDoubleLE, 8, value);
-      };
-      var writeBytes = util.Array.prototype.set ? function writeBytes_set(val, buf, pos) {
-        buf.set(val, pos);
-      } : function writeBytes_for(val, buf, pos) {
-        for (var i = 0; i < val.length; ++i)
-          buf[pos + i] = val[i];
-      };
-      Writer.prototype.bytes = function write_bytes(value) {
-        var len = value.length >>> 0;
-        if (!len)
-          return this._push(writeByte, 1, 0);
-        if (util.isString(value)) {
-          var buf = Writer.alloc(len = base64.length(value));
-          base64.decode(value, buf, 0);
-          value = buf;
-        }
-        return this.uint32(len)._push(writeBytes, len, value);
-      };
-      Writer.prototype.string = function write_string(value) {
-        var len = utf8.length(value);
-        return len ? this.uint32(len)._push(utf8.write, len, value) : this._push(writeByte, 1, 0);
-      };
-      Writer.prototype.fork = function fork() {
-        this.states = new State(this);
-        this.head = this.tail = new Op(noop, 0, 0);
-        this.len = 0;
-        return this;
-      };
-      Writer.prototype.reset = function reset() {
-        if (this.states) {
-          this.head = this.states.head;
-          this.tail = this.states.tail;
-          this.len = this.states.len;
-          this.states = this.states.next;
-        } else {
-          this.head = this.tail = new Op(noop, 0, 0);
-          this.len = 0;
-        }
-        return this;
-      };
-      Writer.prototype.ldelim = function ldelim() {
-        var head = this.head, tail = this.tail, len = this.len;
-        this.reset().uint32(len);
-        if (len) {
-          this.tail.next = head.next;
-          this.tail = tail;
-          this.len += len;
-        }
-        return this;
-      };
-      Writer.prototype.finish = function finish() {
-        var head = this.head.next, buf = this.constructor.alloc(this.len), pos = 0;
-        while (head) {
-          head.fn(head.val, buf, pos);
-          pos += head.len;
-          head = head.next;
-        }
-        return buf;
-      };
-      Writer._configure = function(BufferWriter_) {
-        BufferWriter = BufferWriter_;
-        Writer.create = create();
-        BufferWriter._configure();
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/writer_buffer.js
-  var require_writer_buffer = __commonJS({
-    "node_modules/protobufjs/src/writer_buffer.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = BufferWriter;
-      var Writer = require_writer();
-      (BufferWriter.prototype = Object.create(Writer.prototype)).constructor = BufferWriter;
-      var util = require_minimal();
-      function BufferWriter() {
-        Writer.call(this);
-      }
-      BufferWriter._configure = function() {
-        BufferWriter.alloc = util._Buffer_allocUnsafe;
-        BufferWriter.writeBytesBuffer = util.Buffer && util.Buffer.prototype instanceof Uint8Array && util.Buffer.prototype.set.name === "set" ? function writeBytesBuffer_set(val, buf, pos) {
-          buf.set(val, pos);
-        } : function writeBytesBuffer_copy(val, buf, pos) {
-          if (val.copy)
-            val.copy(buf, pos, 0, val.length);
-          else
-            for (var i = 0; i < val.length; )
-              buf[pos++] = val[i++];
-        };
-      };
-      BufferWriter.prototype.bytes = function write_bytes_buffer(value) {
-        if (util.isString(value))
-          value = util._Buffer_from(value, "base64");
-        var len = value.length >>> 0;
-        this.uint32(len);
-        if (len)
-          this._push(BufferWriter.writeBytesBuffer, len, value);
-        return this;
-      };
-      function writeStringBuffer(val, buf, pos) {
-        if (val.length < 40)
-          util.utf8.write(val, buf, pos);
-        else if (buf.utf8Write)
-          buf.utf8Write(val, pos);
-        else
-          buf.write(val, pos);
-      }
-      BufferWriter.prototype.string = function write_string_buffer(value) {
-        var len = util.Buffer.byteLength(value);
-        this.uint32(len);
-        if (len)
-          this._push(writeStringBuffer, len, value);
-        return this;
-      };
-      BufferWriter._configure();
-    }
-  });
-
-  // node_modules/protobufjs/src/reader.js
-  var require_reader = __commonJS({
-    "node_modules/protobufjs/src/reader.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = Reader;
-      var util = require_minimal();
-      var BufferReader;
-      var LongBits = util.LongBits;
-      var utf8 = util.utf8;
-      function indexOutOfRange(reader, writeLength) {
-        return RangeError("index out of range: " + reader.pos + " + " + (writeLength || 1) + " > " + reader.len);
-      }
-      function Reader(buffer) {
-        this.buf = buffer;
-        this.pos = 0;
-        this.len = buffer.length;
-      }
-      var create_array = typeof Uint8Array !== "undefined" ? function create_typed_array(buffer) {
-        if (buffer instanceof Uint8Array || Array.isArray(buffer))
-          return new Reader(buffer);
-        throw Error("illegal buffer");
-      } : function create_array2(buffer) {
-        if (Array.isArray(buffer))
-          return new Reader(buffer);
-        throw Error("illegal buffer");
-      };
-      var create = function create2() {
-        return util.Buffer ? function create_buffer_setup(buffer) {
-          return (Reader.create = function create_buffer(buffer2) {
-            return util.Buffer.isBuffer(buffer2) ? new BufferReader(buffer2) : create_array(buffer2);
-          })(buffer);
-        } : create_array;
-      };
-      Reader.create = create();
-      Reader.prototype._slice = util.Array.prototype.subarray || /* istanbul ignore next */
-      util.Array.prototype.slice;
-      Reader.prototype.uint32 = function read_uint32_setup() {
-        var value = 4294967295;
-        return function read_uint32() {
-          value = (this.buf[this.pos] & 127) >>> 0;
-          if (this.buf[this.pos++] < 128)
-            return value;
-          value = (value | (this.buf[this.pos] & 127) << 7) >>> 0;
-          if (this.buf[this.pos++] < 128)
-            return value;
-          value = (value | (this.buf[this.pos] & 127) << 14) >>> 0;
-          if (this.buf[this.pos++] < 128)
-            return value;
-          value = (value | (this.buf[this.pos] & 127) << 21) >>> 0;
-          if (this.buf[this.pos++] < 128)
-            return value;
-          value = (value | (this.buf[this.pos] & 15) << 28) >>> 0;
-          if (this.buf[this.pos++] < 128)
-            return value;
-          if ((this.pos += 5) > this.len) {
-            this.pos = this.len;
-            throw indexOutOfRange(this, 10);
-          }
-          return value;
-        };
-      }();
-      Reader.prototype.int32 = function read_int32() {
-        return this.uint32() | 0;
-      };
-      Reader.prototype.sint32 = function read_sint32() {
-        var value = this.uint32();
-        return value >>> 1 ^ -(value & 1) | 0;
-      };
-      function readLongVarint() {
-        var bits = new LongBits(0, 0);
-        var i = 0;
-        if (this.len - this.pos > 4) {
-          for (; i < 4; ++i) {
-            bits.lo = (bits.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
-            if (this.buf[this.pos++] < 128)
-              return bits;
-          }
-          bits.lo = (bits.lo | (this.buf[this.pos] & 127) << 28) >>> 0;
-          bits.hi = (bits.hi | (this.buf[this.pos] & 127) >> 4) >>> 0;
-          if (this.buf[this.pos++] < 128)
-            return bits;
-          i = 0;
-        } else {
-          for (; i < 3; ++i) {
-            if (this.pos >= this.len)
-              throw indexOutOfRange(this);
-            bits.lo = (bits.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
-            if (this.buf[this.pos++] < 128)
-              return bits;
-          }
-          bits.lo = (bits.lo | (this.buf[this.pos++] & 127) << i * 7) >>> 0;
-          return bits;
-        }
-        if (this.len - this.pos > 4) {
-          for (; i < 5; ++i) {
-            bits.hi = (bits.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
-            if (this.buf[this.pos++] < 128)
-              return bits;
-          }
-        } else {
-          for (; i < 5; ++i) {
-            if (this.pos >= this.len)
-              throw indexOutOfRange(this);
-            bits.hi = (bits.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
-            if (this.buf[this.pos++] < 128)
-              return bits;
-          }
-        }
-        throw Error("invalid varint encoding");
-      }
-      Reader.prototype.bool = function read_bool() {
-        return this.uint32() !== 0;
-      };
-      function readFixed32_end(buf, end) {
-        return (buf[end - 4] | buf[end - 3] << 8 | buf[end - 2] << 16 | buf[end - 1] << 24) >>> 0;
-      }
-      Reader.prototype.fixed32 = function read_fixed32() {
-        if (this.pos + 4 > this.len)
-          throw indexOutOfRange(this, 4);
-        return readFixed32_end(this.buf, this.pos += 4);
-      };
-      Reader.prototype.sfixed32 = function read_sfixed32() {
-        if (this.pos + 4 > this.len)
-          throw indexOutOfRange(this, 4);
-        return readFixed32_end(this.buf, this.pos += 4) | 0;
-      };
-      function readFixed64() {
-        if (this.pos + 8 > this.len)
-          throw indexOutOfRange(this, 8);
-        return new LongBits(readFixed32_end(this.buf, this.pos += 4), readFixed32_end(this.buf, this.pos += 4));
-      }
-      Reader.prototype.float = function read_float() {
-        if (this.pos + 4 > this.len)
-          throw indexOutOfRange(this, 4);
-        var value = util.float.readFloatLE(this.buf, this.pos);
-        this.pos += 4;
-        return value;
-      };
-      Reader.prototype.double = function read_double() {
-        if (this.pos + 8 > this.len)
-          throw indexOutOfRange(this, 4);
-        var value = util.float.readDoubleLE(this.buf, this.pos);
-        this.pos += 8;
-        return value;
-      };
-      Reader.prototype.bytes = function read_bytes() {
-        var length2 = this.uint32(), start = this.pos, end = this.pos + length2;
-        if (end > this.len)
-          throw indexOutOfRange(this, length2);
-        this.pos += length2;
-        if (Array.isArray(this.buf))
-          return this.buf.slice(start, end);
-        return start === end ? new this.buf.constructor(0) : this._slice.call(this.buf, start, end);
-      };
-      Reader.prototype.string = function read_string() {
-        var bytes = this.bytes();
-        return utf8.read(bytes, 0, bytes.length);
-      };
-      Reader.prototype.skip = function skip(length2) {
-        if (typeof length2 === "number") {
-          if (this.pos + length2 > this.len)
-            throw indexOutOfRange(this, length2);
-          this.pos += length2;
-        } else {
-          do {
-            if (this.pos >= this.len)
-              throw indexOutOfRange(this);
-          } while (this.buf[this.pos++] & 128);
-        }
-        return this;
-      };
-      Reader.prototype.skipType = function(wireType) {
-        switch (wireType) {
-          case 0:
-            this.skip();
-            break;
-          case 1:
-            this.skip(8);
-            break;
-          case 2:
-            this.skip(this.uint32());
-            break;
-          case 3:
-            while ((wireType = this.uint32() & 7) !== 4) {
-              this.skipType(wireType);
-            }
-            break;
-          case 5:
-            this.skip(4);
-            break;
-          default:
-            throw Error("invalid wire type " + wireType + " at offset " + this.pos);
-        }
-        return this;
-      };
-      Reader._configure = function(BufferReader_) {
-        BufferReader = BufferReader_;
-        Reader.create = create();
-        BufferReader._configure();
-        var fn = util.Long ? "toLong" : (
-          /* istanbul ignore next */
-          "toNumber"
-        );
-        util.merge(Reader.prototype, {
-          int64: function read_int64() {
-            return readLongVarint.call(this)[fn](false);
-          },
-          uint64: function read_uint64() {
-            return readLongVarint.call(this)[fn](true);
-          },
-          sint64: function read_sint64() {
-            return readLongVarint.call(this).zzDecode()[fn](false);
-          },
-          fixed64: function read_fixed64() {
-            return readFixed64.call(this)[fn](true);
-          },
-          sfixed64: function read_sfixed64() {
-            return readFixed64.call(this)[fn](false);
-          }
-        });
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/reader_buffer.js
-  var require_reader_buffer = __commonJS({
-    "node_modules/protobufjs/src/reader_buffer.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = BufferReader;
-      var Reader = require_reader();
-      (BufferReader.prototype = Object.create(Reader.prototype)).constructor = BufferReader;
-      var util = require_minimal();
-      function BufferReader(buffer) {
-        Reader.call(this, buffer);
-      }
-      BufferReader._configure = function() {
-        if (util.Buffer)
-          BufferReader.prototype._slice = util.Buffer.prototype.slice;
-      };
-      BufferReader.prototype.string = function read_string_buffer() {
-        var len = this.uint32();
-        return this.buf.utf8Slice ? this.buf.utf8Slice(this.pos, this.pos = Math.min(this.pos + len, this.len)) : this.buf.toString("utf-8", this.pos, this.pos = Math.min(this.pos + len, this.len));
-      };
-      BufferReader._configure();
-    }
-  });
-
-  // node_modules/protobufjs/src/rpc/service.js
-  var require_service = __commonJS({
-    "node_modules/protobufjs/src/rpc/service.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = Service;
-      var util = require_minimal();
-      (Service.prototype = Object.create(util.EventEmitter.prototype)).constructor = Service;
-      function Service(rpcImpl, requestDelimited, responseDelimited) {
-        if (typeof rpcImpl !== "function")
-          throw TypeError("rpcImpl must be a function");
-        util.EventEmitter.call(this);
-        this.rpcImpl = rpcImpl;
-        this.requestDelimited = Boolean(requestDelimited);
-        this.responseDelimited = Boolean(responseDelimited);
-      }
-      Service.prototype.rpcCall = function rpcCall(method, requestCtor, responseCtor, request, callback) {
-        if (!request)
-          throw TypeError("request must be specified");
-        var self2 = this;
-        if (!callback)
-          return util.asPromise(rpcCall, self2, method, requestCtor, responseCtor, request);
-        if (!self2.rpcImpl) {
-          setTimeout(function() {
-            callback(Error("already ended"));
-          }, 0);
-          return void 0;
-        }
-        try {
-          return self2.rpcImpl(
-            method,
-            requestCtor[self2.requestDelimited ? "encodeDelimited" : "encode"](request).finish(),
-            function rpcCallback(err, response) {
-              if (err) {
-                self2.emit("error", err, method);
-                return callback(err);
-              }
-              if (response === null) {
-                self2.end(
-                  /* endedByRPC */
-                  true
-                );
-                return void 0;
-              }
-              if (!(response instanceof responseCtor)) {
-                try {
-                  response = responseCtor[self2.responseDelimited ? "decodeDelimited" : "decode"](response);
-                } catch (err2) {
-                  self2.emit("error", err2, method);
-                  return callback(err2);
-                }
-              }
-              self2.emit("data", response, method);
-              return callback(null, response);
-            }
-          );
-        } catch (err) {
-          self2.emit("error", err, method);
-          setTimeout(function() {
-            callback(err);
-          }, 0);
-          return void 0;
-        }
-      };
-      Service.prototype.end = function end(endedByRPC) {
-        if (this.rpcImpl) {
-          if (!endedByRPC)
-            this.rpcImpl(null, null, null);
-          this.rpcImpl = null;
-          this.emit("end").off();
-        }
-        return this;
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/rpc.js
-  var require_rpc = __commonJS({
-    "node_modules/protobufjs/src/rpc.js"(exports2) {
-      "use strict";
-      init_tampermonkey();
-      var rpc = exports2;
-      rpc.Service = require_service();
-    }
-  });
-
-  // node_modules/protobufjs/src/roots.js
-  var require_roots = __commonJS({
-    "node_modules/protobufjs/src/roots.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = {};
-    }
-  });
-
-  // node_modules/protobufjs/src/index-minimal.js
-  var require_index_minimal = __commonJS({
-    "node_modules/protobufjs/src/index-minimal.js"(exports2) {
-      "use strict";
-      init_tampermonkey();
-      var protobuf = exports2;
-      protobuf.build = "minimal";
-      protobuf.Writer = require_writer();
-      protobuf.BufferWriter = require_writer_buffer();
-      protobuf.Reader = require_reader();
-      protobuf.BufferReader = require_reader_buffer();
-      protobuf.util = require_minimal();
-      protobuf.rpc = require_rpc();
-      protobuf.roots = require_roots();
-      protobuf.configure = configure;
-      function configure() {
-        protobuf.util._configure();
-        protobuf.Writer._configure(protobuf.BufferWriter);
-        protobuf.Reader._configure(protobuf.BufferReader);
-      }
-      configure();
-    }
-  });
-
-  // node_modules/@protobufjs/codegen/index.js
-  var require_codegen = __commonJS({
-    "node_modules/@protobufjs/codegen/index.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = codegen;
-      function codegen(functionParams, functionName) {
-        if (typeof functionParams === "string") {
-          functionName = functionParams;
-          functionParams = void 0;
-        }
-        var body = [];
-        function Codegen(formatStringOrScope) {
-          if (typeof formatStringOrScope !== "string") {
-            var source = toString2();
-            if (codegen.verbose)
-              console.log("codegen: " + source);
-            source = "return " + source;
-            if (formatStringOrScope) {
-              var scopeKeys = Object.keys(formatStringOrScope), scopeParams = new Array(scopeKeys.length + 1), scopeValues = new Array(scopeKeys.length), scopeOffset = 0;
-              while (scopeOffset < scopeKeys.length) {
-                scopeParams[scopeOffset] = scopeKeys[scopeOffset];
-                scopeValues[scopeOffset] = formatStringOrScope[scopeKeys[scopeOffset++]];
-              }
-              scopeParams[scopeOffset] = source;
-              return Function.apply(null, scopeParams).apply(null, scopeValues);
-            }
-            return Function(source)();
-          }
-          var formatParams = new Array(arguments.length - 1), formatOffset = 0;
-          while (formatOffset < formatParams.length)
-            formatParams[formatOffset] = arguments[++formatOffset];
-          formatOffset = 0;
-          formatStringOrScope = formatStringOrScope.replace(/%([%dfijs])/g, function replace(\$0, \$1) {
-            var value = formatParams[formatOffset++];
-            switch (\$1) {
-              case "d":
-              case "f":
-                return String(Number(value));
-              case "i":
-                return String(Math.floor(value));
-              case "j":
-                return JSON.stringify(value);
-              case "s":
-                return String(value);
-            }
-            return "%";
-          });
-          if (formatOffset !== formatParams.length)
-            throw Error("parameter count mismatch");
-          body.push(formatStringOrScope);
-          return Codegen;
-        }
-        function toString2(functionNameOverride) {
-          return "function " + (functionNameOverride || functionName || "") + "(" + (functionParams && functionParams.join(",") || "") + "){\\n  " + body.join("\\n  ") + "\\n}";
-        }
-        Codegen.toString = toString2;
-        return Codegen;
-      }
-      codegen.verbose = false;
-    }
-  });
-
-  // node_modules/@protobufjs/fetch/index.js
-  var require_fetch = __commonJS({
-    "node_modules/@protobufjs/fetch/index.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = fetch2;
-      var asPromise = require_aspromise();
-      var inquire2 = require_inquire();
-      var fs = inquire2("fs");
-      function fetch2(filename, options, callback) {
-        if (typeof options === "function") {
-          callback = options;
-          options = {};
-        } else if (!options)
-          options = {};
-        if (!callback)
-          return asPromise(fetch2, this, filename, options);
-        if (!options.xhr && fs && fs.readFile)
-          return fs.readFile(filename, function fetchReadFileCallback(err, contents) {
-            return err && typeof XMLHttpRequest !== "undefined" ? fetch2.xhr(filename, options, callback) : err ? callback(err) : callback(null, options.binary ? contents : contents.toString("utf8"));
-          });
-        return fetch2.xhr(filename, options, callback);
-      }
-      fetch2.xhr = function fetch_xhr(filename, options, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function fetchOnReadyStateChange() {
-          if (xhr.readyState !== 4)
-            return void 0;
-          if (xhr.status !== 0 && xhr.status !== 200)
-            return callback(Error("status " + xhr.status));
-          if (options.binary) {
-            var buffer = xhr.response;
-            if (!buffer) {
-              buffer = [];
-              for (var i = 0; i < xhr.responseText.length; ++i)
-                buffer.push(xhr.responseText.charCodeAt(i) & 255);
-            }
-            return callback(null, typeof Uint8Array !== "undefined" ? new Uint8Array(buffer) : buffer);
-          }
-          return callback(null, xhr.responseText);
-        };
-        if (options.binary) {
-          if ("overrideMimeType" in xhr)
-            xhr.overrideMimeType("text/plain; charset=x-user-defined");
-          xhr.responseType = "arraybuffer";
-        }
-        xhr.open("GET", filename);
-        xhr.send();
-      };
-    }
-  });
-
-  // node_modules/@protobufjs/path/index.js
-  var require_path = __commonJS({
-    "node_modules/@protobufjs/path/index.js"(exports2) {
-      "use strict";
-      init_tampermonkey();
-      var path = exports2;
-      var isAbsolute = (
-        /**
-         * Tests if the specified path is absolute.
-         * @param {string} path Path to test
-         * @returns {boolean} \`true\` if path is absolute
-         */
-        path.isAbsolute = function isAbsolute2(path2) {
-          return /^(?:\\/|\\w+:)/.test(path2);
-        }
-      );
-      var normalize = (
-        /**
-         * Normalizes the specified path.
-         * @param {string} path Path to normalize
-         * @returns {string} Normalized path
-         */
-        path.normalize = function normalize2(path2) {
-          path2 = path2.replace(/\\\\/g, "/").replace(/\\/{2,}/g, "/");
-          var parts = path2.split("/"), absolute = isAbsolute(path2), prefix = "";
-          if (absolute)
-            prefix = parts.shift() + "/";
-          for (var i = 0; i < parts.length; ) {
-            if (parts[i] === "..") {
-              if (i > 0 && parts[i - 1] !== "..")
-                parts.splice(--i, 2);
-              else if (absolute)
-                parts.splice(i, 1);
-              else
-                ++i;
-            } else if (parts[i] === ".")
-              parts.splice(i, 1);
-            else
-              ++i;
-          }
-          return prefix + parts.join("/");
-        }
-      );
-      path.resolve = function resolve(originPath, includePath, alreadyNormalized) {
-        if (!alreadyNormalized)
-          includePath = normalize(includePath);
-        if (isAbsolute(includePath))
-          return includePath;
-        if (!alreadyNormalized)
-          originPath = normalize(originPath);
-        return (originPath = originPath.replace(/(?:\\/|^)[^/]+\$/, "")).length ? normalize(originPath + "/" + includePath) : includePath;
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/types.js
-  var require_types = __commonJS({
-    "node_modules/protobufjs/src/types.js"(exports2) {
-      "use strict";
-      init_tampermonkey();
-      var types = exports2;
-      var util = require_util();
-      var s = [
-        "double",
-        // 0
-        "float",
-        // 1
-        "int32",
-        // 2
-        "uint32",
-        // 3
-        "sint32",
-        // 4
-        "fixed32",
-        // 5
-        "sfixed32",
-        // 6
-        "int64",
-        // 7
-        "uint64",
-        // 8
-        "sint64",
-        // 9
-        "fixed64",
-        // 10
-        "sfixed64",
-        // 11
-        "bool",
-        // 12
-        "string",
-        // 13
-        "bytes"
-        // 14
-      ];
-      function bake(values, offset2) {
-        var i = 0, o = {};
-        offset2 |= 0;
-        while (i < values.length)
-          o[s[i + offset2]] = values[i++];
-        return o;
-      }
-      types.basic = bake([
-        /* double   */
-        1,
-        /* float    */
-        5,
-        /* int32    */
-        0,
-        /* uint32   */
-        0,
-        /* sint32   */
-        0,
-        /* fixed32  */
-        5,
-        /* sfixed32 */
-        5,
-        /* int64    */
-        0,
-        /* uint64   */
-        0,
-        /* sint64   */
-        0,
-        /* fixed64  */
-        1,
-        /* sfixed64 */
-        1,
-        /* bool     */
-        0,
-        /* string   */
-        2,
-        /* bytes    */
-        2
-      ]);
-      types.defaults = bake([
-        /* double   */
-        0,
-        /* float    */
-        0,
-        /* int32    */
-        0,
-        /* uint32   */
-        0,
-        /* sint32   */
-        0,
-        /* fixed32  */
-        0,
-        /* sfixed32 */
-        0,
-        /* int64    */
-        0,
-        /* uint64   */
-        0,
-        /* sint64   */
-        0,
-        /* fixed64  */
-        0,
-        /* sfixed64 */
-        0,
-        /* bool     */
-        false,
-        /* string   */
-        "",
-        /* bytes    */
-        util.emptyArray,
-        /* message  */
-        null
-      ]);
-      types.long = bake([
-        /* int64    */
-        0,
-        /* uint64   */
-        0,
-        /* sint64   */
-        0,
-        /* fixed64  */
-        1,
-        /* sfixed64 */
-        1
-      ], 7);
-      types.mapKey = bake([
-        /* int32    */
-        0,
-        /* uint32   */
-        0,
-        /* sint32   */
-        0,
-        /* fixed32  */
-        5,
-        /* sfixed32 */
-        5,
-        /* int64    */
-        0,
-        /* uint64   */
-        0,
-        /* sint64   */
-        0,
-        /* fixed64  */
-        1,
-        /* sfixed64 */
-        1,
-        /* bool     */
-        0,
-        /* string   */
-        2
-      ], 2);
-      types.packed = bake([
-        /* double   */
-        1,
-        /* float    */
-        5,
-        /* int32    */
-        0,
-        /* uint32   */
-        0,
-        /* sint32   */
-        0,
-        /* fixed32  */
-        5,
-        /* sfixed32 */
-        5,
-        /* int64    */
-        0,
-        /* uint64   */
-        0,
-        /* sint64   */
-        0,
-        /* fixed64  */
-        1,
-        /* sfixed64 */
-        1,
-        /* bool     */
-        0
-      ]);
-    }
-  });
-
-  // node_modules/protobufjs/src/field.js
-  var require_field = __commonJS({
-    "node_modules/protobufjs/src/field.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = Field;
-      var ReflectionObject = require_object2();
-      ((Field.prototype = Object.create(ReflectionObject.prototype)).constructor = Field).className = "Field";
-      var Enum = require_enum();
-      var types = require_types();
-      var util = require_util();
-      var Type2;
-      var ruleRe = /^required|optional|repeated\$/;
-      Field.fromJSON = function fromJSON(name, json) {
-        return new Field(name, json.id, json.type, json.rule, json.extend, json.options, json.comment);
-      };
-      function Field(name, id, type, rule, extend, options, comment) {
-        if (util.isObject(rule)) {
-          comment = extend;
-          options = rule;
-          rule = extend = void 0;
-        } else if (util.isObject(extend)) {
-          comment = options;
-          options = extend;
-          extend = void 0;
-        }
-        ReflectionObject.call(this, name, options);
-        if (!util.isInteger(id) || id < 0)
-          throw TypeError("id must be a non-negative integer");
-        if (!util.isString(type))
-          throw TypeError("type must be a string");
-        if (rule !== void 0 && !ruleRe.test(rule = rule.toString().toLowerCase()))
-          throw TypeError("rule must be a string rule");
-        if (extend !== void 0 && !util.isString(extend))
-          throw TypeError("extend must be a string");
-        if (rule === "proto3_optional") {
-          rule = "optional";
-        }
-        this.rule = rule && rule !== "optional" ? rule : void 0;
-        this.type = type;
-        this.id = id;
-        this.extend = extend || void 0;
-        this.required = rule === "required";
-        this.optional = !this.required;
-        this.repeated = rule === "repeated";
-        this.map = false;
-        this.message = null;
-        this.partOf = null;
-        this.typeDefault = null;
-        this.defaultValue = null;
-        this.long = util.Long ? types.long[type] !== void 0 : (
-          /* istanbul ignore next */
-          false
-        );
-        this.bytes = type === "bytes";
-        this.resolvedType = null;
-        this.extensionField = null;
-        this.declaringField = null;
-        this._packed = null;
-        this.comment = comment;
-      }
-      Object.defineProperty(Field.prototype, "packed", {
-        get: function() {
-          if (this._packed === null)
-            this._packed = this.getOption("packed") !== false;
-          return this._packed;
-        }
-      });
-      Field.prototype.setOption = function setOption(name, value, ifNotSet) {
-        if (name === "packed")
-          this._packed = null;
-        return ReflectionObject.prototype.setOption.call(this, name, value, ifNotSet);
-      };
-      Field.prototype.toJSON = function toJSON(toJSONOptions) {
-        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
-        return util.toObject([
-          "rule",
-          this.rule !== "optional" && this.rule || void 0,
-          "type",
-          this.type,
-          "id",
-          this.id,
-          "extend",
-          this.extend,
-          "options",
-          this.options,
-          "comment",
-          keepComments ? this.comment : void 0
-        ]);
-      };
-      Field.prototype.resolve = function resolve() {
-        if (this.resolved)
-          return this;
-        if ((this.typeDefault = types.defaults[this.type]) === void 0) {
-          this.resolvedType = (this.declaringField ? this.declaringField.parent : this.parent).lookupTypeOrEnum(this.type);
-          if (this.resolvedType instanceof Type2)
-            this.typeDefault = null;
-          else
-            this.typeDefault = this.resolvedType.values[Object.keys(this.resolvedType.values)[0]];
-        } else if (this.options && this.options.proto3_optional) {
-          this.typeDefault = null;
-        }
-        if (this.options && this.options["default"] != null) {
-          this.typeDefault = this.options["default"];
-          if (this.resolvedType instanceof Enum && typeof this.typeDefault === "string")
-            this.typeDefault = this.resolvedType.values[this.typeDefault];
-        }
-        if (this.options) {
-          if (this.options.packed === true || this.options.packed !== void 0 && this.resolvedType && !(this.resolvedType instanceof Enum))
-            delete this.options.packed;
-          if (!Object.keys(this.options).length)
-            this.options = void 0;
-        }
-        if (this.long) {
-          this.typeDefault = util.Long.fromNumber(this.typeDefault, this.type.charAt(0) === "u");
-          if (Object.freeze)
-            Object.freeze(this.typeDefault);
-        } else if (this.bytes && typeof this.typeDefault === "string") {
-          var buf;
-          if (util.base64.test(this.typeDefault))
-            util.base64.decode(this.typeDefault, buf = util.newBuffer(util.base64.length(this.typeDefault)), 0);
-          else
-            util.utf8.write(this.typeDefault, buf = util.newBuffer(util.utf8.length(this.typeDefault)), 0);
-          this.typeDefault = buf;
-        }
-        if (this.map)
-          this.defaultValue = util.emptyObject;
-        else if (this.repeated)
-          this.defaultValue = util.emptyArray;
-        else
-          this.defaultValue = this.typeDefault;
-        if (this.parent instanceof Type2)
-          this.parent.ctor.prototype[this.name] = this.defaultValue;
-        return ReflectionObject.prototype.resolve.call(this);
-      };
-      Field.d = function decorateField(fieldId, fieldType, fieldRule, defaultValue) {
-        if (typeof fieldType === "function")
-          fieldType = util.decorateType(fieldType).name;
-        else if (fieldType && typeof fieldType === "object")
-          fieldType = util.decorateEnum(fieldType).name;
-        return function fieldDecorator(prototype, fieldName) {
-          util.decorateType(prototype.constructor).add(new Field(fieldName, fieldId, fieldType, fieldRule, { "default": defaultValue }));
-        };
-      };
-      Field._configure = function configure(Type_) {
-        Type2 = Type_;
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/oneof.js
-  var require_oneof = __commonJS({
-    "node_modules/protobufjs/src/oneof.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = OneOf;
-      var ReflectionObject = require_object2();
-      ((OneOf.prototype = Object.create(ReflectionObject.prototype)).constructor = OneOf).className = "OneOf";
-      var Field = require_field();
-      var util = require_util();
-      function OneOf(name, fieldNames, options, comment) {
-        if (!Array.isArray(fieldNames)) {
-          options = fieldNames;
-          fieldNames = void 0;
-        }
-        ReflectionObject.call(this, name, options);
-        if (!(fieldNames === void 0 || Array.isArray(fieldNames)))
-          throw TypeError("fieldNames must be an Array");
-        this.oneof = fieldNames || [];
-        this.fieldsArray = [];
-        this.comment = comment;
-      }
-      OneOf.fromJSON = function fromJSON(name, json) {
-        return new OneOf(name, json.oneof, json.options, json.comment);
-      };
-      OneOf.prototype.toJSON = function toJSON(toJSONOptions) {
-        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
-        return util.toObject([
-          "options",
-          this.options,
-          "oneof",
-          this.oneof,
-          "comment",
-          keepComments ? this.comment : void 0
-        ]);
-      };
-      function addFieldsToParent(oneof) {
-        if (oneof.parent) {
-          for (var i = 0; i < oneof.fieldsArray.length; ++i)
-            if (!oneof.fieldsArray[i].parent)
-              oneof.parent.add(oneof.fieldsArray[i]);
-        }
-      }
-      OneOf.prototype.add = function add(field) {
-        if (!(field instanceof Field))
-          throw TypeError("field must be a Field");
-        if (field.parent && field.parent !== this.parent)
-          field.parent.remove(field);
-        this.oneof.push(field.name);
-        this.fieldsArray.push(field);
-        field.partOf = this;
-        addFieldsToParent(this);
-        return this;
-      };
-      OneOf.prototype.remove = function remove(field) {
-        if (!(field instanceof Field))
-          throw TypeError("field must be a Field");
-        var index = this.fieldsArray.indexOf(field);
-        if (index < 0)
-          throw Error(field + " is not a member of " + this);
-        this.fieldsArray.splice(index, 1);
-        index = this.oneof.indexOf(field.name);
-        if (index > -1)
-          this.oneof.splice(index, 1);
-        field.partOf = null;
-        return this;
-      };
-      OneOf.prototype.onAdd = function onAdd(parent) {
-        ReflectionObject.prototype.onAdd.call(this, parent);
-        var self2 = this;
-        for (var i = 0; i < this.oneof.length; ++i) {
-          var field = parent.get(this.oneof[i]);
-          if (field && !field.partOf) {
-            field.partOf = self2;
-            self2.fieldsArray.push(field);
-          }
-        }
-        addFieldsToParent(this);
-      };
-      OneOf.prototype.onRemove = function onRemove(parent) {
-        for (var i = 0, field; i < this.fieldsArray.length; ++i)
-          if ((field = this.fieldsArray[i]).parent)
-            field.parent.remove(field);
-        ReflectionObject.prototype.onRemove.call(this, parent);
-      };
-      OneOf.d = function decorateOneOf() {
-        var fieldNames = new Array(arguments.length), index = 0;
-        while (index < arguments.length)
-          fieldNames[index] = arguments[index++];
-        return function oneOfDecorator(prototype, oneofName) {
-          util.decorateType(prototype.constructor).add(new OneOf(oneofName, fieldNames));
-          Object.defineProperty(prototype, oneofName, {
-            get: util.oneOfGetter(fieldNames),
-            set: util.oneOfSetter(fieldNames)
-          });
-        };
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/namespace.js
-  var require_namespace = __commonJS({
-    "node_modules/protobufjs/src/namespace.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = Namespace;
-      var ReflectionObject = require_object2();
-      ((Namespace.prototype = Object.create(ReflectionObject.prototype)).constructor = Namespace).className = "Namespace";
-      var Field = require_field();
-      var util = require_util();
-      var OneOf = require_oneof();
-      var Type2;
-      var Service;
-      var Enum;
-      Namespace.fromJSON = function fromJSON(name, json) {
-        return new Namespace(name, json.options).addJSON(json.nested);
-      };
-      function arrayToJSON(array, toJSONOptions) {
-        if (!(array && array.length))
-          return void 0;
-        var obj = {};
-        for (var i = 0; i < array.length; ++i)
-          obj[array[i].name] = array[i].toJSON(toJSONOptions);
-        return obj;
-      }
-      Namespace.arrayToJSON = arrayToJSON;
-      Namespace.isReservedId = function isReservedId(reserved, id) {
-        if (reserved) {
-          for (var i = 0; i < reserved.length; ++i)
-            if (typeof reserved[i] !== "string" && reserved[i][0] <= id && reserved[i][1] > id)
-              return true;
-        }
-        return false;
-      };
-      Namespace.isReservedName = function isReservedName(reserved, name) {
-        if (reserved) {
-          for (var i = 0; i < reserved.length; ++i)
-            if (reserved[i] === name)
-              return true;
-        }
-        return false;
-      };
-      function Namespace(name, options) {
-        ReflectionObject.call(this, name, options);
-        this.nested = void 0;
-        this._nestedArray = null;
-      }
-      function clearCache(namespace) {
-        namespace._nestedArray = null;
-        return namespace;
-      }
-      Object.defineProperty(Namespace.prototype, "nestedArray", {
-        get: function() {
-          return this._nestedArray || (this._nestedArray = util.toArray(this.nested));
-        }
-      });
-      Namespace.prototype.toJSON = function toJSON(toJSONOptions) {
-        return util.toObject([
-          "options",
-          this.options,
-          "nested",
-          arrayToJSON(this.nestedArray, toJSONOptions)
-        ]);
-      };
-      Namespace.prototype.addJSON = function addJSON(nestedJson) {
-        var ns = this;
-        if (nestedJson) {
-          for (var names = Object.keys(nestedJson), i = 0, nested; i < names.length; ++i) {
-            nested = nestedJson[names[i]];
-            ns.add(
-              // most to least likely
-              (nested.fields !== void 0 ? Type2.fromJSON : nested.values !== void 0 ? Enum.fromJSON : nested.methods !== void 0 ? Service.fromJSON : nested.id !== void 0 ? Field.fromJSON : Namespace.fromJSON)(names[i], nested)
-            );
-          }
-        }
-        return this;
-      };
-      Namespace.prototype.get = function get(name) {
-        return this.nested && this.nested[name] || null;
-      };
-      Namespace.prototype.getEnum = function getEnum(name) {
-        if (this.nested && this.nested[name] instanceof Enum)
-          return this.nested[name].values;
-        throw Error("no such enum: " + name);
-      };
-      Namespace.prototype.add = function add(object) {
-        if (!(object instanceof Field && object.extend !== void 0 || object instanceof Type2 || object instanceof OneOf || object instanceof Enum || object instanceof Service || object instanceof Namespace))
-          throw TypeError("object must be a valid nested object");
-        if (!this.nested)
-          this.nested = {};
-        else {
-          var prev = this.get(object.name);
-          if (prev) {
-            if (prev instanceof Namespace && object instanceof Namespace && !(prev instanceof Type2 || prev instanceof Service)) {
-              var nested = prev.nestedArray;
-              for (var i = 0; i < nested.length; ++i)
-                object.add(nested[i]);
-              this.remove(prev);
-              if (!this.nested)
-                this.nested = {};
-              object.setOptions(prev.options, true);
-            } else
-              throw Error("duplicate name '" + object.name + "' in " + this);
-          }
-        }
-        this.nested[object.name] = object;
-        object.onAdd(this);
-        return clearCache(this);
-      };
-      Namespace.prototype.remove = function remove(object) {
-        if (!(object instanceof ReflectionObject))
-          throw TypeError("object must be a ReflectionObject");
-        if (object.parent !== this)
-          throw Error(object + " is not a member of " + this);
-        delete this.nested[object.name];
-        if (!Object.keys(this.nested).length)
-          this.nested = void 0;
-        object.onRemove(this);
-        return clearCache(this);
-      };
-      Namespace.prototype.define = function define(path, json) {
-        if (util.isString(path))
-          path = path.split(".");
-        else if (!Array.isArray(path))
-          throw TypeError("illegal path");
-        if (path && path.length && path[0] === "")
-          throw Error("path must be relative");
-        var ptr = this;
-        while (path.length > 0) {
-          var part = path.shift();
-          if (ptr.nested && ptr.nested[part]) {
-            ptr = ptr.nested[part];
-            if (!(ptr instanceof Namespace))
-              throw Error("path conflicts with non-namespace objects");
-          } else
-            ptr.add(ptr = new Namespace(part));
-        }
-        if (json)
-          ptr.addJSON(json);
-        return ptr;
-      };
-      Namespace.prototype.resolveAll = function resolveAll() {
-        var nested = this.nestedArray, i = 0;
-        while (i < nested.length)
-          if (nested[i] instanceof Namespace)
-            nested[i++].resolveAll();
-          else
-            nested[i++].resolve();
-        return this.resolve();
-      };
-      Namespace.prototype.lookup = function lookup(path, filterTypes, parentAlreadyChecked) {
-        if (typeof filterTypes === "boolean") {
-          parentAlreadyChecked = filterTypes;
-          filterTypes = void 0;
-        } else if (filterTypes && !Array.isArray(filterTypes))
-          filterTypes = [filterTypes];
-        if (util.isString(path) && path.length) {
-          if (path === ".")
-            return this.root;
-          path = path.split(".");
-        } else if (!path.length)
-          return this;
-        if (path[0] === "")
-          return this.root.lookup(path.slice(1), filterTypes);
-        var found = this.get(path[0]);
-        if (found) {
-          if (path.length === 1) {
-            if (!filterTypes || filterTypes.indexOf(found.constructor) > -1)
-              return found;
-          } else if (found instanceof Namespace && (found = found.lookup(path.slice(1), filterTypes, true)))
-            return found;
-        } else
-          for (var i = 0; i < this.nestedArray.length; ++i)
-            if (this._nestedArray[i] instanceof Namespace && (found = this._nestedArray[i].lookup(path, filterTypes, true)))
-              return found;
-        if (this.parent === null || parentAlreadyChecked)
-          return null;
-        return this.parent.lookup(path, filterTypes);
-      };
-      Namespace.prototype.lookupType = function lookupType(path) {
-        var found = this.lookup(path, [Type2]);
-        if (!found)
-          throw Error("no such type: " + path);
-        return found;
-      };
-      Namespace.prototype.lookupEnum = function lookupEnum(path) {
-        var found = this.lookup(path, [Enum]);
-        if (!found)
-          throw Error("no such Enum '" + path + "' in " + this);
-        return found;
-      };
-      Namespace.prototype.lookupTypeOrEnum = function lookupTypeOrEnum(path) {
-        var found = this.lookup(path, [Type2, Enum]);
-        if (!found)
-          throw Error("no such Type or Enum '" + path + "' in " + this);
-        return found;
-      };
-      Namespace.prototype.lookupService = function lookupService(path) {
-        var found = this.lookup(path, [Service]);
-        if (!found)
-          throw Error("no such Service '" + path + "' in " + this);
-        return found;
-      };
-      Namespace._configure = function(Type_, Service_, Enum_) {
-        Type2 = Type_;
-        Service = Service_;
-        Enum = Enum_;
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/mapfield.js
-  var require_mapfield = __commonJS({
-    "node_modules/protobufjs/src/mapfield.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = MapField;
-      var Field = require_field();
-      ((MapField.prototype = Object.create(Field.prototype)).constructor = MapField).className = "MapField";
-      var types = require_types();
-      var util = require_util();
-      function MapField(name, id, keyType, type, options, comment) {
-        Field.call(this, name, id, type, void 0, void 0, options, comment);
-        if (!util.isString(keyType))
-          throw TypeError("keyType must be a string");
-        this.keyType = keyType;
-        this.resolvedKeyType = null;
-        this.map = true;
-      }
-      MapField.fromJSON = function fromJSON(name, json) {
-        return new MapField(name, json.id, json.keyType, json.type, json.options, json.comment);
-      };
-      MapField.prototype.toJSON = function toJSON(toJSONOptions) {
-        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
-        return util.toObject([
-          "keyType",
-          this.keyType,
-          "type",
-          this.type,
-          "id",
-          this.id,
-          "extend",
-          this.extend,
-          "options",
-          this.options,
-          "comment",
-          keepComments ? this.comment : void 0
-        ]);
-      };
-      MapField.prototype.resolve = function resolve() {
-        if (this.resolved)
-          return this;
-        if (types.mapKey[this.keyType] === void 0)
-          throw Error("invalid key type: " + this.keyType);
-        return Field.prototype.resolve.call(this);
-      };
-      MapField.d = function decorateMapField(fieldId, fieldKeyType, fieldValueType) {
-        if (typeof fieldValueType === "function")
-          fieldValueType = util.decorateType(fieldValueType).name;
-        else if (fieldValueType && typeof fieldValueType === "object")
-          fieldValueType = util.decorateEnum(fieldValueType).name;
-        return function mapFieldDecorator(prototype, fieldName) {
-          util.decorateType(prototype.constructor).add(new MapField(fieldName, fieldId, fieldKeyType, fieldValueType));
-        };
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/method.js
-  var require_method = __commonJS({
-    "node_modules/protobufjs/src/method.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = Method;
-      var ReflectionObject = require_object2();
-      ((Method.prototype = Object.create(ReflectionObject.prototype)).constructor = Method).className = "Method";
-      var util = require_util();
-      function Method(name, type, requestType, responseType, requestStream, responseStream, options, comment, parsedOptions) {
-        if (util.isObject(requestStream)) {
-          options = requestStream;
-          requestStream = responseStream = void 0;
-        } else if (util.isObject(responseStream)) {
-          options = responseStream;
-          responseStream = void 0;
-        }
-        if (!(type === void 0 || util.isString(type)))
-          throw TypeError("type must be a string");
-        if (!util.isString(requestType))
-          throw TypeError("requestType must be a string");
-        if (!util.isString(responseType))
-          throw TypeError("responseType must be a string");
-        ReflectionObject.call(this, name, options);
-        this.type = type || "rpc";
-        this.requestType = requestType;
-        this.requestStream = requestStream ? true : void 0;
-        this.responseType = responseType;
-        this.responseStream = responseStream ? true : void 0;
-        this.resolvedRequestType = null;
-        this.resolvedResponseType = null;
-        this.comment = comment;
-        this.parsedOptions = parsedOptions;
-      }
-      Method.fromJSON = function fromJSON(name, json) {
-        return new Method(name, json.type, json.requestType, json.responseType, json.requestStream, json.responseStream, json.options, json.comment, json.parsedOptions);
-      };
-      Method.prototype.toJSON = function toJSON(toJSONOptions) {
-        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
-        return util.toObject([
-          "type",
-          this.type !== "rpc" && /* istanbul ignore next */
-          this.type || void 0,
-          "requestType",
-          this.requestType,
-          "requestStream",
-          this.requestStream,
-          "responseType",
-          this.responseType,
-          "responseStream",
-          this.responseStream,
-          "options",
-          this.options,
-          "comment",
-          keepComments ? this.comment : void 0,
-          "parsedOptions",
-          this.parsedOptions
-        ]);
-      };
-      Method.prototype.resolve = function resolve() {
-        if (this.resolved)
-          return this;
-        this.resolvedRequestType = this.parent.lookupType(this.requestType);
-        this.resolvedResponseType = this.parent.lookupType(this.responseType);
-        return ReflectionObject.prototype.resolve.call(this);
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/service.js
-  var require_service2 = __commonJS({
-    "node_modules/protobufjs/src/service.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = Service;
-      var Namespace = require_namespace();
-      ((Service.prototype = Object.create(Namespace.prototype)).constructor = Service).className = "Service";
-      var Method = require_method();
-      var util = require_util();
-      var rpc = require_rpc();
-      function Service(name, options) {
-        Namespace.call(this, name, options);
-        this.methods = {};
-        this._methodsArray = null;
-      }
-      Service.fromJSON = function fromJSON(name, json) {
-        var service = new Service(name, json.options);
-        if (json.methods)
-          for (var names = Object.keys(json.methods), i = 0; i < names.length; ++i)
-            service.add(Method.fromJSON(names[i], json.methods[names[i]]));
-        if (json.nested)
-          service.addJSON(json.nested);
-        service.comment = json.comment;
-        return service;
-      };
-      Service.prototype.toJSON = function toJSON(toJSONOptions) {
-        var inherited = Namespace.prototype.toJSON.call(this, toJSONOptions);
-        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
-        return util.toObject([
-          "options",
-          inherited && inherited.options || void 0,
-          "methods",
-          Namespace.arrayToJSON(this.methodsArray, toJSONOptions) || /* istanbul ignore next */
-          {},
-          "nested",
-          inherited && inherited.nested || void 0,
-          "comment",
-          keepComments ? this.comment : void 0
-        ]);
-      };
-      Object.defineProperty(Service.prototype, "methodsArray", {
-        get: function() {
-          return this._methodsArray || (this._methodsArray = util.toArray(this.methods));
-        }
-      });
-      function clearCache(service) {
-        service._methodsArray = null;
-        return service;
-      }
-      Service.prototype.get = function get(name) {
-        return this.methods[name] || Namespace.prototype.get.call(this, name);
-      };
-      Service.prototype.resolveAll = function resolveAll() {
-        var methods = this.methodsArray;
-        for (var i = 0; i < methods.length; ++i)
-          methods[i].resolve();
-        return Namespace.prototype.resolve.call(this);
-      };
-      Service.prototype.add = function add(object) {
-        if (this.get(object.name))
-          throw Error("duplicate name '" + object.name + "' in " + this);
-        if (object instanceof Method) {
-          this.methods[object.name] = object;
-          object.parent = this;
-          return clearCache(this);
-        }
-        return Namespace.prototype.add.call(this, object);
-      };
-      Service.prototype.remove = function remove(object) {
-        if (object instanceof Method) {
-          if (this.methods[object.name] !== object)
-            throw Error(object + " is not a member of " + this);
-          delete this.methods[object.name];
-          object.parent = null;
-          return clearCache(this);
-        }
-        return Namespace.prototype.remove.call(this, object);
-      };
-      Service.prototype.create = function create(rpcImpl, requestDelimited, responseDelimited) {
-        var rpcService = new rpc.Service(rpcImpl, requestDelimited, responseDelimited);
-        for (var i = 0, method; i < /* initializes */
-        this.methodsArray.length; ++i) {
-          var methodName = util.lcFirst((method = this._methodsArray[i]).resolve().name).replace(/[^\$\\w_]/g, "");
-          rpcService[methodName] = util.codegen(["r", "c"], util.isReserved(methodName) ? methodName + "_" : methodName)("return this.rpcCall(m,q,s,r,c)")({
-            m: method,
-            q: method.resolvedRequestType.ctor,
-            s: method.resolvedResponseType.ctor
-          });
-        }
-        return rpcService;
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/message.js
-  var require_message = __commonJS({
-    "node_modules/protobufjs/src/message.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = Message;
-      var util = require_minimal();
-      function Message(properties) {
-        if (properties)
-          for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-            this[keys[i]] = properties[keys[i]];
-      }
-      Message.create = function create(properties) {
-        return this.\$type.create(properties);
-      };
-      Message.encode = function encode(message, writer) {
-        return this.\$type.encode(message, writer);
-      };
-      Message.encodeDelimited = function encodeDelimited(message, writer) {
-        return this.\$type.encodeDelimited(message, writer);
-      };
-      Message.decode = function decode(reader) {
-        return this.\$type.decode(reader);
-      };
-      Message.decodeDelimited = function decodeDelimited(reader) {
-        return this.\$type.decodeDelimited(reader);
-      };
-      Message.verify = function verify(message) {
-        return this.\$type.verify(message);
-      };
-      Message.fromObject = function fromObject(object) {
-        return this.\$type.fromObject(object);
-      };
-      Message.toObject = function toObject2(message, options) {
-        return this.\$type.toObject(message, options);
-      };
-      Message.prototype.toJSON = function toJSON() {
-        return this.\$type.toObject(this, util.toJSONOptions);
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/decoder.js
-  var require_decoder = __commonJS({
-    "node_modules/protobufjs/src/decoder.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = decoder;
-      var Enum = require_enum();
-      var types = require_types();
-      var util = require_util();
-      function missing(field) {
-        return "missing required '" + field.name + "'";
-      }
-      function decoder(mtype) {
-        var gen = util.codegen(["r", "l"], mtype.name + "\$decode")("if(!(r instanceof Reader))")("r=Reader.create(r)")("var c=l===undefined?r.len:r.pos+l,m=new this.ctor" + (mtype.fieldsArray.filter(function(field2) {
-          return field2.map;
-        }).length ? ",k,value" : ""))("while(r.pos<c){")("var t=r.uint32()");
-        if (mtype.group)
-          gen("if((t&7)===4)")("break");
-        gen("switch(t>>>3){");
-        var i = 0;
-        for (; i < /* initializes */
-        mtype.fieldsArray.length; ++i) {
-          var field = mtype._fieldsArray[i].resolve(), type = field.resolvedType instanceof Enum ? "int32" : field.type, ref = "m" + util.safeProp(field.name);
-          gen("case %i: {", field.id);
-          if (field.map) {
-            gen("if(%s===util.emptyObject)", ref)("%s={}", ref)("var c2 = r.uint32()+r.pos");
-            if (types.defaults[field.keyType] !== void 0)
-              gen("k=%j", types.defaults[field.keyType]);
-            else
-              gen("k=null");
-            if (types.defaults[type] !== void 0)
-              gen("value=%j", types.defaults[type]);
-            else
-              gen("value=null");
-            gen("while(r.pos<c2){")("var tag2=r.uint32()")("switch(tag2>>>3){")("case 1: k=r.%s(); break", field.keyType)("case 2:");
-            if (types.basic[type] === void 0)
-              gen("value=types[%i].decode(r,r.uint32())", i);
-            else
-              gen("value=r.%s()", type);
-            gen("break")("default:")("r.skipType(tag2&7)")("break")("}")("}");
-            if (types.long[field.keyType] !== void 0)
-              gen('%s[typeof k==="object"?util.longToHash(k):k]=value', ref);
-            else
-              gen("%s[k]=value", ref);
-          } else if (field.repeated) {
-            gen("if(!(%s&&%s.length))", ref, ref)("%s=[]", ref);
-            if (types.packed[type] !== void 0)
-              gen("if((t&7)===2){")("var c2=r.uint32()+r.pos")("while(r.pos<c2)")("%s.push(r.%s())", ref, type)("}else");
-            if (types.basic[type] === void 0)
-              gen(field.resolvedType.group ? "%s.push(types[%i].decode(r))" : "%s.push(types[%i].decode(r,r.uint32()))", ref, i);
-            else
-              gen("%s.push(r.%s())", ref, type);
-          } else if (types.basic[type] === void 0)
-            gen(field.resolvedType.group ? "%s=types[%i].decode(r)" : "%s=types[%i].decode(r,r.uint32())", ref, i);
-          else
-            gen("%s=r.%s()", ref, type);
-          gen("break")("}");
-        }
-        gen("default:")("r.skipType(t&7)")("break")("}")("}");
-        for (i = 0; i < mtype._fieldsArray.length; ++i) {
-          var rfield = mtype._fieldsArray[i];
-          if (rfield.required)
-            gen("if(!m.hasOwnProperty(%j))", rfield.name)("throw util.ProtocolError(%j,{instance:m})", missing(rfield));
-        }
-        return gen("return m");
-      }
-    }
-  });
-
-  // node_modules/protobufjs/src/verifier.js
-  var require_verifier = __commonJS({
-    "node_modules/protobufjs/src/verifier.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = verifier;
-      var Enum = require_enum();
-      var util = require_util();
-      function invalid(field, expected) {
-        return field.name + ": " + expected + (field.repeated && expected !== "array" ? "[]" : field.map && expected !== "object" ? "{k:" + field.keyType + "}" : "") + " expected";
-      }
-      function genVerifyValue(gen, field, fieldIndex, ref) {
-        if (field.resolvedType) {
-          if (field.resolvedType instanceof Enum) {
-            gen("switch(%s){", ref)("default:")("return%j", invalid(field, "enum value"));
-            for (var keys = Object.keys(field.resolvedType.values), j = 0; j < keys.length; ++j)
-              gen("case %i:", field.resolvedType.values[keys[j]]);
-            gen("break")("}");
-          } else {
-            gen("{")("var e=types[%i].verify(%s);", fieldIndex, ref)("if(e)")("return%j+e", field.name + ".")("}");
-          }
-        } else {
-          switch (field.type) {
-            case "int32":
-            case "uint32":
-            case "sint32":
-            case "fixed32":
-            case "sfixed32":
-              gen("if(!util.isInteger(%s))", ref)("return%j", invalid(field, "integer"));
-              break;
-            case "int64":
-            case "uint64":
-            case "sint64":
-            case "fixed64":
-            case "sfixed64":
-              gen("if(!util.isInteger(%s)&&!(%s&&util.isInteger(%s.low)&&util.isInteger(%s.high)))", ref, ref, ref, ref)("return%j", invalid(field, "integer|Long"));
-              break;
-            case "float":
-            case "double":
-              gen('if(typeof %s!=="number")', ref)("return%j", invalid(field, "number"));
-              break;
-            case "bool":
-              gen('if(typeof %s!=="boolean")', ref)("return%j", invalid(field, "boolean"));
-              break;
-            case "string":
-              gen("if(!util.isString(%s))", ref)("return%j", invalid(field, "string"));
-              break;
-            case "bytes":
-              gen('if(!(%s&&typeof %s.length==="number"||util.isString(%s)))', ref, ref, ref)("return%j", invalid(field, "buffer"));
-              break;
-          }
-        }
-        return gen;
-      }
-      function genVerifyKey(gen, field, ref) {
-        switch (field.keyType) {
-          case "int32":
-          case "uint32":
-          case "sint32":
-          case "fixed32":
-          case "sfixed32":
-            gen("if(!util.key32Re.test(%s))", ref)("return%j", invalid(field, "integer key"));
-            break;
-          case "int64":
-          case "uint64":
-          case "sint64":
-          case "fixed64":
-          case "sfixed64":
-            gen("if(!util.key64Re.test(%s))", ref)("return%j", invalid(field, "integer|Long key"));
-            break;
-          case "bool":
-            gen("if(!util.key2Re.test(%s))", ref)("return%j", invalid(field, "boolean key"));
-            break;
-        }
-        return gen;
-      }
-      function verifier(mtype) {
-        var gen = util.codegen(["m"], mtype.name + "\$verify")('if(typeof m!=="object"||m===null)')("return%j", "object expected");
-        var oneofs = mtype.oneofsArray, seenFirstField = {};
-        if (oneofs.length)
-          gen("var p={}");
-        for (var i = 0; i < /* initializes */
-        mtype.fieldsArray.length; ++i) {
-          var field = mtype._fieldsArray[i].resolve(), ref = "m" + util.safeProp(field.name);
-          if (field.optional)
-            gen("if(%s!=null&&m.hasOwnProperty(%j)){", ref, field.name);
-          if (field.map) {
-            gen("if(!util.isObject(%s))", ref)("return%j", invalid(field, "object"))("var k=Object.keys(%s)", ref)("for(var i=0;i<k.length;++i){");
-            genVerifyKey(gen, field, "k[i]");
-            genVerifyValue(gen, field, i, ref + "[k[i]]")("}");
-          } else if (field.repeated) {
-            gen("if(!Array.isArray(%s))", ref)("return%j", invalid(field, "array"))("for(var i=0;i<%s.length;++i){", ref);
-            genVerifyValue(gen, field, i, ref + "[i]")("}");
-          } else {
-            if (field.partOf) {
-              var oneofProp = util.safeProp(field.partOf.name);
-              if (seenFirstField[field.partOf.name] === 1)
-                gen("if(p%s===1)", oneofProp)("return%j", field.partOf.name + ": multiple values");
-              seenFirstField[field.partOf.name] = 1;
-              gen("p%s=1", oneofProp);
-            }
-            genVerifyValue(gen, field, i, ref);
-          }
-          if (field.optional)
-            gen("}");
-        }
-        return gen("return null");
-      }
-    }
-  });
-
-  // node_modules/protobufjs/src/converter.js
-  var require_converter = __commonJS({
-    "node_modules/protobufjs/src/converter.js"(exports2) {
-      "use strict";
-      init_tampermonkey();
-      var converter = exports2;
-      var Enum = require_enum();
-      var util = require_util();
-      function genValuePartial_fromObject(gen, field, fieldIndex, prop) {
-        var defaultAlreadyEmitted = false;
-        if (field.resolvedType) {
-          if (field.resolvedType instanceof Enum) {
-            gen("switch(d%s){", prop);
-            for (var values = field.resolvedType.values, keys = Object.keys(values), i = 0; i < keys.length; ++i) {
-              if (values[keys[i]] === field.typeDefault && !defaultAlreadyEmitted) {
-                gen("default:")('if(typeof(d%s)==="number"){m%s=d%s;break}', prop, prop, prop);
-                if (!field.repeated)
-                  gen("break");
-                defaultAlreadyEmitted = true;
-              }
-              gen("case%j:", keys[i])("case %i:", values[keys[i]])("m%s=%j", prop, values[keys[i]])("break");
-            }
-            gen("}");
-          } else
-            gen('if(typeof d%s!=="object")', prop)("throw TypeError(%j)", field.fullName + ": object expected")("m%s=types[%i].fromObject(d%s)", prop, fieldIndex, prop);
-        } else {
-          var isUnsigned = false;
-          switch (field.type) {
-            case "double":
-            case "float":
-              gen("m%s=Number(d%s)", prop, prop);
-              break;
-            case "uint32":
-            case "fixed32":
-              gen("m%s=d%s>>>0", prop, prop);
-              break;
-            case "int32":
-            case "sint32":
-            case "sfixed32":
-              gen("m%s=d%s|0", prop, prop);
-              break;
-            case "uint64":
-              isUnsigned = true;
-            case "int64":
-            case "sint64":
-            case "fixed64":
-            case "sfixed64":
-              gen("if(util.Long)")("(m%s=util.Long.fromValue(d%s)).unsigned=%j", prop, prop, isUnsigned)('else if(typeof d%s==="string")', prop)("m%s=parseInt(d%s,10)", prop, prop)('else if(typeof d%s==="number")', prop)("m%s=d%s", prop, prop)('else if(typeof d%s==="object")', prop)("m%s=new util.LongBits(d%s.low>>>0,d%s.high>>>0).toNumber(%s)", prop, prop, prop, isUnsigned ? "true" : "");
-              break;
-            case "bytes":
-              gen('if(typeof d%s==="string")', prop)("util.base64.decode(d%s,m%s=util.newBuffer(util.base64.length(d%s)),0)", prop, prop, prop)("else if(d%s.length >= 0)", prop)("m%s=d%s", prop, prop);
-              break;
-            case "string":
-              gen("m%s=String(d%s)", prop, prop);
-              break;
-            case "bool":
-              gen("m%s=Boolean(d%s)", prop, prop);
-              break;
-          }
-        }
-        return gen;
-      }
-      converter.fromObject = function fromObject(mtype) {
-        var fields = mtype.fieldsArray;
-        var gen = util.codegen(["d"], mtype.name + "\$fromObject")("if(d instanceof this.ctor)")("return d");
-        if (!fields.length)
-          return gen("return new this.ctor");
-        gen("var m=new this.ctor");
-        for (var i = 0; i < fields.length; ++i) {
-          var field = fields[i].resolve(), prop = util.safeProp(field.name);
-          if (field.map) {
-            gen("if(d%s){", prop)('if(typeof d%s!=="object")', prop)("throw TypeError(%j)", field.fullName + ": object expected")("m%s={}", prop)("for(var ks=Object.keys(d%s),i=0;i<ks.length;++i){", prop);
-            genValuePartial_fromObject(
-              gen,
-              field,
-              /* not sorted */
-              i,
-              prop + "[ks[i]]"
-            )("}")("}");
-          } else if (field.repeated) {
-            gen("if(d%s){", prop)("if(!Array.isArray(d%s))", prop)("throw TypeError(%j)", field.fullName + ": array expected")("m%s=[]", prop)("for(var i=0;i<d%s.length;++i){", prop);
-            genValuePartial_fromObject(
-              gen,
-              field,
-              /* not sorted */
-              i,
-              prop + "[i]"
-            )("}")("}");
-          } else {
-            if (!(field.resolvedType instanceof Enum))
-              gen("if(d%s!=null){", prop);
-            genValuePartial_fromObject(
-              gen,
-              field,
-              /* not sorted */
-              i,
-              prop
-            );
-            if (!(field.resolvedType instanceof Enum))
-              gen("}");
-          }
-        }
-        return gen("return m");
-      };
-      function genValuePartial_toObject(gen, field, fieldIndex, prop) {
-        if (field.resolvedType) {
-          if (field.resolvedType instanceof Enum)
-            gen("d%s=o.enums===String?(types[%i].values[m%s]===undefined?m%s:types[%i].values[m%s]):m%s", prop, fieldIndex, prop, prop, fieldIndex, prop, prop);
-          else
-            gen("d%s=types[%i].toObject(m%s,o)", prop, fieldIndex, prop);
-        } else {
-          var isUnsigned = false;
-          switch (field.type) {
-            case "double":
-            case "float":
-              gen("d%s=o.json&&!isFinite(m%s)?String(m%s):m%s", prop, prop, prop, prop);
-              break;
-            case "uint64":
-              isUnsigned = true;
-            case "int64":
-            case "sint64":
-            case "fixed64":
-            case "sfixed64":
-              gen('if(typeof m%s==="number")', prop)("d%s=o.longs===String?String(m%s):m%s", prop, prop, prop)("else")("d%s=o.longs===String?util.Long.prototype.toString.call(m%s):o.longs===Number?new util.LongBits(m%s.low>>>0,m%s.high>>>0).toNumber(%s):m%s", prop, prop, prop, prop, isUnsigned ? "true" : "", prop);
-              break;
-            case "bytes":
-              gen("d%s=o.bytes===String?util.base64.encode(m%s,0,m%s.length):o.bytes===Array?Array.prototype.slice.call(m%s):m%s", prop, prop, prop, prop, prop);
-              break;
-            default:
-              gen("d%s=m%s", prop, prop);
-              break;
-          }
-        }
-        return gen;
-      }
-      converter.toObject = function toObject2(mtype) {
-        var fields = mtype.fieldsArray.slice().sort(util.compareFieldsById);
-        if (!fields.length)
-          return util.codegen()("return {}");
-        var gen = util.codegen(["m", "o"], mtype.name + "\$toObject")("if(!o)")("o={}")("var d={}");
-        var repeatedFields = [], mapFields = [], normalFields = [], i = 0;
-        for (; i < fields.length; ++i)
-          if (!fields[i].partOf)
-            (fields[i].resolve().repeated ? repeatedFields : fields[i].map ? mapFields : normalFields).push(fields[i]);
-        if (repeatedFields.length) {
-          gen("if(o.arrays||o.defaults){");
-          for (i = 0; i < repeatedFields.length; ++i)
-            gen("d%s=[]", util.safeProp(repeatedFields[i].name));
-          gen("}");
-        }
-        if (mapFields.length) {
-          gen("if(o.objects||o.defaults){");
-          for (i = 0; i < mapFields.length; ++i)
-            gen("d%s={}", util.safeProp(mapFields[i].name));
-          gen("}");
-        }
-        if (normalFields.length) {
-          gen("if(o.defaults){");
-          for (i = 0; i < normalFields.length; ++i) {
-            var field = normalFields[i], prop = util.safeProp(field.name);
-            if (field.resolvedType instanceof Enum)
-              gen("d%s=o.enums===String?%j:%j", prop, field.resolvedType.valuesById[field.typeDefault], field.typeDefault);
-            else if (field.long)
-              gen("if(util.Long){")("var n=new util.Long(%i,%i,%j)", field.typeDefault.low, field.typeDefault.high, field.typeDefault.unsigned)("d%s=o.longs===String?n.toString():o.longs===Number?n.toNumber():n", prop)("}else")("d%s=o.longs===String?%j:%i", prop, field.typeDefault.toString(), field.typeDefault.toNumber());
-            else if (field.bytes) {
-              var arrayDefault = "[" + Array.prototype.slice.call(field.typeDefault).join(",") + "]";
-              gen("if(o.bytes===String)d%s=%j", prop, String.fromCharCode.apply(String, field.typeDefault))("else{")("d%s=%s", prop, arrayDefault)("if(o.bytes!==Array)d%s=util.newBuffer(d%s)", prop, prop)("}");
-            } else
-              gen("d%s=%j", prop, field.typeDefault);
-          }
-          gen("}");
-        }
-        var hasKs2 = false;
-        for (i = 0; i < fields.length; ++i) {
-          var field = fields[i], index = mtype._fieldsArray.indexOf(field), prop = util.safeProp(field.name);
-          if (field.map) {
-            if (!hasKs2) {
-              hasKs2 = true;
-              gen("var ks2");
-            }
-            gen("if(m%s&&(ks2=Object.keys(m%s)).length){", prop, prop)("d%s={}", prop)("for(var j=0;j<ks2.length;++j){");
-            genValuePartial_toObject(
-              gen,
-              field,
-              /* sorted */
-              index,
-              prop + "[ks2[j]]"
-            )("}");
-          } else if (field.repeated) {
-            gen("if(m%s&&m%s.length){", prop, prop)("d%s=[]", prop)("for(var j=0;j<m%s.length;++j){", prop);
-            genValuePartial_toObject(
-              gen,
-              field,
-              /* sorted */
-              index,
-              prop + "[j]"
-            )("}");
-          } else {
-            gen("if(m%s!=null&&m.hasOwnProperty(%j)){", prop, field.name);
-            genValuePartial_toObject(
-              gen,
-              field,
-              /* sorted */
-              index,
-              prop
-            );
-            if (field.partOf)
-              gen("if(o.oneofs)")("d%s=%j", util.safeProp(field.partOf.name), field.name);
-          }
-          gen("}");
-        }
-        return gen("return d");
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/wrappers.js
-  var require_wrappers = __commonJS({
-    "node_modules/protobufjs/src/wrappers.js"(exports2) {
-      "use strict";
-      init_tampermonkey();
-      var wrappers = exports2;
-      var Message = require_message();
-      wrappers[".google.protobuf.Any"] = {
-        fromObject: function(object) {
-          if (object && object["@type"]) {
-            var name = object["@type"].substring(object["@type"].lastIndexOf("/") + 1);
-            var type = this.lookup(name);
-            if (type) {
-              var type_url = object["@type"].charAt(0) === "." ? object["@type"].slice(1) : object["@type"];
-              if (type_url.indexOf("/") === -1) {
-                type_url = "/" + type_url;
-              }
-              return this.create({
-                type_url,
-                value: type.encode(type.fromObject(object)).finish()
-              });
-            }
-          }
-          return this.fromObject(object);
-        },
-        toObject: function(message, options) {
-          var googleApi = "type.googleapis.com/";
-          var prefix = "";
-          var name = "";
-          if (options && options.json && message.type_url && message.value) {
-            name = message.type_url.substring(message.type_url.lastIndexOf("/") + 1);
-            prefix = message.type_url.substring(0, message.type_url.lastIndexOf("/") + 1);
-            var type = this.lookup(name);
-            if (type)
-              message = type.decode(message.value);
-          }
-          if (!(message instanceof this.ctor) && message instanceof Message) {
-            var object = message.\$type.toObject(message, options);
-            var messageName = message.\$type.fullName[0] === "." ? message.\$type.fullName.slice(1) : message.\$type.fullName;
-            if (prefix === "") {
-              prefix = googleApi;
-            }
-            name = prefix + messageName;
-            object["@type"] = name;
-            return object;
-          }
-          return this.toObject(message, options);
-        }
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/type.js
-  var require_type = __commonJS({
-    "node_modules/protobufjs/src/type.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = Type2;
-      var Namespace = require_namespace();
-      ((Type2.prototype = Object.create(Namespace.prototype)).constructor = Type2).className = "Type";
-      var Enum = require_enum();
-      var OneOf = require_oneof();
-      var Field = require_field();
-      var MapField = require_mapfield();
-      var Service = require_service2();
-      var Message = require_message();
-      var Reader = require_reader();
-      var Writer = require_writer();
-      var util = require_util();
-      var encoder = require_encoder();
-      var decoder = require_decoder();
-      var verifier = require_verifier();
-      var converter = require_converter();
-      var wrappers = require_wrappers();
-      function Type2(name, options) {
-        Namespace.call(this, name, options);
-        this.fields = {};
-        this.oneofs = void 0;
-        this.extensions = void 0;
-        this.reserved = void 0;
-        this.group = void 0;
-        this._fieldsById = null;
-        this._fieldsArray = null;
-        this._oneofsArray = null;
-        this._ctor = null;
-      }
-      Object.defineProperties(Type2.prototype, {
-        /**
-         * Message fields by id.
-         * @name Type#fieldsById
-         * @type {Object.<number,Field>}
-         * @readonly
-         */
-        fieldsById: {
-          get: function() {
-            if (this._fieldsById)
-              return this._fieldsById;
-            this._fieldsById = {};
-            for (var names = Object.keys(this.fields), i = 0; i < names.length; ++i) {
-              var field = this.fields[names[i]], id = field.id;
-              if (this._fieldsById[id])
-                throw Error("duplicate id " + id + " in " + this);
-              this._fieldsById[id] = field;
-            }
-            return this._fieldsById;
-          }
-        },
-        /**
-         * Fields of this message as an array for iteration.
-         * @name Type#fieldsArray
-         * @type {Field[]}
-         * @readonly
-         */
-        fieldsArray: {
-          get: function() {
-            return this._fieldsArray || (this._fieldsArray = util.toArray(this.fields));
-          }
-        },
-        /**
-         * Oneofs of this message as an array for iteration.
-         * @name Type#oneofsArray
-         * @type {OneOf[]}
-         * @readonly
-         */
-        oneofsArray: {
-          get: function() {
-            return this._oneofsArray || (this._oneofsArray = util.toArray(this.oneofs));
-          }
-        },
-        /**
-         * The registered constructor, if any registered, otherwise a generic constructor.
-         * Assigning a function replaces the internal constructor. If the function does not extend {@link Message} yet, its prototype will be setup accordingly and static methods will be populated. If it already extends {@link Message}, it will just replace the internal constructor.
-         * @name Type#ctor
-         * @type {Constructor<{}>}
-         */
-        ctor: {
-          get: function() {
-            return this._ctor || (this.ctor = Type2.generateConstructor(this)());
-          },
-          set: function(ctor) {
-            var prototype = ctor.prototype;
-            if (!(prototype instanceof Message)) {
-              (ctor.prototype = new Message()).constructor = ctor;
-              util.merge(ctor.prototype, prototype);
-            }
-            ctor.\$type = ctor.prototype.\$type = this;
-            util.merge(ctor, Message, true);
-            this._ctor = ctor;
-            var i = 0;
-            for (; i < /* initializes */
-            this.fieldsArray.length; ++i)
-              this._fieldsArray[i].resolve();
-            var ctorProperties = {};
-            for (i = 0; i < /* initializes */
-            this.oneofsArray.length; ++i)
-              ctorProperties[this._oneofsArray[i].resolve().name] = {
-                get: util.oneOfGetter(this._oneofsArray[i].oneof),
-                set: util.oneOfSetter(this._oneofsArray[i].oneof)
-              };
-            if (i)
-              Object.defineProperties(ctor.prototype, ctorProperties);
-          }
-        }
-      });
-      Type2.generateConstructor = function generateConstructor(mtype) {
-        var gen = util.codegen(["p"], mtype.name);
-        for (var i = 0, field; i < mtype.fieldsArray.length; ++i)
-          if ((field = mtype._fieldsArray[i]).map)
-            gen("this%s={}", util.safeProp(field.name));
-          else if (field.repeated)
-            gen("this%s=[]", util.safeProp(field.name));
-        return gen("if(p)for(var ks=Object.keys(p),i=0;i<ks.length;++i)if(p[ks[i]]!=null)")("this[ks[i]]=p[ks[i]]");
-      };
-      function clearCache(type) {
-        type._fieldsById = type._fieldsArray = type._oneofsArray = null;
-        delete type.encode;
-        delete type.decode;
-        delete type.verify;
-        return type;
-      }
-      Type2.fromJSON = function fromJSON(name, json) {
-        var type = new Type2(name, json.options);
-        type.extensions = json.extensions;
-        type.reserved = json.reserved;
-        var names = Object.keys(json.fields), i = 0;
-        for (; i < names.length; ++i)
-          type.add(
-            (typeof json.fields[names[i]].keyType !== "undefined" ? MapField.fromJSON : Field.fromJSON)(names[i], json.fields[names[i]])
-          );
-        if (json.oneofs)
-          for (names = Object.keys(json.oneofs), i = 0; i < names.length; ++i)
-            type.add(OneOf.fromJSON(names[i], json.oneofs[names[i]]));
-        if (json.nested)
-          for (names = Object.keys(json.nested), i = 0; i < names.length; ++i) {
-            var nested = json.nested[names[i]];
-            type.add(
-              // most to least likely
-              (nested.id !== void 0 ? Field.fromJSON : nested.fields !== void 0 ? Type2.fromJSON : nested.values !== void 0 ? Enum.fromJSON : nested.methods !== void 0 ? Service.fromJSON : Namespace.fromJSON)(names[i], nested)
-            );
-          }
-        if (json.extensions && json.extensions.length)
-          type.extensions = json.extensions;
-        if (json.reserved && json.reserved.length)
-          type.reserved = json.reserved;
-        if (json.group)
-          type.group = true;
-        if (json.comment)
-          type.comment = json.comment;
-        return type;
-      };
-      Type2.prototype.toJSON = function toJSON(toJSONOptions) {
-        var inherited = Namespace.prototype.toJSON.call(this, toJSONOptions);
-        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
-        return util.toObject([
-          "options",
-          inherited && inherited.options || void 0,
-          "oneofs",
-          Namespace.arrayToJSON(this.oneofsArray, toJSONOptions),
-          "fields",
-          Namespace.arrayToJSON(this.fieldsArray.filter(function(obj) {
-            return !obj.declaringField;
-          }), toJSONOptions) || {},
-          "extensions",
-          this.extensions && this.extensions.length ? this.extensions : void 0,
-          "reserved",
-          this.reserved && this.reserved.length ? this.reserved : void 0,
-          "group",
-          this.group || void 0,
-          "nested",
-          inherited && inherited.nested || void 0,
-          "comment",
-          keepComments ? this.comment : void 0
-        ]);
-      };
-      Type2.prototype.resolveAll = function resolveAll() {
-        var fields = this.fieldsArray, i = 0;
-        while (i < fields.length)
-          fields[i++].resolve();
-        var oneofs = this.oneofsArray;
-        i = 0;
-        while (i < oneofs.length)
-          oneofs[i++].resolve();
-        return Namespace.prototype.resolveAll.call(this);
-      };
-      Type2.prototype.get = function get(name) {
-        return this.fields[name] || this.oneofs && this.oneofs[name] || this.nested && this.nested[name] || null;
-      };
-      Type2.prototype.add = function add(object) {
-        if (this.get(object.name))
-          throw Error("duplicate name '" + object.name + "' in " + this);
-        if (object instanceof Field && object.extend === void 0) {
-          if (this._fieldsById ? (
-            /* istanbul ignore next */
-            this._fieldsById[object.id]
-          ) : this.fieldsById[object.id])
-            throw Error("duplicate id " + object.id + " in " + this);
-          if (this.isReservedId(object.id))
-            throw Error("id " + object.id + " is reserved in " + this);
-          if (this.isReservedName(object.name))
-            throw Error("name '" + object.name + "' is reserved in " + this);
-          if (object.parent)
-            object.parent.remove(object);
-          this.fields[object.name] = object;
-          object.message = this;
-          object.onAdd(this);
-          return clearCache(this);
-        }
-        if (object instanceof OneOf) {
-          if (!this.oneofs)
-            this.oneofs = {};
-          this.oneofs[object.name] = object;
-          object.onAdd(this);
-          return clearCache(this);
-        }
-        return Namespace.prototype.add.call(this, object);
-      };
-      Type2.prototype.remove = function remove(object) {
-        if (object instanceof Field && object.extend === void 0) {
-          if (!this.fields || this.fields[object.name] !== object)
-            throw Error(object + " is not a member of " + this);
-          delete this.fields[object.name];
-          object.parent = null;
-          object.onRemove(this);
-          return clearCache(this);
-        }
-        if (object instanceof OneOf) {
-          if (!this.oneofs || this.oneofs[object.name] !== object)
-            throw Error(object + " is not a member of " + this);
-          delete this.oneofs[object.name];
-          object.parent = null;
-          object.onRemove(this);
-          return clearCache(this);
-        }
-        return Namespace.prototype.remove.call(this, object);
-      };
-      Type2.prototype.isReservedId = function isReservedId(id) {
-        return Namespace.isReservedId(this.reserved, id);
-      };
-      Type2.prototype.isReservedName = function isReservedName(name) {
-        return Namespace.isReservedName(this.reserved, name);
-      };
-      Type2.prototype.create = function create(properties) {
-        return new this.ctor(properties);
-      };
-      Type2.prototype.setup = function setup() {
-        var fullName = this.fullName, types = [];
-        for (var i = 0; i < /* initializes */
-        this.fieldsArray.length; ++i)
-          types.push(this._fieldsArray[i].resolve().resolvedType);
-        this.encode = encoder(this)({
-          Writer,
-          types,
-          util
-        });
-        this.decode = decoder(this)({
-          Reader,
-          types,
-          util
-        });
-        this.verify = verifier(this)({
-          types,
-          util
-        });
-        this.fromObject = converter.fromObject(this)({
-          types,
-          util
-        });
-        this.toObject = converter.toObject(this)({
-          types,
-          util
-        });
-        var wrapper = wrappers[fullName];
-        if (wrapper) {
-          var originalThis = Object.create(this);
-          originalThis.fromObject = this.fromObject;
-          this.fromObject = wrapper.fromObject.bind(originalThis);
-          originalThis.toObject = this.toObject;
-          this.toObject = wrapper.toObject.bind(originalThis);
-        }
-        return this;
-      };
-      Type2.prototype.encode = function encode_setup(message, writer) {
-        return this.setup().encode(message, writer);
-      };
-      Type2.prototype.encodeDelimited = function encodeDelimited(message, writer) {
-        return this.encode(message, writer && writer.len ? writer.fork() : writer).ldelim();
-      };
-      Type2.prototype.decode = function decode_setup(reader, length2) {
-        return this.setup().decode(reader, length2);
-      };
-      Type2.prototype.decodeDelimited = function decodeDelimited(reader) {
-        if (!(reader instanceof Reader))
-          reader = Reader.create(reader);
-        return this.decode(reader, reader.uint32());
-      };
-      Type2.prototype.verify = function verify_setup(message) {
-        return this.setup().verify(message);
-      };
-      Type2.prototype.fromObject = function fromObject(object) {
-        return this.setup().fromObject(object);
-      };
-      Type2.prototype.toObject = function toObject2(message, options) {
-        return this.setup().toObject(message, options);
-      };
-      Type2.d = function decorateType(typeName) {
-        return function typeDecorator(target) {
-          util.decorateType(target, typeName);
-        };
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/root.js
-  var require_root = __commonJS({
-    "node_modules/protobufjs/src/root.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = Root2;
-      var Namespace = require_namespace();
-      ((Root2.prototype = Object.create(Namespace.prototype)).constructor = Root2).className = "Root";
-      var Field = require_field();
-      var Enum = require_enum();
-      var OneOf = require_oneof();
-      var util = require_util();
-      var Type2;
-      var parse;
-      var common;
-      function Root2(options) {
-        Namespace.call(this, "", options);
-        this.deferred = [];
-        this.files = [];
-      }
-      Root2.fromJSON = function fromJSON(json, root) {
-        if (!root)
-          root = new Root2();
-        if (json.options)
-          root.setOptions(json.options);
-        return root.addJSON(json.nested);
-      };
-      Root2.prototype.resolvePath = util.path.resolve;
-      Root2.prototype.fetch = util.fetch;
-      function SYNC() {
-      }
-      Root2.prototype.load = function load2(filename, options, callback) {
-        if (typeof options === "function") {
-          callback = options;
-          options = void 0;
-        }
-        var self2 = this;
-        if (!callback)
-          return util.asPromise(load2, self2, filename, options);
-        var sync = callback === SYNC;
-        function finish(err, root) {
-          if (!callback)
-            return;
-          var cb = callback;
-          callback = null;
-          if (sync)
-            throw err;
-          cb(err, root);
-        }
-        function getBundledFileName(filename2) {
-          var idx = filename2.lastIndexOf("google/protobuf/");
-          if (idx > -1) {
-            var altname = filename2.substring(idx);
-            if (altname in common)
-              return altname;
-          }
-          return null;
-        }
-        function process(filename2, source) {
-          try {
-            if (util.isString(source) && source.charAt(0) === "{")
-              source = JSON.parse(source);
-            if (!util.isString(source))
-              self2.setOptions(source.options).addJSON(source.nested);
-            else {
-              parse.filename = filename2;
-              var parsed = parse(source, self2, options), resolved2, i2 = 0;
-              if (parsed.imports) {
-                for (; i2 < parsed.imports.length; ++i2)
-                  if (resolved2 = getBundledFileName(parsed.imports[i2]) || self2.resolvePath(filename2, parsed.imports[i2]))
-                    fetch2(resolved2);
-              }
-              if (parsed.weakImports) {
-                for (i2 = 0; i2 < parsed.weakImports.length; ++i2)
-                  if (resolved2 = getBundledFileName(parsed.weakImports[i2]) || self2.resolvePath(filename2, parsed.weakImports[i2]))
-                    fetch2(resolved2, true);
-              }
-            }
-          } catch (err) {
-            finish(err);
-          }
-          if (!sync && !queued)
-            finish(null, self2);
-        }
-        function fetch2(filename2, weak) {
-          filename2 = getBundledFileName(filename2) || filename2;
-          if (self2.files.indexOf(filename2) > -1)
-            return;
-          self2.files.push(filename2);
-          if (filename2 in common) {
-            if (sync)
-              process(filename2, common[filename2]);
-            else {
-              ++queued;
-              setTimeout(function() {
-                --queued;
-                process(filename2, common[filename2]);
-              });
-            }
-            return;
-          }
-          if (sync) {
-            var source;
-            try {
-              source = util.fs.readFileSync(filename2).toString("utf8");
-            } catch (err) {
-              if (!weak)
-                finish(err);
-              return;
-            }
-            process(filename2, source);
-          } else {
-            ++queued;
-            self2.fetch(filename2, function(err, source2) {
-              --queued;
-              if (!callback)
-                return;
-              if (err) {
-                if (!weak)
-                  finish(err);
-                else if (!queued)
-                  finish(null, self2);
-                return;
-              }
-              process(filename2, source2);
-            });
-          }
-        }
-        var queued = 0;
-        if (util.isString(filename))
-          filename = [filename];
-        for (var i = 0, resolved; i < filename.length; ++i)
-          if (resolved = self2.resolvePath("", filename[i]))
-            fetch2(resolved);
-        if (sync)
-          return self2;
-        if (!queued)
-          finish(null, self2);
-        return void 0;
-      };
-      Root2.prototype.loadSync = function loadSync(filename, options) {
-        if (!util.isNode)
-          throw Error("not supported");
-        return this.load(filename, options, SYNC);
-      };
-      Root2.prototype.resolveAll = function resolveAll() {
-        if (this.deferred.length)
-          throw Error("unresolvable extensions: " + this.deferred.map(function(field) {
-            return "'extend " + field.extend + "' in " + field.parent.fullName;
-          }).join(", "));
-        return Namespace.prototype.resolveAll.call(this);
-      };
-      var exposeRe = /^[A-Z]/;
-      function tryHandleExtension(root, field) {
-        var extendedType = field.parent.lookup(field.extend);
-        if (extendedType) {
-          var sisterField = new Field(field.fullName, field.id, field.type, field.rule, void 0, field.options);
-          if (extendedType.get(sisterField.name)) {
-            return true;
-          }
-          sisterField.declaringField = field;
-          field.extensionField = sisterField;
-          extendedType.add(sisterField);
-          return true;
-        }
-        return false;
-      }
-      Root2.prototype._handleAdd = function _handleAdd(object) {
-        if (object instanceof Field) {
-          if (
-            /* an extension field (implies not part of a oneof) */
-            object.extend !== void 0 && /* not already handled */
-            !object.extensionField
-          ) {
-            if (!tryHandleExtension(this, object))
-              this.deferred.push(object);
-          }
-        } else if (object instanceof Enum) {
-          if (exposeRe.test(object.name))
-            object.parent[object.name] = object.values;
-        } else if (!(object instanceof OneOf)) {
-          if (object instanceof Type2)
-            for (var i = 0; i < this.deferred.length; )
-              if (tryHandleExtension(this, this.deferred[i]))
-                this.deferred.splice(i, 1);
-              else
-                ++i;
-          for (var j = 0; j < /* initializes */
-          object.nestedArray.length; ++j)
-            this._handleAdd(object._nestedArray[j]);
-          if (exposeRe.test(object.name))
-            object.parent[object.name] = object;
-        }
-      };
-      Root2.prototype._handleRemove = function _handleRemove(object) {
-        if (object instanceof Field) {
-          if (
-            /* an extension field */
-            object.extend !== void 0
-          ) {
-            if (
-              /* already handled */
-              object.extensionField
-            ) {
-              object.extensionField.parent.remove(object.extensionField);
-              object.extensionField = null;
-            } else {
-              var index = this.deferred.indexOf(object);
-              if (index > -1)
-                this.deferred.splice(index, 1);
-            }
-          }
-        } else if (object instanceof Enum) {
-          if (exposeRe.test(object.name))
-            delete object.parent[object.name];
-        } else if (object instanceof Namespace) {
-          for (var i = 0; i < /* initializes */
-          object.nestedArray.length; ++i)
-            this._handleRemove(object._nestedArray[i]);
-          if (exposeRe.test(object.name))
-            delete object.parent[object.name];
-        }
-      };
-      Root2._configure = function(Type_, parse_, common_) {
-        Type2 = Type_;
-        parse = parse_;
-        common = common_;
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/util.js
-  var require_util = __commonJS({
-    "node_modules/protobufjs/src/util.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      var util = module2.exports = require_minimal();
-      var roots = require_roots();
-      var Type2;
-      var Enum;
-      util.codegen = require_codegen();
-      util.fetch = require_fetch();
-      util.path = require_path();
-      util.fs = util.inquire("fs");
-      util.toArray = function toArray(object) {
-        if (object) {
-          var keys = Object.keys(object), array = new Array(keys.length), index = 0;
-          while (index < keys.length)
-            array[index] = object[keys[index++]];
-          return array;
-        }
-        return [];
-      };
-      util.toObject = function toObject2(array) {
-        var object = {}, index = 0;
-        while (index < array.length) {
-          var key = array[index++], val = array[index++];
-          if (val !== void 0)
-            object[key] = val;
-        }
-        return object;
-      };
-      var safePropBackslashRe = /\\\\/g;
-      var safePropQuoteRe = /"/g;
-      util.isReserved = function isReserved(name) {
-        return /^(?:do|if|in|for|let|new|try|var|case|else|enum|eval|false|null|this|true|void|with|break|catch|class|const|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)\$/.test(name);
-      };
-      util.safeProp = function safeProp(prop) {
-        if (!/^[\$\\w_]+\$/.test(prop) || util.isReserved(prop))
-          return '["' + prop.replace(safePropBackslashRe, "\\\\\\\\").replace(safePropQuoteRe, '\\\\"') + '"]';
-        return "." + prop;
-      };
-      util.ucFirst = function ucFirst(str) {
-        return str.charAt(0).toUpperCase() + str.substring(1);
-      };
-      var camelCaseRe = /_([a-z])/g;
-      util.camelCase = function camelCase(str) {
-        return str.substring(0, 1) + str.substring(1).replace(camelCaseRe, function(\$0, \$1) {
-          return \$1.toUpperCase();
-        });
-      };
-      util.compareFieldsById = function compareFieldsById(a, b) {
-        return a.id - b.id;
-      };
-      util.decorateType = function decorateType(ctor, typeName) {
-        if (ctor.\$type) {
-          if (typeName && ctor.\$type.name !== typeName) {
-            util.decorateRoot.remove(ctor.\$type);
-            ctor.\$type.name = typeName;
-            util.decorateRoot.add(ctor.\$type);
-          }
-          return ctor.\$type;
-        }
-        if (!Type2)
-          Type2 = require_type();
-        var type = new Type2(typeName || ctor.name);
-        util.decorateRoot.add(type);
-        type.ctor = ctor;
-        Object.defineProperty(ctor, "\$type", { value: type, enumerable: false });
-        Object.defineProperty(ctor.prototype, "\$type", { value: type, enumerable: false });
-        return type;
-      };
-      var decorateEnumIndex = 0;
-      util.decorateEnum = function decorateEnum(object) {
-        if (object.\$type)
-          return object.\$type;
-        if (!Enum)
-          Enum = require_enum();
-        var enm = new Enum("Enum" + decorateEnumIndex++, object);
-        util.decorateRoot.add(enm);
-        Object.defineProperty(object, "\$type", { value: enm, enumerable: false });
-        return enm;
-      };
-      util.setProperty = function setProperty(dst, path, value) {
-        function setProp(dst2, path2, value2) {
-          var part = path2.shift();
-          if (part === "__proto__") {
-            return dst2;
-          }
-          if (path2.length > 0) {
-            dst2[part] = setProp(dst2[part] || {}, path2, value2);
-          } else {
-            var prevValue = dst2[part];
-            if (prevValue)
-              value2 = [].concat(prevValue).concat(value2);
-            dst2[part] = value2;
-          }
-          return dst2;
-        }
-        if (typeof dst !== "object")
-          throw TypeError("dst must be an object");
-        if (!path)
-          throw TypeError("path must be specified");
-        path = path.split(".");
-        return setProp(dst, path, value);
-      };
-      Object.defineProperty(util, "decorateRoot", {
-        get: function() {
-          return roots["decorated"] || (roots["decorated"] = new (require_root())());
-        }
-      });
-    }
-  });
-
-  // node_modules/protobufjs/src/object.js
-  var require_object2 = __commonJS({
-    "node_modules/protobufjs/src/object.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = ReflectionObject;
-      ReflectionObject.className = "ReflectionObject";
-      var util = require_util();
-      var Root2;
-      function ReflectionObject(name, options) {
-        if (!util.isString(name))
-          throw TypeError("name must be a string");
-        if (options && !util.isObject(options))
-          throw TypeError("options must be an object");
-        this.options = options;
-        this.parsedOptions = null;
-        this.name = name;
-        this.parent = null;
-        this.resolved = false;
-        this.comment = null;
-        this.filename = null;
-      }
-      Object.defineProperties(ReflectionObject.prototype, {
-        /**
-         * Reference to the root namespace.
-         * @name ReflectionObject#root
-         * @type {Root}
-         * @readonly
-         */
-        root: {
-          get: function() {
-            var ptr = this;
-            while (ptr.parent !== null)
-              ptr = ptr.parent;
-            return ptr;
-          }
-        },
-        /**
-         * Full name including leading dot.
-         * @name ReflectionObject#fullName
-         * @type {string}
-         * @readonly
-         */
-        fullName: {
-          get: function() {
-            var path = [this.name], ptr = this.parent;
-            while (ptr) {
-              path.unshift(ptr.name);
-              ptr = ptr.parent;
-            }
-            return path.join(".");
-          }
-        }
-      });
-      ReflectionObject.prototype.toJSON = /* istanbul ignore next */
-      function toJSON() {
-        throw Error();
-      };
-      ReflectionObject.prototype.onAdd = function onAdd(parent) {
-        if (this.parent && this.parent !== parent)
-          this.parent.remove(this);
-        this.parent = parent;
-        this.resolved = false;
-        var root = parent.root;
-        if (root instanceof Root2)
-          root._handleAdd(this);
-      };
-      ReflectionObject.prototype.onRemove = function onRemove(parent) {
-        var root = parent.root;
-        if (root instanceof Root2)
-          root._handleRemove(this);
-        this.parent = null;
-        this.resolved = false;
-      };
-      ReflectionObject.prototype.resolve = function resolve() {
-        if (this.resolved)
-          return this;
-        if (this.root instanceof Root2)
-          this.resolved = true;
-        return this;
-      };
-      ReflectionObject.prototype.getOption = function getOption(name) {
-        if (this.options)
-          return this.options[name];
-        return void 0;
-      };
-      ReflectionObject.prototype.setOption = function setOption(name, value, ifNotSet) {
-        if (!ifNotSet || !this.options || this.options[name] === void 0)
-          (this.options || (this.options = {}))[name] = value;
-        return this;
-      };
-      ReflectionObject.prototype.setParsedOption = function setParsedOption(name, value, propName) {
-        if (!this.parsedOptions) {
-          this.parsedOptions = [];
-        }
-        var parsedOptions = this.parsedOptions;
-        if (propName) {
-          var opt = parsedOptions.find(function(opt2) {
-            return Object.prototype.hasOwnProperty.call(opt2, name);
-          });
-          if (opt) {
-            var newValue = opt[name];
-            util.setProperty(newValue, propName, value);
-          } else {
-            opt = {};
-            opt[name] = util.setProperty({}, propName, value);
-            parsedOptions.push(opt);
-          }
-        } else {
-          var newOpt = {};
-          newOpt[name] = value;
-          parsedOptions.push(newOpt);
-        }
-        return this;
-      };
-      ReflectionObject.prototype.setOptions = function setOptions(options, ifNotSet) {
-        if (options)
-          for (var keys = Object.keys(options), i = 0; i < keys.length; ++i)
-            this.setOption(keys[i], options[keys[i]], ifNotSet);
-        return this;
-      };
-      ReflectionObject.prototype.toString = function toString2() {
-        var className = this.constructor.className, fullName = this.fullName;
-        if (fullName.length)
-          return className + " " + fullName;
-        return className;
-      };
-      ReflectionObject._configure = function(Root_) {
-        Root2 = Root_;
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/enum.js
-  var require_enum = __commonJS({
-    "node_modules/protobufjs/src/enum.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = Enum;
-      var ReflectionObject = require_object2();
-      ((Enum.prototype = Object.create(ReflectionObject.prototype)).constructor = Enum).className = "Enum";
-      var Namespace = require_namespace();
-      var util = require_util();
-      function Enum(name, values, options, comment, comments, valuesOptions) {
-        ReflectionObject.call(this, name, options);
-        if (values && typeof values !== "object")
-          throw TypeError("values must be an object");
-        this.valuesById = {};
-        this.values = Object.create(this.valuesById);
-        this.comment = comment;
-        this.comments = comments || {};
-        this.valuesOptions = valuesOptions;
-        this.reserved = void 0;
-        if (values) {
-          for (var keys = Object.keys(values), i = 0; i < keys.length; ++i)
-            if (typeof values[keys[i]] === "number")
-              this.valuesById[this.values[keys[i]] = values[keys[i]]] = keys[i];
-        }
-      }
-      Enum.fromJSON = function fromJSON(name, json) {
-        var enm = new Enum(name, json.values, json.options, json.comment, json.comments);
-        enm.reserved = json.reserved;
-        return enm;
-      };
-      Enum.prototype.toJSON = function toJSON(toJSONOptions) {
-        var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
-        return util.toObject([
-          "options",
-          this.options,
-          "valuesOptions",
-          this.valuesOptions,
-          "values",
-          this.values,
-          "reserved",
-          this.reserved && this.reserved.length ? this.reserved : void 0,
-          "comment",
-          keepComments ? this.comment : void 0,
-          "comments",
-          keepComments ? this.comments : void 0
-        ]);
-      };
-      Enum.prototype.add = function add(name, id, comment, options) {
-        if (!util.isString(name))
-          throw TypeError("name must be a string");
-        if (!util.isInteger(id))
-          throw TypeError("id must be an integer");
-        if (this.values[name] !== void 0)
-          throw Error("duplicate name '" + name + "' in " + this);
-        if (this.isReservedId(id))
-          throw Error("id " + id + " is reserved in " + this);
-        if (this.isReservedName(name))
-          throw Error("name '" + name + "' is reserved in " + this);
-        if (this.valuesById[id] !== void 0) {
-          if (!(this.options && this.options.allow_alias))
-            throw Error("duplicate id " + id + " in " + this);
-          this.values[name] = id;
-        } else
-          this.valuesById[this.values[name] = id] = name;
-        if (options) {
-          if (this.valuesOptions === void 0)
-            this.valuesOptions = {};
-          this.valuesOptions[name] = options || null;
-        }
-        this.comments[name] = comment || null;
-        return this;
-      };
-      Enum.prototype.remove = function remove(name) {
-        if (!util.isString(name))
-          throw TypeError("name must be a string");
-        var val = this.values[name];
-        if (val == null)
-          throw Error("name '" + name + "' does not exist in " + this);
-        delete this.valuesById[val];
-        delete this.values[name];
-        delete this.comments[name];
-        if (this.valuesOptions)
-          delete this.valuesOptions[name];
-        return this;
-      };
-      Enum.prototype.isReservedId = function isReservedId(id) {
-        return Namespace.isReservedId(this.reserved, id);
-      };
-      Enum.prototype.isReservedName = function isReservedName(name) {
-        return Namespace.isReservedName(this.reserved, name);
-      };
-    }
-  });
-
-  // node_modules/protobufjs/src/encoder.js
-  var require_encoder = __commonJS({
-    "node_modules/protobufjs/src/encoder.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = encoder;
-      var Enum = require_enum();
-      var types = require_types();
-      var util = require_util();
-      function genTypePartial(gen, field, fieldIndex, ref) {
-        return field.resolvedType.group ? gen("types[%i].encode(%s,w.uint32(%i)).uint32(%i)", fieldIndex, ref, (field.id << 3 | 3) >>> 0, (field.id << 3 | 4) >>> 0) : gen("types[%i].encode(%s,w.uint32(%i).fork()).ldelim()", fieldIndex, ref, (field.id << 3 | 2) >>> 0);
-      }
-      function encoder(mtype) {
-        var gen = util.codegen(["m", "w"], mtype.name + "\$encode")("if(!w)")("w=Writer.create()");
-        var i, ref;
-        var fields = (
-          /* initializes */
-          mtype.fieldsArray.slice().sort(util.compareFieldsById)
-        );
-        for (var i = 0; i < fields.length; ++i) {
-          var field = fields[i].resolve(), index = mtype._fieldsArray.indexOf(field), type = field.resolvedType instanceof Enum ? "int32" : field.type, wireType = types.basic[type];
-          ref = "m" + util.safeProp(field.name);
-          if (field.map) {
-            gen("if(%s!=null&&Object.hasOwnProperty.call(m,%j)){", ref, field.name)("for(var ks=Object.keys(%s),i=0;i<ks.length;++i){", ref)("w.uint32(%i).fork().uint32(%i).%s(ks[i])", (field.id << 3 | 2) >>> 0, 8 | types.mapKey[field.keyType], field.keyType);
-            if (wireType === void 0)
-              gen("types[%i].encode(%s[ks[i]],w.uint32(18).fork()).ldelim().ldelim()", index, ref);
-            else
-              gen(".uint32(%i).%s(%s[ks[i]]).ldelim()", 16 | wireType, type, ref);
-            gen("}")("}");
-          } else if (field.repeated) {
-            gen("if(%s!=null&&%s.length){", ref, ref);
-            if (field.packed && types.packed[type] !== void 0) {
-              gen("w.uint32(%i).fork()", (field.id << 3 | 2) >>> 0)("for(var i=0;i<%s.length;++i)", ref)("w.%s(%s[i])", type, ref)("w.ldelim()");
-            } else {
-              gen("for(var i=0;i<%s.length;++i)", ref);
-              if (wireType === void 0)
-                genTypePartial(gen, field, index, ref + "[i]");
-              else
-                gen("w.uint32(%i).%s(%s[i])", (field.id << 3 | wireType) >>> 0, type, ref);
-            }
-            gen("}");
-          } else {
-            if (field.optional)
-              gen("if(%s!=null&&Object.hasOwnProperty.call(m,%j))", ref, field.name);
-            if (wireType === void 0)
-              genTypePartial(gen, field, index, ref);
-            else
-              gen("w.uint32(%i).%s(%s)", (field.id << 3 | wireType) >>> 0, type, ref);
-          }
-        }
-        return gen("return w");
-      }
-    }
-  });
-
-  // node_modules/protobufjs/src/index-light.js
-  var require_index_light = __commonJS({
-    "node_modules/protobufjs/src/index-light.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      var protobuf = module2.exports = require_index_minimal();
-      protobuf.build = "light";
-      function load2(filename, root, callback) {
-        if (typeof root === "function") {
-          callback = root;
-          root = new protobuf.Root();
-        } else if (!root)
-          root = new protobuf.Root();
-        return root.load(filename, callback);
-      }
-      protobuf.load = load2;
-      function loadSync(filename, root) {
-        if (!root)
-          root = new protobuf.Root();
-        return root.loadSync(filename);
-      }
-      protobuf.loadSync = loadSync;
-      protobuf.encoder = require_encoder();
-      protobuf.decoder = require_decoder();
-      protobuf.verifier = require_verifier();
-      protobuf.converter = require_converter();
-      protobuf.ReflectionObject = require_object2();
-      protobuf.Namespace = require_namespace();
-      protobuf.Root = require_root();
-      protobuf.Enum = require_enum();
-      protobuf.Type = require_type();
-      protobuf.Field = require_field();
-      protobuf.OneOf = require_oneof();
-      protobuf.MapField = require_mapfield();
-      protobuf.Service = require_service2();
-      protobuf.Method = require_method();
-      protobuf.Message = require_message();
-      protobuf.wrappers = require_wrappers();
-      protobuf.types = require_types();
-      protobuf.util = require_util();
-      protobuf.ReflectionObject._configure(protobuf.Root);
-      protobuf.Namespace._configure(protobuf.Type, protobuf.Service, protobuf.Enum);
-      protobuf.Root._configure(protobuf.Type);
-      protobuf.Field._configure(protobuf.Type);
-    }
-  });
-
-  // node_modules/protobufjs/light.js
-  var require_light = __commonJS({
-    "node_modules/protobufjs/light.js"(exports2, module2) {
-      "use strict";
-      init_tampermonkey();
-      module2.exports = require_index_light();
-    }
-  });
-
   // src/index.ts
   init_tampermonkey();
 
   // src/core/bilibili-old.ts
   init_tampermonkey();
-  var BLOD = new class {
-    /** 路径拆分 */
-    path = location.href.split("/");
-    /** bangumi标记 */
-    pgc = false;
-    ui;
-    get aid() {
-      return window.aid;
-    }
-    set aid(v) {
-      window.aid = v;
-    }
-    get cid() {
-      return window.cid;
-    }
-    set cid(v) {
-      window.cid = v;
-    }
-    /** bangumi ssid */
-    ssid;
-    /** bangumi epid */
-    epid;
-    /** 限制视频 */
-    limit;
-    /** 东南亚视频标记 */
-    th;
-    /** 播放器已加载 */
-    playLoaded = false;
-    /** 已模拟APP端取流 */
-    networkMocked = false;
-    /** 是否大会员 */
-    isVip = false;
-    /** 播放器哈希值 */
-    version;
-  }();
+  var import_md52 = __toESM(require_md5());
 
-  // src/core/user.ts
+  // src/io/api.ts
   init_tampermonkey();
+  var import_md5 = __toESM(require_md5());
+
+  // src/utils/format/url.ts
+  init_tampermonkey();
+
+  // src/utils/typeof.ts
+  init_tampermonkey();
+  var isArray = Array.isArray;
+  var isObject = (val) => val !== null && typeof val === "object";
+  var isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
+
+  // src/utils/format/url.ts
+  var URL2 = class {
+    /** 锚 */
+    hash;
+    /** 基链 */
+    base;
+    /** 参数对象。结果会格式化\`undefined\`\`null\`\`NaN\`等特殊值，但不会处理数字，以免丢失精度。 */
+    params = {};
+    /** 参数链（不含\`?\`） */
+    get param() {
+      return Object.entries(this.params).reduce((s, d) => {
+        return s += \`\${s ? "&" : ""}\${d[0]}=\${d[1]}\`;
+      }, "");
+    }
+    /** 提取URL参数 */
+    constructor(url) {
+      const arr1 = url.split("#");
+      let str = arr1.shift();
+      this.hash = arr1.join("#");
+      (this.hash || url.includes("#")) && (this.hash = \`#\${this.hash}\`);
+      const arr2 = str.split("?");
+      this.base = arr2.shift();
+      str = arr2.join("?");
+      if (str) {
+        str.split("&").forEach((d) => {
+          const arr3 = d.split("=");
+          const key = arr3.shift();
+          if (key) {
+            let value = arr3.join("=") || "";
+            try {
+              if (!isNumber(value)) {
+                value = JSON.parse(value);
+              }
+            } catch {
+              value === "undefined" && (value = void 0);
+              value === "NaN" && (value = NaN);
+            }
+            this.params[key] = value;
+          }
+        });
+      }
+    }
+    sort() {
+      this.params = Object.keys(this.params).sort().reduce((s, d) => {
+        s[d] = this.params[d];
+        return s;
+      }, {});
+    }
+    /** 还原url链接 */
+    toJSON() {
+      return \`\${this.base ? this.param ? this.base + "?" : this.base : ""}\${this.param}\${this.hash || ""}\`;
+    }
+  };
+  function objUrl(url, obj) {
+    const res = new URL2(url);
+    Object.entries(obj).forEach((d) => {
+      if (d[1] === void 0 || d[1] === null)
+        return;
+      res.params[d[0]] = d[1];
+    });
+    return res.toJSON();
+  }
+  function urlObj(url) {
+    const res = new URL2(url);
+    return res.params;
+  }
+
+  // src/io/api.ts
+  function jsonCheck(str) {
+    const result = typeof str === "string" ? JSON.parse(str) : str;
+    if (result.code === 0)
+      return result;
+    throw new Error(\`\${result.code} \${result.message}\`, { cause: result.code });
+  }
+  var APP_KEY = /* @__PURE__ */ ((APP_KEY2) => {
+    APP_KEY2["1d8b6e7d45233436"] = "560c52ccd288fed045859ed18bffd973";
+    APP_KEY2["c1b107428d337928"] = "ea85624dfcf12d7cc7b2b3a94fac1f2c";
+    APP_KEY2["07da50c9a0bf829f"] = "25bdede4e1581c836cab73a48790ca6e";
+    APP_KEY2["7d089525d3611b1c"] = "acd495b248ec528c2eed1e862d393126";
+    APP_KEY2["9e5ded06c39bf5c4"] = "583e398ed0f980290b5903aba30b4cc4";
+    APP_KEY2["27eb53fc9058f8c3"] = "c2ed53a74eeefe3cf99fbd01d8c9c375";
+    APP_KEY2["85eb6835b0a1034e"] = "2ad42749773c441109bdc0191257a664";
+    APP_KEY2["4409e2ce8ffd12b8"] = "59b43e04ad6965f34319062b478f83dd";
+    APP_KEY2["37207f2beaebf8d7"] = "e988e794d4d4b6dd43bc0e89d6e90c43";
+    APP_KEY2["84956560bc028eb7"] = "94aba54af9065f71de72f5508f1cd42e";
+    APP_KEY2["bb3101000e232e27"] = "36efcfed79309338ced0380abd824ac1";
+    APP_KEY2["fb06a25c6338edbc"] = "fd10bd177559780c2e4a44f1fa47fa83";
+    APP_KEY2["iVGUTjsxvpLeuDCf"] = "aHRmhWMLkdeMuILqORnYZocwMBpMEOdt";
+    APP_KEY2["178cf125136ca8ea"] = "34381a26236dd1171185c0beb042e1c6";
+    APP_KEY2["57263273bc6b67f6"] = "a0488e488d1567960d3a765e8d129f90";
+    APP_KEY2["8d23902c1688a798"] = "710f0212e62bd499b8d3ac6e1db9302a";
+    APP_KEY2["7d336ec01856996b"] = "a1ce6983bc89e20a36c37f40c4f1a0dd";
+    APP_KEY2["8e16697a1b4f8121"] = "f5dd03b752426f2e623d7badb28d190a";
+    APP_KEY2["aae92bc66f3edfab"] = "af125a0d5279fd576c1b4418a3e8276d";
+    APP_KEY2["ae57252b0c09105d"] = "c75875c596a69eb55bd119e74b07cfe3";
+    APP_KEY2["bca7e84c2d947ac6"] = "60698ba2f68e01ce44738920a0ffe768";
+    APP_KEY2["cc578d267072c94d"] = "ffb6bb4c4edae2566584dbcacfc6a6ad";
+    APP_KEY2["cc8617fd6961e070"] = "3131924b941aac971e45189f265262be";
+    APP_KEY2["YvirImLGlLANCLvM"] = "JNlZNgfNGKZEpaDTkCdPQVXntXhuiJEM";
+    APP_KEY2["f3bb208b3d081dc8"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["4fa4601d1caa8b48"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["452d3958f048c02a"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["86385cdc024c0f6c"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["5256c25b71989747"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["e97210393ad42219"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["5dce947fe22167f9"] = "";
+    APP_KEY2["8e9fc618fbd41e28"] = "";
+    APP_KEY2["21087a09e533a072"] = "e5b8ba95cab6104100be35739304c23a";
+    return APP_KEY2;
+  })(APP_KEY || {});
+  var ApiSign = class {
+    constructor(url, appkey) {
+      this.url = url;
+      this.appkey = appkey;
+    }
+    get ts() {
+      return (/* @__PURE__ */ new Date()).getTime();
+    }
+    /** 查询参数，须要在子类中初始化好才能无参数调用\`sign\`方法 */
+    data = {};
+    /**
+     * URL签名
+     * @param searchParams 查询参数，会覆盖url原有参数
+     * @param api 授权api，**授权第三方登录专用**
+     * @returns 签名后的api
+     */
+    sign(searchParams = this.data, api = "") {
+      const url = new URL2(this.url);
+      Object.assign(url.params, searchParams, { ts: this.ts });
+      delete url.params.sign;
+      api && (this.appkey = "27eb53fc9058f8c3");
+      const appSecret = this.appSecret;
+      url.params.appkey = this.appkey;
+      url.sort();
+      url.params.sign = (0, import_md5.default)((api ? \`api=\${decodeURIComponent(api)}\` : url.param) + appSecret);
+      return url.toJSON();
+    }
+    get appSecret() {
+      switch (this.appkey) {
+        case "f3bb208b3d081dc8":
+        case "4fa4601d1caa8b48":
+        case "452d3958f048c02a":
+        case "86385cdc024c0f6c":
+        case "5256c25b71989747":
+        case "e97210393ad42219":
+          switch (Math.trunc((/* @__PURE__ */ new Date()).getHours() / 4)) {
+            case 0:
+              this.appkey = "f3bb208b3d081dc8";
+              break;
+            case 1:
+              this.appkey = "4fa4601d1caa8b48";
+              break;
+            case 2:
+              this.appkey = "452d3958f048c02a";
+              break;
+            case 3:
+              this.appkey = "86385cdc024c0f6c";
+              break;
+            case 4:
+              this.appkey = "5256c25b71989747";
+              break;
+            case 5:
+              this.appkey = "e97210393ad42219";
+              break;
+            default:
+              break;
+          }
+          break;
+        default:
+          break;
+      }
+      return APP_KEY[this.appkey];
+    }
+  };
+  async function urlSign(url, searchParams = {}, appkey = "c1b107428d337928") {
+    const api = new ApiSign(url, appkey);
+    const response = await fetch(api.sign(searchParams));
+    return await response.json();
+  }
+
+  // src/utils/base64.ts
+  init_tampermonkey();
+  var base64 = new class {
+    /**
+     * Base64编码
+     * @param str 原始字符串
+     * @returns 编码结果
+     */
+    encode(str) {
+      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode("0x" + p1);
+      }));
+    }
+    /**
+     * Base64解码
+     * @param str 原始字符串
+     * @returns 解码结果
+     */
+    decode(str) {
+      return decodeURIComponent(atob(str).split("").map(function(c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(""));
+    }
+  }();
 
   // src/utils/debug.ts
   init_tampermonkey();
@@ -6878,6 +7059,560 @@ const MODULES = `
     return debug;
   };
 
+  // src/core/danmaku.ts
+  init_tampermonkey();
+
+  // src/io/grpc/api-dm-web.ts
+  init_tampermonkey();
+  var import_light = __toESM(require_light());
+
+  // src/json/dm-web.json
+  var dm_web_default = {
+    nested: {
+      bilibili: {
+        nested: {
+          community: {
+            nested: {
+              service: {
+                nested: {
+                  dm: {
+                    nested: {
+                      v1: {
+                        nested: {
+                          DmWebViewReply: {
+                            fields: {
+                              state: {
+                                type: "int32",
+                                id: 1
+                              },
+                              text: {
+                                type: "string",
+                                id: 2
+                              },
+                              textSide: {
+                                type: "string",
+                                id: 3
+                              },
+                              dmSge: {
+                                type: "DmSegConfig",
+                                id: 4
+                              },
+                              flag: {
+                                type: "DanmakuFlagConfig",
+                                id: 5
+                              },
+                              specialDms: {
+                                rule: "repeated",
+                                type: "string",
+                                id: 6
+                              },
+                              checkBox: {
+                                type: "bool",
+                                id: 7
+                              },
+                              count: {
+                                type: "int64",
+                                id: 8
+                              },
+                              commandDms: {
+                                rule: "repeated",
+                                type: "CommandDm",
+                                id: 9
+                              },
+                              dmSetting: {
+                                type: "DanmuWebPlayerConfig",
+                                id: 10
+                              },
+                              reportFilter: {
+                                rule: "repeated",
+                                type: "string",
+                                id: 11
+                              }
+                            }
+                          },
+                          CommandDm: {
+                            fields: {
+                              id: {
+                                type: "int64",
+                                id: 1
+                              },
+                              oid: {
+                                type: "int64",
+                                id: 2
+                              },
+                              mid: {
+                                type: "int64",
+                                id: 3
+                              },
+                              command: {
+                                type: "string",
+                                id: 4
+                              },
+                              content: {
+                                type: "string",
+                                id: 5
+                              },
+                              progress: {
+                                type: "int32",
+                                id: 6
+                              },
+                              ctime: {
+                                type: "string",
+                                id: 7
+                              },
+                              mtime: {
+                                type: "string",
+                                id: 8
+                              },
+                              extra: {
+                                type: "string",
+                                id: 9
+                              },
+                              idStr: {
+                                type: "string",
+                                id: 10
+                              }
+                            }
+                          },
+                          DmSegConfig: {
+                            fields: {
+                              pageSize: {
+                                type: "int64",
+                                id: 1
+                              },
+                              total: {
+                                type: "int64",
+                                id: 2
+                              }
+                            }
+                          },
+                          DanmakuFlagConfig: {
+                            fields: {
+                              recFlag: {
+                                type: "int32",
+                                id: 1
+                              },
+                              recText: {
+                                type: "string",
+                                id: 2
+                              },
+                              recSwitch: {
+                                type: "int32",
+                                id: 3
+                              }
+                            }
+                          },
+                          DmSegMobileReply: {
+                            fields: {
+                              elems: {
+                                rule: "repeated",
+                                type: "DanmakuElem",
+                                id: 1
+                              }
+                            }
+                          },
+                          DanmakuElem: {
+                            fields: {
+                              id: {
+                                type: "int64",
+                                id: 1
+                              },
+                              progress: {
+                                type: "int32",
+                                id: 2
+                              },
+                              mode: {
+                                type: "int32",
+                                id: 3
+                              },
+                              fontsize: {
+                                type: "int32",
+                                id: 4
+                              },
+                              color: {
+                                type: "uint32",
+                                id: 5
+                              },
+                              midHash: {
+                                type: "string",
+                                id: 6
+                              },
+                              content: {
+                                type: "string",
+                                id: 7
+                              },
+                              ctime: {
+                                type: "int64",
+                                id: 8
+                              },
+                              weight: {
+                                type: "int32",
+                                id: 9
+                              },
+                              action: {
+                                type: "string",
+                                id: 10
+                              },
+                              pool: {
+                                type: "int32",
+                                id: 11
+                              },
+                              idStr: {
+                                type: "string",
+                                id: 12
+                              },
+                              attr: {
+                                type: "int32",
+                                id: 13
+                              }
+                            }
+                          },
+                          DanmuWebPlayerConfig: {
+                            fields: {
+                              dmSwitch: {
+                                type: "bool",
+                                id: 1
+                              },
+                              aiSwitch: {
+                                type: "bool",
+                                id: 2
+                              },
+                              aiLevel: {
+                                type: "int32",
+                                id: 3
+                              },
+                              blocktop: {
+                                type: "bool",
+                                id: 4
+                              },
+                              blockscroll: {
+                                type: "bool",
+                                id: 5
+                              },
+                              blockbottom: {
+                                type: "bool",
+                                id: 6
+                              },
+                              blockcolor: {
+                                type: "bool",
+                                id: 7
+                              },
+                              blockspecial: {
+                                type: "bool",
+                                id: 8
+                              },
+                              preventshade: {
+                                type: "bool",
+                                id: 9
+                              },
+                              dmask: {
+                                type: "bool",
+                                id: 10
+                              },
+                              opacity: {
+                                type: "float",
+                                id: 11
+                              },
+                              dmarea: {
+                                type: "int32",
+                                id: 12
+                              },
+                              speedplus: {
+                                type: "float",
+                                id: 13
+                              },
+                              fontsize: {
+                                type: "float",
+                                id: 14
+                              },
+                              screensync: {
+                                type: "bool",
+                                id: 15
+                              },
+                              speedsync: {
+                                type: "bool",
+                                id: 16
+                              },
+                              fontfamily: {
+                                type: "string",
+                                id: 17
+                              },
+                              bold: {
+                                type: "bool",
+                                id: 18
+                              },
+                              fontborder: {
+                                type: "int32",
+                                id: 19
+                              },
+                              drawType: {
+                                type: "string",
+                                id: 20
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+
+  // src/utils/danmaku.ts
+  init_tampermonkey();
+  var DanmakuBase = class {
+    /** 从小到大排序弹幕 */
+    static sortDmById(dms) {
+      dms.sort((a, b) => this.bigInt(a.idStr, b.idStr) ? 1 : -1);
+    }
+    /** 比较两个弹幕ID先后 */
+    static bigInt(num1, num2) {
+      String(num1).replace(/\\d+/, (d) => num1 = d.replace(/^0+/, ""));
+      String(num2).replace(/\\d+/, (d) => num2 = d.replace(/^0+/, ""));
+      if (num1.length > num2.length)
+        return true;
+      else if (num1.length < num2.length)
+        return false;
+      else {
+        for (let i = 0; i < num1.length; i++) {
+          if (num1[i] > num2[i])
+            return true;
+          if (num1[i] < num2[i])
+            return false;
+        }
+        return false;
+      }
+    }
+    /** 重构为旧版弹幕类型 */
+    static parseCmd(dms) {
+      return dms.map((d) => {
+        const dm = {
+          class: d.pool || 0,
+          color: d.color || 0,
+          date: d.ctime || 0,
+          dmid: d.idStr || "",
+          mode: +d.mode || 1,
+          pool: d.pool || 0,
+          size: d.fontsize || 25,
+          stime: d.progress / 1e3 || 0,
+          text: d.content && d.mode != 8 && d.mode != 9 ? d.content.replace(/(\\/n|\\\\n|\\n|\\r\\n)/g, "\\n") : d.content,
+          uhash: d.midHash || "",
+          uid: d.midHash || "",
+          weight: d.weight,
+          attr: d.attr
+        };
+        d.action?.startsWith("picture:") && (dm.html = \`<img src="\${d.action.replace("picture:", "//")}" style="width:auto;height:28.13px;">\`);
+        return dm;
+      });
+    }
+    /** 解析解码xml弹幕 */
+    static decodeXml(xml) {
+      if (typeof xml === "string") {
+        xml = xml.replace(/((?:[\\0-\\x08\\x0B\\f\\x0E-\\x1F\\uFFFD\\uFFFE\\uFFFF]|[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?:[^\\uD800-\\uDBFF]|^)[\\uDC00-\\uDFFF]))/g, "");
+        xml = new DOMParser().parseFromString(xml, "application/xml");
+      }
+      const items = xml.querySelectorAll("d");
+      const dms = [];
+      items.forEach((d) => {
+        const json = d.getAttribute("p").split(",");
+        const text = d.textContent || d.text;
+        if (text) {
+          const dm = {
+            pool: Number(json[5]),
+            color: Number(json[3]),
+            ctime: Number(json[4]),
+            id: Number(json[7]),
+            idStr: String(json[7]),
+            mode: Number(json[1]),
+            fontsize: Number(json[2]),
+            progress: Number(json[0]) * 1e3,
+            content: String(text),
+            midHash: json[6]
+          };
+          dms.push(dm);
+        }
+      });
+      return dms;
+    }
+    /** 编码xml弹幕 */
+    static encodeXml(dms, cid) {
+      return dms.reduce((s, d) => {
+        const text = d.mode === 8 || d.mode === 9 ? d.text : d.text.replace(/(\\n|\\r\\n)/g, "/n");
+        s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${text.replace(/[<&]/g, (a) => {
+          return { "<": "&lt;", "&": "&amp;" }[a];
+        })}</d>
+\`;
+        return s;
+      }, \`<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>\${cid}</chatid><mission>0</mission><maxlimit>\${dms.length}</maxlimit><state>0</state><real_name>0</real_name><source>k-v</source>
+\`) + "</i>";
+    }
+  };
+
+  // src/io/urls.ts
+  init_tampermonkey();
+  var _URLS = class {
+  };
+  var URLS = _URLS;
+  // protocol + //
+  __publicField(URLS, "P_AUTO", "//");
+  __publicField(URLS, "P_HTTP", "http://");
+  __publicField(URLS, "P_HTTPS", "https://");
+  __publicField(URLS, "P_WS", "ws://");
+  __publicField(URLS, "P_WSS", "wss://");
+  // domain
+  __publicField(URLS, "D_WWW", "www.bilibili.com");
+  __publicField(URLS, "D_API", "api.bilibili.com");
+  __publicField(URLS, "D_APP", "app.bilibili.com");
+  __publicField(URLS, "D_MANAGER", "manager.bilibili.co");
+  __publicField(URLS, "D_INTERFACE", "interface.bilibili.com");
+  __publicField(URLS, "D_PASSPORT", "passport.bilibili.com");
+  __publicField(URLS, "D_BANGUMI", "bangumi.bilibili.com");
+  __publicField(URLS, "D_SPACE", "space.bilibili.com");
+  __publicField(URLS, "D_STATIC_S", "static.hdslb.com");
+  __publicField(URLS, "D_CHAT", "chat.bilibili.com");
+  __publicField(URLS, "D_DATA", "data.bilibili.com");
+  __publicField(URLS, "D_COMMENT", "comment.bilibili.com");
+  __publicField(URLS, "D_BROADCAST", "broadcast.bilibili.com");
+  __publicField(URLS, "D_MISAKA_SW", "misaka-sw.bilibili.com");
+  __publicField(URLS, "D_MEMBER", "member.bilibili.com");
+  __publicField(URLS, "D_BVC", "bvc.bilivideo.com");
+  __publicField(URLS, "D_S1", "s1.hdslb.com");
+  __publicField(URLS, "D_API_GLOBAL", "api.global.bilibili.com");
+  __publicField(URLS, "D_ACCOUNT", "account.bilibili.com");
+  __publicField(URLS, "D_INTL", "apiintl.biliapi.net");
+  __publicField(URLS, "WEBSHOW_LOCS", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/res/locs");
+  __publicField(URLS, "INDEX_TOP_RCMD", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/index/top/rcmd");
+  __publicField(URLS, "PAGE_HEADER", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/page/header");
+  __publicField(URLS, "SEASON_RANK_LIST", _URLS.P_AUTO + _URLS.D_API + "/pgc/season/rank/web/list");
+  __publicField(URLS, "VIDEO", _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/video.min.js");
+  __publicField(URLS, "JQUERY", _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/jquery.min.js");
+  __publicField(URLS, "ARTICLE_CARDS", _URLS.P_AUTO + _URLS.D_API + "/x/article/cards");
+  __publicField(URLS, "VIEW_DETAIL", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view/detail");
+  __publicField(URLS, "VIEW", _URLS.P_AUTO + _URLS.D_API + "/view");
+  __publicField(URLS, "X_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view");
+  __publicField(URLS, "PAGE_LIST", _URLS.P_AUTO + _URLS.D_API + "/x/player/pagelist");
+  __publicField(URLS, "TAG_INFO", _URLS.P_AUTO + _URLS.D_API + "/x/tag/info");
+  __publicField(URLS, "TAG_TOP", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/tag/top");
+  __publicField(URLS, "BANGUMI_SEASON", _URLS.P_AUTO + _URLS.D_BANGUMI + "/view/web_api/season");
+  __publicField(URLS, "SEASON_STATUS", _URLS.P_AUTO + _URLS.D_API + "/pgc/view/web/season/user/status");
+  __publicField(URLS, "SEASON_SECTION", _URLS.P_AUTO + _URLS.D_API + "/pgc/web/season/section");
+  __publicField(URLS, "GLOBAL_OGV_VIEW", _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/view/app/season");
+  __publicField(URLS, "GLOBAL_OGV_PLAYURL", _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/playurl");
+  __publicField(URLS, "APP_PGC_PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurl");
+  __publicField(URLS, "ACCOUNT_GETCARDBYMID", _URLS.P_AUTO + _URLS.D_ACCOUNT + "/api/member/getCardByMid");
+  __publicField(URLS, "LOGIN_APP_THIRD", _URLS.P_AUTO + _URLS.D_PASSPORT + "/login/app/third");
+  __publicField(URLS, "PLAYER", _URLS.P_AUTO + _URLS.D_API + "/x/player/v2");
+  __publicField(URLS, "PLAYURL_PROJ", _URLS.P_AUTO + _URLS.D_APP + "/v2/playurlproj");
+  __publicField(URLS, "PGC_PLAYURL_PROJ", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurlproj");
+  __publicField(URLS, "PGC_PLAYURL_TV", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurltv");
+  __publicField(URLS, "UGC_PLAYURL_TV", _URLS.P_AUTO + _URLS.D_API + "/x/tv/ugc/playurl");
+  __publicField(URLS, "PGC_PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/web/playurl");
+  __publicField(URLS, "PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/x/player/playurl");
+  __publicField(URLS, "INTL_PLAYURL", _URLS.P_AUTO + _URLS.D_APP + "/x/intl/playurl");
+  __publicField(URLS, "INTL_OGV_PLAYURL", _URLS.P_AUTO + _URLS.D_INTL + "/intl/gateway/ogv/player/api/playurl");
+  __publicField(URLS, "PLAYURL_INTERFACE", _URLS.P_AUTO + _URLS.D_INTERFACE + "/v2/playurl");
+  __publicField(URLS, "PLAYURL_BANGUMI", _URLS.P_AUTO + _URLS.D_BANGUMI + "/player/web_api/v2/playurl");
+  __publicField(URLS, "LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/like");
+  __publicField(URLS, "HAS_LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/has/like");
+  __publicField(URLS, "DM_WEB_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/view");
+  __publicField(URLS, "DM_WEB_SEG_SO", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/seg.so");
+  __publicField(URLS, "STAT", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/stat");
+  __publicField(URLS, "SLIDE_SHOW", _URLS.P_AUTO + _URLS.D_API + "/pgc/operation/api/slideshow");
+  __publicField(URLS, "SEARCH_SQUARE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/search/square");
+  __publicField(URLS, "SPACE_ARC", _URLS.P_AUTO + _URLS.D_API + "/x/space/wbi/arc/search");
+  __publicField(URLS, "NEWLIST", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/newlist");
+  __publicField(URLS, "SEARCH", _URLS.P_AUTO + _URLS.D_API + "/search");
+
+  // src/io/grpc/api-dm-web.ts
+  var _ApiDmWeb = class {
+    constructor(aid, cid) {
+      this.aid = aid;
+      this.cid = cid;
+      _ApiDmWeb.Root || _ApiDmWeb.RootInit();
+    }
+    static RootInit() {
+      this.Root = import_light.Root.fromJSON(dm_web_default);
+      this.DmWebViewReply = this.Root.lookupType("DmWebViewReply");
+      this.DmSegMobileReply = this.Root.lookupType("DmSegMobileReply");
+    }
+    danmaku = [];
+    /** 获取新版弹幕 */
+    async getData() {
+      if (!this.danmaku.length) {
+        const dmWebView = await this.DmWebViewReply();
+        const pageSize = dmWebView.dmSge.pageSize ? dmWebView.dmSge.pageSize / 1e3 : 360;
+        const total = this.aid == window.aid && window.player?.getDuration?.() / pageSize + 1 || dmWebView.dmSge.total;
+        const promises = [];
+        for (let i = 1; i <= total; i++) {
+          promises.push(
+            this.DmSegMobileReply(i).then((d) => {
+              d.elems && (this.danmaku = this.danmaku.concat(d.elems));
+            }).catch((e) => {
+              console.warn("弹幕丢包：", \`segment_index=\${i}\`, e);
+            })
+          );
+        }
+        dmWebView.specialDms && dmWebView.specialDms.forEach((d) => {
+          promises.push(
+            this.specialDm(d.replace("http:", "")).then((d2) => {
+              d2.elems && (this.danmaku = this.danmaku.concat(d2.elems));
+            }).catch((e) => {
+              console.warn("高级弹幕丢包：", d, e);
+            })
+          );
+        });
+        await Promise.all(promises);
+        DanmakuBase.sortDmById(this.danmaku);
+      }
+      return this.danmaku;
+    }
+    /** 获取旧版弹幕 */
+    async toCmd() {
+      const danmaku2 = await this.getData();
+      return DanmakuBase.parseCmd(danmaku2);
+    }
+    /** 获取弹幕分包 */
+    async DmWebViewReply() {
+      const response = await fetch(objUrl(URLS.DM_WEB_VIEW, {
+        type: 1,
+        oid: this.cid,
+        pid: this.aid
+      }), { credentials: "include", cache: "force-cache" });
+      const arraybuffer = await response.arrayBuffer();
+      const msg = _ApiDmWeb.DmWebViewReply.decode(new Uint8Array(arraybuffer));
+      return _ApiDmWeb.DmWebViewReply.toObject(msg);
+    }
+    /** 获取弹幕分包 */
+    async DmSegMobileReply(segment_index = 1) {
+      const response = await fetch(objUrl(URLS.DM_WEB_SEG_SO, {
+        type: 1,
+        oid: this.cid,
+        pid: this.aid,
+        segment_index
+      }), { credentials: "include" });
+      const arraybuffer = await response.arrayBuffer();
+      const msg = _ApiDmWeb.DmSegMobileReply.decode(new Uint8Array(arraybuffer));
+      return _ApiDmWeb.DmSegMobileReply.toObject(msg);
+    }
+    /** 获取高级弹幕 */
+    async specialDm(url) {
+      const response = await fetch(url);
+      const arraybuffer = await response.arrayBuffer();
+      const msg = _ApiDmWeb.DmSegMobileReply.decode(new Uint8Array(arraybuffer));
+      return _ApiDmWeb.DmSegMobileReply.toObject(msg);
+    }
+  };
+  var ApiDmWeb = _ApiDmWeb;
+  __publicField(ApiDmWeb, "Root");
+  __publicField(ApiDmWeb, "DmWebViewReply");
+  __publicField(ApiDmWeb, "DmSegMobileReply");
+
   // src/utils/file.ts
   init_tampermonkey();
   function readAs(file, type = "string", encoding = "utf-8") {
@@ -6926,6 +7661,652 @@ const MODULES = `
         }, 100);
       }, { once: true });
     });
+  }
+
+  // src/utils/format/size.ts
+  init_tampermonkey();
+  function sizeFormat(size = 0) {
+    let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1e3 ** i;
+    while (dex > 1) {
+      if (size >= vor) {
+        size = Number((size / dex).toFixed(2));
+        break;
+      }
+      dex = dex / 1024;
+      vor = vor / 1e3;
+      i--;
+    }
+    return size ? size + unit[i] : "N/A";
+  }
+
+  // src/utils/hook/method.ts
+  init_tampermonkey();
+  function methodHook(target, propertyKey, callback, modifyArguments) {
+    try {
+      let modify2 = function() {
+        loaded = true;
+        if (values[0]) {
+          Reflect.defineProperty(target, propertyKey, { configurable: true, value: values[0] });
+          iArguments.forEach((d) => values[0](...d));
+        } else {
+          debug.error("拦截方法出错！", "目标方法", propertyKey, "所属对象", target);
+        }
+      };
+      var modify = modify2;
+      const values = [];
+      const iArguments = [];
+      let loading2 = false;
+      let loaded = false;
+      Reflect.defineProperty(target, propertyKey, {
+        configurable: true,
+        set: (v) => {
+          if (loading2 && !loaded) {
+            values.unshift(v);
+          }
+          return true;
+        },
+        get: () => {
+          if (!loading2) {
+            loading2 = true;
+            setTimeout(() => {
+              const res = callback();
+              if (res && res.finally) {
+                res.finally(() => modify2());
+              } else {
+                modify2();
+              }
+            });
+          }
+          return function() {
+            modifyArguments?.(arguments);
+            iArguments.push(arguments);
+          };
+        }
+      });
+    } catch (e) {
+      debug.error(e);
+    }
+  }
+  function propertyHook(target, propertyKey, propertyValue, configurable = true) {
+    try {
+      Reflect.defineProperty(target, propertyKey, {
+        configurable,
+        set: (v) => true,
+        get: () => {
+          Reflect.defineProperty(target, propertyKey, { configurable: true, value: propertyValue });
+          return propertyValue;
+        }
+      });
+    } catch (e) {
+      debug.error(e);
+    }
+  }
+  propertyHook.modify = (target, propertyKey, callback, once = false) => {
+    try {
+      let value = target[propertyKey];
+      value && (value = callback(value));
+      Reflect.defineProperty(target, propertyKey, {
+        configurable: true,
+        set: (v) => {
+          value = callback(v);
+          return true;
+        },
+        get: () => {
+          if (once) {
+            Reflect.deleteProperty(target, propertyKey);
+            Reflect.set(target, propertyKey, value);
+          }
+          return value;
+        }
+      });
+    } catch (e) {
+      debug.error(e);
+    }
+  };
+  function ProxyHandler(target, parrent, key) {
+    return new Proxy(target, {
+      deleteProperty(target2, p) {
+        const res = Reflect.deleteProperty(target2, p);
+        parrent[key] = target2;
+        return res;
+      },
+      set(target2, p, newValue, receiver) {
+        const res = Reflect.set(target2, p, newValue, receiver);
+        parrent[key] = target2;
+        return res;
+      },
+      get(target2, p, receiver) {
+        const res = Reflect.get(target2, p, receiver);
+        if (isArray(res) || isObject(res)) {
+          return ProxyHandler(res, receiver, p);
+        }
+        return res;
+      }
+    });
+  }
+  function propertryChangeHook(target, callback) {
+    return new Proxy(target, {
+      deleteProperty(target2, p) {
+        const res = Reflect.deleteProperty(target2, p);
+        callback(p, void 0);
+        return res;
+      },
+      set(target2, p, newValue, receiver) {
+        const res = Reflect.set(target2, p, newValue, receiver);
+        callback(p, newValue);
+        return res;
+      },
+      get(target2, p, receiver) {
+        const res = Reflect.get(target2, p, receiver);
+        if (isArray(res) || isObject(res)) {
+          return ProxyHandler(res, receiver, p);
+        }
+        return res;
+      }
+    });
+  }
+
+  // src/utils/hook/worker.ts
+  init_tampermonkey();
+  var _WorkerHook = class {
+    /** Worker.prototype.postMessage hook init. */
+    static postMessageHook() {
+      this.postMessage = Worker.prototype.postMessage;
+      Worker.prototype.postMessage = function(message, transfer) {
+        let ishook = false;
+        _WorkerHook.postMessageCallback.forEach((d) => {
+          d.call(this, message, transfer) && (ishook = true);
+        });
+        ishook || _WorkerHook.postMessage.call(this, message, transfer);
+      };
+    }
+    constructor() {
+      _WorkerHook.postMessage || _WorkerHook.postMessageHook();
+    }
+    /**
+     * Worker.prototype.postMessage hook.
+     * @param callback 检查并处理\`Worker.prototype.postMessage\`的回调函数，继承原传参，返回 **true** 时拦截该实例。
+     * @returns 取消该hook的方法，执行后不再hook。
+     */
+    postMessage(callback) {
+      const id = _WorkerHook.postMessageCallback.push(callback);
+      return () => {
+        id >= 0 && delete _WorkerHook.postMessageCallback[id - 1];
+      };
+    }
+  };
+  var WorkerHook = _WorkerHook;
+  /** Worker.prototype.postMessage backup. */
+  __publicField(WorkerHook, "postMessage");
+  __publicField(WorkerHook, "postMessageCallback", []);
+
+  // src/utils/utils.ts
+  init_tampermonkey();
+
+  // src/io/api-bangumi-season.ts
+  init_tampermonkey();
+  async function apiBangumiSeason(data) {
+    const response = await fetch(objUrl(URLS.BANGUMI_SEASON, data), { credentials: "include" });
+    const json = await response.json();
+    return jsonCheck(json).result;
+  }
+
+  // src/io/api-biliplus-view.ts
+  init_tampermonkey();
+
+  // src/utils/hook/xhr.ts
+  init_tampermonkey();
+  var rules = [];
+  var open = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function(...rest) {
+    const args = [...rest];
+    args[1] && rules.forEach((d) => {
+      d && d[0].every((d2) => args[1].includes(d2)) && d[1].call(this, args);
+    });
+    return open.call(this, ...args);
+  };
+  function xhrHook(url, modifyOpen, modifyResponse, once = true) {
+    let id;
+    const one = Array.isArray(url) ? url : [url];
+    const two = function(args) {
+      once && id && delete rules[id - 1];
+      if (modifyOpen)
+        try {
+          modifyOpen(args);
+        } catch (e) {
+          debug.error("modifyOpen of xhrhook", one, e);
+        }
+      if (modifyResponse)
+        try {
+          this.addEventListener("readystatechange", () => {
+            try {
+              if (this.readyState === 4) {
+                const response = { response: this.response, responseType: this.responseType, status: this.status, statusText: this.statusText };
+                (this.responseType === "" || this.responseType === "text") && (response.responseText = this.responseText);
+                (this.responseType === "" || this.responseType === "document") && (response.responseXML = this.responseXML);
+                modifyResponse(response);
+                Reflect.defineProperty(this, "response", { configurable: true, value: response.response });
+                response.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
+                response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
+              }
+            } catch (e) {
+              debug.error("modifyResponse of xhrhook", one, e);
+            }
+          });
+        } catch (e) {
+          debug.error("modifyResponse of xhrhook", one, e);
+        }
+    };
+    const iid = rules.push([one, two]);
+    return () => {
+      removeXhrhook(iid);
+    };
+  }
+  xhrHook.async = (url, condition, modifyResponse, once = true) => {
+    let id, temp;
+    const one = Array.isArray(url) ? url : [url];
+    const two = function(args) {
+      try {
+        if (!condition || condition(args)) {
+          this.xhrhookTimes = this.xhrhookTimes ? this.xhrhookTimes++ : 1;
+          id && (temp = rules[id - 1]);
+          delete rules[id - 1];
+          this.send = () => true;
+          (!args[2] || args[2] === true) && (this.timeout = 0);
+          const et = setInterval(() => {
+            this.dispatchEvent(new ProgressEvent("progress"));
+          }, 50);
+          Reflect.defineProperty(this, "status", { configurable: true, value: 200 });
+          Reflect.defineProperty(this, "readyState", { configurable: true, value: 2 });
+          this.dispatchEvent(new ProgressEvent("readystatechange"));
+          modifyResponse ? modifyResponse(args).then((d) => {
+            clearInterval(et);
+            if (d) {
+              Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
+              d.responseType && setResponseType(d.responseType, this);
+              d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
+              d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
+              !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
+              Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
+              this.dispatchEvent(new ProgressEvent("readystatechange"));
+              this.dispatchEvent(new ProgressEvent("load"));
+              this.dispatchEvent(new ProgressEvent("loadend"));
+            }
+          }).catch((d) => {
+            if (this.xhrhookTimes === 1) {
+              if (d && d.response) {
+                Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
+                d.responseType && setResponseType(d.responseType, this);
+                d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
+                d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
+                !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
+                Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
+                this.dispatchEvent(new ProgressEvent("readystatechange"));
+                this.dispatchEvent(new ProgressEvent("load"));
+                this.dispatchEvent(new ProgressEvent("loadend"));
+              } else {
+                this.dispatchEvent(new ProgressEvent("error"));
+              }
+            } else {
+              this.xhrhookTimes--;
+            }
+            debug.error("modifyResponse of xhrhookasync", one, d);
+          }).finally(() => {
+            clearInterval(et);
+            !once && (id = rules.push(temp));
+          }) : (this.abort(), !once && (id = rules.push(temp)));
+          clearInterval(et);
+        }
+      } catch (e) {
+        debug.error("condition of xhrhook", one, e);
+      }
+    };
+    const iid = rules.push([one, two]);
+    return () => {
+      removeXhrhook(iid);
+    };
+  };
+  function removeXhrhook(id) {
+    id >= 0 && delete rules[id - 1];
+  }
+  xhrHook.ultra = (url, modify) => {
+    const one = Array.isArray(url) ? url : [url];
+    const two = function(args) {
+      try {
+        modify.call(this, this, args);
+      } catch (e) {
+        debug.error("xhrhook modify", one, modify, e);
+      }
+    };
+    const iid = rules.push([one, two]);
+    return () => {
+      removeXhrhook(iid);
+    };
+  };
+  function setResponseType(responseType, xhr) {
+    Reflect.defineProperty(xhr, "responseType", { configurable: true, value: responseType });
+    xhr.getResponseHeader = (name) => {
+      if (name === "content-type") {
+        switch (xhr.responseType) {
+          case "arraybuffer":
+          case "blob":
+            return "application/octet-stream";
+          case "document":
+            return "text/xml; charset=utf-8";
+          case "json":
+            return "application/json; charset=utf-8";
+          default:
+            return "text/plain; charset=utf-8";
+        }
+      }
+      return "text/plain; charset=utf-8";
+    };
+    xhr.getAllResponseHeaders = () => {
+      switch (xhr.responseType) {
+        case "arraybuffer":
+        case "blob":
+          return "content-type: application/octet-stream\\r\\n";
+        case "document":
+          return "content-type: text/xml; charset=utf-8\\r\\n";
+        case "json":
+          return "content-type: application/json; charset=utf-8\\r\\n";
+        default:
+          return "content-type: text/plain; charset=utf-8\\r\\n";
+      }
+    };
+  }
+
+  // src/io/api-view-detail.ts
+  init_tampermonkey();
+  var ApiViewDetail = class {
+    code = 0;
+    data = {
+      Card: { archive_count: -1, article_count: -1, card: {}, follower: -1, following: false, like_num: -1, space: {} },
+      Related: [],
+      Reply: { page: {}, replies: [] },
+      Spec: null,
+      Tags: [],
+      View: {},
+      elec: null,
+      hot_share: {},
+      recommend: null,
+      view_addit: {}
+    };
+    message = "0";
+    ttl = 1;
+  };
+  async function apiViewDetail(aid) {
+    const response = await fetch(objUrl(URLS.VIEW_DETAIL, {
+      aid
+    }));
+    const json = await response.json();
+    return jsonCheck(json).data;
+  }
+
+  // src/io/api-biliplus-view.ts
+  var apiBiliplusView = class {
+    constructor(aid) {
+      this.aid = aid;
+      this.fetch = fetch(objUrl("//www.biliplus.com/api/view", {
+        id: aid
+      }));
+    }
+    fetch;
+    async getDate() {
+      const respense = await this.fetch;
+      return await respense.json();
+    }
+    /** 转化为\`apiViewDetail\`格式 */
+    async toDetail() {
+      const json = await this.getDate();
+      return this.view2Detail(json);
+    }
+    view2Detail(data) {
+      const result = new ApiViewDetail();
+      if (data.v2_app_api) {
+        delete data.v2_app_api.redirect_url;
+        result.data.Card.follower = data.v2_app_api.owner_ext?.fans;
+        result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
+        result.data.Tags = data.v2_app_api.tag;
+        result.data.View = data.v2_app_api;
+        xhrHook(\`api.bilibili.com/x/web-interface/view?aid=\${this.aid}\`, void 0, (res) => {
+          const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
+          res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+        }, false);
+        xhrHook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${this.aid}\`, void 0, (res) => {
+          const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}\`;
+          res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+        }, false);
+        return JSON.parse(JSON.stringify(result));
+      } else
+        return this.view2Detail_v1(data);
+    }
+    view2Detail_v1(data) {
+      if ("code" in data) {
+        jsonCheck(data);
+      }
+      const result = new ApiViewDetail();
+      const p = Number(getUrlValue("p"));
+      result.data.Card.card = {
+        face: "//static.hdslb.com/images/akari.jpg",
+        mid: data.mid,
+        name: data.author,
+        vip: {}
+      };
+      data.list || (data.list = [{
+        cid: -1,
+        dimension: { width: 1920, height: 1080, rotate: 0 }
+      }]);
+      result.data.View = {
+        aid: data.aid || data.id || this.aid,
+        cid: data.list[p ? p - 1 : 0].cid,
+        copyright: 1,
+        ctime: data.created ?? 0,
+        dimension: { width: 1920, height: 1080, rotate: 0 },
+        duration: -1,
+        owner: result.data.Card.card,
+        pages: data.list.map((d) => {
+          d.dimension = { width: 1920, height: 1080, rotate: 0 };
+          return d;
+        }),
+        pic: data.pic ?? "",
+        pubdate: data.lastupdatets ?? 0,
+        rights: {},
+        stat: {
+          aid: data.aid || data.id || this.aid,
+          coin: data.coins,
+          danmaku: data.video_review,
+          dislike: 0,
+          evaluation: "",
+          favorite: data.favorites,
+          his_rank: 0,
+          like: -1,
+          now_rank: 0,
+          reply: -1,
+          share: -1,
+          view: data.play
+        },
+        state: 0,
+        subtitle: { allow_submit: false, list: [] },
+        tid: data.tid ?? 0,
+        title: data.title ?? "",
+        tname: data.typename ?? "",
+        videos: data.list.length ?? 0
+      };
+      data.bangumi && (result.data.View.season = data.bangumi);
+      xhrHook(\`api.bilibili.com/x/web-interface/view?aid=\${this.aid}\`, void 0, (res) => {
+        const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
+        res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+      }, false);
+      xhrHook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${this.aid}\`, void 0, (res) => {
+        const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}\`;
+        res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+      }, false);
+      return JSON.parse(JSON.stringify(result));
+    }
+  };
+
+  // src/io/api-player-pagelist.ts
+  init_tampermonkey();
+  async function apiPlayerPagelist(aid) {
+    const response = await fetch(objUrl(URLS.PAGE_LIST, { aid }));
+    const json = await response.json();
+    return jsonCheck(json).data;
+  }
+
+  // src/io/api-view.ts
+  init_tampermonkey();
+  async function apiView(aid) {
+    const response = await fetch(objUrl(URLS.VIEW, {
+      appkey: "8e9fc618fbd41e28",
+      id: aid,
+      type: "json"
+    }));
+    return await response.json();
+  }
+
+  // src/io/api-x-view.ts
+  init_tampermonkey();
+  async function apiXView(aid) {
+    const response = await fetch(objUrl(URLS.X_VIEW, { aid }));
+    const json = await response.json();
+    return jsonCheck(json).data;
+  }
+
+  // src/utils/abv.ts
+  init_tampermonkey();
+  var Abv = class {
+    base58Table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF";
+    digitMap = [11, 10, 3, 8, 4, 6];
+    xor = 177451812;
+    add = 8728348608;
+    bvidTemplate = ["B", "V", 1, "", "", 4, "", 1, "", 7, "", ""];
+    table = {};
+    constructor() {
+      for (let i = 0; i < 58; i++)
+        this.table[this.base58Table[i]] = i;
+    }
+    /**
+     * av/BV互转
+     * @param input av或BV，可带av/BV前缀
+     * @returns 转化结果
+     */
+    check(input) {
+      if (/^[aA][vV][0-9]+\$/.test(String(input)) || /^\\d+\$/.test(String(input)))
+        return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
+      if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
+        return this.bvToAv("BV" + input);
+      if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
+        return this.bvToAv(String(input));
+      throw input;
+    }
+    bvToAv(BV) {
+      let r = 0;
+      for (let i = 0; i < 6; i++)
+        r += this.table[BV[this.digitMap[i]]] * 58 ** i;
+      return r - this.add ^ this.xor;
+    }
+    avToBv(av) {
+      let bv = Array.from(this.bvidTemplate);
+      av = (av ^ this.xor) + this.add;
+      for (let i = 0; i < 6; i++)
+        bv[this.digitMap[i]] = this.base58Table[parseInt(String(av / 58 ** i)) % 58];
+      return bv.join("");
+    }
+  };
+  function abv(input) {
+    return new Abv().check(input);
+  }
+  function BV2avAll(str) {
+    return str.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
+  }
+
+  // src/utils/utils.ts
+  function getUrlValue(name) {
+    const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|\$)", "i");
+    const r = window.location.search.substr(1).match(reg);
+    if (r != null)
+      return decodeURIComponent(r[2]);
+    return null;
+  }
+  var catchs = { aid: {}, ssid: {}, epid: {} };
+  async function urlParam(url, redirect = true) {
+    url && !url.includes("?") && (url = "?" + url);
+    const obj = urlObj(url);
+    let { aid, cid, ssid, epid, p } = obj;
+    let pgc = false;
+    !aid && (aid = obj.avid);
+    !aid && url.replace(/[aA][vV]\\d+/, (d) => aid = d.substring(2));
+    !aid && url.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/, (d) => aid = abv(d));
+    !aid && obj.bvid && (aid = abv(obj.bvid));
+    aid && !Number(aid) && (aid = abv(aid));
+    p = p || 1;
+    !ssid && (ssid = obj.seasonId);
+    !ssid && (ssid = obj.season_id);
+    !ssid && url.replace(/[sS][sS]\\d+/, (d) => ssid = d.substring(2));
+    !epid && (epid = obj.episodeId);
+    !epid && (epid = obj.ep_id);
+    !epid && url.replace(/[eE][pP]\\d+/, (d) => epid = d.substring(2));
+    if (!ssid && !epid && aid) {
+      if (catchs.aid[aid])
+        return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+      if (!cid) {
+        try {
+          let data = await apiXView(aid);
+          if (data.redirect_url)
+            return urlParam(objUrl(data.redirect_url, { aid, cid, ssid, epid, p }));
+          catchs.aid[aid] = data.pages;
+          catchs.aid[aid].forEach((d) => d.aid = aid);
+          return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+        } catch (e) {
+          debug.error("view", e);
+          try {
+            catchs.aid[aid] = await apiPlayerPagelist(aid);
+            catchs.aid[aid].forEach((d) => d.aid = aid);
+            return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+          } catch (e2) {
+            debug.error("pagelist", e2);
+            try {
+              catchs.aid[aid] = (await apiView(aid)).list;
+              catchs.aid[aid].forEach((d) => d.aid = aid);
+              return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+            } catch (e3) {
+              debug.error("appkey", e3);
+              try {
+                let data = await new apiBiliplusView(aid).getDate();
+                catchs.aid[aid] = data.list || data.v2_app_api && data.v2_app_api.pages;
+                catchs.aid[aid].forEach((d) => d.aid = aid);
+                if (redirect && data.v2_app_api && data.v2_app_api.redirect_url)
+                  return urlParam(objUrl(data.v2_app_api.redirect_url, { aid, cid, ssid, epid, p }));
+                return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+              } catch (e4) {
+                debug.error("biliplus", e4);
+              }
+            }
+          }
+        }
+      }
+    }
+    if (ssid || epid) {
+      if (ssid && catchs.ssid[ssid])
+        return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
+      if (epid && catchs.epid[epid])
+        return catchs.epid[epid];
+      pgc = true;
+      let data = await apiBangumiSeason({ ep_id: epid, season_id: ssid });
+      ssid = data.season_id;
+      catchs.ssid[ssid] = [];
+      data.episodes.forEach((d) => {
+        Object.assign(d, { ssid, pgc, epid: d.ep_id });
+        catchs.aid[d.aid] = catchs.aid[d.aid] || [];
+        catchs.aid[d.aid].push(d);
+        catchs.ssid[ssid].push(catchs.epid[d.ep_id] = d);
+      });
+      if (epid)
+        return catchs.epid[epid];
+      return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
+    }
+    return { aid, cid, ssid, epid, p, pgc };
   }
 
   // src/core/toast.ts
@@ -7064,12 +8445,6 @@ const MODULES = `
     }
     return result;
   }
-
-  // src/utils/typeof.ts
-  init_tampermonkey();
-  var isArray = Array.isArray;
-  var isObject = (val) => val !== null && typeof val === "object";
-  var isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
 
   // src/core/toast.ts
   var Toastconfig = {
@@ -7261,6 +8636,9 @@ const MODULES = `
   };
   customElements.get(\`toast-container-\${"9c7ff17"}\`) || customElements.define(\`toast-container-\${"9c7ff17"}\`, ToastContainer);
   var toast = new ToastContainer();
+
+  // src/core/user.ts
+  init_tampermonkey();
 
   // src/core/userstatus.ts
   init_tampermonkey();
@@ -7715,133 +9093,6 @@ const MODULES = `
     }
   }
 
-  // src/utils/hook/method.ts
-  init_tampermonkey();
-  function methodHook(target, propertyKey, callback, modifyArguments) {
-    try {
-      let modify2 = function() {
-        loaded = true;
-        if (values[0]) {
-          Reflect.defineProperty(target, propertyKey, { configurable: true, value: values[0] });
-          iArguments.forEach((d) => values[0](...d));
-        } else {
-          debug.error("拦截方法出错！", "目标方法", propertyKey, "所属对象", target);
-        }
-      };
-      var modify = modify2;
-      const values = [];
-      const iArguments = [];
-      let loading2 = false;
-      let loaded = false;
-      Reflect.defineProperty(target, propertyKey, {
-        configurable: true,
-        set: (v) => {
-          if (loading2 && !loaded) {
-            values.unshift(v);
-          }
-          return true;
-        },
-        get: () => {
-          if (!loading2) {
-            loading2 = true;
-            setTimeout(() => {
-              const res = callback();
-              if (res && res.finally) {
-                res.finally(() => modify2());
-              } else {
-                modify2();
-              }
-            });
-          }
-          return function() {
-            modifyArguments?.(arguments);
-            iArguments.push(arguments);
-          };
-        }
-      });
-    } catch (e) {
-      debug.error(e);
-    }
-  }
-  function propertyHook(target, propertyKey, propertyValue, configurable = true) {
-    try {
-      Reflect.defineProperty(target, propertyKey, {
-        configurable,
-        set: (v) => true,
-        get: () => {
-          Reflect.defineProperty(target, propertyKey, { configurable: true, value: propertyValue });
-          return propertyValue;
-        }
-      });
-    } catch (e) {
-      debug.error(e);
-    }
-  }
-  propertyHook.modify = (target, propertyKey, callback, once = false) => {
-    try {
-      let value = target[propertyKey];
-      value && (value = callback(value));
-      Reflect.defineProperty(target, propertyKey, {
-        configurable: true,
-        set: (v) => {
-          value = callback(v);
-          return true;
-        },
-        get: () => {
-          if (once) {
-            Reflect.deleteProperty(target, propertyKey);
-            Reflect.set(target, propertyKey, value);
-          }
-          return value;
-        }
-      });
-    } catch (e) {
-      debug.error(e);
-    }
-  };
-  function ProxyHandler(target, parrent, key) {
-    return new Proxy(target, {
-      deleteProperty(target2, p) {
-        const res = Reflect.deleteProperty(target2, p);
-        parrent[key] = target2;
-        return res;
-      },
-      set(target2, p, newValue, receiver) {
-        const res = Reflect.set(target2, p, newValue, receiver);
-        parrent[key] = target2;
-        return res;
-      },
-      get(target2, p, receiver) {
-        const res = Reflect.get(target2, p, receiver);
-        if (isArray(res) || isObject(res)) {
-          return ProxyHandler(res, receiver, p);
-        }
-        return res;
-      }
-    });
-  }
-  function propertryChangeHook(target, callback) {
-    return new Proxy(target, {
-      deleteProperty(target2, p) {
-        const res = Reflect.deleteProperty(target2, p);
-        callback(p, void 0);
-        return res;
-      },
-      set(target2, p, newValue, receiver) {
-        const res = Reflect.set(target2, p, newValue, receiver);
-        callback(p, newValue);
-        return res;
-      },
-      get(target2, p, receiver) {
-        const res = Reflect.get(target2, p, receiver);
-        if (isArray(res) || isObject(res)) {
-          return ProxyHandler(res, receiver, p);
-        }
-        return res;
-      }
-    });
-  }
-
   // src/core/user.ts
   var User = class {
     /** 用户数据，除非确定已初始化，否则请使用\`addCallback\`用户数据回调代替 */
@@ -7954,6 +9205,2201 @@ const MODULES = `
   };
   var user = new User();
 
+  // src/core/video-info.ts
+  init_tampermonkey();
+  var VideoInfo = class {
+    cids = {};
+    stats = {};
+    get metadata() {
+      const cid = BLOD.cid;
+      return cid ? this.cids[cid] : void 0;
+    }
+    get album() {
+      return this.metadata?.album || this.title;
+    }
+    get artist() {
+      return this.metadata?.artist;
+    }
+    get title() {
+      return this.metadata?.title || document.title.slice(0, -26);
+    }
+    get artwork() {
+      return this.metadata?.artwork;
+    }
+    get stat() {
+      const aid = BLOD.aid;
+      return aid ? this.stats[aid] : void 0;
+    }
+    /** 数据变动回调栈 */
+    callbacks = [];
+    /**
+     * 数据变动回调
+     * @param callback 数据变动时执行的回调函数
+     * @returns 撤销监听的函数
+     */
+    bindChange(callback) {
+      const id = this.callbacks.push(callback);
+      return () => {
+        delete this.callbacks[id - 1];
+      };
+    }
+    timer;
+    /** 推送数据变动 */
+    emitChange() {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => this.callbacks.forEach((d) => d(this)), 100);
+    }
+    /** 从\`IAidDatail\`中提取 */
+    aidDatail(data) {
+      const album = data.title;
+      const artist = data.owner.name;
+      const pic = data.pic.replace("http:", "");
+      data.pages ? data.pages.forEach((d, i) => {
+        this.cids[d.cid] = {
+          album,
+          artist,
+          title: d.part || \`#\${i + 1}\`,
+          artwork: [{ src: pic }]
+        };
+      }) : this.cids[data.cid] = {
+        album,
+        artist,
+        title: \`#1\`,
+        artwork: [{ src: pic }]
+      };
+      this.stats[data.aid] = data.stat;
+      this.emitChange();
+    }
+    /** 从\`IAidInfo\`中提取 */
+    aidInfo(data) {
+      const album = data.title;
+      const artist = data.upper.name;
+      const pic = data.cover.replace("http:", "");
+      data.pages ? data.pages.forEach((d, i) => {
+        this.cids[d.id] = {
+          album,
+          artist,
+          title: d.title || \`#\${i + 1}\`,
+          artwork: [{ src: pic }]
+        };
+      }) : this.cids[data.id] = {
+        album,
+        artist,
+        title: \`#1\`,
+        artwork: [{ src: pic }]
+      };
+    }
+    /** 从\`IBangumiSeasonResponse\`中提取 */
+    bangumiSeason(data) {
+      const album = data.title || data.jp_title;
+      const artist = data.actors || data.staff || data.up_info?.name;
+      const pic = data.cover.replace("http:", "");
+      const bkg_cover = data.bkg_cover?.replace("http:", "");
+      this.bangumiEpisode(data.episodes, album, artist, pic, bkg_cover);
+      this.emitChange();
+    }
+    /** 从\`IBangumiEpisode\`中提取 */
+    bangumiEpisode(data, album, artist, pic, bkg_cover) {
+      data.forEach((d) => {
+        const artwork = [{ src: d.cover.replace("http:", "") }, { src: pic }];
+        bkg_cover && artwork.push({ src: bkg_cover });
+        this.cids[d.cid] = {
+          album,
+          artist,
+          title: d.index_title,
+          artwork
+        };
+      });
+    }
+    toview(data) {
+      const album = data.name;
+      const pic = data.cover.replace("http:", "");
+      data.list.forEach((d) => {
+        const title = d.title;
+        const cover = d.pic.replace("http:", "");
+        const artist = d.owner.name;
+        d.pages.forEach((d2, i) => {
+          this.cids[d2.cid] = {
+            album,
+            artist,
+            title: title + \`(\${d2.part})\`,
+            artwork: [{ src: pic }, { src: cover }]
+          };
+        });
+      });
+      this.emitChange();
+    }
+    /** 设置浏览器媒体信息 */
+    mediaSession() {
+      if (this.metadata) {
+        navigator.mediaSession.metadata = new MediaMetadata({ ...this.metadata });
+      }
+    }
+  };
+  var videoInfo = new VideoInfo();
+
+  // src/core/danmaku.ts
+  var Danmaku = class {
+    listSoFixed = false;
+    constructor() {
+      user.addCallback((status) => {
+        if (!status.bilibiliplayer) {
+          this.listSoFix();
+        }
+      });
+    }
+    /** 原生旧版播放器使用protobuf弹幕 */
+    listSoFix() {
+      if (this.listSoFixed)
+        return;
+      this.listSoFixed = true;
+      const that = this;
+      new WorkerHook().postMessage(function(message) {
+        if (message.url && message.url.includes("list.so")) {
+          user.userStatus.dmwrap && that.trim();
+          if (!user.userStatus.dmproto)
+            return false;
+          const params = urlObj(message.url);
+          const startTime = (/* @__PURE__ */ new Date()).getTime();
+          that.getSegDanmaku(void 0, params.oid).then((d) => {
+            this.dispatchEvent(new MessageEvent("message", {
+              data: {
+                code: 0,
+                danmakuArray: d,
+                loadTime: (/* @__PURE__ */ new Date()).getTime() - startTime,
+                parseTime: Math.random(),
+                sendTip: "",
+                state: 0,
+                textSide: "",
+                total: d.length.toString()
+              }
+            }));
+          }).catch((e) => {
+            console.error("protobuf 弹幕获取失败", e);
+          });
+          return true;
+        }
+        return false;
+      });
+    }
+    /** 允许普权弹幕排版 */
+    trim() {
+      propertyHook(String.prototype, "trim", function() {
+        return String(this);
+      });
+    }
+    async getSegDanmaku(aid = BLOD.aid, cid = BLOD.cid) {
+      if (!cid)
+        throw new Error(\`无法获取弹幕 aid：\${aid} cid：\${cid}\`);
+      return new ApiDmWeb(aid, cid).toCmd();
+    }
+    /** 加载本地xml弹幕 */
+    localDmXml() {
+      if (!window.player)
+        return toast.warning("未找到播放器实例！请在播放页面使用。");
+      if (!window.player?.appendDm)
+        return toast.warning("未启用【重构播放器】，无法载入弹幕！");
+      const data = ["请选择一个弹幕文件，拓展名：.xml，编码：utf-8"];
+      const tst = toast.toast(0, "info", ...data);
+      fileRead(".xml", false).then((d) => {
+        if (d && d[0]) {
+          data.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
+          tst.data = data;
+          tst.type = "warning";
+          return readAs(d[0]);
+        }
+        throw new Error(data[0]);
+      }).then((d) => {
+        const dm = DanmakuBase.decodeXml(d);
+        window.player.appendDm(dm, !user.userStatus.dmContact);
+        data.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
+        tst.data = data;
+        tst.type = "success";
+      }).catch((e) => {
+        data.push(e);
+        debug.error(e);
+        tst.data = data;
+        tst.type = "error";
+      }).finally(() => {
+        tst.delay = user.userStatus.toast.delay;
+      });
+    }
+    /** 加载本地json弹幕 */
+    localDmJson() {
+      if (!window.player)
+        return toast.warning("未找到播放器实例！请在播放页面使用。");
+      if (!window.player?.appendDm)
+        return toast.warning("未启用【重构播放器】，无法载入弹幕！");
+      const data = ["请选择一个弹幕文件，拓展名：.json，编码：utf-8"];
+      const tst = toast.toast(0, "info", ...data);
+      fileRead(".json", false).then((d) => {
+        if (d && d[0]) {
+          data.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
+          tst.data = data;
+          tst.type = "warning";
+          return readAs(d[0]);
+        }
+        throw new Error(data[0]);
+      }).then((d) => {
+        const dm = JSON.parse(d);
+        window.player.appendDm(dm, !user.userStatus.dmContact);
+        data.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
+        tst.data = data;
+        tst.type = "success";
+      }).catch((e) => {
+        data.push(e);
+        debug.error(e);
+        tst.data = data;
+        tst.type = "error";
+      }).finally(() => {
+        tst.delay = user.userStatus.toast.delay;
+      });
+    }
+    /** 下载弹幕 */
+    async download(aid = BLOD.aid, cid = BLOD.cid) {
+      if (!cid)
+        return toast.warning("未找到播放器实例！请在播放页面使用。");
+      const dms = window.player?.getDanmaku ? window.player.getDanmaku() : await new ApiDmWeb(aid, cid).getData();
+      const metadata = videoInfo.metadata;
+      const title = metadata ? \`\${metadata.album}(\${metadata.title})\` : \`\${aid}.\${cid}\`;
+      if (user.userStatus.dmExtension === "json") {
+        return saveAs(JSON.stringify(dms, void 0, "	"), \`\${title}.json\`, "application/json");
+      }
+      return saveAs(DanmakuBase.encodeXml(DanmakuBase.parseCmd(dms), cid), \`\${title}.xml\`, "application/xml");
+    }
+    /** 加载在线弹幕 */
+    async onlineDm(str) {
+      if (!window.player)
+        return toast.warning("未找到播放器实例！请在播放页面使用。");
+      if (!window.player?.appendDm)
+        return toast.warning("未启用【重构播放器】，无法载入弹幕！");
+      const data = ["-------在线弹幕-------", \`目标：\${str}\`];
+      const tst = toast.toast(0, "info", ...data);
+      const { aid, cid } = await urlParam(str);
+      data.push(\`aid：\${aid}\`, \`cid：\${cid}\`);
+      tst.data = data;
+      if (!aid || !cid) {
+        data.push("查询cid信息失败，已退出！");
+        tst.data = data;
+        tst.type = "error";
+        tst.delay = toast.delay;
+      } else {
+        new ApiDmWeb(aid, cid).getData().then((d) => {
+          window.player.appendDm(d, !user.userStatus.dmContact);
+          data.push(\`有效弹幕数：\${d.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
+          tst.data = data;
+          tst.type = "success";
+        }).catch((e) => {
+          data.push(e);
+          debug.error(e);
+          tst.data = data;
+          tst.type = "error";
+        }).finally(() => {
+          tst.delay = user.userStatus.toast.delay;
+        });
+      }
+    }
+  };
+  var danmaku = new Danmaku();
+
+  // src/core/download.ts
+  init_tampermonkey();
+
+  // src/io/api-playurl.ts
+  init_tampermonkey();
+
+  // src/io/fnval.ts
+  init_tampermonkey();
+  var qn = 127;
+  var fnver = 0;
+  var fnval = 0 /* FLV */ + 16 /* DASH_H265 */ + 64 /* HDR */ + 128 /* DASH_4K */ + 256 /* DOLBYAUDIO */ + 512 /* DOLBYVIDEO */ + 1024 /* DASH_8K */ + 2048 /* DASH_AV1 */;
+
+  // src/io/api-playurl.ts
+  var PlayurlDescriptionMap = {
+    127: "超高清 8K",
+    126: "杜比视界",
+    125: "HDR",
+    121: "超清 4K",
+    120: "超清 4K",
+    116: "高清 1080P60",
+    112: "高清 1080P+",
+    80: "高清 1080P",
+    74: "高清 720P60",
+    64: "高清 720P",
+    48: "高清 720P",
+    32: "清晰 480P",
+    16: "流畅 360P",
+    15: "流畅 360P",
+    6: "流畅 240P",
+    5: "流畅 144P"
+  };
+  var PlayurlFormatMap = {
+    127: "hdflv2",
+    126: "hdflv2",
+    125: "hdflv2",
+    121: "hdflv2",
+    120: "hdflv2",
+    116: "flv_p60",
+    112: "hdflv2",
+    80: "flv",
+    74: "flv720_p60",
+    64: "flv720",
+    48: "flv720",
+    32: "flv480",
+    16: "mp4",
+    15: "mp4",
+    6: "mp4",
+    5: "mp4"
+  };
+  var PlayurlQualityMap = {
+    127: "8K",
+    126: "Dolby",
+    125: "HDR",
+    121: "4K",
+    120: "4K",
+    116: "1080P60",
+    112: "1080P+",
+    80: "1080P",
+    74: "720P60",
+    64: "720P",
+    48: "720P",
+    32: "480P",
+    16: "360P",
+    15: "360P",
+    6: "240P",
+    5: "144P"
+  };
+  var PlayurlCodecs = {
+    30126: "hvc1.2.4.L153.90",
+    126: "hvc1.2.4.L153.90",
+    30121: "hev1.1.6.L156.90",
+    121: "hev1.1.6.L156.90",
+    30120: "avc1.64003C",
+    120: "avc1.64003C",
+    30112: "avc1.640028",
+    // 1080P+
+    112: "avc1.640028",
+    // 1080P+
+    30102: "hev1.1.6.L120.90",
+    // HEVC 1080P+
+    102: "hev1.1.6.L120.90",
+    // HEVC 1080P+
+    30080: "avc1.640028",
+    // 1080P
+    80: "avc1.640028",
+    // 1080P
+    30077: "hev1.1.6.L120.90",
+    // HEVC 1080P
+    77: "hev1.1.6.L120.90",
+    // HEVC 1080P
+    30064: "avc1.64001F",
+    // 720P
+    64: "avc1.64001F",
+    // 720P
+    30066: "hev1.1.6.L120.90",
+    // HEVC 720P
+    66: "hev1.1.6.L120.90",
+    // HEVC 720P
+    30032: "avc1.64001E",
+    // 480P
+    32: "avc1.64001E",
+    // 480P
+    30033: "hev1.1.6.L120.90",
+    // HEVC 480P
+    33: "hev1.1.6.L120.90",
+    // HEVC 480P
+    30011: "hev1.1.6.L120.90",
+    // HEVC 360P
+    11: "hev1.1.6.L120.90",
+    // HEVC 360P
+    30016: "avc1.64001E",
+    // 360P
+    16: "avc1.64001E",
+    // 360P
+    30006: "avc1.64001E",
+    //240P
+    6: "avc1.64001E",
+    // 240P
+    30005: "avc1.64001E",
+    // 144P
+    5: "avc1.64001E",
+    // 144P
+    30251: "fLaC",
+    // Hires
+    30250: "ec-3",
+    // Dolby
+    30280: "mp4a.40.2",
+    // 高码音频
+    30232: "mp4a.40.2",
+    // 中码音频
+    30216: "mp4a.40.2"
+    // 低码音频
+  };
+  var PlayurlCodecsAPP = {
+    30016: "avc1.64001E",
+    // APP源 360P
+    16: "avc1.64001E",
+    // APP源 360P
+    30032: "avc1.64001F",
+    // APP源 480P
+    32: "avc1.64001F",
+    // APP源 480P
+    30064: "avc1.640028",
+    // APP源 720P
+    64: "avc1.640028",
+    // APP源 720P
+    30080: "avc1.640032",
+    // APP源 1080P
+    80: "avc1.640032",
+    // APP源 1080P
+    30216: "mp4a.40.2",
+    // APP源 低码音频
+    30232: "mp4a.40.2",
+    // APP源 中码音频
+    30280: "mp4a.40.2"
+    // APP源 高码音频 
+  };
+  var PlayurlFrameRate = {
+    30121: "16000/672",
+    121: "16000/672",
+    30120: "16000/672",
+    120: "16000/672",
+    30112: "16000/672",
+    112: "16000/672",
+    30102: "16000/672",
+    102: "16000/672",
+    30080: "16000/672",
+    80: "16000/672",
+    30077: "16000/656",
+    77: "16000/656",
+    30064: "16000/672",
+    64: "16000/672",
+    30066: "16000/656",
+    66: "16000/656",
+    30032: "16000/672",
+    32: "16000/672",
+    30033: "16000/656",
+    33: "16000/656",
+    30011: "16000/656",
+    11: "16000/656",
+    30016: "16000/672",
+    16: "16000/672",
+    30006: "16000/672",
+    6: "16000/672",
+    30005: "16000/672",
+    5: "16000/672"
+  };
+  var PlayurlResolution = {
+    30121: [3840, 2160],
+    121: [3840, 2160],
+    30120: [3840, 2160],
+    120: [3840, 2160],
+    30112: [1920, 1080],
+    // 1080P+
+    112: [1920, 1080],
+    // 1080P+
+    30102: [1920, 1080],
+    // HEVC 1080P+
+    102: [1920, 1080],
+    // HEVC 1080P+
+    30080: [1920, 1080],
+    // 1080P
+    80: [1920, 1080],
+    // 1080P
+    30077: [1920, 1080],
+    // HEVC 1080P
+    77: [1920, 1080],
+    // HEVC 1080P
+    30064: [1280, 720],
+    // 720P
+    64: [1280, 720],
+    // 720P
+    30066: [1280, 720],
+    // HEVC 720P
+    66: [1280, 720],
+    // HEVC 720P
+    30032: [852, 480],
+    // 480P
+    32: [852, 480],
+    // 480P
+    30033: [852, 480],
+    // HEVC 480P
+    33: [852, 480],
+    // HEVC 480P
+    30011: [640, 360],
+    // HEVC 360P
+    11: [640, 360],
+    // HEVC 360P
+    30016: [640, 360],
+    // 360P
+    16: [640, 360],
+    // 360P
+    30006: [426, 240],
+    // 240P
+    6: [426, 240],
+    // 240P
+    30005: [256, 144],
+    // 144P
+    5: [256, 144]
+    // 144P
+  };
+  var PlayurlDash = class {
+    accept_description = [];
+    accept_format = "";
+    accept_quality = [];
+    bp = 0;
+    code = 0;
+    dash = {
+      audio: [],
+      dolby: { audio: [], type: 0 },
+      duration: 0,
+      min_buffer_time: 1.5,
+      minBufferTime: 1.5,
+      video: []
+    };
+    fnval = 4048;
+    fnver = 0;
+    format = "flv";
+    from = "local";
+    has_paid = true;
+    is_preview = 0;
+    message = "";
+    no_rexcode = 1;
+    quality = 80;
+    result = "suee";
+    seek_param = "start";
+    seek_type = "offset";
+    status = 2;
+    support_formats = [];
+    timelength = 0;
+    type = "DASH";
+    video_codecid = 7;
+    video_project = true;
+  };
+  async function apiPlayurl(data, dash = true, pgc = false, server = "api.bilibili.com") {
+    data = Object.assign({
+      qn,
+      otype: "json",
+      fourk: 1
+    }, data, dash ? { fnver, fnval } : {});
+    const response = await fetch(objUrl(pgc ? URLS.PGC_PLAYURL.replace("api.bilibili.com", server) : URLS.PLAYURL, data), { credentials: "include" });
+    const json = await response.json();
+    if (pgc) {
+      return jsonCheck(json).result;
+    }
+    return jsonCheck(json).data;
+  }
+
+  // src/io/api-playurl-interface.ts
+  init_tampermonkey();
+  var ApiPlayurlInterface = class extends ApiSign {
+    constructor(data, pgc = false) {
+      super(pgc ? URLS.PLAYURL_BANGUMI : URLS.PLAYURL_INTERFACE, "YvirImLGlLANCLvM");
+      this.data = data;
+      this.data = Object.assign({
+        otype: "json",
+        qn: data.quality,
+        type: "",
+        fnver,
+        fnval
+      }, data, pgc ? { module: "bangumi", season_type: 1 } : {});
+    }
+    async getData() {
+      const response = await fetch(this.sign(), { credentials: "include" });
+      return await response.json();
+    }
+  };
+
+  // src/io/api-playurl-intl.ts
+  init_tampermonkey();
+  var ApiPlayurlIntl = class extends ApiSign {
+    constructor(data, dash = true, pgc = false) {
+      super(pgc ? URLS.INTL_OGV_PLAYURL : URLS.INTL_PLAYURL, "bb3101000e232e27");
+      this.data = data;
+      this.pgc = pgc;
+      this.data = Object.assign({
+        device: "android",
+        force_host: 1,
+        mobi_app: "android_i",
+        qn,
+        platform: "android_i",
+        fourk: 1,
+        build: 2100110,
+        otype: "json"
+      }, data, dash ? { fnval, fnver } : {});
+    }
+    async getData() {
+      const response = await GM.fetch(this.sign());
+      const json = await response.json();
+      if (this.pgc) {
+        return jsonCheck(json);
+      }
+      return jsonCheck(json).data;
+    }
+  };
+
+  // src/io/api-playurl-tv.ts
+  init_tampermonkey();
+  var ApiPlayurlTv = class extends ApiSign {
+    constructor(data, dash = true, pgc = false) {
+      super(pgc ? URLS.PGC_PLAYURL_TV : URLS.UGC_PLAYURL_TV, "4409e2ce8ffd12b8");
+      this.data = data;
+      this.data = Object.assign({
+        qn,
+        fourk: 1,
+        otype: "json",
+        platform: "android",
+        mobi_app: "android_tv_yst",
+        build: 102801
+      }, data, dash ? { fnval, fnver } : {});
+    }
+    async getData() {
+      const response = await fetch(this.sign());
+      const json = await response.json();
+      return jsonCheck(json);
+    }
+  };
+
+  // src/io/api-playurlproj.ts
+  init_tampermonkey();
+  var ApiPlayurlProj = class extends ApiSign {
+    constructor(data, pgc = false) {
+      super(pgc ? URLS.PGC_PLAYURL_PROJ : URLS.PLAYURL_PROJ, "bb3101000e232e27");
+      this.data = data;
+      this.data = Object.assign({
+        build: "2040100",
+        device: "android",
+        mobi_app: "android_i",
+        otype: "json",
+        platform: "android_i",
+        qn
+      }, data);
+      pgc && (this.data.module = "bangumi");
+    }
+    async getData() {
+      const response = await fetch(this.sign());
+      return await response.json();
+    }
+  };
+
+  // src/core/download/aria2.ts
+  init_tampermonkey();
+
+  // src/utils/mutex.ts
+  init_tampermonkey();
+  function getMetux() {
+    return Math.random().toString(36).substring(2);
+  }
+
+  // src/core/download/aria2.ts
+  var Aria2 = class {
+    constructor(userAgent, referer, dir, server = "http://localhost", port = 6800, token, split, size) {
+      this.userAgent = userAgent;
+      this.referer = referer;
+      this.dir = dir;
+      this.server = server;
+      this.port = port;
+      this.token = token;
+      this.split = split;
+      this.size = size;
+    }
+    get url() {
+      return \`\${this.server}:\${this.port}/jsonrpc\`;
+    }
+    /** 命令行 */
+    cmdlet(data) {
+      const arr2 = ["aria2c"];
+      data.urls.forEach((d) => arr2.push(\`"\${d}"\`));
+      data.out && arr2.push(\`--out="\${data.out}"\`);
+      (data.userAgent || this.userAgent) && arr2.push(\`--user-agent="\${data.userAgent || this.userAgent}"\`);
+      (data.referer || this.referer) && arr2.push(\`--referer="\${data.referer || this.referer}"\`);
+      (data.dir || this.dir) && arr2.push(\`--dir="\${data.dir || this.dir}"\`);
+      (data.split || this.split) && arr2.push(\`--split="\${data.split || this.split}"\`, \`--max-connection-per-server="\${data.split || this.split}"\`);
+      (data.size || this.size) && arr2.push(\`--min-split-size="\${data.size || this.size}M"\`);
+      data.header && Object.entries(data.header).forEach((d) => arr2.push(\`--header="\${d[0]}: \${d[1]}"\`));
+      return navigator.clipboard.writeText(arr2.join(" "));
+    }
+    /** RPC */
+    rpc(data) {
+      const options = {};
+      data.out && (options.out = data.out);
+      (data.userAgent || this.userAgent) && (options["user-agent"] = data.userAgent || this.userAgent);
+      (data.referer || this.referer) && (options.referer = data.referer || this.referer);
+      (data.dir || this.dir) && (options.dir = data.dir || this.dir);
+      (data.split || this.split) && (options.split = options["max-connection-per-server"] = data.split || this.split);
+      (data.size || this.size) && (options["min-split-size"] = \`\${data.size || this.size}M\`);
+      data.header && (options.header = data.header);
+      return this.postMessage("aria2.addUri", data.id, [data.urls, options]);
+    }
+    /** 获取aria2配置信息 */
+    getVersion() {
+      return this.postMessage("aria2.getVersion");
+    }
+    postMessage(method, id = getMetux(), params = []) {
+      this.token && params.unshift(\`token:\${this.token}\`);
+      return new Promise((r, j) => {
+        fetch(this.url, {
+          method: "POST",
+          body: JSON.stringify({ method, id, params }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }).then((d) => d.json()).then((d) => {
+          d.error && j(d.error);
+          d.result && r(d.result);
+        }).catch((e) => {
+          debug.error("RPC<POST>", e);
+          fetch(objUrl(this.url, { method, id, params: base64.encode(JSON.stringify(params)) })).then((d) => d.json()).then((d) => {
+            d.error && j(d.error);
+            d.result && r(d.result);
+          }).catch((e2) => {
+            debug.error("RPC<GET>", e2);
+            j(e2);
+          });
+        });
+      });
+    }
+  };
+
+  // src/core/download/ef2.ts
+  init_tampermonkey();
+  var Ef2 = class {
+    constructor(userAgent, referer, dir, delay = false, silence = false) {
+      this.userAgent = userAgent;
+      this.referer = referer;
+      this.dir = dir;
+      this.delay = delay;
+      this.silence = silence;
+    }
+    /** 拉起IDM */
+    sendLinkToIDM(data) {
+      this.rebuildData(data);
+      const ef2str = Ef2.encode(data);
+      const a = document.createElement("a");
+      a.href = ef2str;
+      a.click();
+      return ef2str;
+    }
+    /** 生成ef2文件 */
+    file(data, fileName) {
+      this.rebuildData(data);
+      return Ef2.file([data], fileName);
+    }
+    /** 补全数据 */
+    rebuildData(data) {
+      this.userAgent && !data.userAgent && (data.userAgent = this.userAgent);
+      this.referer && !data.referer && (data.referer = this.referer);
+      this.dir && !data.dir && (data.dir = this.dir);
+      this.delay && !data.delay && (data.delay = this.delay);
+      this.silence && !data.silence && (data.silence = this.silence);
+    }
+    /** 生成ef2文件 */
+    static file(data, fileName) {
+      const result = [];
+      data.forEach((d) => {
+        const arr2 = ["<", "", "", "", ""];
+        Object.entries(d).forEach((d2) => {
+          switch (d2[0]) {
+            case "cookie":
+              arr2[4] = \`cookie: \${d2[1]}\`;
+              break;
+            case "delay":
+              break;
+            case "dir":
+              d2[1] = d2[1].replace(/\\//, "\\\\");
+              d2[1].endsWith("\\\\") && (d2[1] = d2[1].slice(0, -1));
+              arr2.push(\`filepath: \${d2[1]}\`);
+              break;
+            case "out":
+              arr2.push(\`filename: \${d2[1]}\`);
+              break;
+            case "password":
+              arr2.push(\`password: \${d2[1]}\`);
+              break;
+            case "body":
+              arr2.push(\`postdata: \${d2[1]}\`);
+              break;
+            case "referer":
+              arr2[2] = \`referer: \${d2[1]}\`;
+              break;
+            case "silence":
+              break;
+            case "url":
+              d2[1].startsWith("//") && (d2[1] = "https:" + d2[1]);
+              arr2[1] = d2[1];
+              break;
+            case "userAgent":
+              arr2[3] = \`User-Agent: \${d2[1]}\`;
+              break;
+            case "userName":
+              arr2.push(\`username: \${d2[1]}\`);
+              break;
+            default:
+              break;
+          }
+        });
+        arr2.push(">");
+        arr2.forEach((d2) => {
+          d2 && result.push(d2);
+        });
+      });
+      result.push("");
+      saveAs(result.join("\\r\\n"), fileName || \`\${data[0].out || getMetux()}.ef2\`);
+    }
+    /** 生成ef2协议 */
+    static encode(data) {
+      const arr2 = [];
+      Object.entries(data).forEach((d) => {
+        typeof d[1] === "string" && d[1].startsWith('"') || (d[1] = \`"\${d[1]}"\`);
+        switch (d[0]) {
+          case "cookie":
+            arr2.push("-c", d[1]);
+            break;
+          case "delay":
+            arr2.push("-q");
+            break;
+          case "dir":
+            d[1] = d[1].replace(/\\//, "\\\\");
+            d[1].endsWith("\\\\") && (d[1] = d[1].slice(0, -1));
+            arr2.push("-o", d[1]);
+            break;
+          case "out":
+            arr2.push("-s", d[1]);
+            break;
+          case "password":
+            arr2.push("-P", d[1]);
+            break;
+          case "body":
+            arr2.push("-d", d[1]);
+            break;
+          case "referer":
+            arr2.push("-r", d[1]);
+            break;
+          case "silence":
+            arr2.push("-f");
+            break;
+          case "url":
+            d[1].startsWith("//") && (d[1] = "https:" + d[1]);
+            arr2.push("-u", d[1]);
+            break;
+          case "userAgent":
+            arr2.push("-a", d[1]);
+            break;
+          case "userName":
+            arr2.push("-U", d[1]);
+            break;
+          default:
+            break;
+        }
+      });
+      return \`ef2://\${base64.encode(arr2.join(" "))}\`;
+    }
+    /** 解码ef2协议 */
+    static decode(ef2str) {
+      ef2str = ef2str.replace("ef2://", "");
+      ef2str = base64.decode(ef2str);
+      const arr2 = ef2str.split(" ");
+      const data = {};
+      for (let i = 0; i < arr2.length; i++) {
+        if (/-\\w/.test(arr2[i])) {
+          switch (arr2[i]) {
+            case "-c":
+              data.cookie = arr2[i + 1];
+              i++;
+              break;
+            case "-q":
+              data.delay = true;
+              break;
+            case "-o":
+              data.dir = arr2[i + 1];
+              i++;
+              break;
+            case "-s":
+              data.out = arr2[i + 1];
+              i++;
+              break;
+            case "-P":
+              data.password = arr2[i + 1];
+              i++;
+              break;
+            case "-d":
+              data.body = arr2[i + 1];
+              i++;
+              break;
+            case "-r":
+              data.referer = arr2[i + 1];
+              i++;
+              break;
+            case "-f":
+              data.silence = true;
+              break;
+            case "-u":
+              data.url = arr2[i + 1];
+              i++;
+              break;
+            case "-a":
+              data.userAgent = arr2[i + 1];
+              i++;
+              break;
+            case "-U":
+              data.userName = arr2[i + 1];
+              i++;
+              break;
+            default:
+              break;
+          }
+        }
+      }
+      return data;
+    }
+  };
+
+  // src/core/download/playinfo.ts
+  init_tampermonkey();
+  var PlayinfoFilter = class {
+    constructor(fileName) {
+      this.fileName = fileName;
+    }
+    /** 数据 */
+    record = [];
+    /** id => 质量 */
+    quality = {
+      100032: "8K",
+      100029: "4K",
+      100028: "1080P60",
+      100027: "1080P+",
+      100026: "1080P",
+      100024: "720P",
+      100023: "480P",
+      100022: "360P",
+      30280: "320Kbps",
+      30260: "320Kbps",
+      30259: "128Kbps",
+      30257: "64Kbps",
+      30255: "AUDIO",
+      30251: "FLAC",
+      30250: "ATMOS",
+      30232: "128Kbps",
+      30216: "64Kbps",
+      30127: "8K",
+      30126: "Dolby",
+      30125: "HDR",
+      30121: "4K",
+      30120: "4K",
+      30116: "1080P60",
+      30112: "1080P+",
+      30106: "1080P60",
+      30102: "1080P+",
+      30080: "1080P",
+      30077: "1080P",
+      30076: "720P",
+      30074: "720P",
+      30066: "720P",
+      30064: "720P",
+      30048: "720P",
+      30033: "480P",
+      30032: "480P",
+      30016: "360P",
+      30015: "360P",
+      30011: "360P",
+      464: "预览",
+      336: "1080P",
+      320: "720P",
+      288: "480P",
+      272: "360P",
+      208: "1080P",
+      192: "720P",
+      160: "480P",
+      127: "8K",
+      126: "Dolby",
+      125: "HDR",
+      120: "4K",
+      116: "1080P60",
+      112: "1080P+",
+      80: "1080P",
+      74: "720P60",
+      64: "720P",
+      48: "720P",
+      32: "480P",
+      16: "360P",
+      15: "360P",
+      6: "240P",
+      5: "144P"
+    };
+    /** id => 类型（备用方案） */
+    codec = {
+      hev: [30127, 30126, 30125, 30121, 30106, 30102, 30077, 30066, 30033, 30011],
+      avc: [30120, 30112, 30080, 30064, 30032, 30016],
+      av1: [100029, 100028, 100027, 100026, 100024, 100023, 100022]
+    };
+    /** 颜色表 */
+    color = {
+      "8K": "yellow",
+      "Dolby": "pink",
+      "FLAC": "pink",
+      "ATMOS": "pink",
+      "AUDIO": "pink",
+      "HDR": "purple",
+      "4K": "purple",
+      "1080P60": "red",
+      "1080P+": "red",
+      "1080P": "red",
+      "720P60": "orange",
+      "720P": "orange",
+      "480P": "blue",
+      "360P": "green",
+      "320Kbps": "red",
+      "128Kbps": "blue",
+      "64Kbps": "green"
+    };
+    /**
+     * 解码playurl的下载数据
+     * @param playinfo playurl返回值(json)
+     */
+    filter(playinfo) {
+      typeof playinfo === "string" && (playinfo = toObject(playinfo));
+      if (playinfo) {
+        playinfo.data && this.filter(playinfo.data);
+        playinfo.result && this.filter(playinfo.result);
+        playinfo.durl && this.durl(playinfo.durl);
+        playinfo.dash && this.dash(playinfo.dash);
+      }
+      return this.record;
+    }
+    /**
+     * 整理durl部分
+     * @param durl durl信息
+     */
+    durl(durl) {
+      let index = 0;
+      durl.forEach((d) => {
+        const url = d.backupUrl || d.backup_url || [];
+        url.unshift(d.url);
+        const qua = this.getQuality(url[0], d.id);
+        const link = {
+          type: "",
+          url,
+          quality: qua,
+          size: sizeFormat(d.size),
+          color: this.color[qua] || ""
+        };
+        switch (d.url.includes("mp4?")) {
+          case true:
+            link.type = "mp4";
+            break;
+          case false:
+            link.type = "flv";
+            index++;
+            link.flv = index;
+            break;
+        }
+        this.fileName && (link.fileName = \`\${this.fileName}\${qua}.\${link.type}\`);
+        this.record.push(link);
+      });
+    }
+    /**
+     * 整理dash部分
+     * @param dash dash信息
+     */
+    dash(dash) {
+      dash.video && this.dashVideo(dash.video, dash.duration);
+      dash.audio && this.dashAudio(dash.audio, dash.duration);
+      dash.dolby && dash.dolby.audio && Array.isArray(dash.dolby.audio) && this.dashAudio(dash.dolby.audio, dash.duration);
+      dash.flac && dash.flac.audio && this.dashAudio([dash.flac.audio], dash.duration, ".flac");
+    }
+    /**
+     * 整理dash视频部分
+     * @param video dash视频信息
+     * @param duration duration信息，配合bandwidth能计算出文件大小
+     */
+    dashVideo(video, duration) {
+      video.forEach((d) => {
+        const url = d.backupUrl || d.backup_url || [];
+        (d.baseUrl || d.base_url) && url.unshift(d.baseUrl || d.base_url);
+        if (!url.length)
+          return;
+        let type = "";
+        if (d.codecs) {
+          type = d.codecs.includes("avc") ? "avc" : d.codecs.includes("av01") ? "av1" : "hev";
+        } else {
+          const id = this.getID(url[0]);
+          type = this.codec.hev.find((d2) => d2 === id) ? "hev" : "avc";
+        }
+        const qua = this.getQuality(url[0], d.id);
+        this.record.push({
+          type,
+          url,
+          quality: qua,
+          size: sizeFormat(d.bandwidth * duration / 8),
+          color: this.color[qua] || "",
+          fileName: \`\${this.fileName}\${qua}.m4v\`
+        });
+      });
+    }
+    /**
+     * 整理dash音频部分
+     * @param audio dash音频信息
+     * @param duration duration信息，配合bandwidth能计算出文件大小
+     * @param fmt 音频拓展名，默认\`.m4a\`
+     */
+    dashAudio(audio, duration, fmt = ".m4a") {
+      audio.forEach((d) => {
+        const url = d.backupUrl || d.backup_url || [];
+        (d.baseUrl || d.base_url) && url.unshift(d.baseUrl || d.base_url);
+        const qua = this.getQuality(url[0], d.id);
+        url.length && this.record.push({
+          type: "aac",
+          url,
+          quality: qua,
+          size: sizeFormat(d.bandwidth * duration / 8),
+          color: this.color[qua] || "",
+          fileName: \`\${this.fileName}\${qua}.\${fmt}\`
+        });
+      });
+    }
+    /**
+     * 根据url确定画质/音质信息  
+     * 需要维护quality表
+     * @param url 多媒体url
+     * @param id 媒体流id
+     * @returns 画质/音质信息
+     */
+    getQuality(url, id) {
+      return this.quality[this.getID(url)] || id && this.quality[id] || "N/A";
+    }
+    /**
+     * 从url中提取可能的id
+     * @param url 多媒体url
+     */
+    getID(url) {
+      let id = 0;
+      url.replace(/\\d+\\.((flv)|(mp4)|(m4s))/, (d) => id = Number(d.split(".")[0]));
+      return id;
+    }
+  };
+
+  // src/core/observer.ts
+  init_tampermonkey();
+  var nodelist = [];
+  var observe = new MutationObserver(async (d) => d.forEach((d2) => {
+    d2.addedNodes[0] && nodelist.forEach((f) => {
+      try {
+        f(d2.addedNodes[0]);
+      } catch (e) {
+        debug.error("MutationObserver", e);
+      }
+    });
+  }));
+  observe.observe(document, { childList: true, subtree: true });
+  function observerAddedNodes(callback) {
+    try {
+      if (typeof callback === "function")
+        nodelist.push(callback);
+      return nodelist.length - 1;
+    } catch (e) {
+      debug.error(e);
+    }
+  }
+  var switchlist = [];
+  function switchVideo(callback) {
+    try {
+      if (typeof callback === "function")
+        switchlist.push(callback);
+    } catch (e) {
+      debug.error("switchVideo", e);
+    }
+  }
+  observerAddedNodes((node) => {
+    if (/video-state-pause/.test(node.className)) {
+      switchlist.forEach(async (d) => {
+        try {
+          d();
+        } catch (e) {
+          debug.error(d);
+        }
+      });
+    }
+  });
+
+  // src/core/ui/download.ts
+  init_tampermonkey();
+
+  // src/html/download.html
+  var download_default2 = '<div class="table"></div>\\r\\n<style type="text/css">\\r\\n    .table {\\r\\n        position: fixed;\\r\\n        z-index: 11113;\\r\\n        bottom: 0;\\r\\n        width: 100%;\\r\\n        min-height: 50px;\\r\\n        display: flex;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n    }\\r\\n\\r\\n    .cell {\\r\\n        background-color: #fff;\\r\\n        color: #000 !important;\\r\\n        border: #ccc 1px solid;\\r\\n        border-radius: 3px;\\r\\n        display: flex;\\r\\n        margin: 3px;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n        flex-direction: row;\\r\\n    }\\r\\n\\r\\n    .type {\\r\\n        color: #000 !important;\\r\\n        display: table-cell;\\r\\n        min-width: 1.5em;\\r\\n        text-align: center;\\r\\n        vertical-align: middle;\\r\\n        padding: 10px 3px;\\r\\n    }\\r\\n\\r\\n    .type.mp4 {\\r\\n        background-color: #e0e;\\r\\n    }\\r\\n\\r\\n    .type.av1 {\\r\\n        background-color: #feb;\\r\\n    }\\r\\n\\r\\n    .type.avc {\\r\\n        background-color: #07e;\\r\\n    }\\r\\n\\r\\n    .type.hev {\\r\\n        background-color: #7ba;\\r\\n    }\\r\\n\\r\\n    .type.aac {\\r\\n        background-color: #0d0;\\r\\n    }\\r\\n\\r\\n    .type.flv {\\r\\n        background-color: #0dd;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        display: table-cell;\\r\\n        text-decoration: none;\\r\\n        padding: 3px;\\r\\n        cursor: pointer;\\r\\n        color: #1184B4;\\r\\n    }\\r\\n\\r\\n    .item:hover {\\r\\n        color: #FE3676;\\r\\n    }\\r\\n\\r\\n    .up {\\r\\n        color: #fff !important;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n        background-color: #777;\\r\\n    }\\r\\n\\r\\n    .up.yellow {\\r\\n        background-color: #ffe42b;\\r\\n        background-image: linear-gradient(to right, #ffe42b, #dfb200);\\r\\n    }\\r\\n\\r\\n    .up.pink {\\r\\n        background-color: #ffafc9;\\r\\n        background-image: linear-gradient(to right, #ffafc9, #dfada7);\\r\\n    }\\r\\n\\r\\n    .up.purple {\\r\\n        background-color: #c0f;\\r\\n        background-image: linear-gradient(to right, #c0f, #90f);\\r\\n    }\\r\\n\\r\\n    .up.red {\\r\\n        background-color: #f00;\\r\\n        background-image: linear-gradient(to right, #f00, #c00);\\r\\n    }\\r\\n\\r\\n    .up.orange {\\r\\n        background-color: #f90;\\r\\n        background-image: linear-gradient(to right, #f90, #d70);\\r\\n    }\\r\\n\\r\\n    .up.blue {\\r\\n        background-color: #00d;\\r\\n        background-image: linear-gradient(to right, #00d, #00b);\\r\\n    }\\r\\n\\r\\n    .up.green {\\r\\n        background-color: #0d0;\\r\\n        background-image: linear-gradient(to right, #0d0, #0b0);\\r\\n    }\\r\\n\\r\\n    .up.lv9 {\\r\\n        background-color: #151515;\\r\\n        background-image: linear-gradient(to right, #151515, #030303);\\r\\n    }\\r\\n\\r\\n    .up.lv8 {\\r\\n        background-color: #841cf9;\\r\\n        background-image: linear-gradient(to right, #841cf9, #620ad7);\\r\\n    }\\r\\n\\r\\n    .up.lv7 {\\r\\n        background-color: #e52fec;\\r\\n        background-image: linear-gradient(to right, #e52fec, #c30dca);\\r\\n    }\\r\\n\\r\\n    .up.lv6 {\\r\\n        background-color: #ff0000;\\r\\n        background-image: linear-gradient(to right, #ff0000, #dd0000);\\r\\n    }\\r\\n\\r\\n    .up.lv5 {\\r\\n        background-color: #ff6c00;\\r\\n        background-image: linear-gradient(to right, #ff6c00, #dd4a00);\\r\\n    }\\r\\n\\r\\n    .up.lv4 {\\r\\n        background-color: #ffb37c;\\r\\n        background-image: linear-gradient(to right, #ffb37c, #dd915a);\\r\\n    }\\r\\n\\r\\n    .up.lv3 {\\r\\n        background-color: #92d1e5;\\r\\n        background-image: linear-gradient(to right, #92d1e5, #70b0c3);\\r\\n    }\\r\\n\\r\\n    .up.lv2 {\\r\\n        background-color: #95ddb2;\\r\\n        background-image: linear-gradient(to right, #95ddb2, #73bb90);\\r\\n    }\\r\\n\\r\\n    .up.lv1 {\\r\\n        background-color: #bfbfbf;\\r\\n        background-image: linear-gradient(to right, #bfbfbf, #9d9d9d);\\r\\n    }\\r\\n\\r\\n    .down {\\r\\n        font-size: 90%;\\r\\n        margin-top: 2px;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n    }\\r\\n</style>';
+
+  // src/core/ui/download.ts
+  var BilioldDownload = class extends HTMLElement {
+    _container;
+    _cells = {};
+    _noData;
+    constructor() {
+      super();
+      const root = this.attachShadow({ mode: "closed" });
+      root.innerHTML = download_default2;
+      this._container = root.children[0];
+      this.addEventListener("click", (e) => e.stopPropagation());
+      this._noData = addElement("div", void 0, this._container, "正在获取下载数据~");
+    }
+    updateItem = (key, value) => {
+      this._container.contains(this._noData) && this._noData.remove();
+      this._cells[key] || (this._cells[key] = addElement("div", { class: "cell" }, this._container));
+      this._cells[key].innerHTML = \`<div class="type \${key}">\${key}</div>\`;
+      value ? value.forEach((d) => {
+        const a = addElement("a", { class: "item", target: "_blank" }, this._cells[key], \`<div class="up\${d.color ? \` \${d.color}\` : ""}">\${d.quality}</div><div class="down">\${d.size}</div>\`);
+        d.url && (a.href = d.url[0]);
+        d.fileName && (a.download = d.fileName);
+        d.onClick && a.addEventListener("click", (e) => d.onClick(e));
+      }) : this._cells[key]?.remove();
+      this._container.firstChild || this._container.replaceChildren(this._noData);
+    };
+    show() {
+      document.contains(this) || document.body.appendChild(this);
+      this.style.display = "";
+      window.addEventListener("click", () => {
+        this.style.display = "none";
+      }, { once: true });
+    }
+    init() {
+      return propertryChangeHook({}, this.updateItem);
+    }
+    disconnectedCallback() {
+      this.destory();
+    }
+    destory() {
+      this._cells = {};
+      this._container.replaceChildren(this._noData);
+    }
+  };
+  customElements.get(\`download-\${"9c7ff17"}\`) || customElements.define(\`download-\${"9c7ff17"}\`, BilioldDownload);
+
+  // src/core/ui/preview-image.ts
+  init_tampermonkey();
+
+  // src/html/preview-image.html
+  var preview_image_default = '<div class="reply-view-image">\\r\\n    <!-- 操作区 -->\\r\\n    <div class="operation-btn">\\r\\n        <div class="operation-btn-icon close-container">\\r\\n            <i class="svg-icon close use-color" style="width: 14px; height: 14px;"></i>\\r\\n        </div>\\r\\n        <div class="operation-btn-icon last-image">\\r\\n            <i class="svg-icon left-arrow use-color" style="width: 22px; height: 22px;"></i>\\r\\n        </div>\\r\\n        <div class="operation-btn-icon next-image">\\r\\n            <i class="svg-icon right-arrow use-color" style="width: 22px; height: 22px;"></i>\\r\\n        </div>\\r\\n    </div>\\r\\n    <!-- 图片内容 -->\\r\\n    <div class="show-image-wrap"></div>\\r\\n    <!-- 小图预览栏 -->\\r\\n    <div class="preview-list"></div>\\r\\n</div>\\r\\n<style>\\r\\n    .reply-view-image {\\r\\n        position: fixed;\\r\\n        z-index: 999999;\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        bottom: 0;\\r\\n        left: 0;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        background: rgba(24, 25, 28, 0.85);\\r\\n        transform: scale(1);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .reply-view-image,\\r\\n    .reply-view-image * {\\r\\n        box-sizing: border-box;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        justify-content: center;\\r\\n        position: absolute;\\r\\n        z-index: 2;\\r\\n        width: 42px;\\r\\n        height: 42px;\\r\\n        border-radius: 50%;\\r\\n        color: white;\\r\\n        background: rgba(0, 0, 0, 0.58);\\r\\n        transition: 0.2s;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon:hover {\\r\\n        color: #FF6699;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon.close-container {\\r\\n        top: 16px;\\r\\n        right: 16px;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon.last-image {\\r\\n        top: 50%;\\r\\n        left: 16px;\\r\\n        transform: translateY(-50%);\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon.next-image {\\r\\n        top: 50%;\\r\\n        right: 16px;\\r\\n        transform: translateY(-50%);\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        justify-content: center;\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        max-height: 100%;\\r\\n        padding: 0 100px;\\r\\n        overflow: auto;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap .loading-svga {\\r\\n        position: absolute;\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translate(-50%, -50%);\\r\\n        width: 42px;\\r\\n        height: 42px;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap.vertical {\\r\\n        flex-direction: column;\\r\\n        justify-content: start;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap .image-content {\\r\\n        max-width: 100%;\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        position: absolute;\\r\\n        left: 50%;\\r\\n        bottom: 30px;\\r\\n        z-index: 2;\\r\\n        padding: 6px 10px;\\r\\n        border-radius: 8px;\\r\\n        background: rgba(24, 25, 28, 0.8);\\r\\n        backdrop-filter: blur(20px);\\r\\n        transform: translateX(-50%);\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box {\\r\\n        padding: 1px;\\r\\n        border: 2px solid transparent;\\r\\n        border-radius: 8px;\\r\\n        transition: 0.3s;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box.active {\\r\\n        border-color: #FF6699;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap {\\r\\n        display: flex;\\r\\n        justify-content: center;\\r\\n        overflow: hidden;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        border-radius: 6px;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.vertical {\\r\\n        flex-direction: column;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.extra-long {\\r\\n        justify-content: start;\\r\\n    }\\r\\n\\r\\n    .svg-icon {\\r\\n        display: inline-flex;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n    }\\r\\n\\r\\n    .svg-icon svg {\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .svg-icon.use-color svg path {\\r\\n        fill: currentColor;\\r\\n        color: inherit;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
+
+  // src/core/ui/preview-image.ts
+  var PreviewImage = class extends HTMLElement {
+    _image;
+    _list;
+    constructor() {
+      super();
+      const root = this.attachShadow({ mode: "closed" });
+      root.innerHTML = preview_image_default;
+      const close = root.querySelector(".svg-icon.close.use-color");
+      const left = root.querySelector(".svg-icon.left-arrow.use-color");
+      const right = root.querySelector(".svg-icon.right-arrow.use-color");
+      close.innerHTML = svg.fork;
+      left.innerHTML = svg.left;
+      right.innerHTML = svg.right;
+      this._image = root.querySelector(".show-image-wrap");
+      this._list = root.querySelector(".preview-list");
+      close.parentElement.addEventListener("click", (e) => {
+        this.remove();
+        document.body.style.overflow = "";
+        e.stopPropagation();
+      });
+      left.parentElement.addEventListener("click", (e) => {
+        this.togger(e, false);
+        e.stopPropagation();
+      });
+      right.parentElement.addEventListener("click", (e) => {
+        this.togger(e);
+        e.stopPropagation();
+      });
+    }
+    togger(e, right = true) {
+      const list = this._list.querySelectorAll(".preview-item-box");
+      if (list.length) {
+        let i = 0;
+        list.forEach((d, j) => {
+          if (d.classList.contains("active")) {
+            d.classList.remove("active");
+            if (right) {
+              i = j + 1;
+              i < list.length || (i = 0);
+            } else {
+              i = j - 1;
+              i < 0 && (i = list.length - 1);
+            }
+          }
+        });
+        list[i].classList.add("active");
+        const img = list[i].querySelector("img");
+        if (img) {
+          this._image.innerHTML = \`<img class="image-content" src="\${img.src}">\`;
+        }
+      }
+      e.stopPropagation();
+    }
+    /**
+     * 初始化
+     * @param imgs 图片链接（组）
+     * @param vertical 是否垂直
+     * @param active 显示第几张图片
+     */
+    value(imgs, vertical = false, active = 0) {
+      imgs = isArray(imgs) ? imgs : [imgs];
+      active < imgs.length || (active = 0);
+      this._image.innerHTML = \`<img class="image-content" src="\${imgs[active]}">\`;
+      vertical ? this.classList.add("vertical") : this.classList.remove("vertical");
+      this._list.innerHTML = "";
+      imgs.forEach((d, i) => {
+        const item = addElement("div", {
+          class: \`preview-item-box\${i === active ? " active" : ""}\`,
+          style: "min-width: 54px; max-width: 54px; height: 54px;"
+        }, this._list, \`<div class="preview-item-wrap\${vertical ? " vertical" : ""}"><img src="\${d}"></div>\`);
+        item.addEventListener("click", (e) => {
+          this._list.querySelector(".preview-item-box.active")?.classList.remove("active");
+          item.classList.add("active");
+          this._image.innerHTML = \`<img class="image-content" src="\${d}">\`;
+          e.stopPropagation();
+        });
+      });
+      document.body.contains(this) || document.body.appendChild(this);
+      document.body.style.overflow = "hidden";
+    }
+  };
+  customElements.get(\`preview-image-\${"9c7ff17"}\`) || customElements.define(\`preview-image-\${"9c7ff17"}\`, PreviewImage);
+
+  // src/core/videolimit.ts
+  init_tampermonkey();
+
+  // src/io/api-biliplus-playurl.ts
+  init_tampermonkey();
+  async function apiBiliplusPlayurl(data) {
+    const response = await fetch(objUrl("//www.biliplus.com/BPplayurl.php", data));
+    return await response.json();
+  }
+
+  // src/io/api-global-ogv-playurl.ts
+  init_tampermonkey();
+
+  // src/io/sidx.ts
+  init_tampermonkey();
+  var Sidx = class {
+    /**
+     * @param url 目标url
+     * @param size 最大索引范围（不宜过大），默认6万字节
+     */
+    constructor(url, size = 6e4) {
+      this.url = url;
+      this.size = size;
+    }
+    /** range索引结束点 */
+    end = 5999;
+    /** range索引开始点 */
+    start = 0;
+    /** 结果hex字符串 */
+    hex_data = "";
+    getData() {
+      return new Promise((resolve, reject) => {
+        this.fetch(resolve, reject);
+      });
+    }
+    /** 请求片段 */
+    fetch(resolve, reject) {
+      fetch(this.url.replace("http:", "https:"), {
+        headers: {
+          range: \`bytes=\${this.start}-\${this.end}\`
+        }
+      }).then((d) => {
+        if ((d.status >= 300 || d.status < 200) && d.status !== 304)
+          throw new Error(\`\${d.status} \${d.statusText}\`, { cause: d.status });
+        return d.arrayBuffer();
+      }).then((d) => {
+        const data = new Uint8Array(d);
+        this.hex_data += Array.prototype.map.call(data, (x) => ("00" + x.toString(16)).slice(-2)).join("");
+        if (this.hex_data.indexOf("73696478") > -1 && this.hex_data.indexOf("6d6f6f66") > -1) {
+          const indexRangeStart = this.hex_data.indexOf("73696478") / 2 - 4;
+          const indexRagneEnd = this.hex_data.indexOf("6d6f6f66") / 2 - 5;
+          resolve(["0-" + String(indexRangeStart - 1), String(indexRangeStart) + "-" + String(indexRagneEnd)]);
+        } else {
+          this.start = this.end + 1;
+          if (this.size && this.start > this.size) {
+            reject("未能获取到sidx");
+          } else {
+            this.end += 6e3;
+            this.size && (this.end = Math.min(this.end, this.size));
+            this.fetch(resolve, reject);
+          }
+        }
+      }).catch((e) => reject(e));
+    }
+  };
+
+  // src/io/api-global-ogv-playurl.ts
+  var ApiGlobalOgvPlayurl = class extends ApiSign {
+    /**
+     * @param data 查询参数
+     * @param server 东南亚（泰区）代理服务器
+     */
+    constructor(data, server = "api.global.bilibili.com") {
+      super(URLS.GLOBAL_OGV_PLAYURL.replace("api.global.bilibili.com", server), "7d089525d3611b1c");
+      this.data = data;
+      this.data = Object.assign({
+        area: "th",
+        build: 1001310,
+        device: "android",
+        force_host: 2,
+        download: 1,
+        mobi_app: "bstar_a",
+        platform: "android"
+      }, data);
+    }
+    response;
+    async getDate() {
+      if (this.response)
+        return this.response;
+      const response = await fetch(this.sign());
+      const json = await response.json();
+      return this.response = jsonCheck(json).data;
+    }
+    toPlayurl() {
+      return new Promise((resolve, reject) => {
+        this.getDate().then((d) => {
+          const playurl = new PlayurlDash();
+          const set = [];
+          playurl.quality = d.video_info.stream_list[0].stream_info.quality || d.video_info.quality;
+          playurl.format = PlayurlFormatMap[playurl.quality];
+          playurl.timelength = d.video_info.timelength;
+          playurl.dash.duration = Math.ceil(playurl.timelength / 1e3);
+          playurl.dash.minBufferTime = playurl.dash.min_buffer_time = 1.5;
+          Promise.all([
+            ...d.video_info.stream_list.map((d2) => (async () => {
+              if (d2.dash_video && d2.dash_video.base_url) {
+                const id = d2.stream_info.quality;
+                playurl.accept_description.push(PlayurlDescriptionMap[id]);
+                set.push(PlayurlFormatMap[id]);
+                playurl.accept_quality.push(id);
+                playurl.support_formats.push({
+                  description: PlayurlDescriptionMap[id],
+                  display_desc: PlayurlQualityMap[id],
+                  format: PlayurlFormatMap[id],
+                  new_description: PlayurlDescriptionMap[id],
+                  quality: id,
+                  superscript: "",
+                  codecs: [PlayurlCodecs[id]]
+                });
+                const sidx = await new Sidx(d2.dash_video.base_url, d2.dash_video.size).getData();
+                playurl.dash.video.push({
+                  SegmentBase: {
+                    Initialization: sidx[0],
+                    indexRange: sidx[1]
+                  },
+                  segment_base: {
+                    initialization: sidx[0],
+                    index_range: sidx[1]
+                  },
+                  backupUrl: [],
+                  backup_url: [],
+                  bandwidth: d2.dash_video.bandwidth,
+                  baseUrl: d2.dash_video.base_url,
+                  base_url: d2.dash_video.base_url,
+                  codecid: d2.dash_video.codecid,
+                  codecs: PlayurlCodecsAPP[id] || PlayurlCodecs[id],
+                  frameRate: PlayurlFrameRate[id],
+                  frame_rate: PlayurlFrameRate[id],
+                  height: PlayurlResolution[id]?.[1],
+                  id: d2.stream_info.quality,
+                  mimeType: "video/mp4",
+                  mime_type: "video/mp4",
+                  sar: "1:1",
+                  startWithSap: 1,
+                  start_with_sap: 1,
+                  width: PlayurlResolution[id]?.[0]
+                });
+              }
+            })()),
+            ...d.video_info.dash_audio.map((d2) => (async () => {
+              const id = d2.id;
+              const sidx = await new Sidx(d2.base_url, d2.size).getData();
+              playurl.dash.audio.push({
+                SegmentBase: {
+                  Initialization: sidx[0],
+                  indexRange: sidx[1]
+                },
+                segment_base: {
+                  initialization: sidx[0],
+                  index_range: sidx[1]
+                },
+                backupUrl: [],
+                backup_url: [],
+                bandwidth: d2.bandwidth,
+                baseUrl: d2.base_url,
+                base_url: d2.base_url,
+                codecid: d2.codecid,
+                codecs: PlayurlCodecsAPP[id] || PlayurlCodecs[id],
+                frameRate: "",
+                frame_rate: "",
+                height: 0,
+                id,
+                mimeType: "audio/mp4",
+                mime_type: "audio/mp4",
+                sar: "",
+                startWithSap: 0,
+                start_with_sap: 0,
+                width: 0
+              });
+            })())
+          ]).then(() => {
+            const avc = [], hev = [], video = [];
+            playurl.dash.video.forEach((d2) => {
+              if (d2.codecid == 7)
+                avc.push(d2);
+              else
+                hev.push(d2);
+            });
+            let length2 = avc.length > hev.length ? avc.length : hev.length;
+            for (let i = length2 - 1; i >= 0; i--) {
+              if (avc[i])
+                video.push(avc[i]);
+              if (hev[i])
+                video.push(hev[i]);
+            }
+            playurl.dash.video = video;
+            playurl.accept_format = set.join(",");
+            playurl.quality > 80 && (playurl.quality = 80);
+            resolve(playurl);
+          }).catch((e) => reject(e));
+        }).catch((e) => reject(e));
+      });
+    }
+  };
+
+  // src/utils/conf/uid.ts
+  init_tampermonkey();
+
+  // src/utils/cookie.ts
+  init_tampermonkey();
+  function getCookies() {
+    return document.cookie.split("; ").reduce((s, d) => {
+      let key = d.split("=")[0];
+      let val = d.split("=")[1];
+      s[key] = unescape(val);
+      return s;
+    }, {});
+  }
+  function setCookie(name, value, days = 365) {
+    const exp = /* @__PURE__ */ new Date();
+    exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1e3);
+    document.cookie = name + "=" + escape(value) + ";expires=" + exp.toUTCString() + "; path=/; domain=.bilibili.com";
+  }
+
+  // src/utils/conf/uid.ts
+  var uid = Number(getCookies().DedeUserID);
+
+  // src/core/network-mock.ts
+  init_tampermonkey();
+  var networkMocked = false;
+  function defineRes(target, res, v) {
+    Object.defineProperties(target, {
+      status: {
+        configurable: true,
+        writable: true,
+        value: res.status
+      },
+      statusText: {
+        configurable: true,
+        writable: true,
+        value: res.statusText
+      },
+      response: {
+        configurable: true,
+        writable: true,
+        value: res.response
+      },
+      responseText: {
+        configurable: true,
+        writable: true,
+        value: res.responseText
+      },
+      responseXML: {
+        configurable: true,
+        writable: true,
+        value: res.responseXML
+      },
+      responseURL: {
+        configurable: true,
+        writable: true,
+        value: res.finalUrl
+      }
+    });
+    v();
+  }
+  function networkMock() {
+    if (!networkMocked) {
+      networkMocked = true;
+      if (true) {
+        xhrHook.ultra(".m4s", function(target, args) {
+          const obj = {
+            method: args[0],
+            url: args[1],
+            headers: {
+              "user-agent": user.userStatus.userAgent
+            },
+            onloadstart: (res) => {
+              defineRes(this, res, () => {
+              });
+            }
+          };
+          args[2] || (obj.anonymous = true);
+          Object.defineProperties(this, {
+            responseType: {
+              configurable: true,
+              set: (v) => {
+                obj.responseType = v;
+              },
+              get: () => obj.responseType
+            },
+            onload: {
+              configurable: true,
+              set: (v) => {
+                obj.onload = (res) => {
+                  defineRes(this, res, v);
+                };
+              },
+              get: () => obj.onload
+            },
+            onerror: {
+              configurable: true,
+              set: (v) => {
+                obj.onerror = (res) => {
+                  defineRes(this, res, v);
+                };
+              },
+              get: () => obj.onerror
+            },
+            timeout: {
+              configurable: true,
+              set: (v) => {
+                obj.timeout = v;
+              },
+              get: () => obj.timeout
+            },
+            ontimeout: {
+              configurable: true,
+              set: (v) => {
+                obj.ontimeout = (res) => {
+                  defineRes(this, res, v);
+                };
+              },
+              get: () => obj.ontimeout
+            },
+            onprogress: {
+              configurable: true,
+              set: (v) => {
+                obj.onprogress = (res) => {
+                  defineRes(this, res, v.bind(this, new ProgressEvent("progress", {
+                    lengthComputable: res.lengthComputable,
+                    loaded: res.loaded,
+                    total: res.total
+                  })));
+                };
+              },
+              get: () => obj.onprogress
+            },
+            onabort: {
+              configurable: true,
+              set: (v) => {
+                obj.onabort = (res) => {
+                  defineRes(this, res, v);
+                };
+              },
+              get: () => obj.onabort
+            },
+            onreadystatechange: {
+              configurable: true,
+              set: (v) => {
+                obj.onreadystatechange = (res) => {
+                  defineRes(this, res, v);
+                };
+              },
+              get: () => obj.onreadystatechange
+            },
+            setRequestHeader: {
+              configurable: true,
+              value: (name, value) => {
+                obj.headers && (obj.headers[name] = value);
+              }
+            },
+            send: {
+              configurable: true,
+              value: (body) => {
+                obj.method === "POST" && body && (obj.data = body);
+                const tar = GM.xmlHttpRequest(obj);
+                this.abort = tar.abort.bind(tar);
+                return true;
+              }
+            }
+          });
+        });
+      } else {
+        GM.updateSessionRules(mock);
+      }
+    }
+  }
+
+  // src/core/videolimit.ts
+  var UPOS = {
+    "ks3（金山）": "upos-sz-mirrorks3.bilivideo.com",
+    "ks3b（金山）": "upos-sz-mirrorks3b.bilivideo.com",
+    "ks3c（金山）": "upos-sz-mirrorks3c.bilivideo.com",
+    "ks32（金山）": "upos-sz-mirrorks32.bilivideo.com",
+    "kodo（七牛）": "upos-sz-mirrorkodo.bilivideo.com",
+    "kodob（七牛）": "upos-sz-mirrorkodob.bilivideo.com",
+    "cos（腾讯）": "upos-sz-mirrorcos.bilivideo.com",
+    "cosb（腾讯）": "upos-sz-mirrorcosb.bilivideo.com",
+    "coso1（腾讯）": "upos-sz-mirrorcoso1.bilivideo.com",
+    "coso2（腾讯）": "upos-sz-mirrorcoso2.bilivideo.com",
+    "bos（腾讯）": "upos-sz-mirrorbos.bilivideo.com",
+    "hw（华为）": "upos-sz-mirrorhw.bilivideo.com",
+    "hwb（华为）": "upos-sz-mirrorhwb.bilivideo.com",
+    "uphw（华为）": "upos-sz-upcdnhw.bilivideo.com",
+    "js（华为）": "upos-tf-all-js.bilivideo.com",
+    "hk（香港）": "cn-hk-eq-bcache-01.bilivideo.com",
+    "akamai（海外）": "upos-hz-mirrorakam.akamaized.net"
+  };
+  var AREA = /* @__PURE__ */ ((AREA2) => {
+    AREA2[AREA2["tw"] = 0] = "tw";
+    AREA2[AREA2["hk"] = 1] = "hk";
+    AREA2[AREA2["cn"] = 2] = "cn";
+    return AREA2;
+  })(AREA || {});
+  var VideoLimit = class {
+    /** 数据备份 */
+    Backup = {};
+    /** 通知组件 */
+    toast;
+    /** 通知信息 */
+    data = [];
+    /** 监听中 */
+    listening = false;
+    /** 播放数据备份 */
+    __playinfo__;
+    constructor() {
+      xhrHook("/playurl?", (args) => {
+        const param2 = urlObj(args[1]);
+        if (!uid && user.userStatus.show1080p && user.userStatus.accessKey.token) {
+          param2.appkey = "27eb53fc9058f8c3";
+          param2.access_key = user.userStatus.accessKey.token;
+        }
+        param2.fnval && (param2.fnval = fnval);
+        args[1] = objUrl(args[1], param2);
+        return !(BLOD.limit || BLOD.th);
+      }, (res) => {
+        try {
+          const result = res.responseType === "json" ? JSON.stringify(res) : res.responseText;
+          if (user.userStatus.uposReplace.nor !== "不替换") {
+            const nstr = this.uposReplace(result, user.userStatus.uposReplace.nor);
+            toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${user.userStatus.uposReplace.nor}\`, \`UPOS：\${UPOS[user.userStatus.uposReplace.nor]}\`);
+            if (res.responseType === "json") {
+              res.response = JSON.parse(nstr);
+            } else {
+              res.response = res.responseText = nstr;
+            }
+          }
+        } catch (e) {
+        }
+      }, false);
+    }
+    /** 开始监听 */
+    enable() {
+      if (this.listening)
+        return;
+      const disable = xhrHook.async("/playurl?", (args) => {
+        const obj = urlObj(args[1]);
+        this.updateVaribale(obj);
+        return Boolean(BLOD.limit || BLOD.th);
+      }, async (args) => {
+        const response = BLOD.th ? await this._th(args) : await this._gat(args);
+        return { response, responseType: "json", responseText: JSON.stringify(response) };
+      }, false);
+      this.disable = () => {
+        disable();
+        this.listening = false;
+      };
+      this.listening = true;
+    }
+    /** 处理泰区 */
+    async _th(args) {
+      this.data = ["泰区限制视频！"];
+      this.toast = toast.toast(0, "info", ...this.data);
+      const obj = urlObj(args[1]);
+      this.data.push(\`aid：\${BLOD.aid}\`, \`cid：\${BLOD.cid}\`);
+      this.toast.data = this.data;
+      const epid = obj.ep_id || obj.episodeId || BLOD.epid;
+      obj.access_key = user.userStatus.accessKey.token;
+      if (!this.Backup[epid]) {
+        try {
+          networkMock();
+          this.data.push(\`代理服务器：\${user.userStatus.videoLimit.th}\`);
+          this.toast.data = this.data;
+          this.Backup[epid] = { code: 0, message: "success", result: await this.th(obj) };
+          this.data.push("获取代理数据成功！");
+          this.toast.data = this.data;
+          this.toast.type = "success";
+        } catch (e) {
+          this.data.push("代理出错！", e);
+          !obj.access_key && this.data.push("代理服务器要求【账户授权】才能进一步操作！");
+          this.toast.data = this.data;
+          this.toast.type = "error";
+          debug.error(...this.data);
+          this.toast.delay = 4;
+          delete this.toast;
+          this.data = [];
+          return { code: -404, message: e, data: null };
+        }
+      }
+      this.toast.delay = 4;
+      delete this.toast;
+      this.data = [];
+      return this.__playinfo__ = this.Backup[epid];
+    }
+    /** 处理港澳台 */
+    async _gat(args) {
+      this.data = ["港澳台限制视频！"];
+      this.toast = toast.toast(0, "info", ...this.data);
+      const obj = urlObj(args[1]);
+      this.data.push(\`aid：\${BLOD.aid}\`, \`cid：\${BLOD.cid}\`);
+      this.toast.data = this.data;
+      const epid = obj.ep_id || obj.episodeId || BLOD.epid;
+      obj.access_key = user.userStatus.accessKey.token;
+      if (!this.Backup[epid]) {
+        try {
+          if (user.userStatus.videoLimit.server === "内置") {
+            obj.module = "bangumi";
+            const upInfo = window.__INITIAL_STATE__?.upInfo;
+            if (upInfo) {
+              (upInfo.mid == 1988098633 || upInfo.mid == 2042149112) && (obj.module = "movie");
+            }
+            this.data.push(\`代理服务器：内置\`, \`类型：\${obj.module}\`);
+            this.toast.data = this.data;
+            const res = await apiBiliplusPlayurl(obj);
+            this.Backup[epid] = { code: 0, message: "success", result: res };
+          } else {
+            const res = await this.gat(obj);
+            this.Backup[epid] = { code: 0, message: "success", result: res };
+          }
+          if (user.userStatus.uposReplace.gat !== "不替换") {
+            this.Backup[epid] = JSON.parse(this.uposReplace(JSON.stringify(this.Backup[epid]), user.userStatus.uposReplace.gat));
+            toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${user.userStatus.uposReplace.gat}\`, \`UPOS：\${UPOS[user.userStatus.uposReplace.gat]}\`);
+          }
+          ;
+          this.data.push("获取代理数据成功！");
+          this.toast.data = this.data;
+          this.toast.type = "success";
+        } catch (e) {
+          this.data.push("代理出错！", e);
+          !obj.access_key && this.data.push("代理服务器要求【账户授权】才能进一步操作！");
+          this.toast.data = this.data;
+          this.toast.type = "error";
+          debug.error(...this.data);
+          this.toast.delay = 4;
+          delete this.toast;
+          this.data = [];
+          return { code: -404, message: e, data: null };
+        }
+      }
+      this.toast.delay = 4;
+      delete this.toast;
+      this.data = [];
+      return this.__playinfo__ = this.Backup[epid];
+    }
+    /** 停止监听 */
+    disable() {
+      this.listening = false;
+    }
+    /** 更新全局变量 */
+    updateVaribale(obj) {
+      obj.seasonId && (BLOD.ssid = obj.seasonId);
+      obj.episodeId && (BLOD.epid = obj.episodeId);
+      obj.ep_id && (BLOD.epid = obj.ep_id);
+      obj.aid && (BLOD.aid = Number(obj.aid)) && (BLOD.aid = obj.aid);
+      obj.avid && (BLOD.aid = Number(obj.avid)) && (BLOD.aid = obj.avid);
+      obj.cid && (BLOD.cid = Number(obj.cid)) && (BLOD.cid = obj.cid);
+    }
+    /** 访问泰区代理 */
+    async th(obj) {
+      const d = await new ApiGlobalOgvPlayurl(obj, user.userStatus.uposReplace.th).toPlayurl();
+      toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${user.userStatus.uposReplace.th}\`, \`UPOS：\${UPOS[user.userStatus.uposReplace.th]}\`);
+      return JSON.parse(this.uposReplace(JSON.stringify(d), user.userStatus.uposReplace.th));
+    }
+    /** 代理服务器序号 */
+    area = 0;
+    /** 访问港澳台代理 */
+    async gat(obj) {
+      if (!user.userStatus.videoLimit[AREA[this.area]])
+        throw new Error(\`无有效代理服务器：\${AREA[this.area]}\`);
+      const server = user.userStatus.videoLimit[AREA[this.area]];
+      obj.area = AREA[this.area];
+      this.data.push(\`代理服务器：\${server}\`);
+      this.toast && (this.toast.data = this.data);
+      try {
+        return await apiPlayurl(obj, true, true, server);
+      } catch (e) {
+        this.data.push("代理服务器返回异常！", e);
+        if (this.toast) {
+          this.toast.data = this.data;
+          this.toast.type = "warning";
+        }
+        this.area++;
+        if (this.area > 2)
+          throw new Error("代理服务器不可用！");
+        return await this.gat(obj);
+      }
+    }
+    /** 用于过滤upos提示 */
+    upos = false;
+    /** 用于取消过滤upos提示 */
+    timer;
+    /**
+     * 替换upos服务器
+     * @param str playurl或包含视频URL的字符串
+     * @param uposName 替换的代理服务器名 keyof typeof {@link UPOS}
+     */
+    uposReplace(str, uposName) {
+      if (uposName === "不替换")
+        return str;
+      this.upos = true;
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => this.upos = false, 1e3);
+      return str.replace(/:\\\\?\\/\\\\?\\/[^\\/]+\\\\?\\//g, () => \`://\${UPOS[uposName]}/\`);
+    }
+  };
+  var videoLimit = new VideoLimit();
+
+  // src/core/download.ts
+  var Download = class {
+    /** 下载界面 */
+    ui = new BilioldDownload();
+    /** 数据缓存 */
+    data = this.ui.init();
+    previewImage;
+    /** 下载按钮 */
+    bgrayButtonBtn;
+    get fileName() {
+      if (videoInfo.metadata) {
+        return \`\${videoInfo.metadata.album}(\${videoInfo.metadata.title})\`;
+      }
+      return "";
+    }
+    constructor() {
+      switchVideo(() => {
+        this.destory();
+        user.userStatus.downloadButton && this.bgrayButton();
+      });
+    }
+    /** 解码playinfo */
+    decodePlayinfo(playinfo, fileName = this.fileName) {
+      const data = new PlayinfoFilter(fileName).filter(playinfo);
+      data.forEach((d) => {
+        this.data[d.type] || (this.data[d.type] = []);
+        this.data[d.type].push({
+          url: d.url,
+          fileName,
+          quality: Reflect.has(d, "flv") ? \`\${d.quality}*\${d.flv}\` : d.quality,
+          size: d.size,
+          color: d.color,
+          onClick: (ev) => this.pushDownload(d, ev)
+        });
+      });
+    }
+    /** 分发数据 */
+    pushDownload(data, ev) {
+      if (data.onClick) {
+        data.onClick(ev);
+      } else if (data.url) {
+        switch (user.userStatus.downloadMethod) {
+          case "IDM":
+            ev.preventDefault();
+            new Ef2(user.userStatus.userAgent, user.userStatus.referer, user.userStatus.filepath, user.userStatus.ef2.delay, user.userStatus.ef2.silence).file({
+              url: data.url[0],
+              out: data.fileName
+            });
+            toast.success('保存IDM导出文件后，打开IDM -> 任务 -> 导入 -> 从"IDM导出文件"导入即可下载');
+            break;
+          case "ef2":
+            ev.preventDefault();
+            new Ef2(user.userStatus.userAgent, user.userStatus.referer, user.userStatus.filepath, user.userStatus.ef2.delay, user.userStatus.ef2.silence).sendLinkToIDM({
+              url: data.url[0],
+              out: data.fileName
+            });
+            toast.warning("允许浏览器打开【IDM EF2辅助工具】即可开始下载", "如果浏览器和IDM都没有任何反应，那些请先安装ef2辅助工具。");
+            break;
+          case "aria2":
+            ev.preventDefault();
+            const cmdLine = new Aria2(user.userStatus.userAgent, user.userStatus.referer, user.userStatus.filepath, user.userStatus.aria2.server, user.userStatus.aria2.port, user.userStatus.aria2.token, user.userStatus.aria2.split, user.userStatus.aria2.size).cmdlet({
+              urls: data.url,
+              out: data.fileName
+            });
+            toast.success(
+              "已复制下载命令到剪切板，粘贴到终端里回车即可开始下载。当然前提是您的设备已配置好了aria2。",
+              "--------------",
+              cmdLine
+            );
+            break;
+          case "aria2rpc":
+            ev.preventDefault();
+            new Aria2(user.userStatus.userAgent, user.userStatus.referer, user.userStatus.filepath, user.userStatus.aria2.server, user.userStatus.aria2.port, user.userStatus.aria2.token, user.userStatus.aria2.split, user.userStatus.aria2.size).rpc({
+              urls: data.url,
+              out: data.fileName
+            }).then((d) => {
+              toast.success("aria2已经开始下载", \`GUID: \${d}\`);
+            }).catch((e) => {
+              toast.error("aria2[RPC]错误！", e);
+            });
+            break;
+          default:
+            toast.warning("当前下载方式设定为浏览器（默认），受限于浏览器安全策略，可能并未触发下载而是打开了一个标签页，所以更良好的习惯是右键要下载的链接【另存为】。另外如果下载失败（403无权访问），请尝试在设置里修改下载方式及其他下载相关选项。");
+            break;
+        }
+      }
+    }
+    /** 请求中 */
+    downloading = false;
+    /** 已请求 */
+    gets = [];
+    /** 下载当前视频 */
+    default() {
+      if (this.downloading)
+        return;
+      if (!BLOD.cid)
+        return toast.warning("未找到视频文件");
+      this.downloading = true;
+      this.ui.show();
+      user.userStatus.TVresource || this.gets.includes("_") || (this.decodePlayinfo(videoLimit.__playinfo__), this.gets.push("_"));
+      const tasks = [];
+      user.userStatus.downloadType.includes("mp4") && (this.data.mp4 || this.gets.includes("mp4") || tasks.push(this.mp4(BLOD.cid).then((d) => {
+        this.gets.push("mp4");
+        this.decodePlayinfo(d);
+      })));
+      user.userStatus.downloadType.includes("flv") && (this.data.flv || this.gets.includes("flv") || tasks.push(
+        (user.userStatus.TVresource ? this.tv(BLOD.aid, BLOD.cid, false, user.userStatus.downloadQn) : this.interface(BLOD.cid, user.userStatus.downloadQn)).then((d) => {
+          this.gets.push("flv");
+          this.decodePlayinfo(d);
+        })
+      ));
+      user.userStatus.downloadType.includes("dash") && (this.data.aac || this.gets.includes("dash") || this.data.hev || this.data.av1 || tasks.push(
+        (user.userStatus.TVresource ? this.tv(BLOD.aid, BLOD.cid) : this.dash(BLOD.aid, BLOD.cid)).then((d) => {
+          this.gets.push("dash");
+          this.decodePlayinfo(d);
+        })
+      ));
+      Promise.allSettled(tasks).finally(() => {
+        this.downloading = false;
+      });
+    }
+    /** 清空数据 */
+    destory() {
+      this.ui.remove();
+      this.data = this.ui.init();
+      this.downloading = false;
+      this.gets = [];
+      videoLimit.__playinfo__ = void 0;
+    }
+    mp4(cid) {
+      return new ApiPlayurlProj({ cid, access_key: user.userStatus.accessKey.token }, BLOD.pgc).getData();
+    }
+    // private flv(avid: number, cid: number) {
+    //     return <Promise<IPlayurlDurl>>apiPlayurl({ avid, cid }, false, this.BLOD.pgc);
+    // }
+    dash(avid, cid) {
+      return apiPlayurl({ avid, cid }, true, BLOD.pgc);
+    }
+    tv(avid, cid, dash = true, quality = qn) {
+      return new ApiPlayurlTv({ avid, cid, access_key: user.userStatus.accessKey.token, qn: quality }, dash, BLOD.pgc).getData();
+    }
+    intl(aid, cid, dash = true) {
+      return new ApiPlayurlIntl({ aid, cid, access_key: user.userStatus.accessKey.token }, dash, BLOD.pgc).getData();
+    }
+    interface(cid, quality = qn) {
+      return new ApiPlayurlInterface({ cid, quality }, BLOD.pgc).getData();
+    }
+    image() {
+      const src = [];
+      videoInfo.metadata?.artwork?.forEach((d) => src.push(d.src));
+      if (location.host === "live.bilibili.com" && window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover) {
+        src.push(window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover);
+      }
+      if (/\\/read\\/[Cc][Vv]/.test(location.href)) {
+        document.querySelectorAll(".article-holder img").forEach((d) => {
+          d.src && src.push(d.src);
+        });
+      }
+      if (src.length) {
+        this.previewImage || (this.previewImage = new PreviewImage());
+        this.previewImage.value(src);
+      } else {
+        toast.warning("未找到封面信息！");
+      }
+    }
+    /** 添加播放器下载按钮 */
+    bgrayButton() {
+      if (!this.bgrayButtonBtn) {
+        this.bgrayButtonBtn = document.createElement("div");
+        this.bgrayButtonBtn.classList.add("bgray-btn", "show");
+        this.bgrayButtonBtn.title = "下载当前视频";
+        this.bgrayButtonBtn.innerHTML = "下载<br>视频";
+        this.bgrayButtonBtn.addEventListener("click", (e) => {
+          BLOD.ui?.show("download");
+          e.stopPropagation();
+        });
+      }
+      document.querySelector(".bgray-btn-wrap")?.appendChild(this.bgrayButtonBtn);
+    }
+  };
+  var download = new Download();
+
+  // src/core/bilibili-old.ts
+  var BLOD = new class {
+    /** 路径拆分 */
+    path = location.href.split("/");
+    /** bangumi标记 */
+    pgc = false;
+    ui;
+    get aid() {
+      return window.aid;
+    }
+    set aid(v) {
+      window.aid = v;
+    }
+    get cid() {
+      return window.cid;
+    }
+    set cid(v) {
+      window.cid = v;
+    }
+    /** bangumi ssid */
+    ssid;
+    /** bangumi epid */
+    epid;
+    /** 限制视频 */
+    limit;
+    /** 东南亚视频标记 */
+    th;
+    /** 播放器已加载 */
+    playLoaded = false;
+    /** 已模拟APP端取流 */
+    networkMocked = false;
+    /** 是否大会员 */
+    isVip = false;
+    /** 播放器哈希值 */
+    version;
+    // 调试接口
+    GM = GM;
+    urlSign = urlSign;
+    objUrl = objUrl;
+    urlObj = urlObj;
+    download = download;
+    danmaku = danmaku;
+    toast = toast;
+    debug = debug;
+    videoInfo = videoInfo;
+    base64 = base64;
+    md5 = import_md52.default;
+  }();
+
   // src/core/storage.ts
   init_tampermonkey();
   var LocalStorage = class {
@@ -8036,288 +11482,11 @@ const MODULES = `
 
   // src/io/api-page-header.ts
   init_tampermonkey();
-
-  // src/utils/format/url.ts
-  init_tampermonkey();
-  var URL2 = class {
-    /** 锚 */
-    hash;
-    /** 基链 */
-    base;
-    /** 参数对象。结果会格式化\`undefined\`\`null\`\`NaN\`等特殊值，但不会处理数字，以免丢失精度。 */
-    params = {};
-    /** 参数链（不含\`?\`） */
-    get param() {
-      return Object.entries(this.params).reduce((s, d) => {
-        return s += \`\${s ? "&" : ""}\${d[0]}=\${d[1]}\`;
-      }, "");
-    }
-    /** 提取URL参数 */
-    constructor(url) {
-      const arr1 = url.split("#");
-      let str = arr1.shift();
-      this.hash = arr1.join("#");
-      (this.hash || url.includes("#")) && (this.hash = \`#\${this.hash}\`);
-      const arr2 = str.split("?");
-      this.base = arr2.shift();
-      str = arr2.join("?");
-      if (str) {
-        str.split("&").forEach((d) => {
-          const arr3 = d.split("=");
-          const key = arr3.shift();
-          if (key) {
-            let value = arr3.join("=") || "";
-            try {
-              if (!isNumber(value)) {
-                value = JSON.parse(value);
-              }
-            } catch {
-              value === "undefined" && (value = void 0);
-              value === "NaN" && (value = NaN);
-            }
-            this.params[key] = value;
-          }
-        });
-      }
-    }
-    sort() {
-      this.params = Object.keys(this.params).sort().reduce((s, d) => {
-        s[d] = this.params[d];
-        return s;
-      }, {});
-    }
-    /** 还原url链接 */
-    toJSON() {
-      return \`\${this.base ? this.param ? this.base + "?" : this.base : ""}\${this.param}\${this.hash || ""}\`;
-    }
-  };
-  function objUrl(url, obj) {
-    const res = new URL2(url);
-    Object.entries(obj).forEach((d) => {
-      if (d[1] === void 0 || d[1] === null)
-        return;
-      res.params[d[0]] = d[1];
-    });
-    return res.toJSON();
-  }
-  function urlObj(url) {
-    const res = new URL2(url);
-    return res.params;
-  }
-
-  // src/io/api.ts
-  init_tampermonkey();
-  var import_md5 = __toESM(require_md5());
-  function jsonCheck(str) {
-    const result = typeof str === "string" ? JSON.parse(str) : str;
-    if (result.code === 0)
-      return result;
-    throw new Error(\`\${result.code} \${result.message}\`, { cause: result.code });
-  }
-  var APP_KEY = /* @__PURE__ */ ((APP_KEY2) => {
-    APP_KEY2["1d8b6e7d45233436"] = "560c52ccd288fed045859ed18bffd973";
-    APP_KEY2["c1b107428d337928"] = "ea85624dfcf12d7cc7b2b3a94fac1f2c";
-    APP_KEY2["07da50c9a0bf829f"] = "25bdede4e1581c836cab73a48790ca6e";
-    APP_KEY2["7d089525d3611b1c"] = "acd495b248ec528c2eed1e862d393126";
-    APP_KEY2["9e5ded06c39bf5c4"] = "583e398ed0f980290b5903aba30b4cc4";
-    APP_KEY2["27eb53fc9058f8c3"] = "c2ed53a74eeefe3cf99fbd01d8c9c375";
-    APP_KEY2["85eb6835b0a1034e"] = "2ad42749773c441109bdc0191257a664";
-    APP_KEY2["4409e2ce8ffd12b8"] = "59b43e04ad6965f34319062b478f83dd";
-    APP_KEY2["37207f2beaebf8d7"] = "e988e794d4d4b6dd43bc0e89d6e90c43";
-    APP_KEY2["84956560bc028eb7"] = "94aba54af9065f71de72f5508f1cd42e";
-    APP_KEY2["bb3101000e232e27"] = "36efcfed79309338ced0380abd824ac1";
-    APP_KEY2["fb06a25c6338edbc"] = "fd10bd177559780c2e4a44f1fa47fa83";
-    APP_KEY2["iVGUTjsxvpLeuDCf"] = "aHRmhWMLkdeMuILqORnYZocwMBpMEOdt";
-    APP_KEY2["178cf125136ca8ea"] = "34381a26236dd1171185c0beb042e1c6";
-    APP_KEY2["57263273bc6b67f6"] = "a0488e488d1567960d3a765e8d129f90";
-    APP_KEY2["8d23902c1688a798"] = "710f0212e62bd499b8d3ac6e1db9302a";
-    APP_KEY2["7d336ec01856996b"] = "a1ce6983bc89e20a36c37f40c4f1a0dd";
-    APP_KEY2["8e16697a1b4f8121"] = "f5dd03b752426f2e623d7badb28d190a";
-    APP_KEY2["aae92bc66f3edfab"] = "af125a0d5279fd576c1b4418a3e8276d";
-    APP_KEY2["ae57252b0c09105d"] = "c75875c596a69eb55bd119e74b07cfe3";
-    APP_KEY2["bca7e84c2d947ac6"] = "60698ba2f68e01ce44738920a0ffe768";
-    APP_KEY2["cc578d267072c94d"] = "ffb6bb4c4edae2566584dbcacfc6a6ad";
-    APP_KEY2["cc8617fd6961e070"] = "3131924b941aac971e45189f265262be";
-    APP_KEY2["YvirImLGlLANCLvM"] = "JNlZNgfNGKZEpaDTkCdPQVXntXhuiJEM";
-    APP_KEY2["f3bb208b3d081dc8"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["4fa4601d1caa8b48"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["452d3958f048c02a"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["86385cdc024c0f6c"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["5256c25b71989747"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["e97210393ad42219"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["5dce947fe22167f9"] = "";
-    APP_KEY2["8e9fc618fbd41e28"] = "";
-    APP_KEY2["21087a09e533a072"] = "e5b8ba95cab6104100be35739304c23a";
-    return APP_KEY2;
-  })(APP_KEY || {});
-  var ApiSign = class {
-    constructor(url, appkey) {
-      this.url = url;
-      this.appkey = appkey;
-    }
-    get ts() {
-      return (/* @__PURE__ */ new Date()).getTime();
-    }
-    /** 查询参数，须要在子类中初始化好才能无参数调用\`sign\`方法 */
-    data = {};
-    /**
-     * URL签名
-     * @param searchParams 查询参数，会覆盖url原有参数
-     * @param api 授权api，**授权第三方登录专用**
-     * @returns 签名后的api
-     */
-    sign(searchParams = this.data, api = "") {
-      const url = new URL2(this.url);
-      Object.assign(url.params, searchParams, { ts: this.ts });
-      delete url.params.sign;
-      api && (this.appkey = "27eb53fc9058f8c3");
-      const appSecret = this.appSecret;
-      url.params.appkey = this.appkey;
-      url.sort();
-      url.params.sign = (0, import_md5.default)((api ? \`api=\${decodeURIComponent(api)}\` : url.param) + appSecret);
-      return url.toJSON();
-    }
-    get appSecret() {
-      switch (this.appkey) {
-        case "f3bb208b3d081dc8":
-        case "4fa4601d1caa8b48":
-        case "452d3958f048c02a":
-        case "86385cdc024c0f6c":
-        case "5256c25b71989747":
-        case "e97210393ad42219":
-          switch (Math.trunc((/* @__PURE__ */ new Date()).getHours() / 4)) {
-            case 0:
-              this.appkey = "f3bb208b3d081dc8";
-              break;
-            case 1:
-              this.appkey = "4fa4601d1caa8b48";
-              break;
-            case 2:
-              this.appkey = "452d3958f048c02a";
-              break;
-            case 3:
-              this.appkey = "86385cdc024c0f6c";
-              break;
-            case 4:
-              this.appkey = "5256c25b71989747";
-              break;
-            case 5:
-              this.appkey = "e97210393ad42219";
-              break;
-            default:
-              break;
-          }
-          break;
-        default:
-          break;
-      }
-      return APP_KEY[this.appkey];
-    }
-  };
-
-  // src/io/urls.ts
-  init_tampermonkey();
-  var _URLS = class {
-  };
-  var URLS = _URLS;
-  // protocol + //
-  __publicField(URLS, "P_AUTO", "//");
-  __publicField(URLS, "P_HTTP", "http://");
-  __publicField(URLS, "P_HTTPS", "https://");
-  __publicField(URLS, "P_WS", "ws://");
-  __publicField(URLS, "P_WSS", "wss://");
-  // domain
-  __publicField(URLS, "D_WWW", "www.bilibili.com");
-  __publicField(URLS, "D_API", "api.bilibili.com");
-  __publicField(URLS, "D_APP", "app.bilibili.com");
-  __publicField(URLS, "D_MANAGER", "manager.bilibili.co");
-  __publicField(URLS, "D_INTERFACE", "interface.bilibili.com");
-  __publicField(URLS, "D_PASSPORT", "passport.bilibili.com");
-  __publicField(URLS, "D_BANGUMI", "bangumi.bilibili.com");
-  __publicField(URLS, "D_SPACE", "space.bilibili.com");
-  __publicField(URLS, "D_STATIC_S", "static.hdslb.com");
-  __publicField(URLS, "D_CHAT", "chat.bilibili.com");
-  __publicField(URLS, "D_DATA", "data.bilibili.com");
-  __publicField(URLS, "D_COMMENT", "comment.bilibili.com");
-  __publicField(URLS, "D_BROADCAST", "broadcast.bilibili.com");
-  __publicField(URLS, "D_MISAKA_SW", "misaka-sw.bilibili.com");
-  __publicField(URLS, "D_MEMBER", "member.bilibili.com");
-  __publicField(URLS, "D_BVC", "bvc.bilivideo.com");
-  __publicField(URLS, "D_S1", "s1.hdslb.com");
-  __publicField(URLS, "D_API_GLOBAL", "api.global.bilibili.com");
-  __publicField(URLS, "D_ACCOUNT", "account.bilibili.com");
-  __publicField(URLS, "D_INTL", "apiintl.biliapi.net");
-  __publicField(URLS, "WEBSHOW_LOCS", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/res/locs");
-  __publicField(URLS, "INDEX_TOP_RCMD", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/index/top/rcmd");
-  __publicField(URLS, "PAGE_HEADER", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/page/header");
-  __publicField(URLS, "SEASON_RANK_LIST", _URLS.P_AUTO + _URLS.D_API + "/pgc/season/rank/web/list");
-  __publicField(URLS, "VIDEO", _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/video.min.js");
-  __publicField(URLS, "JQUERY", _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/jquery.min.js");
-  __publicField(URLS, "ARTICLE_CARDS", _URLS.P_AUTO + _URLS.D_API + "/x/article/cards");
-  __publicField(URLS, "VIEW_DETAIL", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view/detail");
-  __publicField(URLS, "VIEW", _URLS.P_AUTO + _URLS.D_API + "/view");
-  __publicField(URLS, "X_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view");
-  __publicField(URLS, "PAGE_LIST", _URLS.P_AUTO + _URLS.D_API + "/x/player/pagelist");
-  __publicField(URLS, "TAG_INFO", _URLS.P_AUTO + _URLS.D_API + "/x/tag/info");
-  __publicField(URLS, "TAG_TOP", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/tag/top");
-  __publicField(URLS, "BANGUMI_SEASON", _URLS.P_AUTO + _URLS.D_BANGUMI + "/view/web_api/season");
-  __publicField(URLS, "SEASON_STATUS", _URLS.P_AUTO + _URLS.D_API + "/pgc/view/web/season/user/status");
-  __publicField(URLS, "SEASON_SECTION", _URLS.P_AUTO + _URLS.D_API + "/pgc/web/season/section");
-  __publicField(URLS, "GLOBAL_OGV_VIEW", _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/view/app/season");
-  __publicField(URLS, "GLOBAL_OGV_PLAYURL", _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/playurl");
-  __publicField(URLS, "APP_PGC_PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurl");
-  __publicField(URLS, "ACCOUNT_GETCARDBYMID", _URLS.P_AUTO + _URLS.D_ACCOUNT + "/api/member/getCardByMid");
-  __publicField(URLS, "LOGIN_APP_THIRD", _URLS.P_AUTO + _URLS.D_PASSPORT + "/login/app/third");
-  __publicField(URLS, "PLAYER", _URLS.P_AUTO + _URLS.D_API + "/x/player/v2");
-  __publicField(URLS, "PLAYURL_PROJ", _URLS.P_AUTO + _URLS.D_APP + "/v2/playurlproj");
-  __publicField(URLS, "PGC_PLAYURL_PROJ", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurlproj");
-  __publicField(URLS, "PGC_PLAYURL_TV", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurltv");
-  __publicField(URLS, "UGC_PLAYURL_TV", _URLS.P_AUTO + _URLS.D_API + "/x/tv/ugc/playurl");
-  __publicField(URLS, "PGC_PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/web/playurl");
-  __publicField(URLS, "PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/x/player/playurl");
-  __publicField(URLS, "INTL_PLAYURL", _URLS.P_AUTO + _URLS.D_APP + "/x/intl/playurl");
-  __publicField(URLS, "INTL_OGV_PLAYURL", _URLS.P_AUTO + _URLS.D_INTL + "/intl/gateway/ogv/player/api/playurl");
-  __publicField(URLS, "PLAYURL_INTERFACE", _URLS.P_AUTO + _URLS.D_INTERFACE + "/v2/playurl");
-  __publicField(URLS, "PLAYURL_BANGUMI", _URLS.P_AUTO + _URLS.D_BANGUMI + "/player/web_api/v2/playurl");
-  __publicField(URLS, "LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/like");
-  __publicField(URLS, "HAS_LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/has/like");
-  __publicField(URLS, "DM_WEB_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/view");
-  __publicField(URLS, "DM_WEB_SEG_SO", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/seg.so");
-  __publicField(URLS, "STAT", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/stat");
-  __publicField(URLS, "SLIDE_SHOW", _URLS.P_AUTO + _URLS.D_API + "/pgc/operation/api/slideshow");
-  __publicField(URLS, "SEARCH_SQUARE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/search/square");
-  __publicField(URLS, "SPACE_ARC", _URLS.P_AUTO + _URLS.D_API + "/x/space/wbi/arc/search");
-  __publicField(URLS, "NEWLIST", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/newlist");
-  __publicField(URLS, "SEARCH", _URLS.P_AUTO + _URLS.D_API + "/search");
-
-  // src/io/api-page-header.ts
   async function apiPageHeader(data) {
     const response = await fetch(objUrl(URLS.PAGE_HEADER, data));
     const json = await response.json();
     return jsonCheck(json).data;
   }
-
-  // src/utils/conf/uid.ts
-  init_tampermonkey();
-
-  // src/utils/cookie.ts
-  init_tampermonkey();
-  function getCookies() {
-    return document.cookie.split("; ").reduce((s, d) => {
-      let key = d.split("=")[0];
-      let val = d.split("=")[1];
-      s[key] = unescape(val);
-      return s;
-    }, {});
-  }
-  function setCookie(name, value, days = 365) {
-    const exp = /* @__PURE__ */ new Date();
-    exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1e3);
-    document.cookie = name + "=" + escape(value) + ";expires=" + exp.toUTCString() + "; path=/; domain=.bilibili.com";
-  }
-
-  // src/utils/conf/uid.ts
-  var uid = Number(getCookies().DedeUserID);
 
   // src/utils/format/subarray.ts
   init_tampermonkey();
@@ -8460,168 +11629,6 @@ const MODULES = `
   };
   function removeJsonphook(id) {
     id >= 0 && delete jsonp[id - 1];
-  }
-
-  // src/utils/hook/xhr.ts
-  init_tampermonkey();
-  var rules = [];
-  var open = XMLHttpRequest.prototype.open;
-  XMLHttpRequest.prototype.open = function(...rest) {
-    const args = [...rest];
-    args[1] && rules.forEach((d) => {
-      d && d[0].every((d2) => args[1].includes(d2)) && d[1].call(this, args);
-    });
-    return open.call(this, ...args);
-  };
-  function xhrHook(url, modifyOpen, modifyResponse, once = true) {
-    let id;
-    const one = Array.isArray(url) ? url : [url];
-    const two = function(args) {
-      once && id && delete rules[id - 1];
-      if (modifyOpen)
-        try {
-          modifyOpen(args);
-        } catch (e) {
-          debug.error("modifyOpen of xhrhook", one, e);
-        }
-      if (modifyResponse)
-        try {
-          this.addEventListener("readystatechange", () => {
-            try {
-              if (this.readyState === 4) {
-                const response = { response: this.response, responseType: this.responseType, status: this.status, statusText: this.statusText };
-                (this.responseType === "" || this.responseType === "text") && (response.responseText = this.responseText);
-                (this.responseType === "" || this.responseType === "document") && (response.responseXML = this.responseXML);
-                modifyResponse(response);
-                Reflect.defineProperty(this, "response", { configurable: true, value: response.response });
-                response.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
-                response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
-              }
-            } catch (e) {
-              debug.error("modifyResponse of xhrhook", one, e);
-            }
-          });
-        } catch (e) {
-          debug.error("modifyResponse of xhrhook", one, e);
-        }
-    };
-    const iid = rules.push([one, two]);
-    return () => {
-      removeXhrhook(iid);
-    };
-  }
-  xhrHook.async = (url, condition, modifyResponse, once = true) => {
-    let id, temp;
-    const one = Array.isArray(url) ? url : [url];
-    const two = function(args) {
-      try {
-        if (!condition || condition(args)) {
-          this.xhrhookTimes = this.xhrhookTimes ? this.xhrhookTimes++ : 1;
-          id && (temp = rules[id - 1]);
-          delete rules[id - 1];
-          this.send = () => true;
-          (!args[2] || args[2] === true) && (this.timeout = 0);
-          const et = setInterval(() => {
-            this.dispatchEvent(new ProgressEvent("progress"));
-          }, 50);
-          Reflect.defineProperty(this, "status", { configurable: true, value: 200 });
-          Reflect.defineProperty(this, "readyState", { configurable: true, value: 2 });
-          this.dispatchEvent(new ProgressEvent("readystatechange"));
-          modifyResponse ? modifyResponse(args).then((d) => {
-            clearInterval(et);
-            if (d) {
-              Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
-              d.responseType && setResponseType(d.responseType, this);
-              d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
-              d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
-              !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
-              Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
-              this.dispatchEvent(new ProgressEvent("readystatechange"));
-              this.dispatchEvent(new ProgressEvent("load"));
-              this.dispatchEvent(new ProgressEvent("loadend"));
-            }
-          }).catch((d) => {
-            if (this.xhrhookTimes === 1) {
-              if (d && d.response) {
-                Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
-                d.responseType && setResponseType(d.responseType, this);
-                d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
-                d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
-                !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
-                Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
-                this.dispatchEvent(new ProgressEvent("readystatechange"));
-                this.dispatchEvent(new ProgressEvent("load"));
-                this.dispatchEvent(new ProgressEvent("loadend"));
-              } else {
-                this.dispatchEvent(new ProgressEvent("error"));
-              }
-            } else {
-              this.xhrhookTimes--;
-            }
-            debug.error("modifyResponse of xhrhookasync", one, d);
-          }).finally(() => {
-            clearInterval(et);
-            !once && (id = rules.push(temp));
-          }) : (this.abort(), !once && (id = rules.push(temp)));
-          clearInterval(et);
-        }
-      } catch (e) {
-        debug.error("condition of xhrhook", one, e);
-      }
-    };
-    const iid = rules.push([one, two]);
-    return () => {
-      removeXhrhook(iid);
-    };
-  };
-  function removeXhrhook(id) {
-    id >= 0 && delete rules[id - 1];
-  }
-  xhrHook.ultra = (url, modify) => {
-    const one = Array.isArray(url) ? url : [url];
-    const two = function(args) {
-      try {
-        modify.call(this, this, args);
-      } catch (e) {
-        debug.error("xhrhook modify", one, modify, e);
-      }
-    };
-    const iid = rules.push([one, two]);
-    return () => {
-      removeXhrhook(iid);
-    };
-  };
-  function setResponseType(responseType, xhr) {
-    Reflect.defineProperty(xhr, "responseType", { configurable: true, value: responseType });
-    xhr.getResponseHeader = (name) => {
-      if (name === "content-type") {
-        switch (xhr.responseType) {
-          case "arraybuffer":
-          case "blob":
-            return "application/octet-stream";
-          case "document":
-            return "text/xml; charset=utf-8";
-          case "json":
-            return "application/json; charset=utf-8";
-          default:
-            return "text/plain; charset=utf-8";
-        }
-      }
-      return "text/plain; charset=utf-8";
-    };
-    xhr.getAllResponseHeaders = () => {
-      switch (xhr.responseType) {
-        case "arraybuffer":
-        case "blob":
-          return "content-type: application/octet-stream\\r\\n";
-        case "document":
-          return "content-type: text/xml; charset=utf-8\\r\\n";
-        case "json":
-          return "content-type: application/json; charset=utf-8\\r\\n";
-        default:
-          return "content-type: text/plain; charset=utf-8\\r\\n";
-      }
-    };
   }
 
   // src/css/avatar-animation.css
@@ -9665,56 +12672,6 @@ const MODULES = `
 
   // src/core/url.ts
   init_tampermonkey();
-
-  // src/utils/abv.ts
-  init_tampermonkey();
-  var Abv = class {
-    base58Table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF";
-    digitMap = [11, 10, 3, 8, 4, 6];
-    xor = 177451812;
-    add = 8728348608;
-    bvidTemplate = ["B", "V", 1, "", "", 4, "", 1, "", 7, "", ""];
-    table = {};
-    constructor() {
-      for (let i = 0; i < 58; i++)
-        this.table[this.base58Table[i]] = i;
-    }
-    /**
-     * av/BV互转
-     * @param input av或BV，可带av/BV前缀
-     * @returns 转化结果
-     */
-    check(input) {
-      if (/^[aA][vV][0-9]+\$/.test(String(input)) || /^\\d+\$/.test(String(input)))
-        return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
-      if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
-        return this.bvToAv("BV" + input);
-      if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
-        return this.bvToAv(String(input));
-      throw input;
-    }
-    bvToAv(BV) {
-      let r = 0;
-      for (let i = 0; i < 6; i++)
-        r += this.table[BV[this.digitMap[i]]] * 58 ** i;
-      return r - this.add ^ this.xor;
-    }
-    avToBv(av) {
-      let bv = Array.from(this.bvidTemplate);
-      av = (av ^ this.xor) + this.add;
-      for (let i = 0; i < 6; i++)
-        bv[this.digitMap[i]] = this.base58Table[parseInt(String(av / 58 ** i)) % 58];
-      return bv.join("");
-    }
-  };
-  function abv(input) {
-    return new Abv().check(input);
-  }
-  function BV2avAll(str) {
-    return str.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
-  }
-
-  // src/core/url.ts
   var paramsSet = /* @__PURE__ */ new Set([
     "spm_id_from",
     "from_source",
@@ -10307,96 +13264,6 @@ const MODULES = `
     const json = await response.json();
     return jsonCheck(json).data.trending.list;
   }
-
-  // src/utils/danmaku.ts
-  init_tampermonkey();
-  var DanmakuBase = class {
-    /** 从小到大排序弹幕 */
-    static sortDmById(dms) {
-      dms.sort((a, b) => this.bigInt(a.idStr, b.idStr) ? 1 : -1);
-    }
-    /** 比较两个弹幕ID先后 */
-    static bigInt(num1, num2) {
-      String(num1).replace(/\\d+/, (d) => num1 = d.replace(/^0+/, ""));
-      String(num2).replace(/\\d+/, (d) => num2 = d.replace(/^0+/, ""));
-      if (num1.length > num2.length)
-        return true;
-      else if (num1.length < num2.length)
-        return false;
-      else {
-        for (let i = 0; i < num1.length; i++) {
-          if (num1[i] > num2[i])
-            return true;
-          if (num1[i] < num2[i])
-            return false;
-        }
-        return false;
-      }
-    }
-    /** 重构为旧版弹幕类型 */
-    static parseCmd(dms) {
-      return dms.map((d) => {
-        const dm = {
-          class: d.pool || 0,
-          color: d.color || 0,
-          date: d.ctime || 0,
-          dmid: d.idStr || "",
-          mode: +d.mode || 1,
-          pool: d.pool || 0,
-          size: d.fontsize || 25,
-          stime: d.progress / 1e3 || 0,
-          text: d.content && d.mode != 8 && d.mode != 9 ? d.content.replace(/(\\/n|\\\\n|\\n|\\r\\n)/g, "\\n") : d.content,
-          uhash: d.midHash || "",
-          uid: d.midHash || "",
-          weight: d.weight,
-          attr: d.attr
-        };
-        d.action?.startsWith("picture:") && (dm.html = \`<img src="\${d.action.replace("picture:", "//")}" style="width:auto;height:28.13px;">\`);
-        return dm;
-      });
-    }
-    /** 解析解码xml弹幕 */
-    static decodeXml(xml) {
-      if (typeof xml === "string") {
-        xml = xml.replace(/((?:[\\0-\\x08\\x0B\\f\\x0E-\\x1F\\uFFFD\\uFFFE\\uFFFF]|[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?:[^\\uD800-\\uDBFF]|^)[\\uDC00-\\uDFFF]))/g, "");
-        xml = new DOMParser().parseFromString(xml, "application/xml");
-      }
-      const items = xml.querySelectorAll("d");
-      const dms = [];
-      items.forEach((d) => {
-        const json = d.getAttribute("p").split(",");
-        const text = d.textContent || d.text;
-        if (text) {
-          const dm = {
-            pool: Number(json[5]),
-            color: Number(json[3]),
-            ctime: Number(json[4]),
-            id: Number(json[7]),
-            idStr: String(json[7]),
-            mode: Number(json[1]),
-            fontsize: Number(json[2]),
-            progress: Number(json[0]) * 1e3,
-            content: String(text),
-            midHash: json[6]
-          };
-          dms.push(dm);
-        }
-      });
-      return dms;
-    }
-    /** 编码xml弹幕 */
-    static encodeXml(dms, cid) {
-      return dms.reduce((s, d) => {
-        const text = d.mode === 8 || d.mode === 9 ? d.text : d.text.replace(/(\\n|\\r\\n)/g, "/n");
-        s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${text.replace(/[<&]/g, (a) => {
-          return { "<": "&lt;", "&": "&amp;" }[a];
-        })}</d>
-\`;
-        return s;
-      }, \`<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>\${cid}</chatid><mission>0</mission><maxlimit>\${dms.length}</maxlimit><state>0</state><real_name>0</real_name><source>k-v</source>
-\`) + "</i>";
-    }
-  };
 
   // src/utils/format/cht2chs.ts
   init_tampermonkey();
@@ -13574,49 +16441,6 @@ const MODULES = `
     return text.replace(regexp, (d) => aTC2SC[d]);
   }
 
-  // src/core/observer.ts
-  init_tampermonkey();
-  var nodelist = [];
-  var observe = new MutationObserver(async (d) => d.forEach((d2) => {
-    d2.addedNodes[0] && nodelist.forEach((f) => {
-      try {
-        f(d2.addedNodes[0]);
-      } catch (e) {
-        debug.error("MutationObserver", e);
-      }
-    });
-  }));
-  observe.observe(document, { childList: true, subtree: true });
-  function observerAddedNodes(callback) {
-    try {
-      if (typeof callback === "function")
-        nodelist.push(callback);
-      return nodelist.length - 1;
-    } catch (e) {
-      debug.error(e);
-    }
-  }
-  var switchlist = [];
-  function switchVideo(callback) {
-    try {
-      if (typeof callback === "function")
-        switchlist.push(callback);
-    } catch (e) {
-      debug.error("switchVideo", e);
-    }
-  }
-  observerAddedNodes((node) => {
-    if (/video-state-pause/.test(node.className)) {
-      switchlist.forEach(async (d) => {
-        try {
-          d();
-        } catch (e) {
-          debug.error(d);
-        }
-      });
-    }
-  });
-
   // src/core/player.ts
   var danmakuProtect = [
     96048,
@@ -14043,98 +16867,6 @@ const MODULES = `
 
   // src/core/comment.ts
   init_tampermonkey();
-
-  // src/core/ui/preview-image.ts
-  init_tampermonkey();
-
-  // src/html/preview-image.html
-  var preview_image_default = '<div class="reply-view-image">\\r\\n    <!-- 操作区 -->\\r\\n    <div class="operation-btn">\\r\\n        <div class="operation-btn-icon close-container">\\r\\n            <i class="svg-icon close use-color" style="width: 14px; height: 14px;"></i>\\r\\n        </div>\\r\\n        <div class="operation-btn-icon last-image">\\r\\n            <i class="svg-icon left-arrow use-color" style="width: 22px; height: 22px;"></i>\\r\\n        </div>\\r\\n        <div class="operation-btn-icon next-image">\\r\\n            <i class="svg-icon right-arrow use-color" style="width: 22px; height: 22px;"></i>\\r\\n        </div>\\r\\n    </div>\\r\\n    <!-- 图片内容 -->\\r\\n    <div class="show-image-wrap"></div>\\r\\n    <!-- 小图预览栏 -->\\r\\n    <div class="preview-list"></div>\\r\\n</div>\\r\\n<style>\\r\\n    .reply-view-image {\\r\\n        position: fixed;\\r\\n        z-index: 999999;\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        bottom: 0;\\r\\n        left: 0;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        background: rgba(24, 25, 28, 0.85);\\r\\n        transform: scale(1);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .reply-view-image,\\r\\n    .reply-view-image * {\\r\\n        box-sizing: border-box;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        justify-content: center;\\r\\n        position: absolute;\\r\\n        z-index: 2;\\r\\n        width: 42px;\\r\\n        height: 42px;\\r\\n        border-radius: 50%;\\r\\n        color: white;\\r\\n        background: rgba(0, 0, 0, 0.58);\\r\\n        transition: 0.2s;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon:hover {\\r\\n        color: #FF6699;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon.close-container {\\r\\n        top: 16px;\\r\\n        right: 16px;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon.last-image {\\r\\n        top: 50%;\\r\\n        left: 16px;\\r\\n        transform: translateY(-50%);\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon.next-image {\\r\\n        top: 50%;\\r\\n        right: 16px;\\r\\n        transform: translateY(-50%);\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        justify-content: center;\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        max-height: 100%;\\r\\n        padding: 0 100px;\\r\\n        overflow: auto;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap .loading-svga {\\r\\n        position: absolute;\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translate(-50%, -50%);\\r\\n        width: 42px;\\r\\n        height: 42px;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap.vertical {\\r\\n        flex-direction: column;\\r\\n        justify-content: start;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap .image-content {\\r\\n        max-width: 100%;\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        position: absolute;\\r\\n        left: 50%;\\r\\n        bottom: 30px;\\r\\n        z-index: 2;\\r\\n        padding: 6px 10px;\\r\\n        border-radius: 8px;\\r\\n        background: rgba(24, 25, 28, 0.8);\\r\\n        backdrop-filter: blur(20px);\\r\\n        transform: translateX(-50%);\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box {\\r\\n        padding: 1px;\\r\\n        border: 2px solid transparent;\\r\\n        border-radius: 8px;\\r\\n        transition: 0.3s;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box.active {\\r\\n        border-color: #FF6699;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap {\\r\\n        display: flex;\\r\\n        justify-content: center;\\r\\n        overflow: hidden;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        border-radius: 6px;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.vertical {\\r\\n        flex-direction: column;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.extra-long {\\r\\n        justify-content: start;\\r\\n    }\\r\\n\\r\\n    .svg-icon {\\r\\n        display: inline-flex;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n    }\\r\\n\\r\\n    .svg-icon svg {\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .svg-icon.use-color svg path {\\r\\n        fill: currentColor;\\r\\n        color: inherit;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
-
-  // src/core/ui/preview-image.ts
-  var PreviewImage = class extends HTMLElement {
-    _image;
-    _list;
-    constructor() {
-      super();
-      const root = this.attachShadow({ mode: "closed" });
-      root.innerHTML = preview_image_default;
-      const close = root.querySelector(".svg-icon.close.use-color");
-      const left = root.querySelector(".svg-icon.left-arrow.use-color");
-      const right = root.querySelector(".svg-icon.right-arrow.use-color");
-      close.innerHTML = svg.fork;
-      left.innerHTML = svg.left;
-      right.innerHTML = svg.right;
-      this._image = root.querySelector(".show-image-wrap");
-      this._list = root.querySelector(".preview-list");
-      close.parentElement.addEventListener("click", (e) => {
-        this.remove();
-        document.body.style.overflow = "";
-        e.stopPropagation();
-      });
-      left.parentElement.addEventListener("click", (e) => {
-        this.togger(e, false);
-        e.stopPropagation();
-      });
-      right.parentElement.addEventListener("click", (e) => {
-        this.togger(e);
-        e.stopPropagation();
-      });
-    }
-    togger(e, right = true) {
-      const list = this._list.querySelectorAll(".preview-item-box");
-      if (list.length) {
-        let i = 0;
-        list.forEach((d, j) => {
-          if (d.classList.contains("active")) {
-            d.classList.remove("active");
-            if (right) {
-              i = j + 1;
-              i < list.length || (i = 0);
-            } else {
-              i = j - 1;
-              i < 0 && (i = list.length - 1);
-            }
-          }
-        });
-        list[i].classList.add("active");
-        const img = list[i].querySelector("img");
-        if (img) {
-          this._image.innerHTML = \`<img class="image-content" src="\${img.src}">\`;
-        }
-      }
-      e.stopPropagation();
-    }
-    /**
-     * 初始化
-     * @param imgs 图片链接（组）
-     * @param vertical 是否垂直
-     * @param active 显示第几张图片
-     */
-    value(imgs, vertical = false, active = 0) {
-      imgs = isArray(imgs) ? imgs : [imgs];
-      active < imgs.length || (active = 0);
-      this._image.innerHTML = \`<img class="image-content" src="\${imgs[active]}">\`;
-      vertical ? this.classList.add("vertical") : this.classList.remove("vertical");
-      this._list.innerHTML = "";
-      imgs.forEach((d, i) => {
-        const item = addElement("div", {
-          class: \`preview-item-box\${i === active ? " active" : ""}\`,
-          style: "min-width: 54px; max-width: 54px; height: 54px;"
-        }, this._list, \`<div class="preview-item-wrap\${vertical ? " vertical" : ""}"><img src="\${d}"></div>\`);
-        item.addEventListener("click", (e) => {
-          this._list.querySelector(".preview-item-box.active")?.classList.remove("active");
-          item.classList.add("active");
-          this._image.innerHTML = \`<img class="image-content" src="\${d}">\`;
-          e.stopPropagation();
-        });
-      });
-      document.body.contains(this) || document.body.appendChild(this);
-      document.body.style.overflow = "hidden";
-    }
-  };
-  customElements.get(\`preview-image-\${"9c7ff17"}\`) || customElements.define(\`preview-image-\${"9c7ff17"}\`, PreviewImage);
-
-  // src/core/comment.ts
   var Feedback;
   var loading = false;
   var load = false;
@@ -14669,403 +17401,11 @@ const MODULES = `
   };
   customElements.get(\`like-\${"9c7ff17"}\`) || customElements.define(\`like-\${"9c7ff17"}\`, Like, { extends: "span" });
 
-  // src/core/video-info.ts
-  init_tampermonkey();
-  var VideoInfo = class {
-    cids = {};
-    stats = {};
-    get metadata() {
-      const cid = BLOD.cid;
-      return cid ? this.cids[cid] : void 0;
-    }
-    get album() {
-      return this.metadata?.album || this.title;
-    }
-    get artist() {
-      return this.metadata?.artist;
-    }
-    get title() {
-      return this.metadata?.title || document.title.slice(0, -26);
-    }
-    get artwork() {
-      return this.metadata?.artwork;
-    }
-    get stat() {
-      const aid = BLOD.aid;
-      return aid ? this.stats[aid] : void 0;
-    }
-    /** 数据变动回调栈 */
-    callbacks = [];
-    /**
-     * 数据变动回调
-     * @param callback 数据变动时执行的回调函数
-     * @returns 撤销监听的函数
-     */
-    bindChange(callback) {
-      const id = this.callbacks.push(callback);
-      return () => {
-        delete this.callbacks[id - 1];
-      };
-    }
-    timer;
-    /** 推送数据变动 */
-    emitChange() {
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => this.callbacks.forEach((d) => d(this)), 100);
-    }
-    /** 从\`IAidDatail\`中提取 */
-    aidDatail(data) {
-      const album = data.title;
-      const artist = data.owner.name;
-      const pic = data.pic.replace("http:", "");
-      data.pages ? data.pages.forEach((d, i) => {
-        this.cids[d.cid] = {
-          album,
-          artist,
-          title: d.part || \`#\${i + 1}\`,
-          artwork: [{ src: pic }]
-        };
-      }) : this.cids[data.cid] = {
-        album,
-        artist,
-        title: \`#1\`,
-        artwork: [{ src: pic }]
-      };
-      this.stats[data.aid] = data.stat;
-      this.emitChange();
-    }
-    /** 从\`IAidInfo\`中提取 */
-    aidInfo(data) {
-      const album = data.title;
-      const artist = data.upper.name;
-      const pic = data.cover.replace("http:", "");
-      data.pages ? data.pages.forEach((d, i) => {
-        this.cids[d.id] = {
-          album,
-          artist,
-          title: d.title || \`#\${i + 1}\`,
-          artwork: [{ src: pic }]
-        };
-      }) : this.cids[data.id] = {
-        album,
-        artist,
-        title: \`#1\`,
-        artwork: [{ src: pic }]
-      };
-    }
-    /** 从\`IBangumiSeasonResponse\`中提取 */
-    bangumiSeason(data) {
-      const album = data.title || data.jp_title;
-      const artist = data.actors || data.staff || data.up_info?.name;
-      const pic = data.cover.replace("http:", "");
-      const bkg_cover = data.bkg_cover?.replace("http:", "");
-      this.bangumiEpisode(data.episodes, album, artist, pic, bkg_cover);
-      this.emitChange();
-    }
-    /** 从\`IBangumiEpisode\`中提取 */
-    bangumiEpisode(data, album, artist, pic, bkg_cover) {
-      data.forEach((d) => {
-        const artwork = [{ src: d.cover.replace("http:", "") }, { src: pic }];
-        bkg_cover && artwork.push({ src: bkg_cover });
-        this.cids[d.cid] = {
-          album,
-          artist,
-          title: d.index_title,
-          artwork
-        };
-      });
-    }
-    toview(data) {
-      const album = data.name;
-      const pic = data.cover.replace("http:", "");
-      data.list.forEach((d) => {
-        const title = d.title;
-        const cover = d.pic.replace("http:", "");
-        const artist = d.owner.name;
-        d.pages.forEach((d2, i) => {
-          this.cids[d2.cid] = {
-            album,
-            artist,
-            title: title + \`(\${d2.part})\`,
-            artwork: [{ src: pic }, { src: cover }]
-          };
-        });
-      });
-      this.emitChange();
-    }
-    /** 设置浏览器媒体信息 */
-    mediaSession() {
-      if (this.metadata) {
-        navigator.mediaSession.metadata = new MediaMetadata({ ...this.metadata });
-      }
-    }
-  };
-  var videoInfo = new VideoInfo();
-
   // src/css/uplist.css
   var uplist_default = ".up-info-m .up-card-box {\\r\\n    white-space: nowrap;\\r\\n    overflow: auto;\\r\\n}\\r\\n\\r\\n.up-info-m .up-card {\\r\\n    display: inline-block;\\r\\n    margin-top: 10px;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar img {\\r\\n    cursor: pointer;\\r\\n    width: 40px;\\r\\n    height: 40px;\\r\\n    border-radius: 50%;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .info-tag {\\r\\n    position: absolute;\\r\\n    background: #fff;\\r\\n    border: 1px solid #fb7299;\\r\\n    border-radius: 2px;\\r\\n    display: inline-block;\\r\\n    font-size: 12px;\\r\\n    color: #fb7299;\\r\\n    padding: 0 3px;\\r\\n    top: -10px;\\r\\n    right: -10px;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    width: 60px;\\r\\n    height: 30px;\\r\\n    display: -ms-flexbox;\\r\\n    display: flex;\\r\\n    -ms-flex-pack: center;\\r\\n    justify-content: center;\\r\\n    -ms-flex-align: start;\\r\\n    align-items: flex-start;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text {\\r\\n    font-family: PingFangSC-Regular, sans-serif;\\r\\n    line-height: 30px;\\r\\n    color: #222;\\r\\n    word-break: break-all;\\r\\n    overflow: hidden;\\r\\n    text-overflow: ellipsis;\\r\\n    display: -webkit-box;\\r\\n    -webkit-line-clamp: 2;\\r\\n    -webkit-box-orient: vertical;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text.is-vip,\\r\\n.up-info-m .avatar .name-text:hover {\\r\\n    color: #fb7299;\\r\\n}\\r\\n\\r\\n.up-info-m .title {\\r\\n    display: block;\\r\\n    font-size: 14px;\\r\\n    margin-right: 80px;\\r\\n    color: #525659;\\r\\n    overflow: hidden;\\r\\n    height: 24px;\\r\\n    font-weight: 400;\\r\\n    padding: 8px 0;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar {\\r\\n    width: 7px;\\r\\n    height: 7px;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-track {\\r\\n    border-radius: 4px;\\r\\n    background-color: #EEE;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-thumb {\\r\\n    border-radius: 4px;\\r\\n    background-color: #999;\\r\\n}";
 
   // src/html/av.html
   var av_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" />\\r\\n    <style type="text/css">\\r\\n        #bofqi .player {\\r\\n            width: 980px;\\r\\n            height: 620px;\\r\\n            display: block;\\r\\n        }\\r\\n\\r\\n        @media screen and (min-width:1400px) {\\r\\n\\r\\n            #bofqi .player {\\r\\n                width: 1160px;\\r\\n                height: 720px\\r\\n            }\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="video-page-app"></div>\\r\\n    <div id="app" data-server-rendered="true"></div>\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript">\\r\\n        window.getInternetExplorerVersion = function () {\\r\\n            var e = -1; if ("Microsoft Internet Explorer" == navigator.appName) {\\r\\n                var r = navigator.userAgent;\\r\\n                null != new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r) && (e = parseFloat(RegExp.\$1))\\r\\n            }\\r\\n            return e\\r\\n        };\\r\\n        function getQueryString(e) {\\r\\n            var r = new RegExp("(^|&)" + e + "=([^&]*)(&|\$)"),\\r\\n                i = window.location.search.substr(1).match(r);\\r\\n            return null != i ? unescape(i[2]) : null\\r\\n        }\\r\\n        window.commentAgent = { seek: t => window.player && window.player.seek(t) };\\r\\n    <\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/manifest.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/vendor.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/video.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
-
-  // src/io/api-biliplus-view.ts
-  init_tampermonkey();
-
-  // src/utils/utils.ts
-  init_tampermonkey();
-
-  // src/io/api-bangumi-season.ts
-  init_tampermonkey();
-  async function apiBangumiSeason(data) {
-    const response = await fetch(objUrl(URLS.BANGUMI_SEASON, data), { credentials: "include" });
-    const json = await response.json();
-    return jsonCheck(json).result;
-  }
-
-  // src/io/api-player-pagelist.ts
-  init_tampermonkey();
-  async function apiPlayerPagelist(aid) {
-    const response = await fetch(objUrl(URLS.PAGE_LIST, { aid }));
-    const json = await response.json();
-    return jsonCheck(json).data;
-  }
-
-  // src/io/api-view.ts
-  init_tampermonkey();
-  async function apiView(aid) {
-    const response = await fetch(objUrl(URLS.VIEW, {
-      appkey: "8e9fc618fbd41e28",
-      id: aid,
-      type: "json"
-    }));
-    return await response.json();
-  }
-
-  // src/io/api-x-view.ts
-  init_tampermonkey();
-  async function apiXView(aid) {
-    const response = await fetch(objUrl(URLS.X_VIEW, { aid }));
-    const json = await response.json();
-    return jsonCheck(json).data;
-  }
-
-  // src/utils/utils.ts
-  function getUrlValue(name) {
-    const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|\$)", "i");
-    const r = window.location.search.substr(1).match(reg);
-    if (r != null)
-      return decodeURIComponent(r[2]);
-    return null;
-  }
-  var catchs = { aid: {}, ssid: {}, epid: {} };
-  async function urlParam(url, redirect = true) {
-    url && !url.includes("?") && (url = "?" + url);
-    const obj = urlObj(url);
-    let { aid, cid, ssid, epid, p } = obj;
-    let pgc = false;
-    !aid && (aid = obj.avid);
-    !aid && url.replace(/[aA][vV]\\d+/, (d) => aid = d.substring(2));
-    !aid && url.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/, (d) => aid = abv(d));
-    !aid && obj.bvid && (aid = abv(obj.bvid));
-    aid && !Number(aid) && (aid = abv(aid));
-    p = p || 1;
-    !ssid && (ssid = obj.seasonId);
-    !ssid && (ssid = obj.season_id);
-    !ssid && url.replace(/[sS][sS]\\d+/, (d) => ssid = d.substring(2));
-    !epid && (epid = obj.episodeId);
-    !epid && (epid = obj.ep_id);
-    !epid && url.replace(/[eE][pP]\\d+/, (d) => epid = d.substring(2));
-    if (!ssid && !epid && aid) {
-      if (catchs.aid[aid])
-        return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
-      if (!cid) {
-        try {
-          let data = await apiXView(aid);
-          if (data.redirect_url)
-            return urlParam(objUrl(data.redirect_url, { aid, cid, ssid, epid, p }));
-          catchs.aid[aid] = data.pages;
-          catchs.aid[aid].forEach((d) => d.aid = aid);
-          return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
-        } catch (e) {
-          debug.error("view", e);
-          try {
-            catchs.aid[aid] = await apiPlayerPagelist(aid);
-            catchs.aid[aid].forEach((d) => d.aid = aid);
-            return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
-          } catch (e2) {
-            debug.error("pagelist", e2);
-            try {
-              catchs.aid[aid] = (await apiView(aid)).list;
-              catchs.aid[aid].forEach((d) => d.aid = aid);
-              return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
-            } catch (e3) {
-              debug.error("appkey", e3);
-              try {
-                let data = await new apiBiliplusView(aid).getDate();
-                catchs.aid[aid] = data.list || data.v2_app_api && data.v2_app_api.pages;
-                catchs.aid[aid].forEach((d) => d.aid = aid);
-                if (redirect && data.v2_app_api && data.v2_app_api.redirect_url)
-                  return urlParam(objUrl(data.v2_app_api.redirect_url, { aid, cid, ssid, epid, p }));
-                return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
-              } catch (e4) {
-                debug.error("biliplus", e4);
-              }
-            }
-          }
-        }
-      }
-    }
-    if (ssid || epid) {
-      if (ssid && catchs.ssid[ssid])
-        return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
-      if (epid && catchs.epid[epid])
-        return catchs.epid[epid];
-      pgc = true;
-      let data = await apiBangumiSeason({ ep_id: epid, season_id: ssid });
-      ssid = data.season_id;
-      catchs.ssid[ssid] = [];
-      data.episodes.forEach((d) => {
-        Object.assign(d, { ssid, pgc, epid: d.ep_id });
-        catchs.aid[d.aid] = catchs.aid[d.aid] || [];
-        catchs.aid[d.aid].push(d);
-        catchs.ssid[ssid].push(catchs.epid[d.ep_id] = d);
-      });
-      if (epid)
-        return catchs.epid[epid];
-      return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
-    }
-    return { aid, cid, ssid, epid, p, pgc };
-  }
-
-  // src/io/api-view-detail.ts
-  init_tampermonkey();
-  var ApiViewDetail = class {
-    code = 0;
-    data = {
-      Card: { archive_count: -1, article_count: -1, card: {}, follower: -1, following: false, like_num: -1, space: {} },
-      Related: [],
-      Reply: { page: {}, replies: [] },
-      Spec: null,
-      Tags: [],
-      View: {},
-      elec: null,
-      hot_share: {},
-      recommend: null,
-      view_addit: {}
-    };
-    message = "0";
-    ttl = 1;
-  };
-  async function apiViewDetail(aid) {
-    const response = await fetch(objUrl(URLS.VIEW_DETAIL, {
-      aid
-    }));
-    const json = await response.json();
-    return jsonCheck(json).data;
-  }
-
-  // src/io/api-biliplus-view.ts
-  var apiBiliplusView = class {
-    constructor(aid) {
-      this.aid = aid;
-      this.fetch = fetch(objUrl("//www.biliplus.com/api/view", {
-        id: aid
-      }));
-    }
-    fetch;
-    async getDate() {
-      const respense = await this.fetch;
-      return await respense.json();
-    }
-    /** 转化为\`apiViewDetail\`格式 */
-    async toDetail() {
-      const json = await this.getDate();
-      return this.view2Detail(json);
-    }
-    view2Detail(data) {
-      const result = new ApiViewDetail();
-      if (data.v2_app_api) {
-        delete data.v2_app_api.redirect_url;
-        result.data.Card.follower = data.v2_app_api.owner_ext?.fans;
-        result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
-        result.data.Tags = data.v2_app_api.tag;
-        result.data.View = data.v2_app_api;
-        xhrHook(\`api.bilibili.com/x/web-interface/view?aid=\${this.aid}\`, void 0, (res) => {
-          const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
-          res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-        }, false);
-        xhrHook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${this.aid}\`, void 0, (res) => {
-          const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}\`;
-          res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-        }, false);
-        return JSON.parse(JSON.stringify(result));
-      } else
-        return this.view2Detail_v1(data);
-    }
-    view2Detail_v1(data) {
-      if ("code" in data) {
-        jsonCheck(data);
-      }
-      const result = new ApiViewDetail();
-      const p = Number(getUrlValue("p"));
-      result.data.Card.card = {
-        face: "//static.hdslb.com/images/akari.jpg",
-        mid: data.mid,
-        name: data.author,
-        vip: {}
-      };
-      data.list || (data.list = [{
-        cid: -1,
-        dimension: { width: 1920, height: 1080, rotate: 0 }
-      }]);
-      result.data.View = {
-        aid: data.aid || data.id || this.aid,
-        cid: data.list[p ? p - 1 : 0].cid,
-        copyright: 1,
-        ctime: data.created ?? 0,
-        dimension: { width: 1920, height: 1080, rotate: 0 },
-        duration: -1,
-        owner: result.data.Card.card,
-        pages: data.list.map((d) => {
-          d.dimension = { width: 1920, height: 1080, rotate: 0 };
-          return d;
-        }),
-        pic: data.pic ?? "",
-        pubdate: data.lastupdatets ?? 0,
-        rights: {},
-        stat: {
-          aid: data.aid || data.id || this.aid,
-          coin: data.coins,
-          danmaku: data.video_review,
-          dislike: 0,
-          evaluation: "",
-          favorite: data.favorites,
-          his_rank: 0,
-          like: -1,
-          now_rank: 0,
-          reply: -1,
-          share: -1,
-          view: data.play
-        },
-        state: 0,
-        subtitle: { allow_submit: false, list: [] },
-        tid: data.tid ?? 0,
-        title: data.title ?? "",
-        tname: data.typename ?? "",
-        videos: data.list.length ?? 0
-      };
-      data.bangumi && (result.data.View.season = data.bangumi);
-      xhrHook(\`api.bilibili.com/x/web-interface/view?aid=\${this.aid}\`, void 0, (res) => {
-        const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
-        res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-      }, false);
-      xhrHook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${this.aid}\`, void 0, (res) => {
-        const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}\`;
-        res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-      }, false);
-      return JSON.parse(JSON.stringify(result));
-    }
-  };
 
   // src/json/sort.txt
   var sort_default = '[{name:"首页",route:"/",tid:"",locid:23,sub:[]},{name:"动画",route:"douga",tid:1,locid:52,count:"",subMenuSize:162,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2507,leftId:2452,rightId:2453},sub:[{name:"MAD·AMV",route:"mad",tid:24,ps:15,rps:10,ad:{active:!0,dataLocId:151},desc:"具有一定制作程度的动画或静画的二次创作视频",url:"//www.bilibili.com/video/douga-mad-1.html"},{name:"MMD·3D",route:"mmd",tid:25,ps:15,rps:10,ad:{active:!0,dataLocId:152},desc:"使用MMD（MikuMikuDance）和其他3D建模类软件制作的视频",url:"//www.bilibili.com/video/douga-mmd-1.html"},{name:"短片·手书·配音",route:"voice",tid:47,ps:15,rps:10,desc:"追求创新并具有强烈特色的短片、手书（绘）及ACG相关配音",url:"//www.bilibili.com/video/douga-voice-1.html"},{name:"手办·模玩",route:"garage_kit",tid:210,ps:15,rps:10,desc:"手办模玩的测评、改造或其他衍生内容",url:""},{name:"特摄",route:"tokusatsu",tid:86,ps:15,rps:10,desc:"特摄相关衍生视频",url:"//www.bilibili.com/video/cinephile-tokusatsu.html"},{name:"综合",route:"other",tid:27,ps:15,rps:10,ad:{active:!0,dataLocId:153},desc:"以动画及动画相关内容为素材，包括但不仅限于音频替换、杂谈、排行榜等内容",url:"//www.bilibili.com/video/douga-else-1.html"}]},{name:"番剧",route:"anime",tid:13,url:"//www.bilibili.com/anime/",takeOvered:!0,count:"",subMenuSize:172,combination:!0,sub:[{name:"连载动画",tid:33,route:"serial",desc:"当季连载的动画番剧",url:"//www.bilibili.com/video/bangumi-two-1.html"},{name:"完结动画",tid:32,route:"finish",desc:"已完结的动画番剧合集",url:"//www.bilibili.com/video/part-twoelement-1.html"},{name:"资讯",tid:51,route:"information",desc:"动画番剧相关资讯视频",url:"//www.bilibili.com/video/douga-else-information-1.html"},{name:"官方延伸",tid:152,route:"offical",desc:"动画番剧为主题的宣传节目、采访视频，及声优相关视频",url:"//www.bilibili.com/video/bagumi_offical_1.html"},{name:"新番时间表",url:"//www.bilibili.com/anime/timeline/",desc:""},{name:"番剧索引",url:"//www.bilibili.com/anime/index/",desc:""}]},{name:"国创",tid:167,route:"guochuang",url:"//www.bilibili.com/guochuang/",takeOvered:!0,count:"",subMenuSize:214,combination:!0,sub:[{name:"国产动画",tid:153,route:"chinese",desc:"我国出品的PGC动画",url:"//www.bilibili.com/video/bangumi_chinese_1.html"},{name:"国产原创相关",tid:168,route:"original",desc:"",url:"//www.bilibili.com/video/guochuang-fanvid-1.html"},{name:"布袋戏",tid:169,route:"puppetry",desc:"",url:"//www.bilibili.com/video/glove-puppetry-1.html"},{name:"动态漫·广播剧",tid:195,route:"motioncomic",desc:"",url:""},{name:"资讯",tid:170,route:"information",desc:"",url:"//www.bilibili.com/video/guochuang-offical-1.html"},{name:"新番时间表",url:"//www.bilibili.com/guochuang/timeline/",desc:""},{name:"国产动画索引",url:"//www.bilibili.com/guochuang/index/",desc:""}]},{name:"音乐",route:"music",tid:3,locid:58,count:"",subMenuSize:268,slider:{width:620,height:220},viewTag:!0,customComponent:{name:"Energy",titleId:2511,leftId:2462,rightId:3131,rightType:"slide"},sub:[{name:"原创音乐",route:"original",tid:28,ps:15,rps:10,viewHotTag:!0,ad:{active:!0,dataLocId:243},dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"原创歌曲及纯音乐，包括改编、重编曲及remix",url:"//www.bilibili.com/video/music-original-1.html"},{name:"翻唱",route:"cover",tid:31,ps:15,rps:10,ad:{active:!0,dataLocId:245},viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"对曲目的人声再演绎视频",url:"//www.bilibili.com/video/music-Cover-1.html"},{name:"演奏",route:"perform",tid:59,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"乐器和非传统乐器器材的演奏作品",url:"//www.bilibili.com/video/music-perform-1.html"},{name:"VOCALOID·UTAU",route:"vocaloid",tid:30,ps:15,rps:10,viewHotTag:!0,ad:{active:!0,dataLocId:247},dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"以VOCALOID等歌声合成引擎为基础，运用各类音源进行的创作",url:"//www.bilibili.com/video/music-vocaloid-1.html"},{name:"音乐现场",route:"live",tid:29,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"音乐表演的实况视频，包括官方/个人拍摄的综艺节目、音乐剧、音乐节、演唱会等",url:"//www.bilibili.com/video/music-oped-1.html"},{name:"MV",route:"mv",tid:193,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"为音乐作品配合拍摄或制作的音乐录影带（Music Video），以及自制拍摄、剪辑、翻拍MV",url:"//www.bilibili.com/video/music-coordinate-1.html"},{name:"乐评盘点",route:"commentary",tid:243,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"音乐类新闻、盘点、点评、reaction、榜单、采访、幕后故事、唱片开箱等",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音乐教学",route:"tutorial",tid:244,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"以音乐教学为目的的内容",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音乐综合",route:"other",tid:130,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"所有无法被收纳到其他音乐二级分区的音乐类视频",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音频",customZone:"Audio",route:"audio",url:"//www.bilibili.com/audio/home?musicType=music"},{name:"说唱",url:"//www.bilibili.com/v/rap"}]},{name:"舞蹈",route:"dance",tid:129,locid:64,count:"",subMenuSize:172,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2513,leftId:2472,rightId:2473},sub:[{name:"宅舞",route:"otaku",tid:20,ps:15,rps:10,ad:{active:!0,dataLocId:249},desc:"与ACG相关的翻跳、原创舞蹈",url:"//www.bilibili.com/video/dance-1.html"},{name:"街舞",route:"hiphop",tid:198,ps:15,rps:10,ad:{active:!0,dataLocId:251},desc:"收录街舞相关内容，包括赛事现场、舞室作品、个人翻跳、FREESTYLE等",url:""},{name:"明星舞蹈",route:"star",tid:199,ps:15,rps:10,desc:"国内外明星发布的官方舞蹈及其翻跳内容",url:""},{name:"中国舞",route:"china",tid:200,ps:15,rps:10,ad:{active:!0,dataLocId:253},desc:"传承中国艺术文化的舞蹈内容，包括古典舞、民族民间舞、汉唐舞、古风舞等",url:""},{name:"舞蹈综合",route:"three_d",tid:154,ps:15,rps:10,desc:"收录无法定义到其他舞蹈子分区的舞蹈视频",url:""},{name:"舞蹈教程",route:"demo",tid:156,ps:10,rps:6,desc:"镜面慢速，动作分解，基础教程等具有教学意义的舞蹈视频",url:"//www.bilibili.com/video/dance-demo-1.html"}]},{name:"游戏",route:"game",tid:4,locid:70,count:"",subMenuSize:240,slider:{width:470,height:216},viewTag:!0,customComponent:{name:"Energy",titleId:3761,leftId:3765,rightId:3775,rightType:"slide"},recommendCardType:"GameGroomBox",sub:[{name:"单机游戏",route:"stand_alone",tid:17,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:255},dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"以所有平台（PC、主机、移动端）的单机或联机游戏为主的视频内容，包括游戏预告、CG、实况解说及相关的评测、杂谈与视频剪辑等",url:"//www.bilibili.com/video/videogame-1.html"},{name:"电子竞技",route:"esports",tid:171,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:257},desc:"具有高对抗性的电子竞技游戏项目，其相关的赛事、实况、攻略、解说、短剧等视频。",url:"//www.bilibili.com/video/esports-1.html"},{name:"手机游戏",route:"mobile",tid:172,ps:10,rps:7,rankshow:1,viewHotTag:!0,desc:"以手机及平板设备为主要平台的游戏，其相关的实况、攻略、解说、短剧、演示等视频。",url:"//www.bilibili.com/video/mobilegame-1.html"},{name:"网络游戏",route:"online",tid:65,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:259},dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"由网络运营商运营的多人在线游戏，以及电子竞技的相关游戏内容。包括赛事、攻略、实况、解说等相关视频",url:"//www.bilibili.com/video/onlinegame-1.html"},{name:"桌游棋牌",route:"board",tid:173,ps:5,rps:3,rankshow:1,viewHotTag:!0,desc:"桌游、棋牌、卡牌对战等及其相关电子版游戏的实况、攻略、解说、演示等视频。",url:"//www.bilibili.com/video/boardgame-1.html"},{name:"GMV",route:"gmv",tid:121,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"由游戏素材制作的MV视频。以游戏内容或CG为主制作的，具有一定创作程度的MV类型的视频",url:"//www.bilibili.com/video/gmv-1.html"},{name:"音游",route:"music",tid:136,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"各个平台上，通过配合音乐与节奏而进行的音乐类游戏视频",url:"//www.bilibili.com/video/music-game-1.html"},{name:"Mugen",route:"mugen",tid:19,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"以Mugen引擎为平台制作、或与Mugen相关的游戏视频",url:"//www.bilibili.com/video/game-mugen-1.html"},{name:"游戏赛事",url:"//www.bilibili.com/v/game/match/",newIcon:!0}]},{name:"知识",route:"knowledge",tid:36,locid:76,count:"",subMenuSize:172,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2058,leftId:2047,rightId:2048},sub:[{name:"科学科普",route:"science",tid:201,ps:15,rps:10,ad:{active:!0,dataLocId:261},desc:"回答你的十万个为什么"},{name:"社科·法律·心理",route:"social_science",tid:124,ps:15,rps:10,ad:{active:!0,dataLocId:263},desc:"基于社会科学、法学、心理学展开或个人观点输出的知识视频"},{name:"人文历史",route:"humanity_history",tid:228,ps:15,rps:10,desc:"看看古今人物，聊聊历史过往，品品文学典籍"},{name:"财经商业",route:"business",tid:207,ps:15,rps:10,desc:"说金融市场，谈宏观经济，一起畅聊商业故事"},{name:"校园学习",route:"campus",tid:208,ps:15,rps:10,ad:{active:!0,dataLocId:265},desc:"老师很有趣，学生也有才，我们一起搞学习"},{name:"职业职场",route:"career",tid:209,ps:15,rps:10,desc:"职业分享、升级指南，一起成为最有料的职场人"},{name:"设计·创意",route:"design",tid:229,ps:15,rps:10,desc:"天马行空，创意设计，都在这里"},{name:"野生技能协会",route:"skill",tid:122,ps:15,rps:10,desc:"技能党集合，是时候展示真正的技术了"}]},{name:"科技",route:"tech",tid:188,locid:2977,count:"",subMenuSize:80,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2980,leftId:2978,rightId:2979},sub:[{name:"数码",route:"digital",tid:95,ps:15,rps:10,viewHotTag:!0,desc:"科技数码产品大全，一起来做发烧友",url:"#"},{name:"软件应用",route:"application",tid:230,ps:15,rps:10,viewHotTag:!0,desc:"超全软件应用指南",url:"#"},{name:"计算机技术",route:"computer_tech",tid:231,ps:15,rps:10,viewHotTag:!0,desc:"研究分析、教学演示、经验分享......有关计算机技术的都在这里",url:"#"},{name:"科工机械",route:"industry",tid:232,ps:15,rps:10,viewHotTag:!0,desc:"从小芯片到大工程，一起见证科工力量",url:"#"},{name:"极客DIY",route:"diy",tid:233,ps:15,rps:10,viewHotTag:!0,desc:"炫酷技能，极客文化，硬核技巧，准备好你的惊讶",url:"#"}]},{name:"运动",route:"sports",tid:234,locid:4639,isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4646,rightId:4652,rightType:"slide"},sub:[{name:"篮球·足球",route:"basketballfootball",tid:235,ps:15,rps:10,ad:{active:!0,dataLocId:4656},desc:"与篮球、足球相关的视频，包括但不限于篮足球赛事、教学、评述、剪辑、剧情等相关内容",url:"#"},{name:"健身",route:"aerobics",tid:164,ps:15,rps:10,desc:"与健身相关的视频，包括但不限于瑜伽、CrossFit、健美、力量举、普拉提、街健等相关内容",url:"//www.bilibili.com/video/fashion-body-1.html"},{name:"竞技体育",route:"athletic",tid:236,ps:15,rps:10,desc:"与竞技体育相关的视频，包括但不限于乒乓、羽毛球、排球、赛车等竞技项目的赛事、评述、剪辑、剧情等相关内容",url:"#"},{name:"运动文化",route:"culture",tid:237,ps:15,rps:10,desc:"与运动文化相关的视频，包络但不限于球鞋、球衣、球星卡等运动衍生品的分享、解读，体育产业的分析、科普等相关内容",url:"#"},{name:"运动综合",route:"comprehensive",tid:238,ps:15,rps:10,desc:"与运动综合相关的视频，包括但不限于钓鱼、骑行、滑板等日常运动分享、教学、Vlog等相关内容",url:"#"}]},{name:"汽车",route:"car",tid:223,locid:4428,isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4435,rightId:4441,rightType:"slide"},sub:[{name:"汽车生活",route:"life",tid:176,ps:15,rps:10,ad:{active:!0,dataLocId:4445},desc:"分享汽车及出行相关的生活体验类视频",url:"#"},{name:"汽车文化",route:"culture",tid:224,ps:15,rps:10,desc:"汽车改装、品牌历史、汽车设计、老爷车、汽车模型等",url:"#"},{name:"赛车",route:"racing",tid:245,ps:15,rps:10,desc:"F1等汽车运动相关",url:"#"},{name:"汽车极客",route:"geek",tid:225,ps:15,rps:10,desc:"汽车硬核达人聚集地，包括DIY造车、专业评测和技术知识分享",url:"#"},{name:"摩托车",route:"motorcycle",tid:240,ps:15,rps:10,desc:"骑士们集合啦",url:"#"},{name:"智能出行",route:"smart",tid:226,ps:15,rps:10,desc:"探索新能源汽车和未来智能出行的前沿阵地",url:"#"},{name:"购车攻略",route:"strategy",tid:227,ps:15,rps:10,desc:"丰富详实的购车建议和新车体验",url:"#"}]},{name:"生活",route:"life",tid:160,locid:88,count:"",subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2062,leftId:1674,rightId:1670},sub:[{name:"搞笑",route:"funny",tid:138,ps:15,rps:10,ad:{active:!0,dataLocId:273},desc:"各种沙雕有趣的搞笑剪辑，挑战，表演，配音等视频",url:"//www.bilibili.com/video/ent_funny_1.html",locid:4204,recommendId:4210,slider:{width:620,height:220},customComponent:{name:"Energy",leftId:4212,rightId:4218,rightType:"slide"}},{name:"家居房产",route:"home",tid:239,ps:15,rps:10,ad:{active:!0,dataLocId:275},desc:"与买房、装修、居家生活相关的分享",url:"#"},{name:"手工",route:"handmake",tid:161,ps:15,rps:10,desc:"手工制品的制作过程或成品展示、教程、测评类视频",url:"//www.bilibili.com/video/ent-handmake-1.html"},{name:"绘画",route:"painting",tid:162,ps:15,rps:10,desc:"绘画过程或绘画教程，以及绘画相关的所有视频",url:"//www.bilibili.com/video/ent-painting-1.html"},{name:"日常",route:"daily",tid:21,ps:15,rps:10,desc:"记录日常生活，分享生活故事",url:"//www.bilibili.com/video/ent-life-1.html"}]},{name:"美食",route:"food",tid:211,locid:4243,count:"",isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4258,rightId:4264},sub:[{name:"美食制作",route:"make",tid:76,ps:15,rps:10,ad:{active:!0,dataLocId:4268},desc:"学做人间美味，展示精湛厨艺",url:"#"},{name:"美食侦探",route:"detective",tid:212,ps:15,rps:10,desc:"寻找美味餐厅，发现街头美食",url:"#"},{name:"美食测评",route:"measurement",tid:213,ps:15,rps:10,desc:"吃货世界，品尝世间美味",url:"#"},{name:"田园美食",route:"rural",tid:214,ps:15,rps:10,desc:"品味乡野美食，寻找山与海的味道",url:"#"},{name:"美食记录",route:"record",tid:215,ps:15,rps:10,desc:"记录一日三餐，给生活添一点幸福感",url:"#"}]},{name:"动物圈",route:"animal",tid:217,locid:4365,count:"",isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4376,rightId:4381,rightType:"slide"},sub:[{name:"喵星人",route:"cat",tid:218,ps:15,rps:10,desc:"喵喵喵喵喵",url:"#",ad:{active:!0,dataLocId:4385}},{name:"汪星人",route:"dog",tid:219,ps:15,rps:10,desc:"汪汪汪汪汪",url:"#"},{name:"大熊猫",route:"panda",tid:220,ps:15,rps:10,desc:"芝麻汤圆营业中",url:"#"},{name:"野生动物",route:"wild_animal",tid:221,ps:15,rps:10,desc:"内有“猛兽”出没",url:"#"},{name:"爬宠",route:"reptiles",tid:222,ps:15,rps:10,desc:"鳞甲有灵",url:"#"},{name:"动物综合",route:"animal_composite",tid:75,ps:15,rps:10,desc:"收录除上述子分区外，其余动物相关视频以及非动物主体或多个动物主体的动物相关延伸内容",url:"#"}]},{name:"鬼畜",route:"kichiku",tid:119,locid:100,count:"",subMenuSize:182,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2509,leftId:2482,rightId:2483},sub:[{name:"鬼畜调教",route:"guide",tid:22,ps:15,rps:10,ad:{active:!0,dataLocId:285},desc:"使用素材在音频、画面上做一定处理，达到与BGM一定的同步感",url:"//www.bilibili.com/video/ent-Kichiku-1.html"},{name:"音MAD",route:"mad",tid:26,ps:15,rps:10,ad:{active:!0,dataLocId:287},desc:"使用素材音频进行一定的二次创作来达到还原原曲的非商业性质稿件",url:"//www.bilibili.com/video/douga-kichiku-1.html"},{name:"人力VOCALOID",route:"manual_vocaloid",tid:126,ps:15,rps:10,desc:"将人物或者角色的无伴奏素材进行人工调音，使其就像VOCALOID一样歌唱的技术",url:"//www.bilibili.com/video/kichiku-manual_vocaloid-1.html"},{name:"鬼畜剧场",route:"theatre",tid:216,ps:15,rps:10,desc:"使用素材进行人工剪辑编排的有剧情的作品"},{name:"教程演示",route:"course",tid:127,ps:10,rps:6,rightComponent:{name:"CmImgList",id:148},ad:{active:!0,dataLocId:289},hideDropdown:!1,desc:"鬼畜相关的教程演示",url:"//www.bilibili.com/video/kichiku-course-1.html"}]},{name:"时尚",route:"fashion",tid:155,locid:94,count:"",subMenuSize:124,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2515,leftId:2492,rightId:2493},sub:[{name:"美妆护肤",route:"makeup",tid:157,ps:15,rps:10,ad:{active:!0,dataLocId:279},desc:"彩妆护肤、美甲美发、仿妆、医美相关内容分享或产品测评",url:"//www.bilibili.com/video/fashion-makeup-fitness-1.html"},{name:"穿搭",route:"clothing",tid:158,ps:15,rps:10,ad:{active:!0,dataLocId:281},desc:"穿搭风格、穿搭技巧的展示分享，涵盖衣服、鞋靴、箱包配件、配饰（帽子、钟表、珠宝首饰）等",url:"//www.bilibili.com/video/fashion-clothing-1.html"},{name:"时尚潮流",route:"trend",tid:159,ps:15,rps:10,desc:"时尚街拍、时装周、时尚大片，时尚品牌、潮流等行业相关记录及知识科普",url:"#"}]},{name:"资讯",route:"information",tid:202,locid:4076,count:"",subMenuSize:60,slider:{width:620,height:220},viewTag:!1,sub:[{name:"热点",route:"hotspot",tid:203,ps:18,rps:10,desc:"全民关注的时政热门资讯"},{name:"环球",route:"global",tid:204,ps:18,rps:10,desc:"全球范围内发生的具有重大影响力的事件动态"},{name:"社会",route:"social",tid:205,ps:18,rps:10,desc:"日常生活的社会事件、社会问题、社会风貌的报道"},{name:"综合",route:"multiple",tid:206,ps:18,rps:10,desc:"除上述领域外其它垂直领域的综合资讯"}]},{name:"娱乐",route:"ent",tid:5,locid:82,count:"",subMenuSize:62,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2067,leftId:2065,rightId:2066},sub:[{name:"综艺",route:"variety",tid:71,ps:15,rps:10,ad:{active:!0,dataLocId:267},desc:"所有综艺相关，全部一手掌握！",url:"//www.bilibili.com/video/ent-variety-1.html"},{name:"娱乐杂谈",route:"talker",tid:241,ps:15,rps:10,ad:{active:!0,dataLocId:269},desc:"娱乐人物解读、娱乐热点点评、娱乐行业分析"},{name:"粉丝创作",route:"fans",tid:242,ps:15,rps:10,desc:"粉丝向创作视频"},{name:"明星综合",route:"celebrity",tid:137,ps:15,rps:10,desc:"娱乐圈动态、明星资讯相关"}]},{name:"影视",route:"cinephile",tid:181,locid:2211,count:"",subMenuSize:84,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2309,leftId:2307,rightId:2308},sub:[{name:"影视杂谈",route:"cinecism",tid:182,ps:15,rps:10,ad:{active:!0,dataLocId:2212},desc:"影视评论、解说、吐槽、科普等",url:"//www.bilibili.com/video/cinephile-cinecism.html"},{name:"影视剪辑",route:"montage",tid:183,ps:15,rps:10,ad:{active:!0,dataLocId:2213},desc:"对影视素材进行剪辑再创作的视频",url:"//www.bilibili.com/video/cinephile-montage.html"},{name:"短片",route:"shortfilm",tid:85,ps:15,rps:10,desc:"追求自我表达且具有特色的短片",url:"//www.bilibili.com/video/cinephile-shortfilm.html"},{name:"预告·资讯",route:"trailer_info",tid:184,ps:15,rps:10,ad:{active:!0,dataLocId:2214},desc:"影视类相关资讯，预告，花絮等视频",url:"//www.bilibili.com/video/cinephile-trailer-info.html"}]},{name:"纪录片",route:"documentary",tid:177,url:"//www.bilibili.com/documentary/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"人文·历史",tid:37,route:"history",dise:"",url:"//www.bilibili.com/video/doco-history.html"},{name:"科学·探索·自然",tid:178,route:"science",dise:"",url:"//www.bilibili.com/video/doco-science.html"},{name:"军事",tid:179,route:"military",dise:"",url:"//www.bilibili.com/video/doco-military.html"},{name:"社会·美食·旅行",tid:180,route:"travel",dise:"",url:"//www.bilibili.com/video/doco-travel.html"},{name:"纪录片索引",url:"//www.bilibili.com/documentary/index/"}]},{name:"电影",route:"movie",tid:23,url:"//www.bilibili.com/movie/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"华语电影",tid:147,route:"chinese",desc:"",url:"//www.bilibili.com/video/movie_chinese_1.html"},{name:"欧美电影",tid:145,route:"west",desc:"",url:"//www.bilibili.com/video/movie_west_1.html"},{name:"日本电影",tid:146,route:"japan",desc:"",url:"//www.bilibili.com/video/movie_japan_1.html"},{name:"其他国家",tid:83,route:"movie",desc:"",url:"//www.bilibili.com/video/movie-movie-1.html"},{name:"电影索引",url:"//www.bilibili.com/movie/index/"}]},{name:"电视剧",route:"tv",tid:11,url:"//www.bilibili.com/tv/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"国产剧",tid:185,route:"mainland",desc:"",url:"//www.bilibili.com/video/tv-mainland.html"},{name:"海外剧",tid:187,route:"overseas",desc:"",url:"//www.bilibili.com/video/tv-overseas.html"},{name:"电视剧索引",url:"//www.bilibili.com/tv/index/"}]},{name:"虚拟UP主",route:"virtual",locid:4735,count:"",isHide:!0,subMenuSize:60,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:4754,leftId:4756},sub:[{name:"游戏",route:"game",tid:4,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/game"},{name:"音乐",route:"music",tid:3,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/music"},{name:"动画",route:"douga",tid:1,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/douga"},{name:"其他",route:"other",tid:0,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/other"}]}]';
@@ -22349,157 +24689,6 @@ const MODULES = `
   // src/page/bangumi.ts
   init_tampermonkey();
 
-  // src/core/network-mock.ts
-  init_tampermonkey();
-  var networkMocked = false;
-  function defineRes(target, res, v) {
-    Object.defineProperties(target, {
-      status: {
-        configurable: true,
-        writable: true,
-        value: res.status
-      },
-      statusText: {
-        configurable: true,
-        writable: true,
-        value: res.statusText
-      },
-      response: {
-        configurable: true,
-        writable: true,
-        value: res.response
-      },
-      responseText: {
-        configurable: true,
-        writable: true,
-        value: res.responseText
-      },
-      responseXML: {
-        configurable: true,
-        writable: true,
-        value: res.responseXML
-      },
-      responseURL: {
-        configurable: true,
-        writable: true,
-        value: res.finalUrl
-      }
-    });
-    v();
-  }
-  function networkMock() {
-    if (!networkMocked) {
-      networkMocked = true;
-      if (true) {
-        xhrHook.ultra(".m4s", function(target, args) {
-          const obj = {
-            method: args[0],
-            url: args[1],
-            headers: {
-              "user-agent": user.userStatus.userAgent
-            },
-            onloadstart: (res) => {
-              defineRes(this, res, () => {
-              });
-            }
-          };
-          args[2] || (obj.anonymous = true);
-          Object.defineProperties(this, {
-            responseType: {
-              configurable: true,
-              set: (v) => {
-                obj.responseType = v;
-              },
-              get: () => obj.responseType
-            },
-            onload: {
-              configurable: true,
-              set: (v) => {
-                obj.onload = (res) => {
-                  defineRes(this, res, v);
-                };
-              },
-              get: () => obj.onload
-            },
-            onerror: {
-              configurable: true,
-              set: (v) => {
-                obj.onerror = (res) => {
-                  defineRes(this, res, v);
-                };
-              },
-              get: () => obj.onerror
-            },
-            timeout: {
-              configurable: true,
-              set: (v) => {
-                obj.timeout = v;
-              },
-              get: () => obj.timeout
-            },
-            ontimeout: {
-              configurable: true,
-              set: (v) => {
-                obj.ontimeout = (res) => {
-                  defineRes(this, res, v);
-                };
-              },
-              get: () => obj.ontimeout
-            },
-            onprogress: {
-              configurable: true,
-              set: (v) => {
-                obj.onprogress = (res) => {
-                  defineRes(this, res, v.bind(this, new ProgressEvent("progress", {
-                    lengthComputable: res.lengthComputable,
-                    loaded: res.loaded,
-                    total: res.total
-                  })));
-                };
-              },
-              get: () => obj.onprogress
-            },
-            onabort: {
-              configurable: true,
-              set: (v) => {
-                obj.onabort = (res) => {
-                  defineRes(this, res, v);
-                };
-              },
-              get: () => obj.onabort
-            },
-            onreadystatechange: {
-              configurable: true,
-              set: (v) => {
-                obj.onreadystatechange = (res) => {
-                  defineRes(this, res, v);
-                };
-              },
-              get: () => obj.onreadystatechange
-            },
-            setRequestHeader: {
-              configurable: true,
-              value: (name, value) => {
-                obj.headers && (obj.headers[name] = value);
-              }
-            },
-            send: {
-              configurable: true,
-              value: (body) => {
-                obj.method === "POST" && body && (obj.data = body);
-                const tar = GM.xmlHttpRequest(obj);
-                this.abort = tar.abort.bind(tar);
-                return true;
-              }
-            }
-          });
-        });
-      } else {
-        GM.updateSessionRules(mock);
-      }
-    }
-  }
-
   // src/html/bangumi.html
   var bangumi_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" />\\r\\n    <style type="text/css">\\r\\n        .new-entry {\\r\\n            display: none;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="app" data-server-rendered="true" class="main-container"></div>\\r\\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"><\\/script>\\r\\n    <script>\\r\\n        window.__INITIAL_STATE__ = { activity: {}, app: false, area: 0, canReview: false, epId: -1, epInfo: {}, epList: [], epStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, isPlayerTrigger: false, loginInfo: { isLogin: false }, mdId: -1, mediaInfo: {}, mediaRating: {}, miniOn: 0, newestEp: {}, paster: {}, payMent: {}, payPack: {}, playerRecomList: [], pubInfo: {}, recomList: [], rightsInfo: {}, seasonFollowed: false, seasonList: [], seasonStat: { coins: 0, danmakus: 0, favorites: 0, views: 0 }, special: false, spending: 0, sponsorTotal: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, sponsorTotalCount: 0, sponsorWeek: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, ssId: -1, ssStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, upInfo: {}, userCoined: false, userLongReview: {}, userScore: 0, userShortReview: {}, userStat: { error: true, follow: 0, loaded: true, pay: 0, payPackPaid: 0, sponsor: 0, vipInfo: { due_date: 0, status: 0, type: 0 }, watchProgress: { lastEpId: -1, lastEpIndex: "", lastTime: 0 } }, ver: {} }; (function () { Reflect.deleteProperty(window, "webpackJsonp"); Reflect.deleteProperty(window, "_babelPolyfill"); var s; (s = document.currentScript || document.scripts[document.scripts.length - 1]).parentNode.removeChild(s); }());\\r\\n    <\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
@@ -23892,6 +26081,16 @@ const MODULES = `
     }
   };
 
+  // src/utils/timer.ts
+  init_tampermonkey();
+  function timeout(value, time = 0) {
+    return new Promise((r) => {
+      setTimeout(() => {
+        r(value);
+      }, time);
+    });
+  }
+
   // src/page/search.ts
   var PageSearch = class extends Page {
     constructor() {
@@ -23926,9 +26125,46 @@ const MODULES = `
     /** 获取港澳台搜索数据 */
     gat() {
       if (user.userStatus.searchAllArea) {
-        jsonpHook.async("x/web-interface/search/all/v2?", void 0, async (url) => {
-          const data = await new ApiSearch(decodeURIComponent(urlObj(url).keyword)).getData();
-          return ApiSearch.toSearchV2(data);
+        const record = {};
+        jsonpHook("x/web-interface/search/all/v2?", void 0, (res, url) => {
+          const keyword = decodeURIComponent(urlObj(url).keyword);
+          (keyword in record ? timeout(record[keyword]) : new ApiSearch(keyword).getData()).then((data) => {
+            record[keyword] = data;
+            const vue = document.querySelector("#all-list > div.flow-loader")?.__vue__;
+            if (vue && data?.result?.media_bangumi.length) {
+              vue.source.result.forEach((d) => {
+                switch (d.result_type) {
+                  case "media_bangumi": {
+                    const arr2 = [].concat(d.data);
+                    const names = arr2.map((d2) => d2.season_id);
+                    data.result.media_bangumi.forEach((d2) => {
+                      d2.season_type_name = "番剧";
+                      names.includes(d2.season_id) || arr2.push(d2);
+                    });
+                    d.data = JSON.parse(JSON.stringify(arr2));
+                    break;
+                  }
+                  default:
+                    break;
+                }
+              });
+            }
+          });
+          return res;
+        }, false);
+        jsonpHook(["x/web-interface/search/type?", "search_type=media_bangumi"], void 0, (res, url) => {
+          const keyword = decodeURIComponent(urlObj(url).keyword);
+          const data = record[keyword];
+          if (data?.result?.media_bangumi.length && res?.data?.result?.length) {
+            const arr2 = [].concat(res.data.result);
+            const names = arr2.map((d) => d.season_id);
+            data.result.media_bangumi.forEach((d) => {
+              d.season_type_name = "番剧";
+              names.includes(d.season_id) || arr2.push(d);
+            });
+            res.data.result = arr2;
+          }
+          return res;
         }, false);
       }
     }
@@ -24012,725 +26248,6 @@ const MODULES = `
       }
     };
   };
-
-  // src/core/videolimit.ts
-  init_tampermonkey();
-
-  // src/io/api-biliplus-playurl.ts
-  init_tampermonkey();
-  async function apiBiliplusPlayurl(data) {
-    const response = await fetch(objUrl("//www.biliplus.com/BPplayurl.php", data));
-    return await response.json();
-  }
-
-  // src/io/api-global-ogv-playurl.ts
-  init_tampermonkey();
-
-  // src/io/api-playurl.ts
-  init_tampermonkey();
-
-  // src/io/fnval.ts
-  init_tampermonkey();
-  var qn = 127;
-  var fnver = 0;
-  var fnval = 0 /* FLV */ + 16 /* DASH_H265 */ + 64 /* HDR */ + 128 /* DASH_4K */ + 256 /* DOLBYAUDIO */ + 512 /* DOLBYVIDEO */ + 1024 /* DASH_8K */ + 2048 /* DASH_AV1 */;
-
-  // src/io/api-playurl.ts
-  var PlayurlDescriptionMap = {
-    127: "超高清 8K",
-    126: "杜比视界",
-    125: "HDR",
-    121: "超清 4K",
-    120: "超清 4K",
-    116: "高清 1080P60",
-    112: "高清 1080P+",
-    80: "高清 1080P",
-    74: "高清 720P60",
-    64: "高清 720P",
-    48: "高清 720P",
-    32: "清晰 480P",
-    16: "流畅 360P",
-    15: "流畅 360P",
-    6: "流畅 240P",
-    5: "流畅 144P"
-  };
-  var PlayurlFormatMap = {
-    127: "hdflv2",
-    126: "hdflv2",
-    125: "hdflv2",
-    121: "hdflv2",
-    120: "hdflv2",
-    116: "flv_p60",
-    112: "hdflv2",
-    80: "flv",
-    74: "flv720_p60",
-    64: "flv720",
-    48: "flv720",
-    32: "flv480",
-    16: "mp4",
-    15: "mp4",
-    6: "mp4",
-    5: "mp4"
-  };
-  var PlayurlQualityMap = {
-    127: "8K",
-    126: "Dolby",
-    125: "HDR",
-    121: "4K",
-    120: "4K",
-    116: "1080P60",
-    112: "1080P+",
-    80: "1080P",
-    74: "720P60",
-    64: "720P",
-    48: "720P",
-    32: "480P",
-    16: "360P",
-    15: "360P",
-    6: "240P",
-    5: "144P"
-  };
-  var PlayurlCodecs = {
-    30126: "hvc1.2.4.L153.90",
-    126: "hvc1.2.4.L153.90",
-    30121: "hev1.1.6.L156.90",
-    121: "hev1.1.6.L156.90",
-    30120: "avc1.64003C",
-    120: "avc1.64003C",
-    30112: "avc1.640028",
-    // 1080P+
-    112: "avc1.640028",
-    // 1080P+
-    30102: "hev1.1.6.L120.90",
-    // HEVC 1080P+
-    102: "hev1.1.6.L120.90",
-    // HEVC 1080P+
-    30080: "avc1.640028",
-    // 1080P
-    80: "avc1.640028",
-    // 1080P
-    30077: "hev1.1.6.L120.90",
-    // HEVC 1080P
-    77: "hev1.1.6.L120.90",
-    // HEVC 1080P
-    30064: "avc1.64001F",
-    // 720P
-    64: "avc1.64001F",
-    // 720P
-    30066: "hev1.1.6.L120.90",
-    // HEVC 720P
-    66: "hev1.1.6.L120.90",
-    // HEVC 720P
-    30032: "avc1.64001E",
-    // 480P
-    32: "avc1.64001E",
-    // 480P
-    30033: "hev1.1.6.L120.90",
-    // HEVC 480P
-    33: "hev1.1.6.L120.90",
-    // HEVC 480P
-    30011: "hev1.1.6.L120.90",
-    // HEVC 360P
-    11: "hev1.1.6.L120.90",
-    // HEVC 360P
-    30016: "avc1.64001E",
-    // 360P
-    16: "avc1.64001E",
-    // 360P
-    30006: "avc1.64001E",
-    //240P
-    6: "avc1.64001E",
-    // 240P
-    30005: "avc1.64001E",
-    // 144P
-    5: "avc1.64001E",
-    // 144P
-    30251: "fLaC",
-    // Hires
-    30250: "ec-3",
-    // Dolby
-    30280: "mp4a.40.2",
-    // 高码音频
-    30232: "mp4a.40.2",
-    // 中码音频
-    30216: "mp4a.40.2"
-    // 低码音频
-  };
-  var PlayurlCodecsAPP = {
-    30016: "avc1.64001E",
-    // APP源 360P
-    16: "avc1.64001E",
-    // APP源 360P
-    30032: "avc1.64001F",
-    // APP源 480P
-    32: "avc1.64001F",
-    // APP源 480P
-    30064: "avc1.640028",
-    // APP源 720P
-    64: "avc1.640028",
-    // APP源 720P
-    30080: "avc1.640032",
-    // APP源 1080P
-    80: "avc1.640032",
-    // APP源 1080P
-    30216: "mp4a.40.2",
-    // APP源 低码音频
-    30232: "mp4a.40.2",
-    // APP源 中码音频
-    30280: "mp4a.40.2"
-    // APP源 高码音频 
-  };
-  var PlayurlFrameRate = {
-    30121: "16000/672",
-    121: "16000/672",
-    30120: "16000/672",
-    120: "16000/672",
-    30112: "16000/672",
-    112: "16000/672",
-    30102: "16000/672",
-    102: "16000/672",
-    30080: "16000/672",
-    80: "16000/672",
-    30077: "16000/656",
-    77: "16000/656",
-    30064: "16000/672",
-    64: "16000/672",
-    30066: "16000/656",
-    66: "16000/656",
-    30032: "16000/672",
-    32: "16000/672",
-    30033: "16000/656",
-    33: "16000/656",
-    30011: "16000/656",
-    11: "16000/656",
-    30016: "16000/672",
-    16: "16000/672",
-    30006: "16000/672",
-    6: "16000/672",
-    30005: "16000/672",
-    5: "16000/672"
-  };
-  var PlayurlResolution = {
-    30121: [3840, 2160],
-    121: [3840, 2160],
-    30120: [3840, 2160],
-    120: [3840, 2160],
-    30112: [1920, 1080],
-    // 1080P+
-    112: [1920, 1080],
-    // 1080P+
-    30102: [1920, 1080],
-    // HEVC 1080P+
-    102: [1920, 1080],
-    // HEVC 1080P+
-    30080: [1920, 1080],
-    // 1080P
-    80: [1920, 1080],
-    // 1080P
-    30077: [1920, 1080],
-    // HEVC 1080P
-    77: [1920, 1080],
-    // HEVC 1080P
-    30064: [1280, 720],
-    // 720P
-    64: [1280, 720],
-    // 720P
-    30066: [1280, 720],
-    // HEVC 720P
-    66: [1280, 720],
-    // HEVC 720P
-    30032: [852, 480],
-    // 480P
-    32: [852, 480],
-    // 480P
-    30033: [852, 480],
-    // HEVC 480P
-    33: [852, 480],
-    // HEVC 480P
-    30011: [640, 360],
-    // HEVC 360P
-    11: [640, 360],
-    // HEVC 360P
-    30016: [640, 360],
-    // 360P
-    16: [640, 360],
-    // 360P
-    30006: [426, 240],
-    // 240P
-    6: [426, 240],
-    // 240P
-    30005: [256, 144],
-    // 144P
-    5: [256, 144]
-    // 144P
-  };
-  var PlayurlDash = class {
-    accept_description = [];
-    accept_format = "";
-    accept_quality = [];
-    bp = 0;
-    code = 0;
-    dash = {
-      audio: [],
-      dolby: { audio: [], type: 0 },
-      duration: 0,
-      min_buffer_time: 1.5,
-      minBufferTime: 1.5,
-      video: []
-    };
-    fnval = 4048;
-    fnver = 0;
-    format = "flv";
-    from = "local";
-    has_paid = true;
-    is_preview = 0;
-    message = "";
-    no_rexcode = 1;
-    quality = 80;
-    result = "suee";
-    seek_param = "start";
-    seek_type = "offset";
-    status = 2;
-    support_formats = [];
-    timelength = 0;
-    type = "DASH";
-    video_codecid = 7;
-    video_project = true;
-  };
-  async function apiPlayurl(data, dash = true, pgc = false, server = "api.bilibili.com") {
-    data = Object.assign({
-      qn,
-      otype: "json",
-      fourk: 1
-    }, data, dash ? { fnver, fnval } : {});
-    const response = await fetch(objUrl(pgc ? URLS.PGC_PLAYURL.replace("api.bilibili.com", server) : URLS.PLAYURL, data), { credentials: "include" });
-    const json = await response.json();
-    if (pgc) {
-      return jsonCheck(json).result;
-    }
-    return jsonCheck(json).data;
-  }
-
-  // src/io/sidx.ts
-  init_tampermonkey();
-  var Sidx = class {
-    /**
-     * @param url 目标url
-     * @param size 最大索引范围（不宜过大），默认6万字节
-     */
-    constructor(url, size = 6e4) {
-      this.url = url;
-      this.size = size;
-    }
-    /** range索引结束点 */
-    end = 5999;
-    /** range索引开始点 */
-    start = 0;
-    /** 结果hex字符串 */
-    hex_data = "";
-    getData() {
-      return new Promise((resolve, reject) => {
-        this.fetch(resolve, reject);
-      });
-    }
-    /** 请求片段 */
-    fetch(resolve, reject) {
-      fetch(this.url.replace("http:", "https:"), {
-        headers: {
-          range: \`bytes=\${this.start}-\${this.end}\`
-        }
-      }).then((d) => {
-        if ((d.status >= 300 || d.status < 200) && d.status !== 304)
-          throw new Error(\`\${d.status} \${d.statusText}\`, { cause: d.status });
-        return d.arrayBuffer();
-      }).then((d) => {
-        const data = new Uint8Array(d);
-        this.hex_data += Array.prototype.map.call(data, (x) => ("00" + x.toString(16)).slice(-2)).join("");
-        if (this.hex_data.indexOf("73696478") > -1 && this.hex_data.indexOf("6d6f6f66") > -1) {
-          const indexRangeStart = this.hex_data.indexOf("73696478") / 2 - 4;
-          const indexRagneEnd = this.hex_data.indexOf("6d6f6f66") / 2 - 5;
-          resolve(["0-" + String(indexRangeStart - 1), String(indexRangeStart) + "-" + String(indexRagneEnd)]);
-        } else {
-          this.start = this.end + 1;
-          if (this.size && this.start > this.size) {
-            reject("未能获取到sidx");
-          } else {
-            this.end += 6e3;
-            this.size && (this.end = Math.min(this.end, this.size));
-            this.fetch(resolve, reject);
-          }
-        }
-      }).catch((e) => reject(e));
-    }
-  };
-
-  // src/io/api-global-ogv-playurl.ts
-  var ApiGlobalOgvPlayurl = class extends ApiSign {
-    /**
-     * @param data 查询参数
-     * @param server 东南亚（泰区）代理服务器
-     */
-    constructor(data, server = "api.global.bilibili.com") {
-      super(URLS.GLOBAL_OGV_PLAYURL.replace("api.global.bilibili.com", server), "7d089525d3611b1c");
-      this.data = data;
-      this.data = Object.assign({
-        area: "th",
-        build: 1001310,
-        device: "android",
-        force_host: 2,
-        download: 1,
-        mobi_app: "bstar_a",
-        platform: "android"
-      }, data);
-    }
-    response;
-    async getDate() {
-      if (this.response)
-        return this.response;
-      const response = await fetch(this.sign());
-      const json = await response.json();
-      return this.response = jsonCheck(json).data;
-    }
-    toPlayurl() {
-      return new Promise((resolve, reject) => {
-        this.getDate().then((d) => {
-          const playurl = new PlayurlDash();
-          const set = [];
-          playurl.quality = d.video_info.stream_list[0].stream_info.quality || d.video_info.quality;
-          playurl.format = PlayurlFormatMap[playurl.quality];
-          playurl.timelength = d.video_info.timelength;
-          playurl.dash.duration = Math.ceil(playurl.timelength / 1e3);
-          playurl.dash.minBufferTime = playurl.dash.min_buffer_time = 1.5;
-          Promise.all([
-            ...d.video_info.stream_list.map((d2) => (async () => {
-              if (d2.dash_video && d2.dash_video.base_url) {
-                const id = d2.stream_info.quality;
-                playurl.accept_description.push(PlayurlDescriptionMap[id]);
-                set.push(PlayurlFormatMap[id]);
-                playurl.accept_quality.push(id);
-                playurl.support_formats.push({
-                  description: PlayurlDescriptionMap[id],
-                  display_desc: PlayurlQualityMap[id],
-                  format: PlayurlFormatMap[id],
-                  new_description: PlayurlDescriptionMap[id],
-                  quality: id,
-                  superscript: "",
-                  codecs: [PlayurlCodecs[id]]
-                });
-                const sidx = await new Sidx(d2.dash_video.base_url, d2.dash_video.size).getData();
-                playurl.dash.video.push({
-                  SegmentBase: {
-                    Initialization: sidx[0],
-                    indexRange: sidx[1]
-                  },
-                  segment_base: {
-                    initialization: sidx[0],
-                    index_range: sidx[1]
-                  },
-                  backupUrl: [],
-                  backup_url: [],
-                  bandwidth: d2.dash_video.bandwidth,
-                  baseUrl: d2.dash_video.base_url,
-                  base_url: d2.dash_video.base_url,
-                  codecid: d2.dash_video.codecid,
-                  codecs: PlayurlCodecsAPP[id] || PlayurlCodecs[id],
-                  frameRate: PlayurlFrameRate[id],
-                  frame_rate: PlayurlFrameRate[id],
-                  height: PlayurlResolution[id]?.[1],
-                  id: d2.stream_info.quality,
-                  mimeType: "video/mp4",
-                  mime_type: "video/mp4",
-                  sar: "1:1",
-                  startWithSap: 1,
-                  start_with_sap: 1,
-                  width: PlayurlResolution[id]?.[0]
-                });
-              }
-            })()),
-            ...d.video_info.dash_audio.map((d2) => (async () => {
-              const id = d2.id;
-              const sidx = await new Sidx(d2.base_url, d2.size).getData();
-              playurl.dash.audio.push({
-                SegmentBase: {
-                  Initialization: sidx[0],
-                  indexRange: sidx[1]
-                },
-                segment_base: {
-                  initialization: sidx[0],
-                  index_range: sidx[1]
-                },
-                backupUrl: [],
-                backup_url: [],
-                bandwidth: d2.bandwidth,
-                baseUrl: d2.base_url,
-                base_url: d2.base_url,
-                codecid: d2.codecid,
-                codecs: PlayurlCodecsAPP[id] || PlayurlCodecs[id],
-                frameRate: "",
-                frame_rate: "",
-                height: 0,
-                id,
-                mimeType: "audio/mp4",
-                mime_type: "audio/mp4",
-                sar: "",
-                startWithSap: 0,
-                start_with_sap: 0,
-                width: 0
-              });
-            })())
-          ]).then(() => {
-            const avc = [], hev = [], video = [];
-            playurl.dash.video.forEach((d2) => {
-              if (d2.codecid == 7)
-                avc.push(d2);
-              else
-                hev.push(d2);
-            });
-            let length2 = avc.length > hev.length ? avc.length : hev.length;
-            for (let i = length2 - 1; i >= 0; i--) {
-              if (avc[i])
-                video.push(avc[i]);
-              if (hev[i])
-                video.push(hev[i]);
-            }
-            playurl.dash.video = video;
-            playurl.accept_format = set.join(",");
-            playurl.quality > 80 && (playurl.quality = 80);
-            resolve(playurl);
-          }).catch((e) => reject(e));
-        }).catch((e) => reject(e));
-      });
-    }
-  };
-
-  // src/core/videolimit.ts
-  var UPOS = {
-    "ks3（金山）": "upos-sz-mirrorks3.bilivideo.com",
-    "ks3b（金山）": "upos-sz-mirrorks3b.bilivideo.com",
-    "ks3c（金山）": "upos-sz-mirrorks3c.bilivideo.com",
-    "ks32（金山）": "upos-sz-mirrorks32.bilivideo.com",
-    "kodo（七牛）": "upos-sz-mirrorkodo.bilivideo.com",
-    "kodob（七牛）": "upos-sz-mirrorkodob.bilivideo.com",
-    "cos（腾讯）": "upos-sz-mirrorcos.bilivideo.com",
-    "cosb（腾讯）": "upos-sz-mirrorcosb.bilivideo.com",
-    "coso1（腾讯）": "upos-sz-mirrorcoso1.bilivideo.com",
-    "coso2（腾讯）": "upos-sz-mirrorcoso2.bilivideo.com",
-    "bos（腾讯）": "upos-sz-mirrorbos.bilivideo.com",
-    "hw（华为）": "upos-sz-mirrorhw.bilivideo.com",
-    "hwb（华为）": "upos-sz-mirrorhwb.bilivideo.com",
-    "uphw（华为）": "upos-sz-upcdnhw.bilivideo.com",
-    "js（华为）": "upos-tf-all-js.bilivideo.com",
-    "hk（香港）": "cn-hk-eq-bcache-01.bilivideo.com",
-    "akamai（海外）": "upos-hz-mirrorakam.akamaized.net"
-  };
-  var AREA = /* @__PURE__ */ ((AREA2) => {
-    AREA2[AREA2["tw"] = 0] = "tw";
-    AREA2[AREA2["hk"] = 1] = "hk";
-    AREA2[AREA2["cn"] = 2] = "cn";
-    return AREA2;
-  })(AREA || {});
-  var VideoLimit = class {
-    /** 数据备份 */
-    Backup = {};
-    /** 通知组件 */
-    toast;
-    /** 通知信息 */
-    data = [];
-    /** 监听中 */
-    listening = false;
-    /** 播放数据备份 */
-    __playinfo__;
-    constructor() {
-      xhrHook("/playurl?", (args) => {
-        const param2 = urlObj(args[1]);
-        if (!uid && user.userStatus.show1080p && user.userStatus.accessKey.token) {
-          param2.appkey = "27eb53fc9058f8c3";
-          param2.access_key = user.userStatus.accessKey.token;
-        }
-        param2.fnval && (param2.fnval = fnval);
-        args[1] = objUrl(args[1], param2);
-        return !(BLOD.limit || BLOD.th);
-      }, (res) => {
-        try {
-          const result = res.responseType === "json" ? JSON.stringify(res) : res.responseText;
-          if (user.userStatus.uposReplace.nor !== "不替换") {
-            const nstr = this.uposReplace(result, user.userStatus.uposReplace.nor);
-            toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${user.userStatus.uposReplace.nor}\`, \`UPOS：\${UPOS[user.userStatus.uposReplace.nor]}\`);
-            if (res.responseType === "json") {
-              res.response = JSON.parse(nstr);
-            } else {
-              res.response = res.responseText = nstr;
-            }
-          }
-        } catch (e) {
-        }
-      }, false);
-    }
-    /** 开始监听 */
-    enable() {
-      if (this.listening)
-        return;
-      const disable = xhrHook.async("/playurl?", (args) => {
-        const obj = urlObj(args[1]);
-        this.updateVaribale(obj);
-        return Boolean(BLOD.limit || BLOD.th);
-      }, async (args) => {
-        const response = BLOD.th ? await this._th(args) : await this._gat(args);
-        return { response, responseType: "json", responseText: JSON.stringify(response) };
-      }, false);
-      this.disable = () => {
-        disable();
-        this.listening = false;
-      };
-      this.listening = true;
-    }
-    /** 处理泰区 */
-    async _th(args) {
-      this.data = ["泰区限制视频！"];
-      this.toast = toast.toast(0, "info", ...this.data);
-      const obj = urlObj(args[1]);
-      this.data.push(\`aid：\${BLOD.aid}\`, \`cid：\${BLOD.cid}\`);
-      this.toast.data = this.data;
-      const epid = obj.ep_id || obj.episodeId || BLOD.epid;
-      obj.access_key = user.userStatus.accessKey.token;
-      if (!this.Backup[epid]) {
-        try {
-          networkMock();
-          this.data.push(\`代理服务器：\${user.userStatus.videoLimit.th}\`);
-          this.toast.data = this.data;
-          this.Backup[epid] = { code: 0, message: "success", result: await this.th(obj) };
-          this.data.push("获取代理数据成功！");
-          this.toast.data = this.data;
-          this.toast.type = "success";
-        } catch (e) {
-          this.data.push("代理出错！", e);
-          !obj.access_key && this.data.push("代理服务器要求【账户授权】才能进一步操作！");
-          this.toast.data = this.data;
-          this.toast.type = "error";
-          debug.error(...this.data);
-          this.toast.delay = 4;
-          delete this.toast;
-          this.data = [];
-          return { code: -404, message: e, data: null };
-        }
-      }
-      this.toast.delay = 4;
-      delete this.toast;
-      this.data = [];
-      return this.__playinfo__ = this.Backup[epid];
-    }
-    /** 处理港澳台 */
-    async _gat(args) {
-      this.data = ["港澳台限制视频！"];
-      this.toast = toast.toast(0, "info", ...this.data);
-      const obj = urlObj(args[1]);
-      this.data.push(\`aid：\${BLOD.aid}\`, \`cid：\${BLOD.cid}\`);
-      this.toast.data = this.data;
-      const epid = obj.ep_id || obj.episodeId || BLOD.epid;
-      obj.access_key = user.userStatus.accessKey.token;
-      if (!this.Backup[epid]) {
-        try {
-          if (user.userStatus.videoLimit.server === "内置") {
-            obj.module = "bangumi";
-            const upInfo = window.__INITIAL_STATE__?.upInfo;
-            if (upInfo) {
-              (upInfo.mid == 1988098633 || upInfo.mid == 2042149112) && (obj.module = "movie");
-            }
-            this.data.push(\`代理服务器：内置\`, \`类型：\${obj.module}\`);
-            this.toast.data = this.data;
-            const res = await apiBiliplusPlayurl(obj);
-            this.Backup[epid] = { code: 0, message: "success", result: res };
-          } else {
-            const res = await this.gat(obj);
-            this.Backup[epid] = { code: 0, message: "success", result: res };
-          }
-          if (user.userStatus.uposReplace.gat !== "不替换") {
-            this.Backup[epid] = JSON.parse(this.uposReplace(JSON.stringify(this.Backup[epid]), user.userStatus.uposReplace.gat));
-            toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${user.userStatus.uposReplace.gat}\`, \`UPOS：\${UPOS[user.userStatus.uposReplace.gat]}\`);
-          }
-          ;
-          this.data.push("获取代理数据成功！");
-          this.toast.data = this.data;
-          this.toast.type = "success";
-        } catch (e) {
-          this.data.push("代理出错！", e);
-          !obj.access_key && this.data.push("代理服务器要求【账户授权】才能进一步操作！");
-          this.toast.data = this.data;
-          this.toast.type = "error";
-          debug.error(...this.data);
-          this.toast.delay = 4;
-          delete this.toast;
-          this.data = [];
-          return { code: -404, message: e, data: null };
-        }
-      }
-      this.toast.delay = 4;
-      delete this.toast;
-      this.data = [];
-      return this.__playinfo__ = this.Backup[epid];
-    }
-    /** 停止监听 */
-    disable() {
-      this.listening = false;
-    }
-    /** 更新全局变量 */
-    updateVaribale(obj) {
-      obj.seasonId && (BLOD.ssid = obj.seasonId);
-      obj.episodeId && (BLOD.epid = obj.episodeId);
-      obj.ep_id && (BLOD.epid = obj.ep_id);
-      obj.aid && (BLOD.aid = Number(obj.aid)) && (BLOD.aid = obj.aid);
-      obj.avid && (BLOD.aid = Number(obj.avid)) && (BLOD.aid = obj.avid);
-      obj.cid && (BLOD.cid = Number(obj.cid)) && (BLOD.cid = obj.cid);
-    }
-    /** 访问泰区代理 */
-    async th(obj) {
-      const d = await new ApiGlobalOgvPlayurl(obj, user.userStatus.uposReplace.th).toPlayurl();
-      toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${user.userStatus.uposReplace.th}\`, \`UPOS：\${UPOS[user.userStatus.uposReplace.th]}\`);
-      return JSON.parse(this.uposReplace(JSON.stringify(d), user.userStatus.uposReplace.th));
-    }
-    /** 代理服务器序号 */
-    area = 0;
-    /** 访问港澳台代理 */
-    async gat(obj) {
-      if (!user.userStatus.videoLimit[AREA[this.area]])
-        throw new Error(\`无有效代理服务器：\${AREA[this.area]}\`);
-      const server = user.userStatus.videoLimit[AREA[this.area]];
-      obj.area = AREA[this.area];
-      this.data.push(\`代理服务器：\${server}\`);
-      this.toast && (this.toast.data = this.data);
-      try {
-        return await apiPlayurl(obj, true, true, server);
-      } catch (e) {
-        this.data.push("代理服务器返回异常！", e);
-        if (this.toast) {
-          this.toast.data = this.data;
-          this.toast.type = "warning";
-        }
-        this.area++;
-        if (this.area > 2)
-          throw new Error("代理服务器不可用！");
-        return await this.gat(obj);
-      }
-    }
-    /** 用于过滤upos提示 */
-    upos = false;
-    /** 用于取消过滤upos提示 */
-    timer;
-    /**
-     * 替换upos服务器
-     * @param str playurl或包含视频URL的字符串
-     * @param uposName 替换的代理服务器名 keyof typeof {@link UPOS}
-     */
-    uposReplace(str, uposName) {
-      if (uposName === "不替换")
-        return str;
-      this.upos = true;
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => this.upos = false, 1e3);
-      return str.replace(/:\\\\?\\/\\\\?\\/[^\\/]+\\\\?\\//g, () => \`://\${UPOS[uposName]}/\`);
-    }
-  };
-  var videoLimit = new VideoLimit();
 
   // src/core/webrtc.ts
   init_tampermonkey();
@@ -24874,1458 +26391,6 @@ const MODULES = `
       }
     }
   }();
-
-  // src/core/danmaku.ts
-  init_tampermonkey();
-
-  // src/io/grpc/api-dm-web.ts
-  init_tampermonkey();
-  var import_light = __toESM(require_light());
-
-  // src/json/dm-web.json
-  var dm_web_default = {
-    nested: {
-      bilibili: {
-        nested: {
-          community: {
-            nested: {
-              service: {
-                nested: {
-                  dm: {
-                    nested: {
-                      v1: {
-                        nested: {
-                          DmWebViewReply: {
-                            fields: {
-                              state: {
-                                type: "int32",
-                                id: 1
-                              },
-                              text: {
-                                type: "string",
-                                id: 2
-                              },
-                              textSide: {
-                                type: "string",
-                                id: 3
-                              },
-                              dmSge: {
-                                type: "DmSegConfig",
-                                id: 4
-                              },
-                              flag: {
-                                type: "DanmakuFlagConfig",
-                                id: 5
-                              },
-                              specialDms: {
-                                rule: "repeated",
-                                type: "string",
-                                id: 6
-                              },
-                              checkBox: {
-                                type: "bool",
-                                id: 7
-                              },
-                              count: {
-                                type: "int64",
-                                id: 8
-                              },
-                              commandDms: {
-                                rule: "repeated",
-                                type: "CommandDm",
-                                id: 9
-                              },
-                              dmSetting: {
-                                type: "DanmuWebPlayerConfig",
-                                id: 10
-                              },
-                              reportFilter: {
-                                rule: "repeated",
-                                type: "string",
-                                id: 11
-                              }
-                            }
-                          },
-                          CommandDm: {
-                            fields: {
-                              id: {
-                                type: "int64",
-                                id: 1
-                              },
-                              oid: {
-                                type: "int64",
-                                id: 2
-                              },
-                              mid: {
-                                type: "int64",
-                                id: 3
-                              },
-                              command: {
-                                type: "string",
-                                id: 4
-                              },
-                              content: {
-                                type: "string",
-                                id: 5
-                              },
-                              progress: {
-                                type: "int32",
-                                id: 6
-                              },
-                              ctime: {
-                                type: "string",
-                                id: 7
-                              },
-                              mtime: {
-                                type: "string",
-                                id: 8
-                              },
-                              extra: {
-                                type: "string",
-                                id: 9
-                              },
-                              idStr: {
-                                type: "string",
-                                id: 10
-                              }
-                            }
-                          },
-                          DmSegConfig: {
-                            fields: {
-                              pageSize: {
-                                type: "int64",
-                                id: 1
-                              },
-                              total: {
-                                type: "int64",
-                                id: 2
-                              }
-                            }
-                          },
-                          DanmakuFlagConfig: {
-                            fields: {
-                              recFlag: {
-                                type: "int32",
-                                id: 1
-                              },
-                              recText: {
-                                type: "string",
-                                id: 2
-                              },
-                              recSwitch: {
-                                type: "int32",
-                                id: 3
-                              }
-                            }
-                          },
-                          DmSegMobileReply: {
-                            fields: {
-                              elems: {
-                                rule: "repeated",
-                                type: "DanmakuElem",
-                                id: 1
-                              }
-                            }
-                          },
-                          DanmakuElem: {
-                            fields: {
-                              id: {
-                                type: "int64",
-                                id: 1
-                              },
-                              progress: {
-                                type: "int32",
-                                id: 2
-                              },
-                              mode: {
-                                type: "int32",
-                                id: 3
-                              },
-                              fontsize: {
-                                type: "int32",
-                                id: 4
-                              },
-                              color: {
-                                type: "uint32",
-                                id: 5
-                              },
-                              midHash: {
-                                type: "string",
-                                id: 6
-                              },
-                              content: {
-                                type: "string",
-                                id: 7
-                              },
-                              ctime: {
-                                type: "int64",
-                                id: 8
-                              },
-                              weight: {
-                                type: "int32",
-                                id: 9
-                              },
-                              action: {
-                                type: "string",
-                                id: 10
-                              },
-                              pool: {
-                                type: "int32",
-                                id: 11
-                              },
-                              idStr: {
-                                type: "string",
-                                id: 12
-                              },
-                              attr: {
-                                type: "int32",
-                                id: 13
-                              }
-                            }
-                          },
-                          DanmuWebPlayerConfig: {
-                            fields: {
-                              dmSwitch: {
-                                type: "bool",
-                                id: 1
-                              },
-                              aiSwitch: {
-                                type: "bool",
-                                id: 2
-                              },
-                              aiLevel: {
-                                type: "int32",
-                                id: 3
-                              },
-                              blocktop: {
-                                type: "bool",
-                                id: 4
-                              },
-                              blockscroll: {
-                                type: "bool",
-                                id: 5
-                              },
-                              blockbottom: {
-                                type: "bool",
-                                id: 6
-                              },
-                              blockcolor: {
-                                type: "bool",
-                                id: 7
-                              },
-                              blockspecial: {
-                                type: "bool",
-                                id: 8
-                              },
-                              preventshade: {
-                                type: "bool",
-                                id: 9
-                              },
-                              dmask: {
-                                type: "bool",
-                                id: 10
-                              },
-                              opacity: {
-                                type: "float",
-                                id: 11
-                              },
-                              dmarea: {
-                                type: "int32",
-                                id: 12
-                              },
-                              speedplus: {
-                                type: "float",
-                                id: 13
-                              },
-                              fontsize: {
-                                type: "float",
-                                id: 14
-                              },
-                              screensync: {
-                                type: "bool",
-                                id: 15
-                              },
-                              speedsync: {
-                                type: "bool",
-                                id: 16
-                              },
-                              fontfamily: {
-                                type: "string",
-                                id: 17
-                              },
-                              bold: {
-                                type: "bool",
-                                id: 18
-                              },
-                              fontborder: {
-                                type: "int32",
-                                id: 19
-                              },
-                              drawType: {
-                                type: "string",
-                                id: 20
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  };
-
-  // src/io/grpc/api-dm-web.ts
-  var _ApiDmWeb = class {
-    constructor(aid, cid) {
-      this.aid = aid;
-      this.cid = cid;
-      _ApiDmWeb.Root || _ApiDmWeb.RootInit();
-    }
-    static RootInit() {
-      this.Root = import_light.Root.fromJSON(dm_web_default);
-      this.DmWebViewReply = this.Root.lookupType("DmWebViewReply");
-      this.DmSegMobileReply = this.Root.lookupType("DmSegMobileReply");
-    }
-    danmaku = [];
-    /** 获取新版弹幕 */
-    async getData() {
-      if (!this.danmaku.length) {
-        const dmWebView = await this.DmWebViewReply();
-        const pageSize = dmWebView.dmSge.pageSize ? dmWebView.dmSge.pageSize / 1e3 : 360;
-        const total = this.aid == window.aid && window.player?.getDuration?.() / pageSize + 1 || dmWebView.dmSge.total;
-        const promises = [];
-        for (let i = 1; i <= total; i++) {
-          promises.push(
-            this.DmSegMobileReply(i).then((d) => {
-              d.elems && (this.danmaku = this.danmaku.concat(d.elems));
-            }).catch((e) => {
-              console.warn("弹幕丢包：", \`segment_index=\${i}\`, e);
-            })
-          );
-        }
-        dmWebView.specialDms && dmWebView.specialDms.forEach((d) => {
-          promises.push(
-            this.specialDm(d.replace("http:", "")).then((d2) => {
-              d2.elems && (this.danmaku = this.danmaku.concat(d2.elems));
-            }).catch((e) => {
-              console.warn("高级弹幕丢包：", d, e);
-            })
-          );
-        });
-        await Promise.all(promises);
-        DanmakuBase.sortDmById(this.danmaku);
-      }
-      return this.danmaku;
-    }
-    /** 获取旧版弹幕 */
-    async toCmd() {
-      const danmaku2 = await this.getData();
-      return DanmakuBase.parseCmd(danmaku2);
-    }
-    /** 获取弹幕分包 */
-    async DmWebViewReply() {
-      const response = await fetch(objUrl(URLS.DM_WEB_VIEW, {
-        type: 1,
-        oid: this.cid,
-        pid: this.aid
-      }), { credentials: "include", cache: "force-cache" });
-      const arraybuffer = await response.arrayBuffer();
-      const msg = _ApiDmWeb.DmWebViewReply.decode(new Uint8Array(arraybuffer));
-      return _ApiDmWeb.DmWebViewReply.toObject(msg);
-    }
-    /** 获取弹幕分包 */
-    async DmSegMobileReply(segment_index = 1) {
-      const response = await fetch(objUrl(URLS.DM_WEB_SEG_SO, {
-        type: 1,
-        oid: this.cid,
-        pid: this.aid,
-        segment_index
-      }), { credentials: "include" });
-      const arraybuffer = await response.arrayBuffer();
-      const msg = _ApiDmWeb.DmSegMobileReply.decode(new Uint8Array(arraybuffer));
-      return _ApiDmWeb.DmSegMobileReply.toObject(msg);
-    }
-    /** 获取高级弹幕 */
-    async specialDm(url) {
-      const response = await fetch(url);
-      const arraybuffer = await response.arrayBuffer();
-      const msg = _ApiDmWeb.DmSegMobileReply.decode(new Uint8Array(arraybuffer));
-      return _ApiDmWeb.DmSegMobileReply.toObject(msg);
-    }
-  };
-  var ApiDmWeb = _ApiDmWeb;
-  __publicField(ApiDmWeb, "Root");
-  __publicField(ApiDmWeb, "DmWebViewReply");
-  __publicField(ApiDmWeb, "DmSegMobileReply");
-
-  // src/utils/format/size.ts
-  init_tampermonkey();
-  function sizeFormat(size = 0) {
-    let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1e3 ** i;
-    while (dex > 1) {
-      if (size >= vor) {
-        size = Number((size / dex).toFixed(2));
-        break;
-      }
-      dex = dex / 1024;
-      vor = vor / 1e3;
-      i--;
-    }
-    return size ? size + unit[i] : "N/A";
-  }
-
-  // src/utils/hook/worker.ts
-  init_tampermonkey();
-  var _WorkerHook = class {
-    /** Worker.prototype.postMessage hook init. */
-    static postMessageHook() {
-      this.postMessage = Worker.prototype.postMessage;
-      Worker.prototype.postMessage = function(message, transfer) {
-        let ishook = false;
-        _WorkerHook.postMessageCallback.forEach((d) => {
-          d.call(this, message, transfer) && (ishook = true);
-        });
-        ishook || _WorkerHook.postMessage.call(this, message, transfer);
-      };
-    }
-    constructor() {
-      _WorkerHook.postMessage || _WorkerHook.postMessageHook();
-    }
-    /**
-     * Worker.prototype.postMessage hook.
-     * @param callback 检查并处理\`Worker.prototype.postMessage\`的回调函数，继承原传参，返回 **true** 时拦截该实例。
-     * @returns 取消该hook的方法，执行后不再hook。
-     */
-    postMessage(callback) {
-      const id = _WorkerHook.postMessageCallback.push(callback);
-      return () => {
-        id >= 0 && delete _WorkerHook.postMessageCallback[id - 1];
-      };
-    }
-  };
-  var WorkerHook = _WorkerHook;
-  /** Worker.prototype.postMessage backup. */
-  __publicField(WorkerHook, "postMessage");
-  __publicField(WorkerHook, "postMessageCallback", []);
-
-  // src/core/danmaku.ts
-  var Danmaku = class {
-    listSoFixed = false;
-    constructor() {
-      user.addCallback((status) => {
-        if (!status.bilibiliplayer) {
-          this.listSoFix();
-        }
-      });
-    }
-    /** 原生旧版播放器使用protobuf弹幕 */
-    listSoFix() {
-      if (this.listSoFixed)
-        return;
-      this.listSoFixed = true;
-      const that = this;
-      new WorkerHook().postMessage(function(message) {
-        if (message.url && message.url.includes("list.so")) {
-          user.userStatus.dmwrap && that.trim();
-          if (!user.userStatus.dmproto)
-            return false;
-          const params = urlObj(message.url);
-          const startTime = (/* @__PURE__ */ new Date()).getTime();
-          that.getSegDanmaku(void 0, params.oid).then((d) => {
-            this.dispatchEvent(new MessageEvent("message", {
-              data: {
-                code: 0,
-                danmakuArray: d,
-                loadTime: (/* @__PURE__ */ new Date()).getTime() - startTime,
-                parseTime: Math.random(),
-                sendTip: "",
-                state: 0,
-                textSide: "",
-                total: d.length.toString()
-              }
-            }));
-          }).catch((e) => {
-            console.error("protobuf 弹幕获取失败", e);
-          });
-          return true;
-        }
-        return false;
-      });
-    }
-    /** 允许普权弹幕排版 */
-    trim() {
-      propertyHook(String.prototype, "trim", function() {
-        return String(this);
-      });
-    }
-    async getSegDanmaku(aid = BLOD.aid, cid = BLOD.cid) {
-      if (!cid)
-        throw new Error(\`无法获取弹幕 aid：\${aid} cid：\${cid}\`);
-      return new ApiDmWeb(aid, cid).toCmd();
-    }
-    /** 加载本地xml弹幕 */
-    localDmXml() {
-      if (!window.player)
-        return toast.warning("未找到播放器实例！请在播放页面使用。");
-      if (!window.player?.appendDm)
-        return toast.warning("未启用【重构播放器】，无法载入弹幕！");
-      const data = ["请选择一个弹幕文件，拓展名：.xml，编码：utf-8"];
-      const tst = toast.toast(0, "info", ...data);
-      fileRead(".xml", false).then((d) => {
-        if (d && d[0]) {
-          data.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
-          tst.data = data;
-          tst.type = "warning";
-          return readAs(d[0]);
-        }
-        throw new Error(data[0]);
-      }).then((d) => {
-        const dm = DanmakuBase.decodeXml(d);
-        window.player.appendDm(dm, !user.userStatus.dmContact);
-        data.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
-        tst.data = data;
-        tst.type = "success";
-      }).catch((e) => {
-        data.push(e);
-        debug.error(e);
-        tst.data = data;
-        tst.type = "error";
-      }).finally(() => {
-        tst.delay = user.userStatus.toast.delay;
-      });
-    }
-    /** 加载本地json弹幕 */
-    localDmJson() {
-      if (!window.player)
-        return toast.warning("未找到播放器实例！请在播放页面使用。");
-      if (!window.player?.appendDm)
-        return toast.warning("未启用【重构播放器】，无法载入弹幕！");
-      const data = ["请选择一个弹幕文件，拓展名：.json，编码：utf-8"];
-      const tst = toast.toast(0, "info", ...data);
-      fileRead(".json", false).then((d) => {
-        if (d && d[0]) {
-          data.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
-          tst.data = data;
-          tst.type = "warning";
-          return readAs(d[0]);
-        }
-        throw new Error(data[0]);
-      }).then((d) => {
-        const dm = JSON.parse(d);
-        window.player.appendDm(dm, !user.userStatus.dmContact);
-        data.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
-        tst.data = data;
-        tst.type = "success";
-      }).catch((e) => {
-        data.push(e);
-        debug.error(e);
-        tst.data = data;
-        tst.type = "error";
-      }).finally(() => {
-        tst.delay = user.userStatus.toast.delay;
-      });
-    }
-    /** 下载弹幕 */
-    async download(aid = BLOD.aid, cid = BLOD.cid) {
-      if (!cid)
-        return toast.warning("未找到播放器实例！请在播放页面使用。");
-      const dms = window.player?.getDanmaku ? window.player.getDanmaku() : await new ApiDmWeb(aid, cid).getData();
-      const metadata = videoInfo.metadata;
-      const title = metadata ? \`\${metadata.album}(\${metadata.title})\` : \`\${aid}.\${cid}\`;
-      if (user.userStatus.dmExtension === "json") {
-        return saveAs(JSON.stringify(dms, void 0, "	"), \`\${title}.json\`, "application/json");
-      }
-      return saveAs(DanmakuBase.encodeXml(DanmakuBase.parseCmd(dms), cid), \`\${title}.xml\`, "application/xml");
-    }
-    /** 加载在线弹幕 */
-    async onlineDm(str) {
-      if (!window.player)
-        return toast.warning("未找到播放器实例！请在播放页面使用。");
-      if (!window.player?.appendDm)
-        return toast.warning("未启用【重构播放器】，无法载入弹幕！");
-      const data = ["-------在线弹幕-------", \`目标：\${str}\`];
-      const tst = toast.toast(0, "info", ...data);
-      const { aid, cid } = await urlParam(str);
-      data.push(\`aid：\${aid}\`, \`cid：\${cid}\`);
-      tst.data = data;
-      if (!aid || !cid) {
-        data.push("查询cid信息失败，已退出！");
-        tst.data = data;
-        tst.type = "error";
-        tst.delay = toast.delay;
-      } else {
-        new ApiDmWeb(aid, cid).getData().then((d) => {
-          window.player.appendDm(d, !user.userStatus.dmContact);
-          data.push(\`有效弹幕数：\${d.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
-          tst.data = data;
-          tst.type = "success";
-        }).catch((e) => {
-          data.push(e);
-          debug.error(e);
-          tst.data = data;
-          tst.type = "error";
-        }).finally(() => {
-          tst.delay = user.userStatus.toast.delay;
-        });
-      }
-    }
-  };
-  var danmaku = new Danmaku();
-
-  // src/core/download.ts
-  init_tampermonkey();
-
-  // src/io/api-playurl-interface.ts
-  init_tampermonkey();
-  var ApiPlayurlInterface = class extends ApiSign {
-    constructor(data, pgc = false) {
-      super(pgc ? URLS.PLAYURL_BANGUMI : URLS.PLAYURL_INTERFACE, "YvirImLGlLANCLvM");
-      this.data = data;
-      this.data = Object.assign({
-        otype: "json",
-        qn: data.quality,
-        type: "",
-        fnver,
-        fnval
-      }, data, pgc ? { module: "bangumi", season_type: 1 } : {});
-    }
-    async getData() {
-      const response = await fetch(this.sign(), { credentials: "include" });
-      return await response.json();
-    }
-  };
-
-  // src/io/api-playurl-intl.ts
-  init_tampermonkey();
-  var ApiPlayurlIntl = class extends ApiSign {
-    constructor(data, dash = true, pgc = false) {
-      super(pgc ? URLS.INTL_OGV_PLAYURL : URLS.INTL_PLAYURL, "bb3101000e232e27");
-      this.data = data;
-      this.pgc = pgc;
-      this.data = Object.assign({
-        device: "android",
-        force_host: 1,
-        mobi_app: "android_i",
-        qn,
-        platform: "android_i",
-        fourk: 1,
-        build: 2100110,
-        otype: "json"
-      }, data, dash ? { fnval, fnver } : {});
-    }
-    async getData() {
-      const response = await GM.fetch(this.sign());
-      const json = await response.json();
-      if (this.pgc) {
-        return jsonCheck(json);
-      }
-      return jsonCheck(json).data;
-    }
-  };
-
-  // src/io/api-playurl-tv.ts
-  init_tampermonkey();
-  var ApiPlayurlTv = class extends ApiSign {
-    constructor(data, dash = true, pgc = false) {
-      super(pgc ? URLS.PGC_PLAYURL_TV : URLS.UGC_PLAYURL_TV, "4409e2ce8ffd12b8");
-      this.data = data;
-      this.data = Object.assign({
-        qn,
-        fourk: 1,
-        otype: "json",
-        platform: "android",
-        mobi_app: "android_tv_yst",
-        build: 102801
-      }, data, dash ? { fnval, fnver } : {});
-    }
-    async getData() {
-      const response = await fetch(this.sign());
-      const json = await response.json();
-      return jsonCheck(json);
-    }
-  };
-
-  // src/io/api-playurlproj.ts
-  init_tampermonkey();
-  var ApiPlayurlProj = class extends ApiSign {
-    constructor(data, pgc = false) {
-      super(pgc ? URLS.PGC_PLAYURL_PROJ : URLS.PLAYURL_PROJ, "bb3101000e232e27");
-      this.data = data;
-      this.data = Object.assign({
-        build: "2040100",
-        device: "android",
-        mobi_app: "android_i",
-        otype: "json",
-        platform: "android_i",
-        qn
-      }, data);
-      pgc && (this.data.module = "bangumi");
-    }
-    async getData() {
-      const response = await fetch(this.sign());
-      return await response.json();
-    }
-  };
-
-  // src/core/download/aria2.ts
-  init_tampermonkey();
-
-  // src/utils/base64.ts
-  init_tampermonkey();
-  var Base64 = class {
-    /**
-     * Base64编码
-     * @param str 原始字符串
-     * @returns 编码结果
-     */
-    static encode(str) {
-      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-        return String.fromCharCode("0x" + p1);
-      }));
-    }
-    /**
-     * Base64解码
-     * @param str 原始字符串
-     * @returns 解码结果
-     */
-    static decode(str) {
-      return decodeURIComponent(atob(str).split("").map(function(c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(""));
-    }
-  };
-
-  // src/utils/mutex.ts
-  init_tampermonkey();
-  function getMetux() {
-    return Math.random().toString(36).substring(2);
-  }
-
-  // src/core/download/aria2.ts
-  var Aria2 = class {
-    constructor(userAgent, referer, dir, server = "http://localhost", port = 6800, token, split, size) {
-      this.userAgent = userAgent;
-      this.referer = referer;
-      this.dir = dir;
-      this.server = server;
-      this.port = port;
-      this.token = token;
-      this.split = split;
-      this.size = size;
-    }
-    get url() {
-      return \`\${this.server}:\${this.port}/jsonrpc\`;
-    }
-    /** 命令行 */
-    cmdlet(data) {
-      const arr2 = ["aria2c"];
-      data.urls.forEach((d) => arr2.push(\`"\${d}"\`));
-      data.out && arr2.push(\`--out="\${data.out}"\`);
-      (data.userAgent || this.userAgent) && arr2.push(\`--user-agent="\${data.userAgent || this.userAgent}"\`);
-      (data.referer || this.referer) && arr2.push(\`--referer="\${data.referer || this.referer}"\`);
-      (data.dir || this.dir) && arr2.push(\`--dir="\${data.dir || this.dir}"\`);
-      (data.split || this.split) && arr2.push(\`--split="\${data.split || this.split}"\`, \`--max-connection-per-server="\${data.split || this.split}"\`);
-      (data.size || this.size) && arr2.push(\`--min-split-size="\${data.size || this.size}M"\`);
-      data.header && Object.entries(data.header).forEach((d) => arr2.push(\`--header="\${d[0]}: \${d[1]}"\`));
-      return navigator.clipboard.writeText(arr2.join(" "));
-    }
-    /** RPC */
-    rpc(data) {
-      const options = {};
-      data.out && (options.out = data.out);
-      (data.userAgent || this.userAgent) && (options["user-agent"] = data.userAgent || this.userAgent);
-      (data.referer || this.referer) && (options.referer = data.referer || this.referer);
-      (data.dir || this.dir) && (options.dir = data.dir || this.dir);
-      (data.split || this.split) && (options.split = options["max-connection-per-server"] = data.split || this.split);
-      (data.size || this.size) && (options["min-split-size"] = \`\${data.size || this.size}M\`);
-      data.header && (options.header = data.header);
-      return this.postMessage("aria2.addUri", data.id, [data.urls, options]);
-    }
-    /** 获取aria2配置信息 */
-    getVersion() {
-      return this.postMessage("aria2.getVersion");
-    }
-    postMessage(method, id = getMetux(), params = []) {
-      this.token && params.unshift(\`token:\${this.token}\`);
-      return new Promise((r, j) => {
-        fetch(this.url, {
-          method: "POST",
-          body: JSON.stringify({ method, id, params }),
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }).then((d) => d.json()).then((d) => {
-          d.error && j(d.error);
-          d.result && r(d.result);
-        }).catch((e) => {
-          debug.error("RPC<POST>", e);
-          fetch(objUrl(this.url, { method, id, params: Base64.encode(JSON.stringify(params)) })).then((d) => d.json()).then((d) => {
-            d.error && j(d.error);
-            d.result && r(d.result);
-          }).catch((e2) => {
-            debug.error("RPC<GET>", e2);
-            j(e2);
-          });
-        });
-      });
-    }
-  };
-
-  // src/core/download/ef2.ts
-  init_tampermonkey();
-  var Ef2 = class {
-    constructor(userAgent, referer, dir, delay = false, silence = false) {
-      this.userAgent = userAgent;
-      this.referer = referer;
-      this.dir = dir;
-      this.delay = delay;
-      this.silence = silence;
-    }
-    /** 拉起IDM */
-    sendLinkToIDM(data) {
-      this.rebuildData(data);
-      const ef2str = Ef2.encode(data);
-      const a = document.createElement("a");
-      a.href = ef2str;
-      a.click();
-      return ef2str;
-    }
-    /** 生成ef2文件 */
-    file(data, fileName) {
-      this.rebuildData(data);
-      return Ef2.file([data], fileName);
-    }
-    /** 补全数据 */
-    rebuildData(data) {
-      this.userAgent && !data.userAgent && (data.userAgent = this.userAgent);
-      this.referer && !data.referer && (data.referer = this.referer);
-      this.dir && !data.dir && (data.dir = this.dir);
-      this.delay && !data.delay && (data.delay = this.delay);
-      this.silence && !data.silence && (data.silence = this.silence);
-    }
-    /** 生成ef2文件 */
-    static file(data, fileName) {
-      const result = [];
-      data.forEach((d) => {
-        const arr2 = ["<", "", "", "", ""];
-        Object.entries(d).forEach((d2) => {
-          switch (d2[0]) {
-            case "cookie":
-              arr2[4] = \`cookie: \${d2[1]}\`;
-              break;
-            case "delay":
-              break;
-            case "dir":
-              d2[1] = d2[1].replace(/\\//, "\\\\");
-              d2[1].endsWith("\\\\") && (d2[1] = d2[1].slice(0, -1));
-              arr2.push(\`filepath: \${d2[1]}\`);
-              break;
-            case "out":
-              arr2.push(\`filename: \${d2[1]}\`);
-              break;
-            case "password":
-              arr2.push(\`password: \${d2[1]}\`);
-              break;
-            case "body":
-              arr2.push(\`postdata: \${d2[1]}\`);
-              break;
-            case "referer":
-              arr2[2] = \`referer: \${d2[1]}\`;
-              break;
-            case "silence":
-              break;
-            case "url":
-              d2[1].startsWith("//") && (d2[1] = "https:" + d2[1]);
-              arr2[1] = d2[1];
-              break;
-            case "userAgent":
-              arr2[3] = \`User-Agent: \${d2[1]}\`;
-              break;
-            case "userName":
-              arr2.push(\`username: \${d2[1]}\`);
-              break;
-            default:
-              break;
-          }
-        });
-        arr2.push(">");
-        arr2.forEach((d2) => {
-          d2 && result.push(d2);
-        });
-      });
-      result.push("");
-      saveAs(result.join("\\r\\n"), fileName || \`\${data[0].out || getMetux()}.ef2\`);
-    }
-    /** 生成ef2协议 */
-    static encode(data) {
-      const arr2 = [];
-      Object.entries(data).forEach((d) => {
-        typeof d[1] === "string" && d[1].startsWith('"') || (d[1] = \`"\${d[1]}"\`);
-        switch (d[0]) {
-          case "cookie":
-            arr2.push("-c", d[1]);
-            break;
-          case "delay":
-            arr2.push("-q");
-            break;
-          case "dir":
-            d[1] = d[1].replace(/\\//, "\\\\");
-            d[1].endsWith("\\\\") && (d[1] = d[1].slice(0, -1));
-            arr2.push("-o", d[1]);
-            break;
-          case "out":
-            arr2.push("-s", d[1]);
-            break;
-          case "password":
-            arr2.push("-P", d[1]);
-            break;
-          case "body":
-            arr2.push("-d", d[1]);
-            break;
-          case "referer":
-            arr2.push("-r", d[1]);
-            break;
-          case "silence":
-            arr2.push("-f");
-            break;
-          case "url":
-            d[1].startsWith("//") && (d[1] = "https:" + d[1]);
-            arr2.push("-u", d[1]);
-            break;
-          case "userAgent":
-            arr2.push("-a", d[1]);
-            break;
-          case "userName":
-            arr2.push("-U", d[1]);
-            break;
-          default:
-            break;
-        }
-      });
-      return \`ef2://\${Base64.encode(arr2.join(" "))}\`;
-    }
-    /** 解码ef2协议 */
-    static decode(ef2str) {
-      ef2str = ef2str.replace("ef2://", "");
-      ef2str = Base64.decode(ef2str);
-      const arr2 = ef2str.split(" ");
-      const data = {};
-      for (let i = 0; i < arr2.length; i++) {
-        if (/-\\w/.test(arr2[i])) {
-          switch (arr2[i]) {
-            case "-c":
-              data.cookie = arr2[i + 1];
-              i++;
-              break;
-            case "-q":
-              data.delay = true;
-              break;
-            case "-o":
-              data.dir = arr2[i + 1];
-              i++;
-              break;
-            case "-s":
-              data.out = arr2[i + 1];
-              i++;
-              break;
-            case "-P":
-              data.password = arr2[i + 1];
-              i++;
-              break;
-            case "-d":
-              data.body = arr2[i + 1];
-              i++;
-              break;
-            case "-r":
-              data.referer = arr2[i + 1];
-              i++;
-              break;
-            case "-f":
-              data.silence = true;
-              break;
-            case "-u":
-              data.url = arr2[i + 1];
-              i++;
-              break;
-            case "-a":
-              data.userAgent = arr2[i + 1];
-              i++;
-              break;
-            case "-U":
-              data.userName = arr2[i + 1];
-              i++;
-              break;
-            default:
-              break;
-          }
-        }
-      }
-      return data;
-    }
-  };
-
-  // src/core/download/playinfo.ts
-  init_tampermonkey();
-  var PlayinfoFilter = class {
-    constructor(fileName) {
-      this.fileName = fileName;
-    }
-    /** 数据 */
-    record = [];
-    /** id => 质量 */
-    quality = {
-      100032: "8K",
-      100029: "4K",
-      100028: "1080P60",
-      100027: "1080P+",
-      100026: "1080P",
-      100024: "720P",
-      100023: "480P",
-      100022: "360P",
-      30280: "320Kbps",
-      30260: "320Kbps",
-      30259: "128Kbps",
-      30257: "64Kbps",
-      30255: "AUDIO",
-      30251: "FLAC",
-      30250: "ATMOS",
-      30232: "128Kbps",
-      30216: "64Kbps",
-      30127: "8K",
-      30126: "Dolby",
-      30125: "HDR",
-      30121: "4K",
-      30120: "4K",
-      30116: "1080P60",
-      30112: "1080P+",
-      30106: "1080P60",
-      30102: "1080P+",
-      30080: "1080P",
-      30077: "1080P",
-      30076: "720P",
-      30074: "720P",
-      30066: "720P",
-      30064: "720P",
-      30048: "720P",
-      30033: "480P",
-      30032: "480P",
-      30016: "360P",
-      30015: "360P",
-      30011: "360P",
-      464: "预览",
-      336: "1080P",
-      320: "720P",
-      288: "480P",
-      272: "360P",
-      208: "1080P",
-      192: "720P",
-      160: "480P",
-      127: "8K",
-      126: "Dolby",
-      125: "HDR",
-      120: "4K",
-      116: "1080P60",
-      112: "1080P+",
-      80: "1080P",
-      74: "720P60",
-      64: "720P",
-      48: "720P",
-      32: "480P",
-      16: "360P",
-      15: "360P",
-      6: "240P",
-      5: "144P"
-    };
-    /** id => 类型（备用方案） */
-    codec = {
-      hev: [30127, 30126, 30125, 30121, 30106, 30102, 30077, 30066, 30033, 30011],
-      avc: [30120, 30112, 30080, 30064, 30032, 30016],
-      av1: [100029, 100028, 100027, 100026, 100024, 100023, 100022]
-    };
-    /** 颜色表 */
-    color = {
-      "8K": "yellow",
-      "Dolby": "pink",
-      "FLAC": "pink",
-      "ATMOS": "pink",
-      "AUDIO": "pink",
-      "HDR": "purple",
-      "4K": "purple",
-      "1080P60": "red",
-      "1080P+": "red",
-      "1080P": "red",
-      "720P60": "orange",
-      "720P": "orange",
-      "480P": "blue",
-      "360P": "green",
-      "320Kbps": "red",
-      "128Kbps": "blue",
-      "64Kbps": "green"
-    };
-    /**
-     * 解码playurl的下载数据
-     * @param playinfo playurl返回值(json)
-     */
-    filter(playinfo) {
-      typeof playinfo === "string" && (playinfo = toObject(playinfo));
-      if (playinfo) {
-        playinfo.data && this.filter(playinfo.data);
-        playinfo.result && this.filter(playinfo.result);
-        playinfo.durl && this.durl(playinfo.durl);
-        playinfo.dash && this.dash(playinfo.dash);
-      }
-      return this.record;
-    }
-    /**
-     * 整理durl部分
-     * @param durl durl信息
-     */
-    durl(durl) {
-      let index = 0;
-      durl.forEach((d) => {
-        const url = d.backupUrl || d.backup_url || [];
-        url.unshift(d.url);
-        const qua = this.getQuality(url[0], d.id);
-        const link = {
-          type: "",
-          url,
-          quality: qua,
-          size: sizeFormat(d.size),
-          color: this.color[qua] || ""
-        };
-        switch (d.url.includes("mp4?")) {
-          case true:
-            link.type = "mp4";
-            break;
-          case false:
-            link.type = "flv";
-            index++;
-            link.flv = index;
-            break;
-        }
-        this.fileName && (link.fileName = \`\${this.fileName}\${qua}.\${link.type}\`);
-        this.record.push(link);
-      });
-    }
-    /**
-     * 整理dash部分
-     * @param dash dash信息
-     */
-    dash(dash) {
-      dash.video && this.dashVideo(dash.video, dash.duration);
-      dash.audio && this.dashAudio(dash.audio, dash.duration);
-      dash.dolby && dash.dolby.audio && Array.isArray(dash.dolby.audio) && this.dashAudio(dash.dolby.audio, dash.duration);
-      dash.flac && dash.flac.audio && this.dashAudio([dash.flac.audio], dash.duration, ".flac");
-    }
-    /**
-     * 整理dash视频部分
-     * @param video dash视频信息
-     * @param duration duration信息，配合bandwidth能计算出文件大小
-     */
-    dashVideo(video, duration) {
-      video.forEach((d) => {
-        const url = d.backupUrl || d.backup_url || [];
-        (d.baseUrl || d.base_url) && url.unshift(d.baseUrl || d.base_url);
-        if (!url.length)
-          return;
-        let type = "";
-        if (d.codecs) {
-          type = d.codecs.includes("avc") ? "avc" : d.codecs.includes("av01") ? "av1" : "hev";
-        } else {
-          const id = this.getID(url[0]);
-          type = this.codec.hev.find((d2) => d2 === id) ? "hev" : "avc";
-        }
-        const qua = this.getQuality(url[0], d.id);
-        this.record.push({
-          type,
-          url,
-          quality: qua,
-          size: sizeFormat(d.bandwidth * duration / 8),
-          color: this.color[qua] || "",
-          fileName: \`\${this.fileName}\${qua}.m4v\`
-        });
-      });
-    }
-    /**
-     * 整理dash音频部分
-     * @param audio dash音频信息
-     * @param duration duration信息，配合bandwidth能计算出文件大小
-     * @param fmt 音频拓展名，默认\`.m4a\`
-     */
-    dashAudio(audio, duration, fmt = ".m4a") {
-      audio.forEach((d) => {
-        const url = d.backupUrl || d.backup_url || [];
-        (d.baseUrl || d.base_url) && url.unshift(d.baseUrl || d.base_url);
-        const qua = this.getQuality(url[0], d.id);
-        url.length && this.record.push({
-          type: "aac",
-          url,
-          quality: qua,
-          size: sizeFormat(d.bandwidth * duration / 8),
-          color: this.color[qua] || "",
-          fileName: \`\${this.fileName}\${qua}.\${fmt}\`
-        });
-      });
-    }
-    /**
-     * 根据url确定画质/音质信息  
-     * 需要维护quality表
-     * @param url 多媒体url
-     * @param id 媒体流id
-     * @returns 画质/音质信息
-     */
-    getQuality(url, id) {
-      return this.quality[this.getID(url)] || id && this.quality[id] || "N/A";
-    }
-    /**
-     * 从url中提取可能的id
-     * @param url 多媒体url
-     */
-    getID(url) {
-      let id = 0;
-      url.replace(/\\d+\\.((flv)|(mp4)|(m4s))/, (d) => id = Number(d.split(".")[0]));
-      return id;
-    }
-  };
-
-  // src/core/ui/download.ts
-  init_tampermonkey();
-
-  // src/html/download.html
-  var download_default2 = '<div class="table"></div>\\r\\n<style type="text/css">\\r\\n    .table {\\r\\n        position: fixed;\\r\\n        z-index: 11113;\\r\\n        bottom: 0;\\r\\n        width: 100%;\\r\\n        min-height: 50px;\\r\\n        display: flex;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n    }\\r\\n\\r\\n    .cell {\\r\\n        background-color: #fff;\\r\\n        color: #000 !important;\\r\\n        border: #ccc 1px solid;\\r\\n        border-radius: 3px;\\r\\n        display: flex;\\r\\n        margin: 3px;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n        flex-direction: row;\\r\\n    }\\r\\n\\r\\n    .type {\\r\\n        color: #000 !important;\\r\\n        display: table-cell;\\r\\n        min-width: 1.5em;\\r\\n        text-align: center;\\r\\n        vertical-align: middle;\\r\\n        padding: 10px 3px;\\r\\n    }\\r\\n\\r\\n    .type.mp4 {\\r\\n        background-color: #e0e;\\r\\n    }\\r\\n\\r\\n    .type.av1 {\\r\\n        background-color: #feb;\\r\\n    }\\r\\n\\r\\n    .type.avc {\\r\\n        background-color: #07e;\\r\\n    }\\r\\n\\r\\n    .type.hev {\\r\\n        background-color: #7ba;\\r\\n    }\\r\\n\\r\\n    .type.aac {\\r\\n        background-color: #0d0;\\r\\n    }\\r\\n\\r\\n    .type.flv {\\r\\n        background-color: #0dd;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        display: table-cell;\\r\\n        text-decoration: none;\\r\\n        padding: 3px;\\r\\n        cursor: pointer;\\r\\n        color: #1184B4;\\r\\n    }\\r\\n\\r\\n    .item:hover {\\r\\n        color: #FE3676;\\r\\n    }\\r\\n\\r\\n    .up {\\r\\n        color: #fff !important;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n        background-color: #777;\\r\\n    }\\r\\n\\r\\n    .up.yellow {\\r\\n        background-color: #ffe42b;\\r\\n        background-image: linear-gradient(to right, #ffe42b, #dfb200);\\r\\n    }\\r\\n\\r\\n    .up.pink {\\r\\n        background-color: #ffafc9;\\r\\n        background-image: linear-gradient(to right, #ffafc9, #dfada7);\\r\\n    }\\r\\n\\r\\n    .up.purple {\\r\\n        background-color: #c0f;\\r\\n        background-image: linear-gradient(to right, #c0f, #90f);\\r\\n    }\\r\\n\\r\\n    .up.red {\\r\\n        background-color: #f00;\\r\\n        background-image: linear-gradient(to right, #f00, #c00);\\r\\n    }\\r\\n\\r\\n    .up.orange {\\r\\n        background-color: #f90;\\r\\n        background-image: linear-gradient(to right, #f90, #d70);\\r\\n    }\\r\\n\\r\\n    .up.blue {\\r\\n        background-color: #00d;\\r\\n        background-image: linear-gradient(to right, #00d, #00b);\\r\\n    }\\r\\n\\r\\n    .up.green {\\r\\n        background-color: #0d0;\\r\\n        background-image: linear-gradient(to right, #0d0, #0b0);\\r\\n    }\\r\\n\\r\\n    .up.lv9 {\\r\\n        background-color: #151515;\\r\\n        background-image: linear-gradient(to right, #151515, #030303);\\r\\n    }\\r\\n\\r\\n    .up.lv8 {\\r\\n        background-color: #841cf9;\\r\\n        background-image: linear-gradient(to right, #841cf9, #620ad7);\\r\\n    }\\r\\n\\r\\n    .up.lv7 {\\r\\n        background-color: #e52fec;\\r\\n        background-image: linear-gradient(to right, #e52fec, #c30dca);\\r\\n    }\\r\\n\\r\\n    .up.lv6 {\\r\\n        background-color: #ff0000;\\r\\n        background-image: linear-gradient(to right, #ff0000, #dd0000);\\r\\n    }\\r\\n\\r\\n    .up.lv5 {\\r\\n        background-color: #ff6c00;\\r\\n        background-image: linear-gradient(to right, #ff6c00, #dd4a00);\\r\\n    }\\r\\n\\r\\n    .up.lv4 {\\r\\n        background-color: #ffb37c;\\r\\n        background-image: linear-gradient(to right, #ffb37c, #dd915a);\\r\\n    }\\r\\n\\r\\n    .up.lv3 {\\r\\n        background-color: #92d1e5;\\r\\n        background-image: linear-gradient(to right, #92d1e5, #70b0c3);\\r\\n    }\\r\\n\\r\\n    .up.lv2 {\\r\\n        background-color: #95ddb2;\\r\\n        background-image: linear-gradient(to right, #95ddb2, #73bb90);\\r\\n    }\\r\\n\\r\\n    .up.lv1 {\\r\\n        background-color: #bfbfbf;\\r\\n        background-image: linear-gradient(to right, #bfbfbf, #9d9d9d);\\r\\n    }\\r\\n\\r\\n    .down {\\r\\n        font-size: 90%;\\r\\n        margin-top: 2px;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n    }\\r\\n</style>';
-
-  // src/core/ui/download.ts
-  var BilioldDownload = class extends HTMLElement {
-    _container;
-    _cells = {};
-    _noData;
-    constructor() {
-      super();
-      const root = this.attachShadow({ mode: "closed" });
-      root.innerHTML = download_default2;
-      this._container = root.children[0];
-      this.addEventListener("click", (e) => e.stopPropagation());
-      this._noData = addElement("div", void 0, this._container, "正在获取下载数据~");
-    }
-    updateItem = (key, value) => {
-      this._container.contains(this._noData) && this._noData.remove();
-      this._cells[key] || (this._cells[key] = addElement("div", { class: "cell" }, this._container));
-      this._cells[key].innerHTML = \`<div class="type \${key}">\${key}</div>\`;
-      value ? value.forEach((d) => {
-        const a = addElement("a", { class: "item", target: "_blank" }, this._cells[key], \`<div class="up\${d.color ? \` \${d.color}\` : ""}">\${d.quality}</div><div class="down">\${d.size}</div>\`);
-        d.url && (a.href = d.url[0]);
-        d.fileName && (a.download = d.fileName);
-        d.onClick && a.addEventListener("click", (e) => d.onClick(e));
-      }) : this._cells[key]?.remove();
-      this._container.firstChild || this._container.replaceChildren(this._noData);
-    };
-    show() {
-      document.contains(this) || document.body.appendChild(this);
-      this.style.display = "";
-      window.addEventListener("click", () => {
-        this.style.display = "none";
-      }, { once: true });
-    }
-    init() {
-      return propertryChangeHook({}, this.updateItem);
-    }
-    disconnectedCallback() {
-      this.destory();
-    }
-    destory() {
-      this._cells = {};
-      this._container.replaceChildren(this._noData);
-    }
-  };
-  customElements.get(\`download-\${"9c7ff17"}\`) || customElements.define(\`download-\${"9c7ff17"}\`, BilioldDownload);
-
-  // src/core/download.ts
-  var Download = class {
-    /** 下载界面 */
-    ui = new BilioldDownload();
-    /** 数据缓存 */
-    data = this.ui.init();
-    previewImage;
-    /** 下载按钮 */
-    bgrayButtonBtn;
-    get fileName() {
-      if (videoInfo.metadata) {
-        return \`\${videoInfo.metadata.album}(\${videoInfo.metadata.title})\`;
-      }
-      return "";
-    }
-    constructor() {
-      switchVideo(() => {
-        this.destory();
-        user.userStatus.downloadButton && this.bgrayButton();
-      });
-    }
-    /** 解码playinfo */
-    decodePlayinfo(playinfo, fileName = this.fileName) {
-      const data = new PlayinfoFilter(fileName).filter(playinfo);
-      data.forEach((d) => {
-        this.data[d.type] || (this.data[d.type] = []);
-        this.data[d.type].push({
-          url: d.url,
-          fileName,
-          quality: Reflect.has(d, "flv") ? \`\${d.quality}*\${d.flv}\` : d.quality,
-          size: d.size,
-          color: d.color,
-          onClick: (ev) => this.pushDownload(d, ev)
-        });
-      });
-    }
-    /** 分发数据 */
-    pushDownload(data, ev) {
-      if (data.onClick) {
-        data.onClick(ev);
-      } else if (data.url) {
-        switch (user.userStatus.downloadMethod) {
-          case "IDM":
-            ev.preventDefault();
-            new Ef2(user.userStatus.userAgent, user.userStatus.referer, user.userStatus.filepath, user.userStatus.ef2.delay, user.userStatus.ef2.silence).file({
-              url: data.url[0],
-              out: data.fileName
-            });
-            toast.success('保存IDM导出文件后，打开IDM -> 任务 -> 导入 -> 从"IDM导出文件"导入即可下载');
-            break;
-          case "ef2":
-            ev.preventDefault();
-            new Ef2(user.userStatus.userAgent, user.userStatus.referer, user.userStatus.filepath, user.userStatus.ef2.delay, user.userStatus.ef2.silence).sendLinkToIDM({
-              url: data.url[0],
-              out: data.fileName
-            });
-            toast.warning("允许浏览器打开【IDM EF2辅助工具】即可开始下载", "如果浏览器和IDM都没有任何反应，那些请先安装ef2辅助工具。");
-            break;
-          case "aria2":
-            ev.preventDefault();
-            const cmdLine = new Aria2(user.userStatus.userAgent, user.userStatus.referer, user.userStatus.filepath, user.userStatus.aria2.server, user.userStatus.aria2.port, user.userStatus.aria2.token, user.userStatus.aria2.split, user.userStatus.aria2.size).cmdlet({
-              urls: data.url,
-              out: data.fileName
-            });
-            toast.success(
-              "已复制下载命令到剪切板，粘贴到终端里回车即可开始下载。当然前提是您的设备已配置好了aria2。",
-              "--------------",
-              cmdLine
-            );
-            break;
-          case "aria2rpc":
-            ev.preventDefault();
-            new Aria2(user.userStatus.userAgent, user.userStatus.referer, user.userStatus.filepath, user.userStatus.aria2.server, user.userStatus.aria2.port, user.userStatus.aria2.token, user.userStatus.aria2.split, user.userStatus.aria2.size).rpc({
-              urls: data.url,
-              out: data.fileName
-            }).then((d) => {
-              toast.success("aria2已经开始下载", \`GUID: \${d}\`);
-            }).catch((e) => {
-              toast.error("aria2[RPC]错误！", e);
-            });
-            break;
-          default:
-            toast.warning("当前下载方式设定为浏览器（默认），受限于浏览器安全策略，可能并未触发下载而是打开了一个标签页，所以更良好的习惯是右键要下载的链接【另存为】。另外如果下载失败（403无权访问），请尝试在设置里修改下载方式及其他下载相关选项。");
-            break;
-        }
-      }
-    }
-    /** 请求中 */
-    downloading = false;
-    /** 已请求 */
-    gets = [];
-    /** 下载当前视频 */
-    default() {
-      if (this.downloading)
-        return;
-      if (!BLOD.cid)
-        return toast.warning("未找到视频文件");
-      this.downloading = true;
-      this.ui.show();
-      user.userStatus.TVresource || this.gets.includes("_") || (this.decodePlayinfo(videoLimit.__playinfo__), this.gets.push("_"));
-      const tasks = [];
-      user.userStatus.downloadType.includes("mp4") && (this.data.mp4 || this.gets.includes("mp4") || tasks.push(this.mp4(BLOD.cid).then((d) => {
-        this.gets.push("mp4");
-        this.decodePlayinfo(d);
-      })));
-      user.userStatus.downloadType.includes("flv") && (this.data.flv || this.gets.includes("flv") || tasks.push(
-        (user.userStatus.TVresource ? this.tv(BLOD.aid, BLOD.cid, false, user.userStatus.downloadQn) : this.interface(BLOD.cid, user.userStatus.downloadQn)).then((d) => {
-          this.gets.push("flv");
-          this.decodePlayinfo(d);
-        })
-      ));
-      user.userStatus.downloadType.includes("dash") && (this.data.aac || this.gets.includes("dash") || this.data.hev || this.data.av1 || tasks.push(
-        (user.userStatus.TVresource ? this.tv(BLOD.aid, BLOD.cid) : this.dash(BLOD.aid, BLOD.cid)).then((d) => {
-          this.gets.push("dash");
-          this.decodePlayinfo(d);
-        })
-      ));
-      Promise.allSettled(tasks).finally(() => {
-        this.downloading = false;
-      });
-    }
-    /** 清空数据 */
-    destory() {
-      this.ui.remove();
-      this.data = this.ui.init();
-      this.downloading = false;
-      this.gets = [];
-      videoLimit.__playinfo__ = void 0;
-    }
-    mp4(cid) {
-      return new ApiPlayurlProj({ cid, access_key: user.userStatus.accessKey.token }, BLOD.pgc).getData();
-    }
-    // private flv(avid: number, cid: number) {
-    //     return <Promise<IPlayurlDurl>>apiPlayurl({ avid, cid }, false, this.BLOD.pgc);
-    // }
-    dash(avid, cid) {
-      return apiPlayurl({ avid, cid }, true, BLOD.pgc);
-    }
-    tv(avid, cid, dash = true, quality = qn) {
-      return new ApiPlayurlTv({ avid, cid, access_key: user.userStatus.accessKey.token, qn: quality }, dash, BLOD.pgc).getData();
-    }
-    intl(aid, cid, dash = true) {
-      return new ApiPlayurlIntl({ aid, cid, access_key: user.userStatus.accessKey.token }, dash, BLOD.pgc).getData();
-    }
-    interface(cid, quality = qn) {
-      return new ApiPlayurlInterface({ cid, quality }, BLOD.pgc).getData();
-    }
-    image() {
-      const src = [];
-      videoInfo.metadata?.artwork?.forEach((d) => src.push(d.src));
-      if (location.host === "live.bilibili.com" && window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover) {
-        src.push(window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover);
-      }
-      if (/\\/read\\/[Cc][Vv]/.test(location.href)) {
-        document.querySelectorAll(".article-holder img").forEach((d) => {
-          d.src && src.push(d.src);
-        });
-      }
-      if (src.length) {
-        this.previewImage || (this.previewImage = new PreviewImage());
-        this.previewImage.value(src);
-      } else {
-        toast.warning("未找到封面信息！");
-      }
-    }
-    /** 添加播放器下载按钮 */
-    bgrayButton() {
-      if (!this.bgrayButtonBtn) {
-        this.bgrayButtonBtn = document.createElement("div");
-        this.bgrayButtonBtn.classList.add("bgray-btn", "show");
-        this.bgrayButtonBtn.title = "下载当前视频";
-        this.bgrayButtonBtn.innerHTML = "下载<br>视频";
-        this.bgrayButtonBtn.addEventListener("click", (e) => {
-          BLOD.ui?.show("download");
-          e.stopPropagation();
-        });
-      }
-      document.querySelector(".bgray-btn-wrap")?.appendChild(this.bgrayButtonBtn);
-    }
-  };
-  var download = new Download();
 
   // src/core/ui/desc.ts
   init_tampermonkey();
