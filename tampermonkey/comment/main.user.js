@@ -571,7 +571,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"z1avrej1mr"}`) || customElements.define(`preview-image-${"z1avrej1mr"}`, PreviewImage);
+customElements.get(`preview-image-${"fysuk576mg"}`) || customElements.define(`preview-image-${"fysuk576mg"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
