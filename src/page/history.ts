@@ -1,10 +1,10 @@
-import { BLOD } from "../bilibili-old";
+import { user } from "../core/user";
 import { objUrl } from "../utils/format/url";
 import { xhrHook } from "../utils/hook/xhr";
 
 export class PageHistory {
-    constructor(protected BLOD: BLOD) {
-        BLOD.userLoadedCallback(status => {
+    constructor() {
+        user.addCallback(status => {
             status.history && this.archive();
         })
     }

@@ -1,7 +1,11 @@
-import { BLOD } from "../bilibili-old";
+import { BLOD } from "../core/bilibili-old";
 import { Comment } from "../core/comment";
+import { networkMock } from "../core/network-mock";
 import { switchVideo } from "../core/observer";
+import { toast } from "../core/toast";
 import { Like } from "../core/ui/like";
+import { user } from "../core/user";
+import { videoInfo } from "../core/video-info";
 import html from '../html/bangumi.html';
 import { jsonCheck } from "../io/api";
 import { apiBangumiSeason, IBangumiEpisode, IBangumiSeasonResponse } from "../io/api-bangumi-season";
@@ -25,42 +29,42 @@ import { Page } from "./page";
 export class PageBangumi extends Page {
     protected like: Like;
     protected get ssid() {
-        return this.BLOD.ssid;
+        return BLOD.ssid;
     }
     protected set ssid(v) {
-        this.BLOD.ssid = v;
+        BLOD.ssid = v;
     }
     protected get epid() {
-        return this.BLOD.epid;
+        return BLOD.epid;
     }
     protected set epid(v) {
-        this.BLOD.epid = v;
+        BLOD.epid = v;
     }
     protected get th() {
-        return this.BLOD.th;
+        return BLOD.th;
     }
     protected set th(v) {
-        this.BLOD.th = v;
+        BLOD.th = v;
     }
     protected get limit() {
-        return this.BLOD.limit;
+        return BLOD.limit;
     }
     protected set limit(v) {
-        this.BLOD.limit = v;
+        BLOD.limit = v;
     }
     protected get pgc() {
-        return this.BLOD.pgc;
+        return BLOD.pgc;
     }
     protected set pgc(v) {
-        this.BLOD.pgc = v;
+        BLOD.pgc = v;
     }
     /** 字幕暂存 */
     protected subtitles: ISubtitle[][] = [];
-    constructor(protected BLOD: BLOD) {
+    constructor() {
         super(html);
         Reflect.deleteProperty(window, '__INITIAL_STATE__');
-        this.like = new Like(this.BLOD);
-        new Comment(BLOD);
+        this.like = new Like();
+        new Comment();
         // 精确爆破新版番剧脚本
         (<any>window).__Iris__ = true;
         this.pgc = true;
@@ -69,7 +73,7 @@ export class PageBangumi extends Page {
         this.updateDom();
         this.recommend();
         this.seasonCount();
-        BLOD.status.videoLimit?.status && this.videoLimit();
+        user.userStatus!.videoLimit?.status && this.videoLimit();
         this.related();
         this.initialState();
         this.enLike();
@@ -177,7 +181,7 @@ export class PageBangumi extends Page {
                     };
                     status.paster && (t.paster = status.paster || {});
                     this.limit = status.area_limit || 0;
-                    this.BLOD.status.videoLimit.status || (t.area = this.limit);
+                    user.userStatus!.videoLimit.status || (t.area = this.limit);
                     t.seasonFollowed = 1 === status.follow;
                 }
                 if (bangumi) {
@@ -201,8 +205,8 @@ export class PageBangumi extends Page {
                     delete i.pay_pack;
                     delete i.payment;
                     delete i.activity;
-                    if (this.BLOD.status.bangumiEplist) delete i.bkg_cover;
-                    this.BLOD.status.videoLimit.status && bangumi.rights && (bangumi.rights.watch_platform = 0);
+                    if (user.userStatus!.bangumiEplist) delete i.bkg_cover;
+                    user.userStatus!.videoLimit.status && bangumi.rights && (bangumi.rights.watch_platform = 0);
                     t.mediaInfo = i;
                     t.mediaInfo.bkg_cover && (t.special = !0);
                     t.ssId = bangumi.season_id || -1;
@@ -236,13 +240,13 @@ export class PageBangumi extends Page {
                     }
                     loopTitle();
                     // 记录视频数据
-                    this.BLOD.videoInfo.bangumiSeason(bangumi);
+                    videoInfo.bangumiSeason(bangumi);
                 } else {
                     return this.initGlobal();
                 }
             })
             .catch(e => {
-                this.BLOD.toast.error('初始化bangumi数据出错！', e)();
+                toast.error('初始化bangumi数据出错！', e)();
             })
             .finally(() => {
                 if ((<any>window).__INITIAL_STATE__.special) {
@@ -310,10 +314,10 @@ export class PageBangumi extends Page {
     /** 尝试东南亚接口 */
     protected async initGlobal() {
         const data = this.epid ? { ep_id: this.epid } : { season_id: this.ssid };
-        Object.assign(data, { access_key: this.BLOD.status.accessKey.token });
-        const d = await new ApiGlobalOgvView(<any>data, this.BLOD.status.videoLimit.th)
+        Object.assign(data, { access_key: user.userStatus!.accessKey.token });
+        const d = await new ApiGlobalOgvView(<any>data, user.userStatus!.videoLimit.th)
             .getDate();
-        this.BLOD.networkMock();
+        networkMock();
         await new Promise(r => poll(() => (<any>window).__INITIAL_STATE__, r));
         const t = (<any>window).__INITIAL_STATE__;
         const i: typeof d = JSON.parse(JSON.stringify(d));
@@ -416,7 +420,7 @@ export class PageBangumi extends Page {
             res.responseType === "json" ? res.response = JSON.parse(t_1) : res.response = res.responseText = t_1;
         }, false);
         this.player();
-        this.BLOD.toast.warning("这大概是一个泰区专属Bangumi，可能没有弹幕和评论区，可以使用【在线弹幕】【播放本地文件】等功能载入弹幕~", "另外：播放泰区番剧还可能导致历史记录错乱，请多担待🤣");
+        toast.warning("这大概是一个泰区专属Bangumi，可能没有弹幕和评论区，可以使用【在线弹幕】【播放本地文件】等功能载入弹幕~", "另外：播放泰区番剧还可能导致历史记录错乱，请多担待🤣");
         const title = this.setTitle(t.epInfo.index, t.mediaInfo.title, this.Q(t.mediaInfo.season_type), !0);
         function loopTitle() {
             poll(() => document.title != title, () => {
@@ -427,7 +431,7 @@ export class PageBangumi extends Page {
         }
         loopTitle();
         // 记录视频数据
-        this.BLOD.videoInfo.bangumiEpisode(episodes, i.title, i.actor?.info, i.cover, t.mediaInfo.bkg_cover);
+        videoInfo.bangumiEpisode(episodes, i.title, i.actor?.info, i.cover, t.mediaInfo.bkg_cover);
     }
     /** 修复泰区player接口 */
     protected player() {
@@ -444,7 +448,7 @@ export class PageBangumi extends Page {
     }
     /** 点赞功能 */
     protected enLike() {
-        if (this.BLOD.status.like) {
+        if (user.userStatus!.like) {
             poll(() => document.querySelector<HTMLSpanElement>('#bangumi_header > div.header-info > div.count-wrapper.clearfix > div.bangumi-coin-wrap'), d => {
                 d.parentElement?.insertBefore(this.like, d);
                 addCss('.ulike {margin-left: 15px;position: relative;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;}', 'ulike-bangumi');
@@ -463,7 +467,7 @@ export class PageBangumi extends Page {
     private episodeIndex = 0;
     /** 分集数据 */
     protected episodeData() {
-        if (this.BLOD.status.episodeData) {
+        if (user.userStatus!.episodeData) {
             switchVideo(() => {
                 this.episodeIndex++;
                 const views = document.querySelector<HTMLSpanElement>(".view-count > span");
@@ -479,7 +483,7 @@ export class PageBangumi extends Page {
                         danmakus.setAttribute("title", "总弹幕数 " + danmaku);
                         debug.log("总播放数：", view, "总弹幕数", danmaku);
                     }
-                    apiStat(this.BLOD.aid)
+                    apiStat(BLOD.aid)
                         .then(({ view, danmaku }) => {
                             views.textContent = unitFormat(view);
                             danmakus.textContent = unitFormat(danmaku);

@@ -26,8 +26,7 @@ const paramsSet = new Set([
 const paramArr = Object.entries({
     from: ["search"]
 });
-/** url净化组件 */
-export class UrlCleaner {
+class UrlCleaner {
     /** 垃圾参数序列 */
     paramsSet = paramsSet;
     /** 精准爆破序列 */
@@ -112,3 +111,5 @@ export class UrlCleaner {
         });
     }
 }
+/** url净化组件 */
+export const urlCleaner = new UrlCleaner();

@@ -1,4 +1,3 @@
-import { BLOD } from "../../bilibili-old";
 import { apiLike } from "../../io/api-like";
 import { apiLikeHas } from "../../io/api-like-has";
 import { uid } from "../../utils/conf/uid";
@@ -8,34 +7,37 @@ import { debug } from "../../utils/debug";
 import { addCss } from "../../utils/element";
 import { unitFormat } from "../../utils/format/unit";
 import { svg } from "../../utils/svg";
+import { BLOD } from "../bilibili-old";
+import { biliQuickLogin } from "../quickLogin";
+import { toast } from "../toast";
 
 export class Like extends HTMLSpanElement implements CustomElementsInterface {
     private liked = false;
     private number = 0;
-    constructor(protected BLOD: BLOD) {
+    constructor() {
         super();
         this.classList.add('ulike');
         this.update();
         this.addEventListener('click', ev => {
             ev.stopPropagation();
             if (uid) {
-                apiLike(this.BLOD.aid, getCookies().bili_jct, !this.liked)
+                apiLike(BLOD.aid, getCookies().bili_jct, !this.liked)
                     .then(() => {
                         this.liked ? this.number-- : this.number++;
                         this.toggle();
                     })
                     .catch(e => {
-                        this.BLOD.toast.error('点赞出错！', e)();
+                        toast.error('点赞出错！', e)();
                     })
             } else {
-                this.BLOD.biliQuickLogin();
+                biliQuickLogin();
             }
         });
     }
     /** 初始化节点 */
     init() {
         if (uid) {
-            apiLikeHas(this.BLOD.aid)
+            apiLikeHas(BLOD.aid)
                 .then(d => {
                     this.liked = d === 1 ? true : false;
                     this.update();

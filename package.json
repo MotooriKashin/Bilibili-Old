@@ -1,17 +1,22 @@
 {
   "dependencies": {
-    "@blod/blod": "file:src",
-    "@blod/extension": "file:extension",
-    "@blod/userscript": "file:userscript"
+    "@jsc/chrome": "file:chrome",
+    "@jsc/tampermonkey": "file:tampermonkey",
+    "esbuild": "^0.17.7",
+    "md5": "^2.3.0",
+    "protobufjs": "^7.2.2",
+    "quill-delta-to-html-cb": "^0.14.0"
   },
   "devDependencies": {
-    "esbuild": "^0.17.6",
+    "@types/md5": "^2.3.2",
     "fs-extra": "^11.1.0",
+    "navigation-api-types": "^0.3.0",
     "typescript": "^4.9.5"
   },
   "scripts": {
-    "extension": "node extension/build.js",
-    "userscript": "node userscript/build.js",
-    "comment": "node userscript/comment/build.js"
+    "tsc": "tsc --noEmit -p ./src/tsconfig.json",
+    "chrome": "node chrome/build.mjs",
+    "tampermonkey": "node tampermonkey/build.mjs",
+    "comment": "node tampermonkey/comment/build.mjs"
   }
 }

@@ -1,10 +1,12 @@
-import { BLOD } from "../bilibili-old";
 import { StatisObserver } from "../core/report";
+import { toast } from "../core/toast";
+import { urlCleaner } from "../core/url";
+import { user } from "../core/user";
 
 export class PageLive {
     protected sleep = false;
-    constructor(protected BLOD: BLOD) {
-        BLOD.userLoadedCallback(status => {
+    constructor() {
+        user.addCallback(status => {
             status.disableSleepChcek && this.disAbleSleepCheck();
             status.disableReport && new StatisObserver();
         });
@@ -12,8 +14,8 @@ export class PageLive {
     }
     /** 添加url清理参数 */
     protected urlClean() {
-        this.BLOD.urlCleaner.paramsSet.add('broadcast_type');
-        this.BLOD.urlCleaner.paramsSet.add('is_room_feed');
+        urlCleaner.paramsSet.add('broadcast_type');
+        urlCleaner.paramsSet.add('is_room_feed');
     }
     /** 禁止挂机检测 */
     protected disAbleSleepCheck() {
@@ -22,7 +24,7 @@ export class PageLive {
             if (args[0].toString().includes('triggerSleepCallback')) {
                 if (!this.sleep) {
                     this.sleep = true;
-                    this.BLOD.toast.warning('成功阻止直播间挂机检测！');
+                    toast.warning('成功阻止直播间挂机检测！');
                 }
                 return Number.MIN_VALUE;
             }

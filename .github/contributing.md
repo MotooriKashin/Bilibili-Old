@@ -19,9 +19,9 @@
 ### 目录结构
 ```
 ├─dist                     【加载已解压的扩展程序】  
-├─extension                chrome扩展模块  
+├─chrome                   chrome扩展模块  
 ├─src                      主模块  
-└─userscript               用户脚本模块  
+└─tampeymonkey             用户脚本模块  
 ```
 
 ---
@@ -50,9 +50,9 @@ VSCode里的typescript项目，使用esbuild编译打包为对应chrome扩展和
 注意：设计background.ts和content.ts的修改需要移除然后重新【加载已解压的扩展程序】才会生效。
 
 #### 用户脚本
-用户脚本模块位于userscript目录，主要是负责引导主模块，实际业务本体还是位于src目录。运行于脚本管理器提供的上下文，但基本不处理任何业务。  
+用户脚本模块位于tampermonkey目录，主要是负责引导主模块，实际业务本体还是位于src目录。运行于脚本管理器提供的上下文，但基本不处理任何业务。  
 
-测试：VSCode里运行用户脚本对应的编译任务会将`main.user.js`生成到userscript目录下，使用Tampermonkey等脚本管理器加载即可测试。  
+测试：VSCode里运行用户脚本对应的编译任务会将`main.user.js`生成到tampermonkey目录下，使用Tampermonkey等脚本管理器加载即可测试。  
 
 提交：请尽量不要将`*.user.js`放进提交里，除非确信此次修改要直接推送给用户。  
 

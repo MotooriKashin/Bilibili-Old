@@ -1,18 +1,20 @@
-import { BLOD } from "../bilibili-old";
 import { ApiLoginAppThird } from "../io/api-login-app-third";
 import { uid } from "../utils/conf/uid";
 import { debug } from "../utils/debug";
 import { timeFormat } from "../utils/format/time";
 import { urlObj } from "../utils/format/url";
+import { biliQuickLogin } from "./quickLogin";
+import { toast } from "./toast";
 import { alert } from "./ui/alert";
+import { user } from "./user";
 
 export class AccessKey {
-    constructor(private BLOD: BLOD) {
+    constructor() {
         const button = [{
             text: '开始授权',
             callback: () => this.get()
         }];
-        if (this.BLOD.status.accessKey.token) {
+        if (user.userStatus!.accessKey.token) {
             button[0].text = '刷新授权';
             button.push(<any>{
                 text: '取消授权',
@@ -29,42 +31,42 @@ export class AccessKey {
     get() {
         if (uid) {
             const data = ['正在申请账户授权~'];
-            const toast = this.BLOD.toast.toast(0, 'info', ...data);
+            const tst = toast.toast(0, 'info', ...data);
             new ApiLoginAppThird('https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png')
                 .getData()
                 .then(async d => {
                     data.push('成功获取到授权链接~');
-                    toast.data = data;
-                    return this.BLOD.GM.fetch(d.confirm_uri, { credentials: 'include' })
+                    tst.data = data;
+                    return GM.fetch(d.confirm_uri, { credentials: 'include' })
                 })
                 .then(d => {
                     const date = new Date().getTime();
                     const dateStr = timeFormat(date, true);
                     const obj = urlObj(d.url);
-                    this.BLOD.status.accessKey.token = <string>obj.access_key;
-                    this.BLOD.status.accessKey.date = date;
-                    this.BLOD.status.accessKey.dateStr = dateStr;
+                    user.userStatus!.accessKey.token = <string>obj.access_key;
+                    user.userStatus!.accessKey.date = date;
+                    user.userStatus!.accessKey.dateStr = dateStr;
                     data.push('------- 授权成功 -------', `鉴权: ${obj.access_key}`, `日期：${dateStr}`);
-                    toast.data = data;
-                    toast.type = 'success';
-                    toast.delay = 4;
+                    tst.data = data;
+                    tst.type = 'success';
+                    tst.delay = 4;
                 })
                 .catch(e => {
                     debug.error('授权出错！', e);
                     data.push('授权出错！', e);
-                    toast.data = data;
-                    toast.type = 'error';
-                    toast.delay = 4;
+                    tst.data = data;
+                    tst.type = 'error';
+                    tst.delay = 4;
                 })
         } else {
-            this.BLOD.toast.warning('请先登录B站账户！');
-            this.BLOD.biliQuickLogin();
+            toast.warning('请先登录B站账户！');
+            biliQuickLogin();
         }
     }
     remove() {
-        this.BLOD.status.accessKey.token = <any>undefined;
-        this.BLOD.status.accessKey.date = 0;
-        this.BLOD.status.accessKey.dateStr = '';
-        this.BLOD.toast.warning('已清除账户鉴权', '如果您在【解除播放限制】功能中选择【自定义】服务器，那么第三方服务器中很可能依然有鉴权。', '为求保险，您可以修改一次密码，这会强制所有鉴权失效。')();
+        user.userStatus!.accessKey.token = <any>undefined;
+        user.userStatus!.accessKey.date = 0;
+        user.userStatus!.accessKey.dateStr = '';
+        toast.warning('已清除账户鉴权', '如果您在【解除播放限制】功能中选择【自定义】服务器，那么第三方服务器中很可能依然有鉴权。', '为求保险，您可以修改一次密码，这会强制所有鉴权失效。')();
     }
 }

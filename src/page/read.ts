@@ -1,6 +1,6 @@
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html-cb';
-import { BLOD } from "../bilibili-old";
 import { Comment } from "../core/comment";
+import { toast } from '../core/toast';
 import html from '../html/read.html';
 import { IStat } from "../io/api";
 import { IUserInfo } from "../io/api-view-detail";
@@ -62,10 +62,10 @@ export class PageRead extends Page {
     ];
     protected readInfoStr = '';
     private ops?: any;
-    constructor(protected BLOD: BLOD) {
+    constructor() {
         super(html);
         this.webpackjsonp();
-        new Comment(BLOD);
+        new Comment();
         this.initState();
     }
     /** 处理webpackJsonp污染 */
@@ -228,7 +228,7 @@ export class PageRead extends Page {
             }
         });
         prism && loadScript('//s1.hdslb.com/bfs/static/article-text/static/ueditor/plugins/prism/prism.js').catch(e => {
-            this.BLOD.toast.error('代码组件加载失败！', e)();
+            toast.error('代码组件加载失败！', e)();
         })
     }
 }

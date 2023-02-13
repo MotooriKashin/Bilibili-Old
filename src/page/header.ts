@@ -7,7 +7,6 @@ import { jsonpHook } from "../utils/hook/node";
 import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
 
-import { BLOD } from "../bilibili-old";
 import avatarAnimation from '../css/avatar-animation.css';
 import message from '../css/message.css';
 
@@ -161,7 +160,7 @@ export class Header {
             || (d?.getAttribute("type") == "all")
         ) ? false : true;
     }
-    constructor(protected BLOD: BLOD) {
+    constructor() {
         this.oldHeader.className = 'z-top-container has-menu';
         this.hookHeadV2();
         this.feedCount();

@@ -1,11 +1,9 @@
-import { BLOD } from "@blod/blod";
-import { GM as GMC } from "@blod/extension/utils/gm";
+import { GM as _ } from "@jsc/chrome/utils/gm";
 import './gm';
 import './polyfill/polyfill';
 
-new BLOD(GM);
-
+export { GM };
 //////////////////////////// 全局定义 ////////////////////////////
 declare global {
-    const GM: typeof GMC;
+    const GM: typeof _;
 }

@@ -1,4 +1,6 @@
-import { BLOD } from "../bilibili-old";
+import { BLOD } from "../core/bilibili-old";
+import { toast } from "../core/toast";
+import { user } from "../core/user";
 import { accountGetCardByMid } from "../io/account-getcardbymid";
 import { jsonCheck } from "../io/api";
 import json from '../json/mid.json';
@@ -18,10 +20,10 @@ export class PageSpace {
     /** 失效视频aid */
     protected aids: number[] = [];
     protected aidInfo: Record<'cover' | 'title', string>[] = [];
-    constructor(protected BLOD: BLOD) {
-        this.mid = Number(this.BLOD.path[3] && this.BLOD.path[3].split("?")[0]);
+    constructor() {
+        this.mid = Number(BLOD.path[3] && BLOD.path[3].split("?")[0]);
         this.midInfo();
-        this.BLOD.userLoadedCallback(status => {
+        user.addCallback(status => {
             status.album && this.album();
             status.jointime && this.jointime();
             status.lostVideo && this.lostVideo();
@@ -38,7 +40,7 @@ export class PageSpace {
                 xhrHook("acc/info?", undefined, obj => {
                     if (obj.responseText && obj.responseText.includes("-404")) {
                         obj.response = obj.responseText = JSON.stringify(json);
-                        this.BLOD.toast.warning("该用户被404，已使用缓存数据恢复访问！")
+                        toast.warning("该用户被404，已使用缓存数据恢复访问！")
                     }
                 }, false);
                 break;
@@ -74,7 +76,7 @@ export class PageSpace {
     /** 注册时间 */
     protected jointime() {
         poll(() => document.querySelector(".section.user-info"), t => {
-            accountGetCardByMid(this.mid, this.BLOD.GM)
+            accountGetCardByMid(this.mid)
                 .then(d => {
                     const jointime = timeFormat(d.regtime * 1000, true);
                     const node = <HTMLDivElement>t.lastChild;
@@ -98,13 +100,13 @@ export class PageSpace {
                 }
                 if (this.aids.length) {
                     const data = ['检测到失效视频！', this.aids.join(' ')];
-                    const toast = this.BLOD.toast.toast(0, 'warning', ...data);
+                    const tst = toast.toast(0, 'warning', ...data);
                     this.lostVideoView().then(() => {
                         setTimeout(() => {
                             data.push('数据返回，正在修复~');
                             let resolve = 0, reject = 0;
-                            toast.data = data;
-                            toast.type = 'success';
+                            tst.data = data;
+                            tst.type = 'success';
                             const ele = document.querySelector("#page-fav");
                             if (ele) {
                                 const medias = (<any>ele).__vue__.favListDetails.medias;
@@ -122,14 +124,14 @@ export class PageSpace {
                                         }
                                         this.aidInfo[d.id].cover && (d.cover = this.aidInfo[d.id].cover);
                                         d.attr = 0;
-                                        toast.data = data;
+                                        tst.data = data;
                                         ele.querySelector(`[data-aid=${d.bvid}]`)?.children[1]?.setAttribute("style", "text-decoration : line-through;color : #ff0000;");
                                     }
                                 })
                             }
                             data.push('', `修复结束：成功 ${resolve} 失败 ${reject}`);
-                            toast.data = data;
-                            toast.delay = 4;
+                            tst.data = data;
+                            tst.delay = 4;
                         }, 100);
                     });
                 }
@@ -143,7 +145,7 @@ export class PageSpace {
                 const d = this.aids.shift()!;
                 if (this.aidInfo[d]) return;
                 let title!: string, cover!: string;
-                await this.BLOD.GM.fetch(`//www.biliplus.com/video/av${d}`)
+                await GM.fetch(`//www.biliplus.com/video/av${d}`)
                     .then(d => d.text())
                     .then(d => {
                         if (d.match(/\<title\>.+?\ \-\ AV/)) {
@@ -155,12 +157,12 @@ export class PageSpace {
                         debug.error(`获取失效视频av${d}信息错误`, 'BILIPLUS', e);
                     });
                 if (!title || !cover) {
-                    await this.BLOD.GM.fetch(`//www.biliplus.com/all/video/av${d}`)
+                    await GM.fetch(`//www.biliplus.com/all/video/av${d}`)
                         .then(d => d.text())
                         .then(d => {
                             if (d.match('/api/view_all?')) {
                                 const url = d.match(/\/api\/view_all\?.+?\',cloudmoe/)![0].replace(/\',cloudmoe/, "");
-                                return this.BLOD.GM.fetch(`//www.biliplus.com${url}`)
+                                return GM.fetch(`//www.biliplus.com${url}`)
                             }
                             throw new Error('无cid缓存');
                         })
@@ -175,7 +177,7 @@ export class PageSpace {
                         });
                 }
                 if (!title || !cover) {
-                    await this.BLOD.GM.fetch(`//www.jijidown.com/video/av${d}`)
+                    await GM.fetch(`//www.jijidown.com/video/av${d}`)
                         .then(d => d.text())
                         .then(d => {
                             if (d.match('window._INIT')) {

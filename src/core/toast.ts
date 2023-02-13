@@ -12,9 +12,11 @@ export const Toastconfig = {
     delay: 4,
     disabled: false
 };
+
 type ObservedAttributesContainer = 'position' | 'rtl' | 'delay' | 'disabled';
 type ToastType = "success" | "error" | "info" | "warning" | "";
-type Position = 'top-left' | 'top-center' | 'top-right' | 'top-full-width' | 'bottom-left' | 'bottom-right' | 'bottom-center' | 'bottom-full-width'
+type Position = 'top-left' | 'top-center' | 'top-right' | 'top-full-width' | 'bottom-left' | 'bottom-right' | 'bottom-center' | 'bottom-full-width';
+
 /** toastr */
 export class Toast extends HTMLDivElement implements CustomElementsInterface {
     /** 关闭按钮 */
@@ -91,8 +93,9 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
     }
 }
 customElements.get(`toast-${_MUTEX_}`) || customElements.define(`toast-${_MUTEX_}`, Toast, { extends: 'div' });
+
 /** toast组件 */
-export class ToastContainer extends HTMLElement implements CustomElementsInterface {
+class ToastContainer extends HTMLElement implements CustomElementsInterface {
     /** 实际根节点 */
     protected container: HTMLDivElement;
     static get observedAttributes(): ObservedAttributesContainer[] {
@@ -191,3 +194,9 @@ export class ToastContainer extends HTMLElement implements CustomElementsInterfa
     }
 }
 customElements.get(`toast-container-${_MUTEX_}`) || customElements.define(`toast-container-${_MUTEX_}`, ToastContainer);
+
+/**
+ * 浮动通知  
+ * 获取到用户配置后请通过`update`方法更新，否则将使用默认配置。
+ */
+export const toast = new ToastContainer();

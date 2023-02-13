@@ -1,6 +1,7 @@
 import { Toastconfig } from "./toast";
 import { UiEntryType } from "./ui/entry";
 
+/** 默认用户配置 */
 export const userStatus = {
     /** 开发者模式 */
     development: true,

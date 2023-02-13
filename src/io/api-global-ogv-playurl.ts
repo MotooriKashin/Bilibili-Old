@@ -1,4 +1,4 @@
-import { UPOS, VideoLimit } from "../core/videolimit";
+import { UPOS } from "../core/videolimit";
 import { ApiSign, jsonCheck } from "./api";
 import { IPlayurlDash, PlayurlDescriptionMap, PlayurlFormatMap, PlayurlDash, IPlayurlQualityNumber, PlayurlQualityMap, PlayurlCodecs, PlayurlCodecsAPP, PlayurlFrameRate, PlayurlResolution } from "./api-playurl";
 import { Sidx } from "./sidx";
@@ -69,7 +69,7 @@ export class ApiGlobalOgvPlayurl extends ApiSign {
      * @param data 查询参数
      * @param server 东南亚（泰区）代理服务器
      */
-    constructor(protected data: GlobalOgvPlayurlData, protected uposName: keyof typeof UPOS | "不替换", server = 'api.global.bilibili.com') {
+    constructor(protected data: GlobalOgvPlayurlData, server = 'api.global.bilibili.com') {
         super(URLS.GLOBAL_OGV_PLAYURL.replace('api.global.bilibili.com', server), '7d089525d3611b1c')
         this.data = Object.assign({
             area: "th",
@@ -84,8 +84,8 @@ export class ApiGlobalOgvPlayurl extends ApiSign {
     async getDate() {
         if (this.response) return this.response;
         const response = await fetch(this.sign());
-        const text = await response.text();
-        return this.response = <IGlobalOgvPlayurlResponse>jsonCheck(VideoLimit.uposReplace(text, this.uposName)).data;
+        const json = await response.json();
+        return this.response = <IGlobalOgvPlayurlResponse>jsonCheck(json).data;
     }
     toPlayurl() {
         return new Promise((resolve: (value: IPlayurlDash) => void, reject) => {

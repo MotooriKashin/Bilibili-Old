@@ -1,6 +1,6 @@
 import { postMessage } from "./message";
 
-/** 提权操作接口（禁止直接导入，请使用`BLOD`对象上挂载的版本） */
+/** 提权操作接口*/
 export const GM = new (class GM {
     /** 【用户脚本】脚本信息 */
     info?: { script: { version: string } };

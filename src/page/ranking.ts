@@ -1,4 +1,4 @@
-import { BLOD } from "../bilibili-old";
+import { urlCleaner } from '../core/url';
 import html from '../html/ranking.html';
 import { addCss } from "../utils/element";
 import { propertyHook } from "../utils/hook/method";
@@ -7,7 +7,7 @@ import { Header } from "./header";
 import { Page } from "./page";
 
 export class PageRanking extends Page {
-    constructor(protected BLOD: BLOD) {
+    constructor() {
         super(html);
         this.location();
         this.overDue();
@@ -18,7 +18,7 @@ export class PageRanking extends Page {
     }
     /** 还原正确的排行地址否则页面无法正常初始化 */
     protected location() {
-        this.BLOD.urlCleaner.updateLocation(/ranking/.test(document.referrer) ? document.referrer : "https://www.bilibili.com/ranking");
+        urlCleaner.updateLocation(/ranking/.test(document.referrer) ? document.referrer : "https://www.bilibili.com/ranking");
     }
     /** 三日以外的数据全部过期 */
     protected overDue() {

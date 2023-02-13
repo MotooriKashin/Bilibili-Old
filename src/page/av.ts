@@ -1,7 +1,11 @@
-import { BLOD } from "../bilibili-old";
+import { BLOD } from "../core/bilibili-old";
 import { Comment } from "../core/comment";
-import { Player } from "../core/player";
+import { player } from "../core/player";
+import { toast } from "../core/toast";
 import { Like } from "../core/ui/like";
+import { urlCleaner } from "../core/url";
+import { user } from "../core/user";
+import { videoInfo } from "../core/video-info";
 import uplist from '../css/uplist.css';
 import html from '../html/av.html';
 import { IStaf } from "../io/api";
@@ -26,18 +30,18 @@ export class PageAV extends Page {
     protected destroy = false;
     protected like: Like;
     protected get aid() {
-        return this.BLOD.aid;
+        return BLOD.aid;
     }
     protected set aid(v) {
-        this.BLOD.aid = v;
+        BLOD.aid = v;
     }
-    constructor(protected BLOD: BLOD) {
+    constructor() {
         super(html);
         location.href.replace(/av\d+/i, d => this.aid = <any>d.slice(2));
-        new Comment(BLOD);
-        this.like = new Like(this.BLOD);
+        new Comment();
+        this.like = new Like();
         propertyHook(window, '__INITIAL_STATE__', undefined);
-        location.href.includes("/s/video") && this.BLOD.urlCleaner.updateLocation(location.href.replace("s/video", "video"));
+        location.href.includes("/s/video") && urlCleaner.updateLocation(location.href.replace("s/video", "video"));
         this.enLike();
         this.aidLostCheck();
         this.updateDom();
@@ -99,7 +103,7 @@ export class PageAV extends Page {
     }
     /** 跳过充电鸣谢 */
     protected elecShow() {
-        if (this.BLOD.status.elecShow) {
+        if (user.userStatus!.elecShow) {
             jsonpHook("api.bilibili.com/x/web-interface/elec/show", undefined, res => {
                 try {
                     res.data.av_list = [];
@@ -123,13 +127,13 @@ export class PageAV extends Page {
             } else {
                 if (res.data && res.data.View) {
                     Promise.resolve().then(() => {
-                        this.BLOD.status.staff && res.data.View.staff && this.staff(res.data.View.staff);
+                        user.userStatus!.staff && res.data.View.staff && this.staff(res.data.View.staff);
                     });
-                    if (this.BLOD.status.ugcSection && res.data.View.ugc_season) {
+                    if (user.userStatus!.ugcSection && res.data.View.ugc_season) {
                         this.ugcSection(res.data.View.ugc_season, res.data.View.owner);
                     }
                     // 记录视频数据
-                    this.BLOD.videoInfo.aidDatail(res.data.View);
+                    videoInfo.aidDatail(res.data.View);
                 }
             }
         }, false);
@@ -137,19 +141,19 @@ export class PageAV extends Page {
     /** 通过其他接口获取aid数据 */
     protected async getVideoInfo() {
         const data = [`av${this.aid}可能无效，尝试其他接口~`]
-        const toast = this.BLOD.toast.toast(0, 'info', ...data);
+        const tst = toast.toast(0, 'info', ...data);
         try {
             const card = await apiArticleCards({ av: this.aid });
             if (card[`av${this.aid}`]) {
                 if (card[`av${this.aid}`].redirect_url) {
                     data.push(`bangumi重定向：${card[`av${this.aid}`].redirect_url}`);
-                    toast.data = data;
-                    toast.type = 'warning';
+                    tst.data = data;
+                    tst.type = 'warning';
                     setTimeout(() => {
-                        this.BLOD.urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
-                        new PageBangumi(this.BLOD); // 跳转Bangumi
+                        urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
+                        new PageBangumi(); // 跳转Bangumi
                         this.destroy = true;
-                        toast.delay = 4;
+                        tst.delay = 4;
                     }, 100);
                     return new ApiViewDetail(); // 必须先返回，否则超时跳转404
                 }
@@ -157,31 +161,31 @@ export class PageAV extends Page {
             const view = await new apiBiliplusView(this.aid).toDetail();
             if (view?.data.View.season) {
                 data.push(`bangumi重定向：${(<any>view).data.View.season.ogv_play_url}`);
-                toast.data = data;
-                toast.type = 'warning';
+                tst.data = data;
+                tst.type = 'warning';
                 view.data.View.season = undefined;
                 setTimeout(() => {
-                    this.BLOD.urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
-                    new PageBangumi(this.BLOD); // 跳转Bangumi
+                    urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
+                    new PageBangumi(); // 跳转Bangumi
                     this.destroy = true;
-                    toast.delay = 4;
+                    tst.delay = 4;
                 }, 100);
                 return new ApiViewDetail();
             }
             setTimeout(() => {
-                this.BLOD.videoInfo.aidDatail(view.data.View); // 记录视频数据
+                videoInfo.aidDatail(view.data.View); // 记录视频数据
                 data.push('获取缓存数据成功！但这可能是个失效视频！');
-                toast.data = data;
-                toast.type = 'success';
-                toast.delay = 4;
+                tst.data = data;
+                tst.type = 'success';
+                tst.delay = 4;
             }, 100);
             return view;
         } catch (e) {
             debug.error('获取数据出错！', e);
             data.push('获取数据出错！', <any>e);
-            toast.data = data;
-            toast.type = 'error';
-            toast.delay = 4;
+            tst.data = data;
+            tst.type = 'error';
+            tst.delay = 4;
             throw e;
         }
     }
@@ -244,7 +248,7 @@ export class PageAV extends Page {
             });
             return s;
         }, []);
-        Player.addModifyArgument(args => {
+        player.addModifyArgument(args => {
             if (this.destroy) return;
             const obj = urlObj(`?${args[2]}`);
             obj.playlist = encodeURIComponent(JSON.stringify({ code: 0, data: toview, message: "0", ttl: 1 }));
@@ -270,10 +274,10 @@ export class PageAV extends Page {
                     // 标签
                     document.querySelector<any>('#v_tag').__vue__.$data.tags = d.Tags;
                     // 记录视频数据
-                    this.BLOD.videoInfo.aidDatail(d.View);
+                    videoInfo.aidDatail(d.View);
                 })
                 .catch(e => {
-                    this.BLOD.toast.error('更新视频信息失败', e)();
+                    toast.error('更新视频信息失败', e)();
                 })
                 .finally(() => {
                     history.pushState(history.state, '', `/video/av${state.aid}`);
@@ -282,13 +286,13 @@ export class PageAV extends Page {
     }
     /** 点赞功能 */
     protected enLike() {
-        if (this.BLOD.status.like) {
+        if (user.userStatus!.like) {
             poll(() => document.querySelector<HTMLSpanElement>('#viewbox_report > div.number > span.u.coin'), d => {
                 if (this.destroy) return this.like.remove();
                 d.parentElement?.insertBefore(this.like, d);
                 addCss('.video-info-m .number .ulike {margin-left: 15px;margin-right: 5px;}', 'ulike-av');
             });
-            const destroy = this.BLOD.videoInfo.bindChange(v => {
+            const destroy = videoInfo.bindChange(v => {
                 if (this.destroy) {
                     destroy();
                     return this.like.remove();

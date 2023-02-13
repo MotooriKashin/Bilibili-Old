@@ -1,34 +1,36 @@
-import { BLOD } from "../bilibili-old";
 import { debug } from "../utils/debug";
 import { fileRead, readAs, saveAs } from "../utils/file";
 import { timeFormat } from "../utils/format/time";
-import { propertryChangeHook } from "../utils/hook/method";
-import { alert } from "./ui/alert";
+import { toast } from "./toast";
 import { userStatus } from "./userstatus";
+import { alert } from "./ui/alert";
+import { propertryChangeHook } from "../utils/hook/method";
 
-/** 用户数据管理 */
-export class User {
-    /** 用户数据，不应直接使用，请使用`addCallback`用户数据回调代替 */
-    protected userStatus?: typeof userStatus;
+class User {
+    /** 用户数据，除非确定已初始化，否则请使用`addCallback`用户数据回调代替 */
+    userStatus?: typeof userStatus;
     /** 初始化标记 */
     protected initialized = false;
     /** 更新CD */
     protected updating?: number;
     /** 回调栈 */
     protected changes: Record<keyof typeof userStatus, Function[]> = <any>{};
+    /** 更新存储延时 */
     protected timer?: number;
-    constructor(protected BLOD: BLOD) {
-        this.BLOD.GM.getValue('userStatus', userStatus).then(status => {
+    /** 用户数据加载回调序列 */
+    userLoadedCallbacks: ((status: typeof userStatus) => void)[] = [];
+    constructor() {
+        GM.getValue('userStatus', userStatus).then(status => {
             status = Object.assign(userStatus, status)
             const proxy = propertryChangeHook(status, (key, value) => {
                 clearTimeout(this.timer);
-                this.timer = setTimeout(() => this.BLOD.GM.setValue('userStatus', status));
+                this.timer = setTimeout(() => GM.setValue('userStatus', status));
                 this.emitChange(key, value);
             });
             this.userStatus = proxy;
             this.initialized = true;
-            while (this.BLOD.userLoadedCallbacks.length) {
-                this.BLOD.userLoadedCallbacks.shift()?.(this.userStatus);
+            while (this.userLoadedCallbacks.length) {
+                this.userLoadedCallbacks.shift()?.(proxy);
             }
         });
     }
@@ -59,18 +61,18 @@ export class User {
             if (this.initialized) {
                 callback(this.userStatus!);
             } else {
-                this.BLOD.userLoadedCallbacks.push(callback);
+                this.userLoadedCallbacks.push(callback);
             }
         }
     }
     /** 恢复默认数据 */
     restoreUserStatus() {
-        this.BLOD.GM.deleteValue('userStatus');
-        this.BLOD.toast.warning('已恢复默认设置数据，请<strong>刷新</strong>页面以避免数据紊乱！');
+        GM.deleteValue('userStatus');
+        toast.warning('已恢复默认设置数据，请<strong>刷新</strong>页面以避免数据紊乱！');
     }
     /** 备份设置数据 */
     outputUserStatus() {
-        this.BLOD.GM.getValue('userStatus', userStatus)
+        GM.getValue('userStatus', userStatus)
             .then(d => {
                 saveAs(JSON.stringify(d, undefined, '\t'), `Bilibili-Old-${timeFormat(undefined, true).replace(/ |:/g, d => '-')}`, 'application/json')
             });
@@ -78,22 +80,22 @@ export class User {
     /** 恢复备份数据 */
     inputUserStatus() {
         const msg = ['请选择一个备份的数据文件（.json）', '注意：无效的数据文件可能导致异常！'];
-        const toast = this.BLOD.toast.toast(0, 'warning', ...msg);
+        const tst = toast.toast(0, 'warning', ...msg);
         fileRead("application/json")
             .then(d => {
                 if (d && d[0]) {
                     msg.push(`读取文件：${d[0].name}`);
-                    toast.data = msg;
-                    toast.type = 'info';
+                    tst.data = msg;
+                    tst.type = 'info';
                     return readAs(d[0])
                         .then(d => {
                             const data = JSON.parse(d);
                             if (typeof data === "object") {
-                                this.BLOD.GM.setValue('userStatus', data);
+                                GM.setValue('userStatus', data);
                                 const text = '已恢复设置数据，请<strong>刷新</strong>页面以避免数据紊乱！';
                                 msg.push(text);
-                                toast.data = msg;
-                                toast.type = 'success';
+                                tst.data = msg;
+                                tst.type = 'success';
                                 return alert(text, '刷新页面', [{
                                     text: '刷新',
                                     callback: () => location.reload()
@@ -102,18 +104,20 @@ export class User {
                         })
                         .catch(e => {
                             msg.push('读取文件出错！', e);
-                            toast.data = msg;
-                            toast.type = 'error';
+                            tst.data = msg;
+                            tst.type = 'error';
                             debug.error('恢复设置数据', e);
                         })
                 }
             })
             .catch(e => {
                 msg.push(e);
-                toast.data = msg;
+                tst.data = msg;
             })
             .finally(() => {
-                toast.delay = 4;
+                tst.delay = 4;
             })
     }
 }
+/** 用户数据管理 */
+export const user = new User();

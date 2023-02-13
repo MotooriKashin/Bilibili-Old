@@ -1,4 +1,5 @@
-import { BLOD } from "../bilibili-old";
+import { toast } from '../core/toast';
+import { user } from '../core/user';
 import html from '../html/index.html';
 import news from '../html/news.html';
 import { IAidDatail } from "../io/api";
@@ -38,7 +39,7 @@ const __INITIAL_STATE__ = {
 
 /** 重构主页 */
 export class PageIndex extends Page {
-    constructor(protected BLOD: BLOD) {
+    constructor() {
         super(html);
         (<any>window).__INITIAL_STATE__ = __INITIAL_STATE__;
         this.updateDom();
@@ -48,9 +49,9 @@ export class PageIndex extends Page {
         this.roomRecommend();
         this.newlist();
         this.region();
-        this.BLOD.status.timeLine && this.timeLine();
         Header.primaryMenu();
         Header.banner();
+        user.userStatus!.timeLine && this.timeLine();
     }
     protected locsData() {
         apiWebshowLocs({ ids: [4694, 29, 31, 34, 40, 42, 44] })
@@ -64,7 +65,7 @@ export class PageIndex extends Page {
                 __INITIAL_STATE__.locsData[44] = this.adblock(d[44]);
             })
             .catch(e => {
-                this.BLOD.toast.error('locsData Error!', e)();
+                toast.error('locsData Error!', e)();
             });
     }
     protected recommendData() {
@@ -100,7 +101,7 @@ export class PageIndex extends Page {
                 }
             })
             .catch(e => {
-                this.BLOD.toast.error('recommendData Error!', e)();
+                toast.error('recommendData Error!', e)();
             });
     }
     /** 修复分区排行 */

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'userscript/manifest.json'
+      - 'tampermonkey/manifest.json'
 
 jobs:
   build:
@@ -23,7 +23,7 @@ jobs:
       run: npm update
       
     - name: Build and release
-      run: npm run extension
+      run: npm run chrome
     
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
