@@ -1,4 +1,13 @@
+import md5 from "md5";
+import { urlSign } from "../io/api";
+import { base64 } from "../utils/base64";
+import { debug } from "../utils/debug";
+import { objUrl, urlObj } from "../utils/format/url";
+import { danmaku } from "./danmaku";
+import { download } from "./download";
+import { toast } from "./toast";
 import { UI } from "./ui";
+import { videoInfo } from "./video-info";
 
 /** 用于暴露的统一接口 */
 export const BLOD = new (class {
@@ -35,4 +44,17 @@ export const BLOD = new (class {
     isVip = false;
     /** 播放器哈希值 */
     version?: string;
+
+    // 调试接口
+    GM = GM;
+    urlSign = urlSign;
+    objUrl = objUrl;
+    urlObj = urlObj;
+    download = download;
+    danmaku = danmaku;
+    toast = toast;
+    debug = debug;
+    videoInfo = videoInfo;
+    base64 = base64;
+    md5 = md5;
 })();

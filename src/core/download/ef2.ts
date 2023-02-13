@@ -1,4 +1,4 @@
-import { Base64 } from "../../utils/base64";
+import { base64 } from "../../utils/base64";
 import { saveAs } from "../../utils/file";
 import { getMetux } from "../../utils/mutex";
 
@@ -132,12 +132,12 @@ export class Ef2 {
                     break;
             }
         });
-        return `ef2://${Base64.encode(arr.join(' '))}`;
+        return `ef2://${base64.encode(arr.join(' '))}`;
     }
     /** 解码ef2协议 */
     static decode(ef2str: string) {
         ef2str = ef2str.replace("ef2://", "");
-        ef2str = Base64.decode(ef2str);
+        ef2str = base64.decode(ef2str);
         const arr = ef2str.split(' ');
         const data: Partial<EF2Data> = {};
         for (let i = 0; i < arr.length; i++) {
