@@ -20,13 +20,13 @@ export const BLOD = new (class {
         (<any>window).cid = v;
     }
     /** bangumi ssid */
-    ssid?: number;
+    ssid!: number;
     /** bangumi epid */
-    epid?: number;
+    epid!: number;
     /** 限制视频 */
-    limit?: number;
+    limit!: number;
     /** 东南亚视频标记 */
-    th?: boolean;
+    th!: boolean;
     /** 播放器已加载 */
     playLoaded = false;
     /** 已模拟APP端取流 */
