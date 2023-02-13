@@ -74,7 +74,7 @@ interface ISearchBangumi {
     type: string;
     typeurl: string;
 }
-interface IApiSearchAndroid {
+export interface IApiSearchAndroid {
     app_display_option: { search_page_visual_opti: number };
     cache: number;
     code: number;
