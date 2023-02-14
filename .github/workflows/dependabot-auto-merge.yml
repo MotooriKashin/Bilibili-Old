@@ -1,10 +1,10 @@
 name: Dependabot Auto Merge
 
-on: pull_request
+on: pull_request_target
 
 jobs:
   merge:
-    if: github.event.pull_request.user.type == 'Bot'
+    if: github.actor == 'dependabot[bot]'
     name: Dependabot Auto Merge
     runs-on: ubuntu-latest
     steps:
