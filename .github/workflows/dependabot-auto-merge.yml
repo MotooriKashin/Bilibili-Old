@@ -4,7 +4,7 @@ on: pull_request
 
 jobs:
   merge:
-    if: github.event.label.name == 'dependencies'
+    if: github.event.pull_request.user.type == 'Bot'
     name: Dependabot Auto Merge
     runs-on: ubuntu-latest
     steps:
