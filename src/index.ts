@@ -27,6 +27,9 @@ import { videoLimit } from './core/videolimit';
 import { Comment } from './core/comment';
 import { WebTRC } from './core/webrtc';
 import { UI } from './core/ui';
+import toview from './json/toview.json';
+
+document.domain = 'bilibili.com';
 
 // 提取版本哈希（仅限用户脚本）
 BLOD.version = GM.info?.script.version.slice(-40);
@@ -69,6 +72,9 @@ user.addCallback(status => {
     }
     if (status.search && BLOD.path[2] == "search.bilibili.com") {
         new PageSearch();
+    }
+    if (/\/moe\/2018\/jp\/home/.test(location.href)) {
+        Reflect.set(window, 'getPlayList', () => { return { code: 0, data: toview } });
     }
 
     player.nanoPermit();
