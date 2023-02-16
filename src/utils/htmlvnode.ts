@@ -59,7 +59,7 @@ class Scanner {
             } else {
                 // 节点开始标记
                 this.removeScanned();
-                if (this.html.startsWith("!-- ")) {
+                if (this.html.startsWith("!--")) {
                     this.html = this.html.replace(/^!--[\S\s]+?-->/, "");
                 }
                 if (/^[a-zA-Z]/.test(this.html)) {
