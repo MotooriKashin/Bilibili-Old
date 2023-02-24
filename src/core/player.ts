@@ -20,7 +20,7 @@ import { alert } from "./ui/alert";
 import { user } from "./user";
 
 const danmakuProtect = [
-    96048, // 【幸运星组曲】「らき☆すた動画」
+    // 96048, // 【幸运星组曲】「らき☆すた動画」
     207527, // 【呆又呆】鹿乃呆? 弹幕呆?
     329896, // 【白屏弹幕】10 years after
     469970, // 【黑屏弹幕】美丽之物【Soundhorizon】
