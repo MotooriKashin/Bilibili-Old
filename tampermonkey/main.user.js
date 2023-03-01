@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.3.2-caecec5992d77bb3ca0d10621b4a2a7858158994
+// @version      10.3.3-caecec5992d77bb3ca0d10621b4a2a7858158994
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -25308,6 +25308,7 @@ const MODULES = `
       new Comment();
       this.like = new Like();
       propertyHook(window, "__INITIAL_STATE__", void 0);
+      propertyHook(window, "__playinfo__", void 0);
       location.href.includes("/s/video") && urlCleaner.updateLocation(location.href.replace("s/video", "video"));
       this.enLike();
       this.aidLostCheck();
