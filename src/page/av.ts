@@ -41,6 +41,7 @@ export class PageAV extends Page {
         new Comment();
         this.like = new Like();
         propertyHook(window, '__INITIAL_STATE__', undefined);
+        propertyHook(window, '__playinfo__', undefined);
         location.href.includes("/s/video") && urlCleaner.updateLocation(location.href.replace("s/video", "video"));
         this.enLike();
         this.aidLostCheck();
