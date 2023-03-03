@@ -24876,6 +24876,8 @@ const MODULES = `
     set pgc(v) {
       BLOD.pgc = v;
     }
+    /** 播放额外参数 */
+    playerExtraParams;
     /** 字幕暂存 */
     subtitles = [];
     constructor() {
@@ -24908,9 +24910,11 @@ const MODULES = `
           result.result = result.data.season;
           r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
           propertyHook.modify(window, "getPlayerExtraParams", (d) => {
-            const res = d();
-            res.recommend = result.result;
-            return () => res;
+            return () => {
+              this.playerExtraParams = d();
+              this.playerExtraParams.recommend = result.result;
+              return this.playerExtraParams;
+            };
           });
         } catch (e) {
         }
@@ -25062,6 +25066,14 @@ const MODULES = `
         }
         if (document.compatMode === "BackCompat")
           addCss(".header-info > .count-wrapper {height: 18px !important;}");
+        window.addEventListener("resize", (e) => {
+          const container = document.querySelector(".main-container");
+          if (container) {
+            setTimeout(() => {
+              container.removeAttribute("style");
+            });
+          }
+        });
       });
     }
     /** epStat，用于判定ep状态。同样由于原生缺陷，ep_id初始化时不会更新本信息，需要主动更新 */
