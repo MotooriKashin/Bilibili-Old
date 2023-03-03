@@ -23,7 +23,13 @@ export abstract class Page {
         // 备份标题
         const title = document.title;
         // 刷新DOM
+        // if (document.body) {
+        //     const html = <HTMLElement>this.vdom.toFragment().children[0];
+        //     document.head.replaceChildren(...html.children[0].children);
+        //     document.body.replaceChildren(...html.children[1].children);
+        // } else {
         this.vdom.replace(document.documentElement);
+        // }
         // 删除PlayerAgent残留
         Reflect.deleteProperty(window, 'PlayerAgent');
         // 删除webpackJsonp残留

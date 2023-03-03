@@ -497,6 +497,8 @@ export class PageBangumi extends Page {
     constructor() {
         super(html);
         Reflect.deleteProperty(window, '__INITIAL_STATE__');
+        // 爆破next.js
+        Reflect.defineProperty(window, '__NEXT_DATA__', { value: true });
         this.like = new Like();
         new Comment();
         // 精确爆破新版番剧脚本
