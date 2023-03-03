@@ -255,6 +255,15 @@ export class PageBangumi extends Page {
                 }
                 // 修复怪异模式下人类所不能理解的样式问题 ಥ_ಥ
                 if (document.compatMode === "BackCompat") addCss(".header-info > .count-wrapper {height: 18px !important;}");
+                // 禁止新版页面残留破坏样式
+                window.addEventListener('resize', e => {
+                    const container = document.querySelector(".main-container");
+                    if (container) {
+                        setTimeout(() => {
+                            container.removeAttribute('style');
+                        })
+                    }
+                });
             });
     }
     /** epStat，用于判定ep状态。同样由于原生缺陷，ep_id初始化时不会更新本信息，需要主动更新 */
