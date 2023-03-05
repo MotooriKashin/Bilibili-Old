@@ -62,6 +62,7 @@ export class PageRead extends Page {
     ];
     protected readInfoStr = '';
     private ops?: any;
+    protected webpackJsonp = true;
     constructor() {
         super(html);
         this.webpackjsonp();
@@ -189,16 +190,9 @@ export class PageRead extends Page {
             },
             spoiler: "0"
         };
-        // 备份标题
-        const title = document.title;
-        this.vdom.replace(document.documentElement);
+        super.updateDom();
         document.querySelector(".page-container")!.innerHTML = this.readInfoStr;
-        this.vdom.loadScript().then(() => {
-            this.loadedCallback();
-            PageRead.rightCopyEnable();
-        });
-        // 还原标题
-        title && !title.includes("404") && (document.title = title);
+        PageRead.rightCopyEnable();
     }
     /** 解锁右键菜单及复制 */
     static rightCopyEnable() {

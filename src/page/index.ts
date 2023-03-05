@@ -42,16 +42,16 @@ export class PageIndex extends Page {
     constructor() {
         super(html);
         (<any>window).__INITIAL_STATE__ = __INITIAL_STATE__;
-        this.updateDom();
         this.locsData();
         this.recommendData();
-        this.ranking();
         this.roomRecommend();
+        this.ranking();
         this.newlist();
         this.region();
         Header.primaryMenu();
         Header.banner();
         user.userStatus!.timeLine && this.timeLine();
+        this.updateDom();
     }
     protected locsData() {
         apiWebshowLocs({ ids: [4694, 29, 31, 34, 40, 42, 44] })

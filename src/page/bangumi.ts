@@ -506,7 +506,6 @@ export class PageBangumi extends Page {
         this.pgc = true;
         location.href.replace(/[sS][sS]\d+/, d => this.ssid = <any>Number(d.substring(2)));
         location.href.replace(/[eE][pP]\d+/, d => this.epid = <any>Number(d.substring(2)));
-        this.updateDom();
         this.recommend();
         this.seasonCount();
         user.userStatus!.videoLimit?.status && this.videoLimit();
@@ -516,6 +515,7 @@ export class PageBangumi extends Page {
         this.episodeData();
         Header.primaryMenu();
         Header.banner();
+        this.updateDom();
     }
     /** 修复：末尾番剧推荐 */
     protected recommend() {

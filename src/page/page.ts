@@ -7,6 +7,8 @@ export abstract class Page {
     protected vdom: VdomTool;
     /** 初始化完成 */
     protected initilized = false;
+    /** 禁止清除webpackJsonp */
+    protected webpackJsonp = false;
     /**
      * @param html 页面框架
      */
@@ -22,22 +24,13 @@ export abstract class Page {
     protected updateDom() {
         // 备份标题
         const title = document.title;
-        // 刷新DOM
-        // if (document.body) {
-        //     const html = <HTMLElement>this.vdom.toFragment().children[0];
-        //     document.head.replaceChildren(...html.children[0].children);
-        //     document.body.replaceChildren(...html.children[1].children);
-        // } else {
-        this.vdom.replace(document.documentElement);
-        // }
-        // 删除PlayerAgent残留
-        Reflect.deleteProperty(window, 'PlayerAgent');
         // 删除webpackJsonp残留
-        Reflect.deleteProperty(window, 'webpackJsonp');
-        // 启动原生脚本
-        this.vdom.loadScript().then(() => this.loadedCallback());
+        this.webpackJsonp || Reflect.deleteProperty(window, 'webpackJsonp');
+        // 刷新DOM
+        this.vdom.replace(document.documentElement);
         // 还原标题
         title && !title.includes("404") && (document.title = title);
+        this.loadedCallback();
     }
     /** 重写完成回调 */
     protected loadedCallback() {

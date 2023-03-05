@@ -12,9 +12,9 @@ export class PageRanking extends Page {
         this.location();
         this.overDue();
         this.initState();
-        this.updateDom();
         Header.primaryMenu();
         Header.banner();
+        this.updateDom();
     }
     /** 还原正确的排行地址否则页面无法正常初始化 */
     protected location() {

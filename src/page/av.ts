@@ -29,6 +29,7 @@ export class PageAV extends Page {
     /** 销毁标记，当前已不是av页，部分回调禁止生效 */
     protected destroy = false;
     protected like: Like;
+    protected webpackJsonp = true;
     protected get aid() {
         return BLOD.aid;
     }
@@ -45,7 +46,6 @@ export class PageAV extends Page {
         location.href.includes("/s/video") && urlCleaner.updateLocation(location.href.replace("s/video", "video"));
         this.enLike();
         this.aidLostCheck();
-        this.updateDom();
         // this.biliUIcomponents();
         this.favCode();
         this.tagTopic();
@@ -56,6 +56,7 @@ export class PageAV extends Page {
         this.elecShow();
         Header.primaryMenu();
         Header.banner();
+        this.updateDom();
     }
     /**
      * 暴露UI组件

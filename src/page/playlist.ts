@@ -34,12 +34,12 @@ export class PagePlaylist extends Page {
         this.init();
         this.EmbedPlayer();
         this.toviewHook();
-        this.updateDom();
         this.elecShow();
         this.enLike();
         Header.primaryMenu();
         Header.banner();
         this.isPl || switchVideo(this.switchVideo);
+        this.updateDom();
     }
     /** 初始化 */
     protected init() {

@@ -6,11 +6,12 @@ import { urlCleaner } from '../core/url';
 import { toast } from '../core/toast';
 
 export class PagePlaylistDetail extends Page {
+    protected webpackJsonp = true;
     constructor() {
         super(html);
         this.__INITIAL_STATE__();
-        this.updateDom();
         this.ancientHeader();
+        this.updateDom();
     }
     /** 移除上古顶栏 */
     protected ancientHeader() {

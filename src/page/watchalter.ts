@@ -20,11 +20,11 @@ export class PageWatchlater extends Page {
         new Comment();
         this.enLike();
         this.toview();
-        this.updateDom();
         this.living();
         this.commentAgent();
         Header.primaryMenu();
         Header.banner();
+        this.updateDom();
     }
     /** 记录视频数据 */
     protected toview() {

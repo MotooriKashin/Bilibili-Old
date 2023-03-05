@@ -15,9 +15,9 @@ export class PageSearch extends Page {
         super(html);
         this.location();
         this.initState();
-        this.updateDom();
         this.style();
         this.gat();
+        this.updateDom();
     }
     /** 修正URL */
     protected location() {

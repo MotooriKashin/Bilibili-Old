@@ -15,9 +15,7 @@ export class VdomTool {
     toFragment() {
         const fragment = document.createDocumentFragment();
         this.vdom.forEach(d => {
-            if (d.tagName === 'script') {
-                this.script.push(d);
-            } else fragment.appendChild(this.createElement(d));
+            fragment.appendChild(this.createElement(d));
         });
         return fragment;
     }
@@ -37,10 +35,12 @@ export class VdomTool {
         element.event && Object.entries(element.event).forEach(d => {
             node.addEventListener(...d);
         });
+        if (element.tagName === 'script') {
+            // 保障脚本依次执行
+            (<HTMLScriptElement>node).async = false;
+        }
         element.children && element.children.forEach(d => {
-            if (d.tagName === 'script') {
-                this.script.push(d);
-            } else node.appendChild(this.createElement(d));
+            node.appendChild(this.createElement(d));
         });
         return node;
     }
@@ -55,24 +55,13 @@ export class VdomTool {
         });
         return node;
     }
-    static loopScript(scripts: HTMLScriptElement[]) {
-        return new Promise((r: (value?: unknown) => void, j) => {
-            const prev = scripts.shift();
-            if (prev) {
-                if (prev.src) {
-                    prev.addEventListener("load", () => r(this.loopScript(scripts)));
-                    prev.addEventListener("abort", () => r(this.loopScript(scripts)));
-                    prev.addEventListener("error", () => r(this.loopScript(scripts)));
-                    return document.body.appendChild(prev);
-                }
-                document.body.appendChild(prev);
-                r(this.loopScript(scripts));
-            } else r();
+    async loadScript() {
+        const scripts = this.script.map(d => {
+            const script = <HTMLScriptElement>this.createElement(d);
+            script.async = false; // 保证所有脚本有序执行
+            return script
         });
-    }
-    loadScript() {
-        const scripts = this.script.map(d => <HTMLScriptElement>this.createElement(d));
-        return VdomTool.loopScript(scripts);
+        document.body.append(...scripts);
     }
     /** 添加为目标节点的子节点 */
     appendTo(node: HTMLElement | ShadowRoot) {
