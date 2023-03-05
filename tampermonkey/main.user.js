@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.3.6-9abdecbfd24fc2b768afabc3f63c84fae1a8e91c
+// @version      10.3.7-9abdecbfd24fc2b768afabc3f63c84fae1a8e91c
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -11639,11 +11639,19 @@ const MODULES = `
 
   // src/page/header.ts
   var _Header = class {
+    /** 资源id */
+    static get rid() {
+      return this.resourceId();
+    }
     /**
      * 根据页面返回resourceId
      * @returns resourceId
      */
     static resourceId() {
+      const tid = window.bid || window.tid || window.topid;
+      if (tid) {
+        return this.tid[tid] ?? 142;
+      }
       if (location.href.includes("v/douga"))
         return 1576;
       if (location.href.includes("/anime"))
@@ -11722,29 +11730,29 @@ const MODULES = `
       this.styleFix();
     }
     static banner() {
-      jsonpHook.async("api.bilibili.com/x/web-show/res/loc", void 0, async (url) => {
+      jsonpHook.async("api.bilibili.com/x/web-show/res/loc", (url) => {
+        const rid = this.rid;
+        this.record[rid] || (this.record[rid] = apiPageHeader({ resource_id: rid }));
+        return true;
+      }, async (url) => {
         const obj = new URL(url);
+        const rid = this.rid;
         obj.searchParams.delete("callback");
-        let loc = this.record[url];
-        let header = this.record[this.rid];
-        let rqs;
-        if (!loc || !header) {
-          rqs = await Promise.all([
-            fetch(obj.toJSON()).then((d) => d.json()),
-            apiPageHeader({ resource_id: this.rid })
-          ]);
-          loc = this.record[url] = rqs[0];
-          header = this.record[this.rid] = rqs[1];
+        url = obj.toJSON();
+        _Header.prid && (url.includes(String(_Header.prid)) || (url = url.replace("ids=", \`ids=\${_Header.prid}%2C\`)));
+        const loc = await fetch(url).then((d) => d.json());
+        const header = await this.record[rid];
+        if (loc.data) {
+          this.locs.forEach((d) => {
+            loc.data[d] && (loc.data[d][0].pic = header && header.pic || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png", loc.data[d][0].litpic = header && header.litpic, loc.data[d][0].url = header && header.url || "", loc.data[d][0].title = header && header.name || "");
+            if (url.includes("loc?") && obj.searchParams.get("id") == String(d)) {
+              loc.data[0].pic = header && header.pic || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png";
+              loc.data[0].litpic = header && header.litpic || "";
+              loc.data[0].url = header && header.url || "";
+              loc.data[0].title = header && header.name || "";
+            }
+          });
         }
-        loc.data && this.locs.forEach((d) => {
-          loc.data[d] && (loc.data[d][0].pic = header && header.pic || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png", loc.data[d][0].litpic = header && header.litpic, loc.data[d][0].url = header && header.url || "", loc.data[d][0].title = header && header.name || "");
-          if (url.includes("loc?") && obj.searchParams.get("id") == String(d)) {
-            loc.data[0].pic = header && header.pic || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png";
-            loc.data[0].litpic = header && header.litpic || "";
-            loc.data[0].url = header && header.url || "";
-            loc.data[0].title = header && header.name || "";
-          }
-        });
         return loc;
       }, false);
     }
@@ -11867,8 +11875,29 @@ const MODULES = `
   __publicField(Header, "locs", [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142]);
   /** 缓存已请求内容 */
   __publicField(Header, "record", {});
-  /** 资源id */
-  __publicField(Header, "rid", _Header.resourceId());
+  /** 页面固定的资源id */
+  __publicField(Header, "prid", 0);
+  /** tid对照表 */
+  __publicField(Header, "tid", {
+    1: 1576,
+    13: 1612,
+    167: 1920,
+    3: 1580,
+    129: 1584,
+    4: 1588,
+    36: 1592,
+    160: 1600,
+    119: 1608,
+    155: 1604,
+    165: 1620,
+    166: 1620,
+    5: 1596,
+    23: 1634,
+    11: 1616,
+    181: 2210,
+    177: 2260,
+    188: 3129
+  });
   __publicField(Header, "fullBannerCover", false);
 
   // src/page/space.ts
@@ -12148,10 +12177,7 @@ const MODULES = `
     toFragment() {
       const fragment = document.createDocumentFragment();
       this.vdom.forEach((d) => {
-        if (d.tagName === "script") {
-          this.script.push(d);
-        } else
-          fragment.appendChild(this.createElement(d));
+        fragment.appendChild(this.createElement(d));
       });
       return fragment;
     }
@@ -12171,11 +12197,11 @@ const MODULES = `
       element.event && Object.entries(element.event).forEach((d) => {
         node.addEventListener(...d);
       });
+      if (element.tagName === "script") {
+        node.async = false;
+      }
       element.children && element.children.forEach((d) => {
-        if (d.tagName === "script") {
-          this.script.push(d);
-        } else
-          node.appendChild(this.createElement(d));
+        node.appendChild(this.createElement(d));
       });
       return node;
     }
@@ -12190,25 +12216,13 @@ const MODULES = `
       });
       return node;
     }
-    static loopScript(scripts) {
-      return new Promise((r, j) => {
-        const prev = scripts.shift();
-        if (prev) {
-          if (prev.src) {
-            prev.addEventListener("load", () => r(this.loopScript(scripts)));
-            prev.addEventListener("abort", () => r(this.loopScript(scripts)));
-            prev.addEventListener("error", () => r(this.loopScript(scripts)));
-            return document.body.appendChild(prev);
-          }
-          document.body.appendChild(prev);
-          r(this.loopScript(scripts));
-        } else
-          r();
+    async loadScript() {
+      const scripts = this.script.map((d) => {
+        const script = this.createElement(d);
+        script.async = false;
+        return script;
       });
-    }
-    loadScript() {
-      const scripts = this.script.map((d) => this.createElement(d));
-      return VdomTool.loopScript(scripts);
+      document.body.append(...scripts);
     }
     /** 添加为目标节点的子节点 */
     appendTo(node) {
@@ -12936,6 +12950,8 @@ const MODULES = `
     vdom;
     /** 初始化完成 */
     initilized = false;
+    /** 禁止清除webpackJsonp */
+    webpackJsonp = false;
     /**
      * @param html 页面框架
      */
@@ -12950,11 +12966,10 @@ const MODULES = `
     /** 重写页面 */
     updateDom() {
       const title = document.title;
+      this.webpackJsonp || Reflect.deleteProperty(window, "webpackJsonp");
       this.vdom.replace(document.documentElement);
-      Reflect.deleteProperty(window, "PlayerAgent");
-      Reflect.deleteProperty(window, "webpackJsonp");
-      this.vdom.loadScript().then(() => this.loadedCallback());
       title && !title.includes("404") && (document.title = title);
+      this.loadedCallback();
     }
     /** 重写完成回调 */
     loadedCallback() {
@@ -12983,16 +12998,16 @@ const MODULES = `
     constructor() {
       super(html_default);
       window.__INITIAL_STATE__ = __INITIAL_STATE__;
-      this.updateDom();
       this.locsData();
       this.recommendData();
-      this.ranking();
       this.roomRecommend();
+      this.ranking();
       this.newlist();
       this.region();
       Header.primaryMenu();
       Header.banner();
       user.userStatus.timeLine && this.timeLine();
+      this.updateDom();
     }
     locsData() {
       apiWebshowLocs({ ids: [4694, 29, 31, 34, 40, 42, 44] }).then((d) => {
@@ -24890,7 +24905,6 @@ const MODULES = `
       this.pgc = true;
       location.href.replace(/[sS][sS]\\d+/, (d) => this.ssid = Number(d.substring(2)));
       location.href.replace(/[eE][pP]\\d+/, (d) => this.epid = Number(d.substring(2)));
-      this.updateDom();
       this.recommend();
       this.seasonCount();
       user.userStatus.videoLimit?.status && this.videoLimit();
@@ -24898,8 +24912,10 @@ const MODULES = `
       this.initialState();
       this.enLike();
       this.episodeData();
+      Header.prid = 1612;
       Header.primaryMenu();
       Header.banner();
+      this.updateDom();
     }
     /** 修复：末尾番剧推荐 */
     recommend() {
@@ -25309,6 +25325,7 @@ const MODULES = `
     /** 销毁标记，当前已不是av页，部分回调禁止生效 */
     destroy = false;
     like;
+    webpackJsonp = true;
     get aid() {
       return BLOD.aid;
     }
@@ -25325,7 +25342,6 @@ const MODULES = `
       location.href.includes("/s/video") && urlCleaner.updateLocation(location.href.replace("s/video", "video"));
       this.enLike();
       this.aidLostCheck();
-      this.updateDom();
       this.favCode();
       this.tagTopic();
       this.menuConfig();
@@ -25335,6 +25351,7 @@ const MODULES = `
       this.elecShow();
       Header.primaryMenu();
       Header.banner();
+      this.updateDom();
     }
     /**
      * 暴露UI组件
@@ -25595,11 +25612,11 @@ const MODULES = `
       new Comment();
       this.enLike();
       this.toview();
-      this.updateDom();
       this.living();
       this.commentAgent();
       Header.primaryMenu();
       Header.banner();
+      this.updateDom();
     }
     /** 记录视频数据 */
     toview() {
@@ -25664,12 +25681,12 @@ const MODULES = `
       this.init();
       this.EmbedPlayer();
       this.toviewHook();
-      this.updateDom();
       this.elecShow();
       this.enLike();
       Header.primaryMenu();
       Header.banner();
       this.isPl || switchVideo(this.switchVideo);
+      this.updateDom();
     }
     /** 初始化 */
     init() {
@@ -25779,11 +25796,12 @@ const MODULES = `
 
   // src/page/playlist-detail.ts
   var PagePlaylistDetail = class extends Page {
+    webpackJsonp = true;
     constructor() {
       super(playlist_detail_default);
       this.__INITIAL_STATE__();
-      this.updateDom();
       this.ancientHeader();
+      this.updateDom();
     }
     /** 移除上古顶栏 */
     ancientHeader() {
@@ -25832,9 +25850,9 @@ const MODULES = `
       this.location();
       this.overDue();
       this.initState();
-      this.updateDom();
       Header.primaryMenu();
       Header.banner();
+      this.updateDom();
     }
     /** 还原正确的排行地址否则页面无法正常初始化 */
     location() {
@@ -25878,6 +25896,7 @@ const MODULES = `
     ];
     readInfoStr = "";
     ops;
+    webpackJsonp = true;
     constructor() {
       super(read_default);
       this.webpackjsonp();
@@ -25994,14 +26013,9 @@ const MODULES = `
         },
         spoiler: "0"
       };
-      const title = document.title;
-      this.vdom.replace(document.documentElement);
+      super.updateDom();
       document.querySelector(".page-container").innerHTML = this.readInfoStr;
-      this.vdom.loadScript().then(() => {
-        this.loadedCallback();
-        PageRead.rightCopyEnable();
-      });
-      title && !title.includes("404") && (document.title = title);
+      PageRead.rightCopyEnable();
     }
     /** 解锁右键菜单及复制 */
     static rightCopyEnable() {
@@ -26110,9 +26124,9 @@ const MODULES = `
       super(search_default);
       this.location();
       this.initState();
-      this.updateDom();
       this.style();
       this.gat();
+      this.updateDom();
     }
     /** 修正URL */
     location() {
