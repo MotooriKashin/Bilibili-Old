@@ -14,14 +14,43 @@ export class Header {
     /** locs列表 */
     static locs = [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142];
     /** 缓存已请求内容 */
-    static record: Record<string, any> = {};
+    static record: Record<number, ReturnType<typeof apiPageHeader>> = {};
     /** 资源id */
-    static rid = this.resourceId();
+    static get rid() {
+        return this.resourceId();
+    }
+    /** 页面固定的资源id */
+    static prid = 0;
+    /** tid对照表 */
+    static tid = {
+        1: 1576,
+        13: 1612,
+        167: 1920,
+        3: 1580,
+        129: 1584,
+        4: 1588,
+        36: 1592,
+        160: 1600,
+        119: 1608,
+        155: 1604,
+        165: 1620,
+        166: 1620,
+        5: 1596,
+        23: 1634,
+        11: 1616,
+        181: 2210,
+        177: 2260,
+        188: 3129
+    }
     /**
      * 根据页面返回resourceId
      * @returns resourceId
      */
     static resourceId() {
+        const tid: 13 = (<any>window).bid || (<any>window).tid || (<any>window).topid;
+        if (tid) {
+            return this.tid[tid] ?? 142;
+        }
         if (location.href.includes("v/douga")) return 1576;
         if (location.href.includes("/anime")) return 1612;
         if (location.href.includes("v/music")) return 1580;
@@ -86,32 +115,34 @@ export class Header {
         this.styleFix();
     }
     static banner() {
-        jsonpHook.async("api.bilibili.com/x/web-show/res/loc", undefined, async url => {
+        jsonpHook.async('api.bilibili.com/x/web-show/res/loc', url => {
+            const rid = this.rid;
+            this.record[rid] || (this.record[rid] = apiPageHeader({ resource_id: rid }));
+            return true;
+        }, async url => {
             const obj = new URL(url);
+            const rid = this.rid;
+
             obj.searchParams.delete("callback");
-            let loc = this.record[url];
-            let header = this.record[this.rid];
-            let rqs: any;
-            if (!loc || !header) {
-                rqs = await Promise.all([
-                    fetch(obj.toJSON()).then(d => d.json()),
-                    apiPageHeader({ resource_id: this.rid })
-                ]);
-                loc = this.record[url] = rqs[0];
-                header = this.record[this.rid] = rqs[1];
+            url = obj.toJSON();
+            Header.prid && (url.includes(String(Header.prid)) || (url = url.replace('ids=', `ids=${Header.prid}%2C`)));
+
+            const loc = await fetch(url).then(d => d.json());
+            const header = await this.record[rid];
+            if (loc.data) {
+                this.locs.forEach(d => {
+                    loc.data[d] && (loc.data[d][0].pic = (header && header.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png",
+                        loc.data[d][0].litpic = (header && header.litpic),
+                        loc.data[d][0].url = (header && header.url) || "",
+                        loc.data[d][0].title = (header && header.name) || "");
+                    if (url.includes("loc?") && obj.searchParams.get("id") == String(d)) {
+                        loc.data[0].pic = (header && header.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png";
+                        loc.data[0].litpic = (header && header.litpic) || "";
+                        loc.data[0].url = (header && header.url) || "";
+                        loc.data[0].title = (header && header.name) || "";
+                    }
+                });
             }
-            loc.data && this.locs.forEach(d => {
-                loc.data[d] && (loc.data[d][0].pic = (header && header.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png",
-                    loc.data[d][0].litpic = (header && header.litpic),
-                    loc.data[d][0].url = (header && header.url) || "",
-                    loc.data[d][0].title = (header && header.name) || "");
-                if (url.includes("loc?") && obj.searchParams.get("id") == String(d)) {
-                    loc.data[0].pic = (header && header.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png";
-                    loc.data[0].litpic = (header && header.litpic) || "";
-                    loc.data[0].url = (header && header.url) || "";
-                    loc.data[0].title = (header && header.name) || "";
-                }
-            });
             return loc;
         }, false);
     }

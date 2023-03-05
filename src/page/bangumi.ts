@@ -513,6 +513,7 @@ export class PageBangumi extends Page {
         this.initialState();
         this.enLike();
         this.episodeData();
+        Header.prid = 1612;
         Header.primaryMenu();
         Header.banner();
         this.updateDom();
