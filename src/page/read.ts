@@ -65,8 +65,6 @@ export class PageRead extends Page {
     protected webpackJsonp = true;
     constructor() {
         super(html);
-        this.webpackjsonp();
-        new Comment();
         this.initState();
     }
     /** 处理webpackJsonp污染 */
@@ -190,6 +188,8 @@ export class PageRead extends Page {
             },
             spoiler: "0"
         };
+        new Comment();
+        this.webpackjsonp();
         super.updateDom();
         document.querySelector(".page-container")!.innerHTML = this.readInfoStr;
         PageRead.rightCopyEnable();

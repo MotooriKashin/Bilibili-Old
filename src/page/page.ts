@@ -30,7 +30,7 @@ export abstract class Page {
         this.vdom.replace(document.documentElement);
         // 还原标题
         title && !title.includes("404") && (document.title = title);
-        this.loadedCallback();
+        setTimeout(() => this.loadedCallback());
     }
     /** 重写完成回调 */
     protected loadedCallback() {
