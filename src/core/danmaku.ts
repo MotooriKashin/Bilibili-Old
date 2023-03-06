@@ -67,29 +67,25 @@ class Danmaku {
     localDmXml() {
         if (!(<any>window).player) return toast.warning('未找到播放器实例！请在播放页面使用。');
         if (!(<any>window).player?.appendDm) return toast.warning('未启用【重构播放器】，无法载入弹幕！');
-        const data = ['请选择一个弹幕文件，拓展名：.xml，编码：utf-8'];
-        const tst = toast.toast(0, 'info', ...data);
+        const tst = toast.list('请选择一个弹幕文件，拓展名：.xml，编码：utf-8');
         fileRead('.xml', false)
             .then(d => {
                 if (d && d[0]) {
-                    data.push('-------loading-------', `弹幕：${d[0].name}`, `类型：${d[0].type}`, `大小：${sizeFormat(d[0].size)}`);
-                    tst.data = data;
+                    tst.push('-------loading-------', `弹幕：${d[0].name}`, `类型：${d[0].type}`, `大小：${sizeFormat(d[0].size)}`);
                     tst.type = 'warning';
                     return readAs(d[0])
                 }
-                throw new Error(data[0]);
+                throw new Error(tst.data[0]);
             })
             .then(d => {
                 const dm = DanmakuBase.decodeXml(d);
                 (<any>window).player.appendDm(dm, !user.userStatus!.dmContact);
-                data.push('-------decoding-------', `有效弹幕数：${dm.length}`, `加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
-                tst.data = data;
+                tst.push('-------decoding-------', `有效弹幕数：${dm.length}`, `加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
                 tst.type = 'success';
             })
             .catch(e => {
-                data.push(e);
+                tst.push(e);
                 debug.error(e);
-                tst.data = data;
                 tst.type = 'error';
             })
             .finally(() => {
@@ -100,29 +96,25 @@ class Danmaku {
     localDmJson() {
         if (!(<any>window).player) return toast.warning('未找到播放器实例！请在播放页面使用。');
         if (!(<any>window).player?.appendDm) return toast.warning('未启用【重构播放器】，无法载入弹幕！');
-        const data = ['请选择一个弹幕文件，拓展名：.json，编码：utf-8'];
-        const tst = toast.toast(0, 'info', ...data);
+        const tst = toast.list('请选择一个弹幕文件，拓展名：.json，编码：utf-8');
         fileRead('.json', false)
             .then(d => {
                 if (d && d[0]) {
-                    data.push('-------loading-------', `弹幕：${d[0].name}`, `类型：${d[0].type}`, `大小：${sizeFormat(d[0].size)}`);
-                    tst.data = data;
+                    tst.push('-------loading-------', `弹幕：${d[0].name}`, `类型：${d[0].type}`, `大小：${sizeFormat(d[0].size)}`);
                     tst.type = 'warning';
                     return readAs(d[0])
                 }
-                throw new Error(data[0]);
+                throw new Error(tst.data[0]);
             })
             .then(d => {
                 const dm = JSON.parse(d);
                 (<any>window).player.appendDm(dm, !user.userStatus!.dmContact);
-                data.push('-------decoding-------', `有效弹幕数：${dm.length}`, `加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
-                tst.data = data;
+                tst.push('-------decoding-------', `有效弹幕数：${dm.length}`, `加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
                 tst.type = 'success';
             })
             .catch(e => {
-                data.push(e);
+                tst.push(e);
                 debug.error(e);
-                tst.data = data;
                 tst.type = 'error';
             })
             .finally(() => {
@@ -144,28 +136,23 @@ class Danmaku {
     async onlineDm(str: string) {
         if (!(<any>window).player) return toast.warning('未找到播放器实例！请在播放页面使用。');
         if (!(<any>window).player?.appendDm) return toast.warning('未启用【重构播放器】，无法载入弹幕！');
-        const data = ['-------在线弹幕-------', `目标：${str}`];
-        const tst = toast.toast(0, 'info', ...data);
+        const tst = toast.list('-------在线弹幕-------', `目标：${str}`);
         const { aid, cid } = await urlParam(str);
-        data.push(`aid：${aid}`, `cid：${cid}`);
-        tst.data = data;
+        tst.push(`aid：${aid}`, `cid：${cid}`);
         if (!aid || !cid) {
-            data.push('查询cid信息失败，已退出！');
-            tst.data = data;
+            tst.push('查询cid信息失败，已退出！');
             tst.type = 'error';
             tst.delay = toast.delay;
         } else {
             new ApiDmWeb(aid, cid).getData()
                 .then(d => {
                     (<any>window).player.appendDm(d, !user.userStatus!.dmContact);
-                    data.push(`有效弹幕数：${d.length}`, `加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
-                    tst.data = data;
+                    tst.push(`有效弹幕数：${d.length}`, `加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
                     tst.type = 'success';
                 })
                 .catch(e => {
-                    data.push(e);
+                    tst.push(e);
                     debug.error(e);
-                    tst.data = data;
                     tst.type = 'error';
                 })
                 .finally(() => {

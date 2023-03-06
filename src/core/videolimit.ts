@@ -40,8 +40,6 @@ class VideoLimit {
     protected Backup: Record<number, any> = {};
     /** 通知组件 */
     protected toast?: Toast;
-    /** 通知信息 */
-    protected data: any[] = [];
     /** 监听中 */
     protected listening = false;
     /** 播放数据备份 */
@@ -92,46 +90,37 @@ class VideoLimit {
     }
     /** 处理泰区 */
     protected async _th(args: XMLHttpRequestOpenParams) {
-        this.data = ['泰区限制视频！'];
-        this.toast = toast.toast(0, 'info', ...this.data);
+        this.toast || (this.toast = toast.list());
+        this.toast.data = ['泰区限制视频！'];
         const obj = urlObj(args[1]);
-        this.data.push(`aid：${BLOD.aid}`, `cid：${BLOD.cid}`);
-        this.toast.data = this.data;
+        this.toast.push(`aid：${BLOD.aid}`, `cid：${BLOD.cid}`);
         const epid = <number>obj.ep_id || <number>obj.episodeId || BLOD.epid;
         obj.access_key = user.userStatus!.accessKey.token;
         if (!this.Backup[epid]) {
             try {
                 networkMock();
-                this.data.push(`代理服务器：${user.userStatus!.videoLimit.th}`);
-                this.toast.data = this.data;
+                this.toast.push(`代理服务器：${user.userStatus!.videoLimit.th}`);
                 this.Backup[epid] = { code: 0, message: "success", result: await this.th(obj) };
-                this.data.push('获取代理数据成功！');
-                this.toast.data = this.data;
+                this.toast.push('获取代理数据成功！');
                 this.toast.type = 'success';
             } catch (e) {
-                this.data.push('代理出错！', <any>e);
-                !obj.access_key && this.data.push('代理服务器要求【账户授权】才能进一步操作！');
-                this.toast.data = this.data;
+                this.toast.push('代理出错！', <any>e);
+                !obj.access_key && this.toast.push('代理服务器要求【账户授权】才能进一步操作！');
                 this.toast.type = 'error';
-                debug.error(...this.data);
-                this.toast.delay = 4;
-                delete this.toast;
-                this.data = [];
+                debug.error(...this.toast.data);
+                this.toast.data = [];
                 return { code: -404, message: e, data: null };
             }
         }
-        this.toast.delay = 4;
-        delete this.toast;
-        this.data = [];
+        this.toast.data = [];
         return this.__playinfo__ = this.Backup[epid];
     }
     /** 处理港澳台 */
     protected async _gat(args: XMLHttpRequestOpenParams) {
-        this.data = ['港澳台限制视频！'];
-        this.toast = toast.toast(0, 'info', ...this.data);
+        this.toast || (this.toast = toast.list());
+        this.toast.data = ['港澳台限制视频！'];
         const obj = urlObj(args[1]);
-        this.data.push(`aid：${BLOD.aid}`, `cid：${BLOD.cid}`);
-        this.toast.data = this.data;
+        this.toast.push(`aid：${BLOD.aid}`, `cid：${BLOD.cid}`);
         const epid = <number>obj.ep_id || <number>obj.episodeId || BLOD.epid;
         obj.access_key = user.userStatus!.accessKey.token;
         if (!this.Backup[epid]) {
@@ -142,8 +131,7 @@ class VideoLimit {
                     if (upInfo) {
                         (upInfo.mid == 1988098633 || upInfo.mid == 2042149112) && (obj.module = 'movie');
                     }
-                    this.data.push(`代理服务器：内置`, `类型：${obj.module}`);
-                    this.toast.data = this.data;
+                    this.toast.push(`代理服务器：内置`, `类型：${obj.module}`);
                     const res = await apiBiliplusPlayurl(<any>obj);
                     this.Backup[epid] = { code: 0, message: "success", result: res };
                 } else {
@@ -155,24 +143,18 @@ class VideoLimit {
                     this.Backup[epid] = JSON.parse(this.uposReplace(JSON.stringify(this.Backup[epid]), <'ks3（金山）'>user.userStatus!.uposReplace.gat));
                     toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.gat}`, `UPOS：${UPOS[<'ks3（金山）'>user.userStatus!.uposReplace.gat]}`);
                 };
-                this.data.push('获取代理数据成功！');
-                this.toast.data = this.data;
+                this.toast.push('获取代理数据成功！');
                 this.toast.type = 'success';
             } catch (e) {
-                this.data.push('代理出错！', <any>e);
-                !obj.access_key && this.data.push('代理服务器要求【账户授权】才能进一步操作！');
-                this.toast.data = this.data;
+                this.toast.push('代理出错！', <any>e);
+                !obj.access_key && this.toast.push('代理服务器要求【账户授权】才能进一步操作！');
                 this.toast.type = 'error';
-                debug.error(...this.data);
-                this.toast.delay = 4;
-                delete this.toast;
-                this.data = [];
+                debug.error(...this.toast.data);
+                this.toast.data = [];
                 return { code: -404, message: e, data: null };
             }
         }
-        this.toast.delay = 4;
-        delete this.toast;
-        this.data = [];
+        this.toast.data = [];
         return this.__playinfo__ = this.Backup[epid];
     }
     /** 停止监听 */
@@ -198,18 +180,17 @@ class VideoLimit {
     protected area = 0;
     /** 访问港澳台代理 */
     protected async gat(obj: Record<string, string | number>): Promise<IPlayurlDash> {
+        this.toast || (this.toast = toast.list());
         if (!user.userStatus!.videoLimit[<'tw'>AREA[this.area]]) throw new Error(`无有效代理服务器：${AREA[this.area]}`);
         const server = user.userStatus!.videoLimit[<'tw'>AREA[this.area]];
         obj.area = AREA[this.area];
-        this.data.push(`代理服务器：${server}`);
-        this.toast && (this.toast.data = this.data);
+        this.toast.push(`代理服务器：${server}`);
         try {
             // return await new ApiAppPgcPlayurl(<any>obj, server).getData();
             return <IPlayurlDash>await apiPlayurl(<any>obj, true, true, server);
         } catch (e) {
-            this.data.push('代理服务器返回异常！', e);
+            this.toast.push('代理服务器返回异常！', e);
             if (this.toast) {
-                this.toast.data = this.data;
                 this.toast.type = 'warning';
             }
             this.area++;

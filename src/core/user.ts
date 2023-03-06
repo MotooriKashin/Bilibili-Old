@@ -79,13 +79,11 @@ class User {
     }
     /** 恢复备份数据 */
     inputUserStatus() {
-        const msg = ['请选择一个备份的数据文件（.json）', '注意：无效的数据文件可能导致异常！'];
-        const tst = toast.toast(0, 'warning', ...msg);
+        const tst = toast.list('请选择一个备份的数据文件（.json）', '注意：无效的数据文件可能导致异常！');
         fileRead("application/json")
             .then(d => {
                 if (d && d[0]) {
-                    msg.push(`读取文件：${d[0].name}`);
-                    tst.data = msg;
+                    tst.push(`读取文件：${d[0].name}`);
                     tst.type = 'info';
                     return readAs(d[0])
                         .then(d => {
@@ -93,8 +91,7 @@ class User {
                             if (typeof data === "object") {
                                 GM.setValue('userStatus', data);
                                 const text = '已恢复设置数据，请<strong>刷新</strong>页面以避免数据紊乱！';
-                                msg.push(text);
-                                tst.data = msg;
+                                tst.push(text);
                                 tst.type = 'success';
                                 return alert(text, '刷新页面', [{
                                     text: '刷新',
@@ -103,16 +100,14 @@ class User {
                             }
                         })
                         .catch(e => {
-                            msg.push('读取文件出错！', e);
-                            tst.data = msg;
+                            tst.push('读取文件出错！', e);
                             tst.type = 'error';
                             debug.error('恢复设置数据', e);
                         })
                 }
             })
             .catch(e => {
-                msg.push(e);
-                tst.data = msg;
+                tst.push(e);
             })
             .finally(() => {
                 tst.delay = 4;

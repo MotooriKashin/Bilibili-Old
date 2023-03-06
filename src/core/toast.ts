@@ -110,6 +110,22 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
             }, v * 1e3);
         }
     }
+    /** 添加消息 */
+    push(...items: any[]) {
+        return this.data.push(...items);
+    }
+    /** 弹出第一条消息 */
+    shift() {
+        return this.data.shift();
+    }
+    /** 添加置顶消息 */
+    unshift(...items: any[]) {
+        return this.data.unshift(...items);
+    }
+    /** 弹出末尾的消息 */
+    pop(pointerId: number): void {
+        return this.data.pop();
+    }
     /** 关闭 */
     close() {
         this.delay = 1;

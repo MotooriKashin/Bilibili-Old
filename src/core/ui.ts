@@ -432,19 +432,16 @@ export class UI {
                 precision: 19
             }, '单位：/MB', undefined, undefined, '如果一个文件有多个下载源，那么此项会间接决定使用几个下载源。一旦要下载的文件不小于此项的2倍，aria2便会同时尝试连接多个下载源。这也是提高下载速率的有效方法。注意：某种意义上此项是越小越好，原因不言而喻。'),
             this.button(<'aria2'>'aria2.test', '测试RPC连接', () => {
-                const data = ['正在测试RPC连接~'];
-                const tst = toast.toast(0, 'info', ...data);
+                const tst = toast.list('正在测试RPC连接~');
                 new Aria2().getVersion()
                     .then(d => {
                         tst.type = 'success';
-                        data.push(`-------aria2 v${d.version}-------`, ...d.enabledFeatures);
-                        tst.data = data;
+                        tst.push(`-------aria2 v${d.version}-------`, ...d.enabledFeatures);
                     })
                     .catch(e => {
                         tst.type = 'error';
-                        data.push('RPC链接失败 ಥ_ಥ', e);
+                        tst.push('RPC链接失败 ಥ_ಥ', e);
                         debug.error('RPC链接失败 ಥ_ಥ', e);
-                        tst.data = data;
                     })
                     .finally(() => {
                         tst.delay = 4;

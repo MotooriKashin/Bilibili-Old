@@ -142,14 +142,12 @@ export class PageAV extends Page {
     }
     /** 通过其他接口获取aid数据 */
     protected async getVideoInfo() {
-        const data = [`av${this.aid}可能无效，尝试其他接口~`]
-        const tst = toast.toast(0, 'info', ...data);
+        const tst = toast.list(`av${this.aid}可能无效，尝试其他接口~`);
         try {
             const card = await apiArticleCards({ av: this.aid });
             if (card[`av${this.aid}`]) {
                 if (card[`av${this.aid}`].redirect_url) {
-                    data.push(`bangumi重定向：${card[`av${this.aid}`].redirect_url}`);
-                    tst.data = data;
+                    tst.push(`bangumi重定向：${card[`av${this.aid}`].redirect_url}`);
                     tst.type = 'warning';
                     setTimeout(() => {
                         urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
@@ -162,8 +160,7 @@ export class PageAV extends Page {
             }
             const view = await new apiBiliplusView(this.aid).toDetail();
             if (view?.data.View.season) {
-                data.push(`bangumi重定向：${(<any>view).data.View.season.ogv_play_url}`);
-                tst.data = data;
+                tst.push(`bangumi重定向：${(<any>view).data.View.season.ogv_play_url}`);
                 tst.type = 'warning';
                 view.data.View.season = undefined;
                 setTimeout(() => {
@@ -176,16 +173,14 @@ export class PageAV extends Page {
             }
             setTimeout(() => {
                 videoInfo.aidDatail(view.data.View); // 记录视频数据
-                data.push('获取缓存数据成功！但这可能是个失效视频！');
-                tst.data = data;
+                tst.push('获取缓存数据成功！但这可能是个失效视频！');
                 tst.type = 'success';
                 tst.delay = 4;
             }, 100);
             return view;
         } catch (e) {
             debug.error('获取数据出错！', e);
-            data.push('获取数据出错！', <any>e);
-            tst.data = data;
+            tst.push('获取数据出错！', <any>e);
             tst.type = 'error';
             tst.delay = 4;
             throw e;
