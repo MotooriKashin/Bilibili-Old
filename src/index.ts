@@ -28,7 +28,7 @@ import { Comment } from './core/comment';
 import { WebTRC } from './core/webrtc';
 import { UI } from './core/ui';
 import toview from './json/toview.json';
-import { PageWild } from './page/wild';
+import { PageHttps, PageWild } from './page/wild';
 
 document.domain = 'bilibili.com';
 
@@ -36,6 +36,7 @@ document.domain = 'bilibili.com';
 BLOD.version = GM.info?.script.version.slice(-40);
 // 获取用户数据后初始化
 user.addCallback(status => {
+    toast.update(status.toast);
     cdn.update(status.cdn, BLOD.version);
     Comment.commentJumpUrlTitle = status.commentJumpUrlTitle;
     if (BLOD.path[2] == 'www.bilibili.com' && (!BLOD.path[3] || (BLOD.path[3].startsWith('\?') || BLOD.path[3].startsWith('\#') || BLOD.path[3].startsWith('index.')))) {
@@ -82,10 +83,15 @@ user.addCallback(status => {
     if (/\/moe\/2018\/jp\/home/.test(location.href)) {
         Reflect.set(window, 'getPlayList', () => { return { code: 0, data: toview } });
     }
+    if (
+        /\/html\/danmubisai.html/.test(location.href)
+        || /\/html\/cele.html/.test(location.href)
+    ) {
+        new PageHttps();
+    }
 
     player.nanoPermit();
     new Automate();
-    toast.update(status.toast);
     status.disableReport && new ReportObserver();
     status.videoLimit.status && videoLimit.enable();
     status.fullBannerCover && (Header.fullBannerCover = true);

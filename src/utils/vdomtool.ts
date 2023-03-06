@@ -3,7 +3,6 @@ import { htmlVnode, Vdom } from "./htmlvnode";
 
 export class VdomTool {
     protected vdom: Vdom[];
-    protected script: Vdom[] = [];
     constructor(html: string | Vdom[]) {
         if (typeof html === 'string') {
             this.vdom = htmlVnode(html);
@@ -55,21 +54,21 @@ export class VdomTool {
         });
         return node;
     }
-    async loadScript() {
-        const scripts = this.script.map(d => {
-            const script = <HTMLScriptElement>this.createElement(d);
-            script.async = false; // 保证所有脚本有序执行
-            return script
-        });
-        document.body.append(...scripts);
-    }
     /** 添加为目标节点的子节点 */
     appendTo(node: HTMLElement | ShadowRoot) {
-        node.append(this.toFragment());
+        try {
+            node.append(this.toFragment());
+        } catch (e) {
+            debug.error(e);
+        }
     }
     /** 替换目标节点 */
     replace(node: HTMLElement) {
-        node.replaceWith(this.toFragment());
+        try {
+            node.replaceWith(this.toFragment());
+        } catch (e) {
+            debug.error(e);
+        }
     }
     /**
      * 添加事件监听（转化为DocumentFragment之前限定，否则请使用DOM接口操作）

@@ -51,16 +51,22 @@ class Scanner {
     /** 提取节点名 */
     organizeTag() {
         if (!this.quote && this.html[0] === "<") {
-            if (this.html.startsWith(`</${this.tagNames.reduce((s, d) => s = d, <any>undefined)}`)) {
+            if (this.html.startsWith(`</${this.tagNames.at(-1)}`)) {
                 // 闭合标签
                 this.textContent();
-                this.html = this.html.replace(new RegExp(`^</${this.tagNames.reduce((s, d) => s = d, <any>undefined)}>`), "");
+                this.html = this.html.replace(new RegExp(`^</${this.tagNames.at(-1)}>`), "");
                 this.popNode();
+            } else if (this.tagNames.at(-1) === 'script') {
+                // script脚本尚未闭合，不是新节点开始的时机
+                this.addText();
             } else {
                 // 节点开始标记
                 this.removeScanned();
                 if (this.html.startsWith("!--")) {
                     this.html = this.html.replace(/^!--[\S\s]+?-->/, "");
+                }
+                if (this.html.startsWith('!DOCTYPE')) {
+                    this.html = this.html.replace(/^!DOCTYPE[\S\s]+?>/, "");
                 }
                 if (/^[a-zA-Z]/.test(this.html)) {
                     this.textContent()
@@ -88,26 +94,29 @@ class Scanner {
                     const tagName = this.html.substring(0, this.pos); // 提取节点名
                     const tag = new Vnode(tagName); // 添加Vnode模板
                     this.tagNames.push(tagName); // 节点名压栈
-                    this.targets.reduce((s, d) => s = d, <any>undefined).children.push(tag); // Vnode上树
+                    this.targets.at(-1).children.push(tag); // Vnode上树
                     this.targets.push(tag); // Vnode压栈
                     this.removeScanned(this.pos + 1);
                     func.forEach(d => d()); // 操作栈：属性处理/出栈
                 }
             }
+        } else {
+            this.addText();
         }
-        else {
-            // 处理TextContent有字符串形式的节点问题
-            switch (this.html[0]) {
-                case "'": !this.quote ? this.quote = "'" : (this.quote === "'" && (this.quote = ""));
-                    break;
-                case '"': !this.quote ? this.quote = '"' : (this.quote === '"' && (this.quote = ""));
-                    break;
-                case '`': !this.quote ? this.quote = '`' : (this.quote === '`' && (this.quote = ""));
-                    break;
-            }
-            this.text += this.html[0]; // 记录TextContent
-            this.removeScanned();
+    }
+    /** 记录疑似文本节点 */
+    addText() {
+        // 处理TextContent有字符串形式的节点问题
+        switch (this.html[0]) {
+            case "'": !this.quote ? this.quote = "'" : (this.quote === "'" && (this.quote = ""));
+                break;
+            case '"': !this.quote ? this.quote = '"' : (this.quote === '"' && (this.quote = ""));
+                break;
+            case '`': !this.quote ? this.quote = '`' : (this.quote === '`' && (this.quote = ""));
+                break;
         }
+        this.text += this.html[0]; // 记录TextContent
+        this.removeScanned();
     }
     /** 提取属性 */
     organizeProp() {
@@ -124,7 +133,7 @@ class Scanner {
                     const str = this.html.substring(start, this.pos).replace(/\r|\n|"/g, "").replace(/^ +/, "");
                     const prop = str.split("=");
                     const key = <string>prop.shift();
-                    key && key !== "/" && (this.targets.reduce((s, d) => s = d, <any>undefined).props[key] = prop.join("=") || key);
+                    key && key !== "/" && (this.targets.at(-1).props[key] = prop.join("=") || key);
                     start = this.pos;
                 }
                     break;
@@ -133,7 +142,7 @@ class Scanner {
                     const str = this.html.substring(start, this.pos).replace(/\r|\n|"/g, "").replace(/^ +/, "");
                     const prop = str.split("=");
                     const key = <string>prop.shift();
-                    key && key !== "/" && (this.targets.reduce((s, d) => s = d, <any>undefined).props[key] = prop.join("=") || key);
+                    key && key !== "/" && (this.targets.at(-1).props[key] = prop.join("=") || key);
                     if (this.html[this.pos - 1] === "/") {
                         this.popNode();
                         popd = true;
@@ -147,7 +156,7 @@ class Scanner {
     }
     /** 出栈检查 空元素直接出栈*/
     tagSingle() {
-        switch (this.tagNames.reduce((s, d) => s = d, <any>undefined)) {
+        switch (this.tagNames.at(-1)) {
             case "area":
             case "base":
             case "br":
@@ -185,7 +194,7 @@ class Scanner {
         if (text) { // 有效TextContent
             const tag = new Vnode("text");
             tag.text = this.text;
-            this.targets.reduce((s, d) => s = d, <any>undefined).children.push(tag);
+            this.targets.at(-1).children.push(tag);
         }
         this.text = ""; // 新节点伊始，重置TextContent
     }

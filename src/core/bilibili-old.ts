@@ -3,6 +3,7 @@ import { urlSign } from "../io/api";
 import { base64 } from "../utils/base64";
 import { debug } from "../utils/debug";
 import { objUrl, urlObj } from "../utils/format/url";
+import { htmlVnode } from "../utils/htmlvnode";
 import { danmaku } from "./danmaku";
 import { download } from "./download";
 import { toast } from "./toast";
@@ -57,6 +58,7 @@ export const BLOD = new (class {
     videoInfo = videoInfo;
     base64 = base64;
     md5 = md5;
+    htmlVnode = htmlVnode;
 
     /** 刷新toast，多用于重构页面后刷新显示 */
     flushToast() {

@@ -7,5 +7,5 @@
  * https('http://www.bilibili.com',true) // 返回 https://www.bilibili.com
  */
 export function https(url: string, protocol = false) {
-    return url.replace('http://', protocol ? 'https://' : '//');
+    return url.replace(/http:/g, protocol ? 'https:' : '');
 }

@@ -8,7 +8,7 @@ import { DanmakuBase } from "../utils/danmaku";
 import { debug } from "../utils/debug";
 import { addCss, loadScript, loadStyle } from "../utils/element";
 import { cht2chs } from "../utils/format/cht2chs";
-import { objUrl } from "../utils/format/url";
+import { objUrl, urlObj } from "../utils/format/url";
 import { methodHook, propertyHook } from "../utils/hook/method";
 import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
@@ -78,6 +78,12 @@ class Player {
             }
             return v;
         });
+        // 嵌入播放器默认宽屏
+        window.self === window.top || this.addModifyArgument(args => {
+            const obj = urlObj(`?${args[2]}`);
+            obj.as_wide = 1;
+            args[2] = objUrl('', obj);
+        })
     }
     /** 修改播放器启动参数 */
     protected modifyArgument(args: IArguments) {

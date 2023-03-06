@@ -3,6 +3,7 @@ import { toast } from "../core/toast";
 import { urlCleaner } from "../core/url";
 import { cdn } from "../utils/cdn";
 import { debug } from "../utils/debug";
+import { https } from "../utils/format/http";
 import { Page } from "./page";
 
 export class PageWild extends Page {
@@ -38,5 +39,35 @@ export class PageWild extends Page {
             .finally(() => {
                 this.toast.delay = 4;
             })
+    }
+}
+export class PageHttps extends Page {
+    private toast = toast.list();
+    constructor(comment = true) {
+        super('');
+        comment && new Comment();
+        this.init();
+    }
+    protected init() {
+        this.toast.push('此页面混有部分不安全链接，即将替换为安全链接并刷新~');
+        fetch(location.href)
+            .then(d => d.text())
+            .then(d => {
+                this.toast.push('刷新中>>>');
+                console.clear();
+                this.updateHtml(https(d, true));
+                this.updateDom();
+                BLOD.flushToast();
+                this.toast.push('> 刷新成功');
+                this.toast.delay = 4;
+            })
+            .catch(e => {
+                this.toast.push('重构页面错误', e);
+                debug.error('重构页面错误', e);
+                this.toast.type = 'error';
+            })
+            .finally(() => {
+                this.toast.delay = 4;
+            });
     }
 }
