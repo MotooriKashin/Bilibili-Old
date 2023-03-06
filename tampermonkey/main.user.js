@@ -88,22 +88,66 @@ const MODULES = `
     }
   });
 
+  // tampermonkey/polyfill/element-prototype-replaceChildren.ts
+  var init_element_prototype_replaceChildren = __esm({
+    "tampermonkey/polyfill/element-prototype-replaceChildren.ts"() {
+      "use strict";
+      init_tampermonkey();
+      if (typeof Element.prototype.replaceChildren === "undefined") {
+        Reflect.defineProperty(Element.prototype, "replaceChildren", {
+          value: function() {
+            while (this.lastChild)
+              this.removeChild(this.lastChild);
+            this.append.call(this, ...arguments);
+          },
+          writable: true,
+          enumerable: false,
+          configurable: true
+        });
+      }
+    }
+  });
+
+  // tampermonkey/polyfill/proposal-relative-indexing-method.ts
+  var at2;
+  var init_proposal_relative_indexing_method = __esm({
+    "tampermonkey/polyfill/proposal-relative-indexing-method.ts"() {
+      "use strict";
+      init_tampermonkey();
+      if (typeof Array.prototype.at === "undefined") {
+        let at = function(n) {
+          n = Math.trunc(n) || 0;
+          if (n < 0)
+            n += this.length;
+          if (n < 0 || n >= this.length)
+            return void 0;
+          return this[n];
+        };
+        at2 = at;
+        const TypedArray = Reflect.getPrototypeOf(Int8Array);
+        for (const C of [Array, String, TypedArray]) {
+          Reflect.defineProperty(
+            C.prototype,
+            "at",
+            {
+              value: at,
+              writable: true,
+              enumerable: false,
+              configurable: true
+            }
+          );
+        }
+      }
+    }
+  });
+
   // tampermonkey/polyfill/polyfill.ts
   var init_polyfill = __esm({
     "tampermonkey/polyfill/polyfill.ts"() {
       "use strict";
       init_tampermonkey();
-      if (typeof Element.prototype.replaceChildren === "undefined") {
-        Reflect.defineProperty(Element.prototype, "replaceChildren", {
-          configurable: true,
-          enumerable: false,
-          value: function() {
-            while (this.lastChild)
-              this.removeChild(this.lastChild);
-            this.append.call(this, ...arguments);
-          }
-        });
-      }
+      init_element_prototype_replaceChildren();
+      init_proposal_relative_indexing_method();
     }
   });
 
