@@ -1,6 +1,7 @@
 import html from "../html/toast.html";
 import { CustomElementsInterface } from "../utils/customelement";
 import { debug } from "../utils/debug";
+import { propertryChangeHook } from "../utils/hook/method";
 import { svg } from "../utils/svg";
 import { toObject, toString } from "../utils/type";
 import { isArray } from "../utils/typeof";
@@ -33,7 +34,9 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
         super();
         this.classList.add('toast');
         this.setAttribute('aria-live', 'assertive');
-        this.setAttribute('style', 'padding-top: 0px;padding-bottom: 0px;height: 0px;');
+        this.style.paddingTop = '0px';
+        this.style.paddingBottom = '0px';
+        this.style.height = '0px';
 
         this.appendChild(this.message);
         this.message.className = 'toast-message';
@@ -50,18 +53,32 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
             this.timeout && (this.delay = 1);
         });
     }
-    /** 内容 */
-    set data(v: any[]) {
+    /** 更新内容 */
+    protected value(v: any[]) {
         isArray(v) || (v = [v]);
         let html = '';
         v.forEach((d, i) => {
             d = toString(d);
             html += i ? `<br>${d}` : `<label>${d}</label>`;
         });
+        // 无内容时隐藏
+        v.length ? this.style.display = '' : this.style.display = 'none';
         const close = this.message.contains(this.closeButton);
         this.message.innerHTML = html;
         close && (this.delay = 0);
-        this.setAttribute("style", `height: ${this.message.scrollHeight + 30}px;`);
+        this.style.paddingTop = '';
+        this.style.paddingBottom = '';
+        this.style.height = `${this.message.scrollHeight + 30}px`;
+    }
+    /** 代理对象暂存 */
+    protected _data: any[] = [];
+    get data() {
+        return this._data;
+    }
+    /** 内容 */
+    set data(v: any[]) {
+        this.value(v);
+        this._data = propertryChangeHook(v, () => this.value(v));
     }
     /** 类型 */
     set type(v: ToastType) {
@@ -81,7 +98,9 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
             : (this.message.contains(this.closeButton) || this.message.insertBefore(this.closeButton, this.message.firstChild));
         if (v === 1) {
             if (!this.hovering) {
-                this.setAttribute("style", "padding-top: 0px;padding-bottom: 0px;height: 0px;");
+                this.style.paddingTop = '0px';
+                this.style.paddingBottom = '0px';
+                this.style.height = '0px';
                 setTimeout(() => this.remove(), 1e3);
             }
         } else if (v !== 0) {
@@ -90,6 +109,10 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
                 this.delay = 1;
             }, v * 1e3);
         }
+    }
+    /** 关闭 */
+    close() {
+        this.delay = 1;
     }
 }
 customElements.get(`toast-${_MUTEX_}`) || customElements.define(`toast-${_MUTEX_}`, Toast, { extends: 'div' });
@@ -125,6 +148,22 @@ class ToastContainer extends HTMLElement implements CustomElementsInterface {
         toast.data = data;
         toast.delay = delay;
         return toast;
+    }
+    /**
+     * 可拓展toast，用于需要动态增减消息。  
+     * 无数据时隐藏，有数据时显现。默认为info类型。
+     * @param data 初始信息，可为空。
+     * @example
+     * const T = toast.list(); // 生成toast(隐藏)
+     * T.data.push(123); // 添加一条消息123，toast显现。data属性本质是数组，可以使用任何数组方法更改消息。
+     * T.type = 'warning'; // 更改toast样式为warning
+     * T.rtl = true; // 镜像toast
+     * T.data.pop(); // 删除最后一条消息，消息变为空，toast自动隐藏
+     * T.delay = 4; // 启用倒计时，单位/秒，倒计时结束后toast将被移除。也就是对象`T`不再响应任何操作，所以除非不需要再拓展，否则请不要修改`delay`属性。
+     * T.close(); // 移除toast，效果同上一条，不过是立即移除。
+     */
+    list(...data: any[]) {
+        return this.toast(0, 'info', ...data);
     }
     success(...data: any[]) {
         this.toast(this.delay, 'success', ...data);
