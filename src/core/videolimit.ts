@@ -108,11 +108,11 @@ class VideoLimit {
                 !obj.access_key && this.toast.push('代理服务器要求【账户授权】才能进一步操作！');
                 this.toast.type = 'error';
                 debug.error(...this.toast.data);
-                this.toast.data = [];
                 return { code: -404, message: e, data: null };
             }
         }
-        this.toast.data = [];
+        this.toast.delay = 4;
+        delete this.toast;
         return this.__playinfo__ = this.Backup[epid];
     }
     /** 处理港澳台 */
@@ -150,11 +150,11 @@ class VideoLimit {
                 !obj.access_key && this.toast.push('代理服务器要求【账户授权】才能进一步操作！');
                 this.toast.type = 'error';
                 debug.error(...this.toast.data);
-                this.toast.data = [];
                 return { code: -404, message: e, data: null };
             }
         }
-        this.toast.data = [];
+        this.toast.delay = 4;
+        delete this.toast;
         return this.__playinfo__ = this.Backup[epid];
     }
     /** 停止监听 */

@@ -152,6 +152,7 @@ export class PageAV extends Page {
                     setTimeout(() => {
                         urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
                         new PageBangumi(); // 跳转Bangumi
+                        BLOD.flushToast();
                         this.destroy = true;
                         tst.delay = 4;
                     }, 100);
@@ -166,6 +167,7 @@ export class PageAV extends Page {
                 setTimeout(() => {
                     urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
                     new PageBangumi(); // 跳转Bangumi
+                    BLOD.flushToast();
                     this.destroy = true;
                     tst.delay = 4;
                 }, 100);

@@ -28,6 +28,7 @@ import { Comment } from './core/comment';
 import { WebTRC } from './core/webrtc';
 import { UI } from './core/ui';
 import toview from './json/toview.json';
+import { PageWild } from './page/wild';
 
 document.domain = 'bilibili.com';
 
@@ -38,7 +39,12 @@ user.addCallback(status => {
     cdn.update(status.cdn, BLOD.version);
     Comment.commentJumpUrlTitle = status.commentJumpUrlTitle;
     if (BLOD.path[2] == 'www.bilibili.com' && (!BLOD.path[3] || (BLOD.path[3].startsWith('\?') || BLOD.path[3].startsWith('\#') || BLOD.path[3].startsWith('index.')))) {
-        status.index && new PageIndex();
+        if (document.referrer.includes('blackboard/bnj2019.html')) {
+            // 拜年祭2019
+            new PageWild('/src/html/bnj2019.html', 'https://www.bilibili.com/blackboard/bnj2019.html');
+        } else {
+            status.index && new PageIndex();
+        }
     }
     if (status.av && /(\/s)?\/video\/[AaBb][Vv]/.test(location.href)) {
         // SEO重定向

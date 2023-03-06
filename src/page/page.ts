@@ -1,10 +1,11 @@
+import { toast } from "../core/toast";
 import { poll } from "../utils/poll";
 import { VdomTool } from "../utils/vdomtool";
 
 /** 重写页面基类 */
 export abstract class Page {
     /** 页面框架vdom */
-    protected vdom: VdomTool;
+    protected vdom!: VdomTool;
     /** 初始化完成 */
     protected initilized = false;
     /** 禁止清除webpackJsonp */
@@ -13,12 +14,15 @@ export abstract class Page {
      * @param html 页面框架
      */
     constructor(html: string) {
-        this.vdom = new VdomTool(html);
+        this.updateHtml(html);
         Reflect.defineProperty(window, '_babelPolyfill', {
             configurable: true,
             set: () => true,
             get: () => undefined
         });
+    }
+    protected updateHtml(html: string) {
+        this.vdom = new VdomTool(html);
     }
     /** 重写页面 */
     protected updateDom() {

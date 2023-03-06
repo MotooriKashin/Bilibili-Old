@@ -57,4 +57,9 @@ export const BLOD = new (class {
     videoInfo = videoInfo;
     base64 = base64;
     md5 = md5;
+
+    /** 刷新toast，多用于重构页面后刷新显示 */
+    flushToast() {
+        document.body.contains(toast) || document.body.appendChild(toast)
+    }
 })();
