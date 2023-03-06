@@ -21,7 +21,7 @@ export class PageWild extends Page {
     }
     private init() {
         this.toast.push(this.url, '已失效~', '请求远程备份>>>');
-        GM.fetch(cdn.encode(this.path))
+        GM.fetch(cdn.encode(this.path, ''))
             .then(d => d.text())
             .then(d => {
                 this.toast.push('成功获取网页框架，刷新页面~');
