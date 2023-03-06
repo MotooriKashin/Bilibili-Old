@@ -8468,7 +8468,7 @@ const MODULES = `
       super();
       this.classList.add("toast");
       this.setAttribute("aria-live", "assertive");
-      this.setAttribute("style", "padding-top: 0px;padding-bottom: 0px;height: 0px;");
+      this.fadeOut();
       this.appendChild(this.message);
       this.message.className = "toast-message";
       this.closeButton.className = "toast-close-button";
@@ -8484,18 +8484,29 @@ const MODULES = `
         this.timeout && (this.delay = 1);
       });
     }
-    /** 内容 */
-    set data(v) {
+    /** 更新内容 */
+    value(v) {
       isArray(v) || (v = [v]);
       let html = "";
       v.forEach((d, i) => {
         d = toString(d);
         html += i ? \`<br>\${d}\` : \`<label>\${d}</label>\`;
       });
+      v.length || this.fadeOut();
       const close = this.message.contains(this.closeButton);
       this.message.innerHTML = html;
       close && (this.delay = 0);
-      this.setAttribute("style", \`height: \${this.message.scrollHeight + 30}px;\`);
+      v.length && this.fadeIn();
+    }
+    /** 代理对象暂存 */
+    _data = [];
+    get data() {
+      return this._data;
+    }
+    /** 内容 */
+    set data(v) {
+      this.value(v);
+      this._data = propertryChangeHook(v, () => this.value(v));
     }
     /** 类型 */
     set type(v) {
@@ -8513,8 +8524,7 @@ const MODULES = `
       v ? this.message.contains(this.closeButton) && this.closeButton.remove() : this.message.contains(this.closeButton) || this.message.insertBefore(this.closeButton, this.message.firstChild);
       if (v === 1) {
         if (!this.hovering) {
-          this.setAttribute("style", "padding-top: 0px;padding-bottom: 0px;height: 0px;");
-          setTimeout(() => this.remove(), 1e3);
+          this.fadeOut(true);
         }
       } else if (v !== 0) {
         this.timer = setTimeout(() => {
@@ -8522,6 +8532,35 @@ const MODULES = `
           this.delay = 1;
         }, v * 1e3);
       }
+    }
+    /** 添加消息 */
+    push(...items) {
+      return this.data.push(...items);
+    }
+    /** 弹出第一条消息 */
+    shift() {
+      return this.data.shift();
+    }
+    /** 添加置顶消息 */
+    unshift(...items) {
+      return this.data.unshift(...items);
+    }
+    /** 弹出末尾的消息 */
+    pop() {
+      return this.data.pop();
+    }
+    /** 淡入 */
+    fadeIn() {
+      this.style.paddingTop = "";
+      this.style.paddingBottom = "";
+      this.style.height = \`\${this.message.scrollHeight + 30}px\`;
+    }
+    /** 淡出 */
+    fadeOut(remove = false) {
+      this.style.paddingTop = "0px";
+      this.style.paddingBottom = "0px";
+      this.style.height = "0px";
+      remove && setTimeout(() => this.remove(), 1e3);
     }
   };
   customElements.get(\`toast-\${"9abdecb"}\`) || customElements.define(\`toast-\${"9abdecb"}\`, Toast, { extends: "div" });
@@ -8557,6 +8596,23 @@ const MODULES = `
       toast2.data = data;
       toast2.delay = delay;
       return toast2;
+    }
+    /**
+     * 可拓展toast，用于需要动态增减消息。  
+     * 无数据时隐藏，有数据时显现。默认为info类型。
+     * @param data 初始信息，可为空。
+     * @example
+     * const T = toast.list(); // 生成toast(隐藏)。
+     * T.data.push(123); // 添加一条消息123，toast显现。data属性本质是数组，可以使用任何数组方法更改消息。
+     * T.type = 'warning'; // 更改toast样式为warning。
+     * T.rtl = true; // 镜像toast。
+     * T.data.pop(); // 删除最后一条消息，消息变为空，toast自动隐藏。
+     * T.delay = 4; // 启用倒计时，单位/秒，倒计时结束后toast将被移除。也就是对象\`T\`不再响应任何操作，所以除非不需要再拓展，否则请不要修改\`delay\`属性。
+     * T.fadeOut(); // 隐藏toast但不移除。
+     * T.fadeOut(true); // 移除toast，效果同T.delay = 1。
+     */
+    list(...data) {
+      return this.toast(0, "info", ...data);
     }
     success(...data) {
       this.toast(this.delay, "success", ...data);
@@ -9168,20 +9224,17 @@ const MODULES = `
     }
     /** 恢复备份数据 */
     inputUserStatus() {
-      const msg = ["请选择一个备份的数据文件（.json）", "注意：无效的数据文件可能导致异常！"];
-      const tst = toast.toast(0, "warning", ...msg);
+      const tst = toast.list("请选择一个备份的数据文件（.json）", "注意：无效的数据文件可能导致异常！");
       fileRead("application/json").then((d) => {
         if (d && d[0]) {
-          msg.push(\`读取文件：\${d[0].name}\`);
-          tst.data = msg;
+          tst.push(\`读取文件：\${d[0].name}\`);
           tst.type = "info";
           return readAs(d[0]).then((d2) => {
             const data = JSON.parse(d2);
             if (typeof data === "object") {
               GM.setValue("userStatus", data);
               const text = "已恢复设置数据，请<strong>刷新</strong>页面以避免数据紊乱！";
-              msg.push(text);
-              tst.data = msg;
+              tst.push(text);
               tst.type = "success";
               return alert(text, "刷新页面", [{
                 text: "刷新",
@@ -9189,15 +9242,13 @@ const MODULES = `
               }]);
             }
           }).catch((e) => {
-            msg.push("读取文件出错！", e);
-            tst.data = msg;
+            tst.push("读取文件出错！", e);
             tst.type = "error";
             debug.error("恢复设置数据", e);
           });
         }
       }).catch((e) => {
-        msg.push(e);
-        tst.data = msg;
+        tst.push(e);
       }).finally(() => {
         tst.delay = 4;
       });
@@ -9399,26 +9450,22 @@ const MODULES = `
         return toast.warning("未找到播放器实例！请在播放页面使用。");
       if (!window.player?.appendDm)
         return toast.warning("未启用【重构播放器】，无法载入弹幕！");
-      const data = ["请选择一个弹幕文件，拓展名：.xml，编码：utf-8"];
-      const tst = toast.toast(0, "info", ...data);
+      const tst = toast.list("请选择一个弹幕文件，拓展名：.xml，编码：utf-8");
       fileRead(".xml", false).then((d) => {
         if (d && d[0]) {
-          data.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
-          tst.data = data;
+          tst.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
           tst.type = "warning";
           return readAs(d[0]);
         }
-        throw new Error(data[0]);
+        throw new Error(tst.data[0]);
       }).then((d) => {
         const dm = DanmakuBase.decodeXml(d);
         window.player.appendDm(dm, !user.userStatus.dmContact);
-        data.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
-        tst.data = data;
+        tst.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
         tst.type = "success";
       }).catch((e) => {
-        data.push(e);
+        tst.push(e);
         debug.error(e);
-        tst.data = data;
         tst.type = "error";
       }).finally(() => {
         tst.delay = user.userStatus.toast.delay;
@@ -9430,26 +9477,22 @@ const MODULES = `
         return toast.warning("未找到播放器实例！请在播放页面使用。");
       if (!window.player?.appendDm)
         return toast.warning("未启用【重构播放器】，无法载入弹幕！");
-      const data = ["请选择一个弹幕文件，拓展名：.json，编码：utf-8"];
-      const tst = toast.toast(0, "info", ...data);
+      const tst = toast.list("请选择一个弹幕文件，拓展名：.json，编码：utf-8");
       fileRead(".json", false).then((d) => {
         if (d && d[0]) {
-          data.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
-          tst.data = data;
+          tst.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
           tst.type = "warning";
           return readAs(d[0]);
         }
-        throw new Error(data[0]);
+        throw new Error(tst.data[0]);
       }).then((d) => {
         const dm = JSON.parse(d);
         window.player.appendDm(dm, !user.userStatus.dmContact);
-        data.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
-        tst.data = data;
+        tst.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
         tst.type = "success";
       }).catch((e) => {
-        data.push(e);
+        tst.push(e);
         debug.error(e);
-        tst.data = data;
         tst.type = "error";
       }).finally(() => {
         tst.delay = user.userStatus.toast.delay;
@@ -9473,26 +9516,21 @@ const MODULES = `
         return toast.warning("未找到播放器实例！请在播放页面使用。");
       if (!window.player?.appendDm)
         return toast.warning("未启用【重构播放器】，无法载入弹幕！");
-      const data = ["-------在线弹幕-------", \`目标：\${str}\`];
-      const tst = toast.toast(0, "info", ...data);
+      const tst = toast.list("-------在线弹幕-------", \`目标：\${str}\`);
       const { aid, cid } = await urlParam(str);
-      data.push(\`aid：\${aid}\`, \`cid：\${cid}\`);
-      tst.data = data;
+      tst.push(\`aid：\${aid}\`, \`cid：\${cid}\`);
       if (!aid || !cid) {
-        data.push("查询cid信息失败，已退出！");
-        tst.data = data;
+        tst.push("查询cid信息失败，已退出！");
         tst.type = "error";
         tst.delay = toast.delay;
       } else {
         new ApiDmWeb(aid, cid).getData().then((d) => {
           window.player.appendDm(d, !user.userStatus.dmContact);
-          data.push(\`有效弹幕数：\${d.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
-          tst.data = data;
+          tst.push(\`有效弹幕数：\${d.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
           tst.type = "success";
         }).catch((e) => {
-          data.push(e);
+          tst.push(e);
           debug.error(e);
-          tst.data = data;
           tst.type = "error";
         }).finally(() => {
           tst.delay = user.userStatus.toast.delay;
@@ -10971,8 +11009,6 @@ const MODULES = `
     Backup = {};
     /** 通知组件 */
     toast;
-    /** 通知信息 */
-    data = [];
     /** 监听中 */
     listening = false;
     /** 播放数据备份 */
@@ -11023,46 +11059,37 @@ const MODULES = `
     }
     /** 处理泰区 */
     async _th(args) {
-      this.data = ["泰区限制视频！"];
-      this.toast = toast.toast(0, "info", ...this.data);
+      this.toast || (this.toast = toast.list());
+      this.toast.data = ["泰区限制视频！"];
       const obj = urlObj(args[1]);
-      this.data.push(\`aid：\${BLOD.aid}\`, \`cid：\${BLOD.cid}\`);
-      this.toast.data = this.data;
+      this.toast.push(\`aid：\${BLOD.aid}\`, \`cid：\${BLOD.cid}\`);
       const epid = obj.ep_id || obj.episodeId || BLOD.epid;
       obj.access_key = user.userStatus.accessKey.token;
       if (!this.Backup[epid]) {
         try {
           networkMock();
-          this.data.push(\`代理服务器：\${user.userStatus.videoLimit.th}\`);
-          this.toast.data = this.data;
+          this.toast.push(\`代理服务器：\${user.userStatus.videoLimit.th}\`);
           this.Backup[epid] = { code: 0, message: "success", result: await this.th(obj) };
-          this.data.push("获取代理数据成功！");
-          this.toast.data = this.data;
+          this.toast.push("获取代理数据成功！");
           this.toast.type = "success";
         } catch (e) {
-          this.data.push("代理出错！", e);
-          !obj.access_key && this.data.push("代理服务器要求【账户授权】才能进一步操作！");
-          this.toast.data = this.data;
+          this.toast.push("代理出错！", e);
+          !obj.access_key && this.toast.push("代理服务器要求【账户授权】才能进一步操作！");
           this.toast.type = "error";
-          debug.error(...this.data);
-          this.toast.delay = 4;
-          delete this.toast;
-          this.data = [];
+          debug.error(...this.toast.data);
           return { code: -404, message: e, data: null };
         }
       }
       this.toast.delay = 4;
       delete this.toast;
-      this.data = [];
       return this.__playinfo__ = this.Backup[epid];
     }
     /** 处理港澳台 */
     async _gat(args) {
-      this.data = ["港澳台限制视频！"];
-      this.toast = toast.toast(0, "info", ...this.data);
+      this.toast || (this.toast = toast.list());
+      this.toast.data = ["港澳台限制视频！"];
       const obj = urlObj(args[1]);
-      this.data.push(\`aid：\${BLOD.aid}\`, \`cid：\${BLOD.cid}\`);
-      this.toast.data = this.data;
+      this.toast.push(\`aid：\${BLOD.aid}\`, \`cid：\${BLOD.cid}\`);
       const epid = obj.ep_id || obj.episodeId || BLOD.epid;
       obj.access_key = user.userStatus.accessKey.token;
       if (!this.Backup[epid]) {
@@ -11073,8 +11100,7 @@ const MODULES = `
             if (upInfo) {
               (upInfo.mid == 1988098633 || upInfo.mid == 2042149112) && (obj.module = "movie");
             }
-            this.data.push(\`代理服务器：内置\`, \`类型：\${obj.module}\`);
-            this.toast.data = this.data;
+            this.toast.push(\`代理服务器：内置\`, \`类型：\${obj.module}\`);
             const res = await apiBiliplusPlayurl(obj);
             this.Backup[epid] = { code: 0, message: "success", result: res };
           } else {
@@ -11086,24 +11112,18 @@ const MODULES = `
             toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${user.userStatus.uposReplace.gat}\`, \`UPOS：\${UPOS[user.userStatus.uposReplace.gat]}\`);
           }
           ;
-          this.data.push("获取代理数据成功！");
-          this.toast.data = this.data;
+          this.toast.push("获取代理数据成功！");
           this.toast.type = "success";
         } catch (e) {
-          this.data.push("代理出错！", e);
-          !obj.access_key && this.data.push("代理服务器要求【账户授权】才能进一步操作！");
-          this.toast.data = this.data;
+          this.toast.push("代理出错！", e);
+          !obj.access_key && this.toast.push("代理服务器要求【账户授权】才能进一步操作！");
           this.toast.type = "error";
-          debug.error(...this.data);
-          this.toast.delay = 4;
-          delete this.toast;
-          this.data = [];
+          debug.error(...this.toast.data);
           return { code: -404, message: e, data: null };
         }
       }
       this.toast.delay = 4;
       delete this.toast;
-      this.data = [];
       return this.__playinfo__ = this.Backup[epid];
     }
     /** 停止监听 */
@@ -11129,18 +11149,17 @@ const MODULES = `
     area = 0;
     /** 访问港澳台代理 */
     async gat(obj) {
+      this.toast || (this.toast = toast.list());
       if (!user.userStatus.videoLimit[AREA[this.area]])
         throw new Error(\`无有效代理服务器：\${AREA[this.area]}\`);
       const server = user.userStatus.videoLimit[AREA[this.area]];
       obj.area = AREA[this.area];
-      this.data.push(\`代理服务器：\${server}\`);
-      this.toast && (this.toast.data = this.data);
+      this.toast.push(\`代理服务器：\${server}\`);
       try {
         return await apiPlayurl(obj, true, true, server);
       } catch (e) {
-        this.data.push("代理服务器返回异常！", e);
+        this.toast.push("代理服务器返回异常！", e);
         if (this.toast) {
-          this.toast.data = this.data;
           this.toast.type = "warning";
         }
         this.area++;
@@ -11398,6 +11417,10 @@ const MODULES = `
     videoInfo = videoInfo;
     base64 = base64;
     md5 = import_md52.default;
+    /** 刷新toast，多用于重构页面后刷新显示 */
+    flushToast() {
+      document.body.contains(toast) || document.body.appendChild(toast);
+    }
   }();
 
   // src/core/storage.ts
@@ -12358,38 +12381,34 @@ const MODULES = `
             });
           }
           if (this.aids.length) {
-            const data2 = ["检测到失效视频！", this.aids.join(" ")];
-            const tst = toast.toast(0, "warning", ...data2);
+            const tst = toast.list("检测到失效视频！", this.aids.join(" "));
             this.lostVideoView().then(() => {
               setTimeout(() => {
-                data2.push("数据返回，正在修复~");
+                tst.push("数据返回，正在修复~");
                 let resolve = 0, reject = 0;
-                tst.data = data2;
                 tst.type = "success";
                 const ele = document.querySelector("#page-fav");
                 if (ele) {
                   const medias = ele.__vue__.favListDetails.medias;
                   medias?.forEach((d) => {
                     if (d.attr % 2) {
-                      data2.push(\`-------- av\${d.id} --------\`);
+                      tst.push(\`-------- av\${d.id} --------\`);
                       if (this.aidInfo[d.id].title) {
                         resolve++;
                         d.title = this.aidInfo[d.id].title;
-                        data2.push(this.aidInfo[d.id].title);
+                        tst.push(this.aidInfo[d.id].title);
                       } else {
                         reject++;
                         d.title = \`av\${d.id}\`;
-                        data2.push("未能获取到有效信息！");
+                        tst.push("未能获取到有效信息！");
                       }
                       this.aidInfo[d.id].cover && (d.cover = this.aidInfo[d.id].cover);
                       d.attr = 0;
-                      tst.data = data2;
                       ele.querySelector(\`[data-aid=\${d.bvid}]\`)?.children[1]?.setAttribute("style", "text-decoration : line-through;color : #ff0000;");
                     }
                   });
                 }
-                data2.push("", \`修复结束：成功 \${resolve} 失败 \${reject}\`);
-                tst.data = data2;
+                tst.push("", \`修复结束：成功 \${resolve} 失败 \${reject}\`);
                 tst.delay = 4;
               }, 100);
             });
@@ -12956,12 +12975,15 @@ const MODULES = `
      * @param html 页面框架
      */
     constructor(html) {
-      this.vdom = new VdomTool(html);
+      this.updateHtml(html);
       Reflect.defineProperty(window, "_babelPolyfill", {
         configurable: true,
         set: () => true,
         get: () => void 0
       });
+    }
+    updateHtml(html) {
+      this.vdom = new VdomTool(html);
     }
     /** 重写页面 */
     updateDom() {
@@ -16756,22 +16778,18 @@ const MODULES = `
           {
             text: "确定",
             callback: () => {
-              const data = ["弹幕保护计划 >>>"];
-              const tst = toast.toast(0, "info", ...data);
+              const tst = toast.list("弹幕保护计划 >>>");
               GM.fetch(cdn.encode(\`/danmaku/\${cid}.xml\`, ""), { cache: "force-cache" }).then((d) => {
-                data.push(\`获取存档：\${cid}.xml\`);
-                tst.data = data;
+                tst.push(\`获取存档：\${cid}.xml\`);
                 tst.type = "success";
                 return d.text();
               }).then((d) => {
                 const dm = DanmakuBase.decodeXml(d);
                 window.player.appendDm(dm, !user.userStatus.dmContact);
-                data.push(\`有效弹幕数：\${dm.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
-                tst.data = data;
+                tst.push(\`有效弹幕数：\${dm.length}\`, \`加载模式：\${user.userStatus.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
               }).catch((e) => {
-                data.push(e);
+                tst.push(e);
                 debug.error("弹幕保护计划", e);
-                tst.data = data;
                 tst.type = "error";
               }).finally(() => {
                 tst.delay = user.userStatus.toast.delay;
@@ -16817,30 +16835,25 @@ const MODULES = `
               this.updating = true;
               if (!BLOD.version)
                 throw new Error(\`未知错误导致脚本版本异常！version：\${BLOD.version}\`);
-              const msg = [
+              const tst = toast.list(
                 "更新播放器组件中，可能需要花费一点时间，请不要关闭页面！",
                 "如果弹出跨域提醒，推荐【总是允许全部域名】",
                 "如果多次更新失败，请禁用【重构播放器】功能！"
-              ];
-              const tst = toast.toast(0, "warning", ...msg);
+              );
               let i = 1;
               await Promise.all([
                 GM.fetch(cdn.encode("/chrome/player/video.js")).then((d) => d.text()).then((d) => {
                   data[0] = d;
-                  msg.push(\`加载播放器组件：\${i++}/2\`);
-                  tst.data = msg;
+                  tst.push(\`加载播放器组件：\${i++}/2\`);
                 }).catch((e) => {
-                  msg.push(\`获取播放器组件出错！\${i++}/2\`, e);
-                  tst.data = msg;
+                  tst.push(\`获取播放器组件出错！\${i++}/2\`, e);
                   tst.type = "error";
                 }),
                 GM.fetch(cdn.encode("/chrome/player/video.css")).then((d) => d.text()).then((d) => {
                   data[1] = d;
-                  msg.push(\`加载播放器组件：\${i++}/2\`);
-                  tst.data = msg;
+                  tst.push(\`加载播放器组件：\${i++}/2\`);
                 }).catch((e) => {
-                  msg.push(\`获取播放器组件出错！\${i++}/2\`, e);
-                  tst.data = msg;
+                  tst.push(\`获取播放器组件出错！\${i++}/2\`, e);
                   tst.type = "error";
                 })
               ]);
@@ -16848,8 +16861,7 @@ const MODULES = `
               tst.delay = user.userStatus.toast.delay;
               if (!data[0] || !data[1])
                 throw new Error("获取播放器组件出错！");
-              msg.push("-------加载成功-------");
-              tst.data = msg;
+              tst.push("-------加载成功-------");
               tst.type = "success";
               GM.setValue("bilibiliplayer", data[0]);
               GM.setValue("bilibiliplayerstyle", data[1]);
@@ -17326,8 +17338,8 @@ const MODULES = `
       };
     }
   };
-  var Comment = _Comment;
-  __publicField(Comment, "commentJumpUrlTitle", false);
+  var Comment2 = _Comment;
+  __publicField(Comment2, "commentJumpUrlTitle", false);
 
   // src/core/ui/like.ts
   init_tampermonkey();
@@ -24900,7 +24912,7 @@ const MODULES = `
       Reflect.deleteProperty(window, "__INITIAL_STATE__");
       Reflect.defineProperty(window, "__NEXT_DATA__", { value: true });
       this.like = new Like();
-      new Comment();
+      new Comment2();
       window.__Iris__ = true;
       this.pgc = true;
       location.href.replace(/[sS][sS]\\d+/, (d) => this.ssid = Number(d.substring(2)));
@@ -25335,7 +25347,7 @@ const MODULES = `
     constructor() {
       super(av_default);
       location.href.replace(/av\\d+/i, (d) => this.aid = d.slice(2));
-      new Comment();
+      new Comment2();
       this.like = new Like();
       propertyHook(window, "__INITIAL_STATE__", void 0);
       propertyHook(window, "__playinfo__", void 0);
@@ -25439,18 +25451,17 @@ const MODULES = `
     }
     /** 通过其他接口获取aid数据 */
     async getVideoInfo() {
-      const data = [\`av\${this.aid}可能无效，尝试其他接口~\`];
-      const tst = toast.toast(0, "info", ...data);
+      const tst = toast.list(\`av\${this.aid}可能无效，尝试其他接口~\`);
       try {
         const card = await apiArticleCards({ av: this.aid });
         if (card[\`av\${this.aid}\`]) {
           if (card[\`av\${this.aid}\`].redirect_url) {
-            data.push(\`bangumi重定向：\${card[\`av\${this.aid}\`].redirect_url}\`);
-            tst.data = data;
+            tst.push(\`bangumi重定向：\${card[\`av\${this.aid}\`].redirect_url}\`);
             tst.type = "warning";
             setTimeout(() => {
               urlCleaner.updateLocation(card[\`av\${this.aid}\`].redirect_url);
               new PageBangumi();
+              BLOD.flushToast();
               this.destroy = true;
               tst.delay = 4;
             }, 100);
@@ -25459,13 +25470,13 @@ const MODULES = `
         }
         const view = await new apiBiliplusView(this.aid).toDetail();
         if (view?.data.View.season) {
-          data.push(\`bangumi重定向：\${view.data.View.season.ogv_play_url}\`);
-          tst.data = data;
+          tst.push(\`bangumi重定向：\${view.data.View.season.ogv_play_url}\`);
           tst.type = "warning";
           view.data.View.season = void 0;
           setTimeout(() => {
             urlCleaner.updateLocation(card[\`av\${this.aid}\`].redirect_url);
             new PageBangumi();
+            BLOD.flushToast();
             this.destroy = true;
             tst.delay = 4;
           }, 100);
@@ -25473,16 +25484,14 @@ const MODULES = `
         }
         setTimeout(() => {
           videoInfo.aidDatail(view.data.View);
-          data.push("获取缓存数据成功！但这可能是个失效视频！");
-          tst.data = data;
+          tst.push("获取缓存数据成功！但这可能是个失效视频！");
           tst.type = "success";
           tst.delay = 4;
         }, 100);
         return view;
       } catch (e) {
         debug.error("获取数据出错！", e);
-        data.push("获取数据出错！", e);
-        tst.data = data;
+        tst.push("获取数据出错！", e);
         tst.type = "error";
         tst.delay = 4;
         throw e;
@@ -25609,7 +25618,7 @@ const MODULES = `
     constructor() {
       super(watchlater_default);
       this.like = new Like();
-      new Comment();
+      new Comment2();
       this.enLike();
       this.toview();
       this.living();
@@ -25677,7 +25686,7 @@ const MODULES = `
     constructor() {
       super(playlist_default);
       this.like = new Like();
-      new Comment();
+      new Comment2();
       this.init();
       this.EmbedPlayer();
       this.toviewHook();
@@ -26011,7 +26020,7 @@ const MODULES = `
         },
         spoiler: "0"
       };
-      new Comment();
+      new Comment2();
       this.webpackjsonp();
       super.updateDom();
       document.querySelector(".page-container").innerHTML = this.readInfoStr;
@@ -26339,11 +26348,9 @@ const MODULES = `
     }
     get() {
       if (uid) {
-        const data = ["正在申请账户授权~"];
-        const tst = toast.toast(0, "info", ...data);
+        const tst = toast.list("正在申请账户授权~");
         new ApiLoginAppThird("https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png").getData().then(async (d) => {
-          data.push("成功获取到授权链接~");
-          tst.data = data;
+          tst.push("成功获取到授权链接~");
           return GM.fetch(d.confirm_uri, { credentials: "include" });
         }).then((d) => {
           const date = (/* @__PURE__ */ new Date()).getTime();
@@ -26352,14 +26359,12 @@ const MODULES = `
           user.userStatus.accessKey.token = obj.access_key;
           user.userStatus.accessKey.date = date;
           user.userStatus.accessKey.dateStr = dateStr;
-          data.push("------- 授权成功 -------", \`鉴权: \${obj.access_key}\`, \`日期：\${dateStr}\`);
-          tst.data = data;
+          tst.push("------- 授权成功 -------", \`鉴权: \${obj.access_key}\`, \`日期：\${dateStr}\`);
           tst.type = "success";
           tst.delay = 4;
         }).catch((e) => {
           debug.error("授权出错！", e);
-          data.push("授权出错！", e);
-          tst.data = data;
+          tst.push("授权出错！", e);
           tst.type = "error";
           tst.delay = 4;
         });
@@ -27563,17 +27568,14 @@ const MODULES = `
           precision: 19
         }, "单位：/MB", void 0, void 0, "如果一个文件有多个下载源，那么此项会间接决定使用几个下载源。一旦要下载的文件不小于此项的2倍，aria2便会同时尝试连接多个下载源。这也是提高下载速率的有效方法。注意：某种意义上此项是越小越好，原因不言而喻。"),
         this.button("aria2.test", "测试RPC连接", () => {
-          const data = ["正在测试RPC连接~"];
-          const tst = toast.toast(0, "info", ...data);
+          const tst = toast.list("正在测试RPC连接~");
           new Aria2().getVersion().then((d) => {
             tst.type = "success";
-            data.push(\`-------aria2 v\${d.version}-------\`, ...d.enabledFeatures);
-            tst.data = data;
+            tst.push(\`-------aria2 v\${d.version}-------\`, ...d.enabledFeatures);
           }).catch((e) => {
             tst.type = "error";
-            data.push("RPC链接失败 ಥ_ಥ", e);
+            tst.push("RPC链接失败 ಥ_ಥ", e);
             debug.error("RPC链接失败 ಥ_ಥ", e);
-            tst.data = data;
           }).finally(() => {
             tst.delay = 4;
           });
@@ -27829,14 +27831,54 @@ const MODULES = `
     }
   };
 
+  // src/page/wild.ts
+  init_tampermonkey();
+  var PageWild = class extends Page {
+    /**
+     * 使用远程网页框架重写页面
+     * @param path 框架文件相对根目录路径（以\`/\`开头）
+     * @param url 修改地址栏
+     * @param comment 是否替换评论区
+     */
+    constructor(path, url, comment = true) {
+      super("");
+      this.path = path;
+      this.url = url;
+      comment && new Comment();
+      typeof this.path === "string" && this.init();
+    }
+    toast = toast.list();
+    init() {
+      this.toast.push(this.url, "已失效~", "请求远程备份>>>");
+      GM.fetch(cdn.encode(this.path)).then((d) => d.text()).then((d) => {
+        this.toast.push("成功获取网页框架，刷新页面~");
+        this.url && urlCleaner.updateLocation(this.url);
+        this.updateHtml(d);
+        this.updateDom();
+        BLOD.flushToast();
+        this.toast.type = "success";
+      }).catch((e) => {
+        this.toast.push("重构页面错误", e);
+        debug.error("重构页面错误", e);
+        this.toast.type = "error";
+      }).finally(() => {
+        this.toast.delay = 4;
+      });
+    }
+  };
+
   // src/index.ts
   document.domain = "bilibili.com";
   BLOD.version = GM.info?.script.version.slice(-40);
   user.addCallback((status) => {
     cdn.update(status.cdn, BLOD.version);
-    Comment.commentJumpUrlTitle = status.commentJumpUrlTitle;
+    Comment2.commentJumpUrlTitle = status.commentJumpUrlTitle;
     if (BLOD.path[2] == "www.bilibili.com" && (!BLOD.path[3] || (BLOD.path[3].startsWith("?") || BLOD.path[3].startsWith("#") || BLOD.path[3].startsWith("index.")))) {
-      status.index && new PageIndex();
+      if (document.referrer.includes("blackboard/bnj2019.html")) {
+        new PageWild("/src/html/bnj2019.html", "https://www.bilibili.com/blackboard/bnj2019.html");
+      } else {
+        status.index && new PageIndex();
+      }
     }
     if (status.av && /(\\/s)?\\/video\\/[AaBb][Vv]/.test(location.href)) {
       BLOD.path[3] === "s" && urlCleaner.updateLocation(location.href.replace("s/video", "video"));
@@ -27882,7 +27924,7 @@ const MODULES = `
     status.videoLimit.status && videoLimit.enable();
     status.fullBannerCover && (Header.fullBannerCover = true);
     status.header && new Header();
-    status.comment && new Comment();
+    status.comment && new Comment2();
     status.webRTC || WebTRC.disable();
     status.album && /t.bilibili.com\\/\\d+/.test(location.href) && PageSpace.album();
     status.development && Reflect.defineProperty(window, "BLOD", {
