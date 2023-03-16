@@ -1,0 +1,71 @@
+name: Bug反馈
+description: 反馈发现的问题
+labels: bug
+title: "[Bug]: "
+body:
+  - type: dropdown
+    id: script-type
+    attributes:
+      label: 问题是发生在那种形态的？
+      options:
+        - Chrome扩展
+        - Tampermonkey脚本
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 问题详情
+      description: 简洁清晰的问题描述
+      placeholder: 发生了什么？
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce-steps
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. [第一步]
+        2. [第二步]
+        3. [...]
+
+  - type: textarea
+    id: proof-items
+    attributes:
+      label: 参考数据
+      description: 帮助诊断的截图或者其他资料
+      placeholder: |
+        网页截图、控制台(f12)截图或DevTools快照
+        **截图可以直接粘贴哦~**
+
+  - type: dropdown
+    id: os-version
+    attributes:
+      label: 操作系统
+      description: 使用的计算机类型
+      options:
+        - Windows 11
+        - Windows 10
+        - Windows 8
+        - Windows 7
+        - Mac (x86)
+        - Mac (arm)
+        - Linux
+        - 其他
+    validations:
+    required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: 浏览器名称及版本
+    validations:
+      required: true
+
+  - type: input
+    id: script-version
+    attributes:
+      label: 脚本版本
+      description: 扩展请自行到[Actions](https://github.com/MotooriKashin/Bilibili-Old/actions)检查是不是最新
