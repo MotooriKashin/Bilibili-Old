@@ -55,7 +55,7 @@ body:
         - Linux
         - 其他
     validations:
-    required: true
+      required: true
 
   - type: input
     id: browser-version
