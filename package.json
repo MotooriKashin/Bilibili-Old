@@ -2,7 +2,7 @@
   "dependencies": {
     "@jsc/chrome": "file:chrome",
     "@jsc/tampermonkey": "file:tampermonkey",
-    "esbuild": "^0.17.11",
+    "esbuild": "^0.17.12",
     "md5": "^2.3.0",
     "protobufjs": "^7.2.2",
     "quill-delta-to-html-cb": "^0.14.0"
