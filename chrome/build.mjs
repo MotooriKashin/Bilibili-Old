@@ -18,6 +18,7 @@ esbuild.build({
         'chrome/background.ts',
         'chrome/content.ts',
     ],
+    target: "chrome76",
     bundle: true,
     // sourcemap: true,
     minify: true,

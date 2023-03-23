@@ -16,6 +16,7 @@ esbuild.build({
     entryPoints: [
         'src/comment.ts'
     ],
+    target: "chrome76",
     bundle: true,
     format: 'esm',
     treeShaking: true,

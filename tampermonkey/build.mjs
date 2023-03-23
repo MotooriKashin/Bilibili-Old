@@ -53,6 +53,7 @@ esbuild.build({
     entryPoints: [
         'src/index.ts'
     ],
+    target: "chrome76",
     bundle: true,
     format: 'iife',
     treeShaking: true,
