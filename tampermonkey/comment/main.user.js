@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.1.0
+// @version      2.1.1
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -396,7 +396,7 @@ jsonpHook.scriptIntercept = (url, redirect, text) => {
         this.removeAttribute("src");
         setTimeout(() => {
           this.dispatchEvent(new ProgressEvent("load"));
-          this?.remove();
+          this == null ? void 0 : this.remove();
         }, 100);
       } else if (redirect) {
         this.src = redirect(this.src);
@@ -561,7 +561,8 @@ var PreviewImage = class extends HTMLElement {
         style: "min-width: 54px; max-width: 54px; height: 54px;"
       }, this._list, `<div class="preview-item-wrap${vertical ? " vertical" : ""}"><img src="${d}"></div>`);
       item.addEventListener("click", (e) => {
-        this._list.querySelector(".preview-item-box.active")?.classList.remove("active");
+        var _a;
+        (_a = this._list.querySelector(".preview-item-box.active")) == null ? void 0 : _a.classList.remove("active");
         item.classList.add("active");
         this._image.innerHTML = `<img class="image-content" src="${d}">`;
         e.stopPropagation();
@@ -571,7 +572,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"fysuk576mg"}`) || customElements.define(`preview-image-${"fysuk576mg"}`, PreviewImage);
+customElements.get(`preview-image-${"nv23obn3l8f"}`) || customElements.define(`preview-image-${"nv23obn3l8f"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -580,16 +581,13 @@ var load = false;
 var events = {};
 var _Comment = class {
   constructor() {
-    if (!_Comment.loaded) {
-      _Comment.loaded = true;
-      Feedback = void 0;
-      loading = false;
-      load = false;
-      events = {};
-      this.bbComment();
-      this.initComment();
-      this.pageCount();
-    }
+    Feedback = void 0;
+    loading = false;
+    load = false;
+    events = {};
+    this.bbComment();
+    this.initComment();
+    this.pageCount();
   }
   /** 捕获评论组件 */
   bbComment() {
@@ -660,17 +658,18 @@ var _Comment = class {
   }
   /** 修复按时间排序评论翻页数 */
   pageCount() {
-    let page;
-    jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=2"], void 0, (res) => {
-      if (0 === res.code && res.data?.page) {
-        page = res.data.page;
-      }
-      return res;
-    }, false);
-    jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=0"], void 0, (res) => {
-      if (page && 0 === res.code && res.data?.page) {
-        page.count && (res.data.page.count = page.count);
-        page.acount && (res.data.page.acount = page.acount);
+    let count = 0;
+    jsonpHook("api.bilibili.com/x/v2/reply?", void 0, (res, url) => {
+      var _a;
+      if (0 === res.code && ((_a = res.data) == null ? void 0 : _a.page)) {
+        if (res.data.page.count) {
+          count = res.data.page.count;
+        } else if (count) {
+          res.data.page.count = count;
+        }
+        if (res.data.mode === 3 && url.includes("sort=0")) {
+          res.data.mode = 2;
+        }
       }
       return res;
     }, false);
@@ -697,6 +696,7 @@ var _Comment = class {
   /** 退出abtest，获取翻页评论区 */
   initAbtest() {
     Feedback.prototype.initAbtest = function() {
+      this.sort = 0;
       this.abtest = {};
       this.abtest.optimize = false;
       if (this.jumpId || this.noPage) {
@@ -766,6 +766,7 @@ var _Comment = class {
   /** 顶层评论ip属地 */
   _createListCon() {
     Feedback.prototype._createListCon = function(item, i, pos) {
+      var _a, _b;
       const blCon = this._parentBlacklistDom(item, i, pos);
       const con = [
         '<div class="con ' + (pos == i ? "no-border" : "") + '">',
@@ -781,7 +782,7 @@ var _Comment = class {
         this._createPlatformDom(item.content.plat),
         '<span class="time-location">',
         '<span class="reply-time">'.concat(this._formateTime(item.ctime), "</span>"),
-        item?.reply_control?.location ? `<span class="reply-location">${item?.reply_control?.location || ""}</span>` : "",
+        ((_a = item == null ? void 0 : item.reply_control) == null ? void 0 : _a.location) ? `<span class="reply-location">${((_b = item == null ? void 0 : item.reply_control) == null ? void 0 : _b.location) || ""}</span>` : "",
         "</span>",
         item.lottery_id ? "" : '<span class="like ' + (item.action == 1 ? "liked" : "") + '"><i></i><span>' + (item.like ? item.like : "") + "</span></span>",
         item.lottery_id ? "" : '<span class="hate ' + (item.action == 2 ? "hated" : "") + '"><i></i></span>',
@@ -804,6 +805,7 @@ var _Comment = class {
   /** 楼中楼评论ip属地 */
   _createSubReplyItem() {
     Feedback.prototype._createSubReplyItem = function(item, i) {
+      var _a, _b;
       if (item.invisible) {
         return "";
       }
@@ -823,7 +825,7 @@ var _Comment = class {
         this._createPlatformDom(item.content.plat),
         '<span class="time-location">',
         '<span class="reply-time">'.concat(this._formateTime(item.ctime), "</span>"),
-        item?.reply_control?.location ? `<span class="reply-location">${item?.reply_control?.location || ""}</span>` : "",
+        ((_a = item == null ? void 0 : item.reply_control) == null ? void 0 : _a.location) ? `<span class="reply-location">${((_b = item == null ? void 0 : item.reply_control) == null ? void 0 : _b.location) || ""}</span>` : "",
         "</span>",
         '<span class="like ' + (item.action == 1 ? "liked" : "") + '"><i></i><span>' + (item.like ? item.like : "") + "</span></span>",
         '<span class="hate ' + (item.action == 2 ? "hated" : "") + '"><i></i></span>',
@@ -939,14 +941,15 @@ var _Comment = class {
           operalist && (operalist.style.display = "none");
       });
       n.on("click.image-exhibition", ".image-item-img", function(e2) {
+        var _a, _b, _c;
         const src = this.src;
         const srcs = [];
-        this.parentElement?.parentElement?.querySelectorAll("img").forEach((d) => {
+        (_b = (_a = this.parentElement) == null ? void 0 : _a.parentElement) == null ? void 0 : _b.querySelectorAll("img").forEach((d) => {
           srcs.push(d.src);
         });
         srcs.length || srcs.push(src);
         previewImage || (previewImage = new PreviewImage());
-        previewImage.value(srcs, this.parentElement?.classList.contains("vertical"), srcs.indexOf(src));
+        previewImage.value(srcs, (_c = this.parentElement) == null ? void 0 : _c.classList.contains("vertical"), srcs.indexOf(src));
       });
     };
   }
@@ -990,9 +993,10 @@ var _Comment = class {
   /** 评论图片 */
   _resolvePictures() {
     Feedback.prototype._resolvePictures = function(content) {
+      var _a, _b;
       const pictureList = [];
       if (content) {
-        if (content.rich_text?.note?.images) {
+        if ((_b = (_a = content.rich_text) == null ? void 0 : _a.note) == null ? void 0 : _b.images) {
           content.pictures || (content.pictures = []);
           content.rich_text.note.images.forEach((d) => {
             content.pictures.push({
@@ -1024,7 +1028,6 @@ var _Comment = class {
 };
 var Comment = _Comment;
 __publicField(Comment, "commentJumpUrlTitle", false);
-__publicField(Comment, "loaded", false);
 
 // src/comment.ts
 new Comment();
