@@ -20,8 +20,11 @@ export class PageLive {
     /** 禁止挂机检测 */
     protected disAbleSleepCheck() {
         const setInterval = self.setInterval;
+        const setTimeout = self.setTimeout;
         self.setInterval = (...args) => {
-            if (args[0].toString().includes('triggerSleepCallback')) {
+            // 定时器经过二次包装，toString方法不便来源，延时5分钟一律过滤
+            // if (args[0].toString().includes('triggerSleepCallback')) {
+            if (args[1] === 300000) {
                 if (!this.sleep) {
                     this.sleep = true;
                     toast.warning('成功阻止直播间挂机检测！');
@@ -29,6 +32,17 @@ export class PageLive {
                 return Number.MIN_VALUE;
             }
             return setInterval.call(self, ...args);
+        }
+        self.setTimeout = (...args) => {
+            // if (args[0].toString().includes('triggerSleepCallback')) {
+            if (args[1] === 300000) {
+                if (!this.sleep) {
+                    this.sleep = true;
+                    toast.warning('成功阻止直播间挂机检测！');
+                }
+                return Number.MIN_VALUE;
+            }
+            return setTimeout.call(self, ...args);
         }
     }
 }
