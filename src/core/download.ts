@@ -110,46 +110,72 @@ export class Download {
         }
     }
     /** 请求中 */
-    protected downloading = false;
+    protected downloading = 0;
     /** 已请求 */
     protected gets: string[] = [];
     /** 下载当前视频 */
     default() {
         if (this.downloading) return;
         if (!BLOD.cid) return toast.warning('未找到视频文件');
-        this.downloading = true;
         this.ui.show();
-        user.userStatus!.TVresource || this.gets.includes('_') || (this.decodePlayinfo(videoLimit.__playinfo__), this.gets.push('_'));
-        const tasks: Promise<any>[] = [];
-        user.userStatus!.downloadType.includes('mp4') && (this.data.mp4 || this.gets.includes('mp4') || tasks.push(this.mp4(BLOD.cid).then(d => { this.gets.push('mp4'); this.decodePlayinfo(d) })));
-        user.userStatus!.downloadType.includes('flv') && (this.data.flv || this.gets.includes('flv') || tasks.push(
-            (user.userStatus!.TVresource
-                ? this.tv(BLOD.aid, BLOD.cid, false, user.userStatus!.downloadQn)
-                : this.interface(BLOD.cid, user.userStatus!.downloadQn))
-                .then(d => { this.gets.push('flv'); this.decodePlayinfo(d) })
-        ));
-        user.userStatus!.downloadType.includes('dash') && (this.data.aac || this.gets.includes('dash') || this.data.hev || this.data.av1 || tasks.push(
-            (user.userStatus!.TVresource
-                ? this.tv(BLOD.aid, BLOD.cid)
-                : this.dash(BLOD.aid, BLOD.cid))
-                .then(d => { this.gets.push('dash'); this.decodePlayinfo(d) })
-        ));
-        Promise.allSettled(tasks).finally(() => { this.downloading = false; });
+        user.userStatus!.TVresource || this.getPlayInfo();
+        user.userStatus!.downloadType.includes('mp4') && this.getMp4();
+        user.userStatus!.downloadType.includes('flv') && this.getFlv();
+        user.userStatus!.downloadType.includes('dash') && this.getDash();
+    }
+    protected getPlayInfo() {
+        if (this.gets.includes('_')) return;
+        this.decodePlayinfo(videoLimit.__playinfo__);
+        this.gets.push('_');
+    }
+    protected getMp4() {
+        if (this.data.mp4 || this.gets.includes('mp4')) return;
+        this.downloading++;
+        (BLOD.pgc ? this.mp4(BLOD.cid) : this.flv(BLOD.aid, BLOD.cid))
+            .then(d => {
+                this.gets.push('mp4');
+                this.decodePlayinfo(d);
+            })
+            .finally(() => {
+                this.downloading--;
+            });
+    }
+    protected getFlv() {
+        if (this.data.flv || this.gets.includes('flv')) return;
+        this.downloading++;
+        (user.userStatus!.TVresource
+            ? this.tv(BLOD.aid, BLOD.cid, false, user.userStatus!.downloadQn)
+            : this.interface(BLOD.cid, user.userStatus!.downloadQn))
+            .then(d => { this.gets.push('flv'); this.decodePlayinfo(d) })
+            .finally(() => {
+                this.downloading--;
+            });
+    }
+    protected getDash() {
+        if (this.data.aac || this.gets.includes('dash') || this.data.hev || this.data.av1) return;
+        this.downloading++;
+        (user.userStatus!.TVresource
+            ? this.tv(BLOD.aid, BLOD.cid)
+            : this.dash(BLOD.aid, BLOD.cid))
+            .then(d => { this.gets.push('dash'); this.decodePlayinfo(d) })
+            .finally(() => {
+                this.downloading--;
+            });
     }
     /** 清空数据 */
     destory() {
         this.ui.remove();
         this.data = this.ui.init();
-        this.downloading = false;
+        this.downloading = 0;
         this.gets = [];
         videoLimit.__playinfo__ = undefined;
     }
     private mp4(cid: number) {
         return new ApiPlayurlProj({ cid, access_key: user.userStatus!.accessKey.token }, BLOD.pgc).getData();
     }
-    // private flv(avid: number, cid: number) {
-    //     return <Promise<IPlayurlDurl>>apiPlayurl({ avid, cid }, false, this.BLOD.pgc);
-    // }
+    private flv(avid: number, cid: number) {
+        return <Promise<IPlayurlDurl>>apiPlayurl({ avid, cid }, false, BLOD.pgc);
+    }
     private dash(avid: number, cid: number) {
         return <Promise<IPlayurlDash>>apiPlayurl({ avid, cid }, true, BLOD.pgc);
     }
