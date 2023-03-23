@@ -92,17 +92,18 @@ export class Comment {
     }
     /** 修复按时间排序评论翻页数 */
     protected pageCount() {
-        let page: any;
-        jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=2"], undefined, res => {
+        let count = 0;
+        jsonpHook("api.bilibili.com/x/v2/reply?", undefined, (res, url) => {
             if (0 === res.code && res.data?.page) {
-                page = res.data.page;
-            }
-            return res;
-        }, false);
-        jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=0"], undefined, res => {
-            if (page && 0 === res.code && res.data?.page) {
-                page.count && (res.data.page.count = page.count);
-                page.acount && (res.data.page.acount = page.acount);
+                if (res.data.page.count) {
+                    count = res.data.page.count;
+                } else if (count) {
+                    res.data.page.count = count;
+                }
+                if (res.data.mode === 3 && url.includes('sort=0')) {
+                    // 排序模式 2-新评
+                    res.data.mode = 2;
+                }
             }
             return res;
         }, false);
@@ -132,6 +133,9 @@ export class Comment {
     /** 退出abtest，获取翻页评论区 */
     protected initAbtest() {
         Feedback.prototype.initAbtest = function () {
+
+            this.sort = 0; // 热门排序无法获取评论总数，默认从调整为最新评论
+
             this.abtest = {};
             this.abtest.optimize = false; //abtest.web_reply_list
 
