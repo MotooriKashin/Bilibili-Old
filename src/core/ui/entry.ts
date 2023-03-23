@@ -1,6 +1,6 @@
 import { CustomElementsInterface } from "../../utils/customelement";
 import html from '../../html/ui-entry.html';
-import { svg } from "../../utils/svg";
+import svgGear from "../../svg/gear.svg";
 
 /** 设置入口样式 */
 export const UiEntryType: 'new' | 'old' = 'new';
@@ -23,7 +23,7 @@ export class BilioldEntry extends HTMLElement implements CustomElementsInterface
         this.root.innerHTML = html;
         this.stage = <HTMLDivElement>this.root.children[0];
         this.gear = <HTMLDivElement>this.root.children[1];
-        this.gear.innerHTML = svg.gear;
+        this.gear.innerHTML = svgGear;
         this.stage.remove();
         this.gear.remove();
         this.gear.addEventListener("mouseover", () => this.gear.style.opacity = "0.8");

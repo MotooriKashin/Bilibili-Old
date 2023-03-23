@@ -7,8 +7,8 @@ import { jsonpHook } from "../utils/hook/node";
 import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
 
-import avatarAnimation from '../css/avatar-animation.css';
-import message from '../css/message.css';
+import cssAvatarAnimation from '../css/avatar-animation.css';
+import cssMessage from '../css/message.css';
 
 export class Header {
     /** locs列表 */
@@ -166,7 +166,7 @@ export class Header {
     }
     /** 消息页面样式 */
     static message() {
-        addCss(message, "message");
+        addCss(cssMessage, "message");
     }
     /** 顶栏动态记录参数失效，另行找补 */
     static videoOffset() {
@@ -257,7 +257,7 @@ export class Header {
     /** 顶栏样式修复 */
     protected static styleFix() {
         addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}", 'lt-row-fix');
-        addCss(avatarAnimation, "avatarAnimation");
+        addCss(cssAvatarAnimation, "avatarAnimation");
         this.fullBannerCover && addCss('.bili-header-m #banner_link{height: 9.375vw !important;min-width: 1000px;min-height: 155px;max-height: 240px;}')
     }
     /** 禁用新版顶栏相关样式 */

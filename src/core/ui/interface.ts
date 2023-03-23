@@ -1,7 +1,7 @@
 import { CustomElementsInterface } from "../../utils/customelement";
 import html from '../../html/ui-interface.html';
-import { svg } from "../../utils/svg";
 import { Menuitem } from "./menu";
+import svgFork from "../../svg/fork.svg";
 
 export class BiliOldInterface extends HTMLElement implements CustomElementsInterface {
     /** 跟节点 */
@@ -26,7 +26,7 @@ export class BiliOldInterface extends HTMLElement implements CustomElementsInter
         this._menu = <HTMLDivElement>root.children[0].children[1].children[0].children[0];
         this._item = <HTMLDivElement>root.children[0].children[1].children[0].children[1];
 
-        this._close.innerHTML = svg.fork;
+        this._close.innerHTML = svgFork;
         this._close.addEventListener("click", () => this.hide());
     }
     show() {

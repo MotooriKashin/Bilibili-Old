@@ -1,7 +1,18 @@
+import svgBlind from "../svg/blind.svg";
+import svgDmset from "../svg/dmset.svg";
+import svgDownload from "../svg/download.svg";
+import svgGear from "../svg/gear.svg";
+import svgLineChart from "../svg/linechart.svg";
+import svgNet from "../svg/net.svg";
+import svgNote from "../svg/note.svg";
+import svgPalette from "../svg/palette.svg";
+import svgPlay from "../svg/play.svg";
+import svgStethoscope from "../svg/stethoscope.svg";
+import svgWarn from "../svg/warn.svg";
+import svgWrench from "../svg/wrench.svg";
 import { debug } from "../utils/debug";
 import { propertyHook } from "../utils/hook/method";
 import { poll } from "../utils/poll";
-import { svg } from "../utils/svg";
 import { AccessKey } from "./accesskey";
 import { BLOD } from "./bilibili-old";
 import { Chain } from "./chain";
@@ -28,13 +39,13 @@ import { UPOS } from "./videolimit";
 
 /** 菜单项 */
 export const Menus = {
-    common: ['通用', svg.wrench],
-    rewrite: ['重写', svg.note],
-    danmaku: ['弹幕', svg.dmset],
-    restore: ['修复', svg.stethoscope],
-    player: ['播放', svg.play],
-    style: ['样式', svg.palette],
-    download: ['下载', svg.download]
+    common: ['通用', svgWrench],
+    rewrite: ['重写', svgNote],
+    danmaku: ['弹幕', svgDmset],
+    restore: ['修复', svgStethoscope],
+    player: ['播放', svgPlay],
+    style: ['样式', svgPalette],
+    download: ['下载', svgDownload]
 };
 export class UI {
     protected entry = new BilioldEntry();
@@ -85,17 +96,17 @@ export class UI {
     /** 通用设置 */
     protected initSettingCommon() {
         this.menuitem.common.addSetting([
-            this.switch('development', '开发者模式', '暴露调试接口到控制台', svg.warn, v => {
+            this.switch('development', '开发者模式', '暴露调试接口到控制台', svgWarn, v => {
                 if (v) {
                     propertyHook(window, 'BLOD', BLOD);
                 } else {
                     Reflect.deleteProperty(window, 'BLOD');
                 }
             }, '暴露一个名为【BLOD】的对象到全局，你可以在浏览器控制台里使用内部的属性及方法进行调试。'),
-            this.switch('disableReport', '数据上报', '禁止网页跟踪上报', svg.linechart),
+            this.switch('disableReport', '数据上报', '禁止网页跟踪上报', svgLineChart),
             this.select('uiEntryType', '设置入口样式', {
                 candidate: ['old', 'new']
-            }, '浮动齿轮或者贴边隐藏', svg.gear, v => this.entry.type = v, '【old】入口更具隐蔽性，鼠标移动到贴边位置才会浮现。【new】入口每次网页加载完成都会滚动浮现，隐藏会鼠标移动到对应位置便会浮现。'),
+            }, '浮动齿轮或者贴边隐藏', svgGear, v => this.entry.type = v, '【old】入口更具隐蔽性，鼠标移动到贴边位置才会浮现。【new】入口每次网页加载完成都会滚动浮现，隐藏会鼠标移动到对应位置便会浮现。'),
             this.button(<'toast'>'userStatus', '管理设置数据', () => {
                 alert([
                     '备份脚本设置或者恢复已备份的数据。',
@@ -114,15 +125,15 @@ export class UI {
                         callback: () => user.inputUserStatus()
                     }
                 ])
-            }, '备份/恢复', '管理', svg.blind),
-            this.switch('bilibiliplayer', '重构播放器', '修复及增强', svg.play, v => {
+            }, '备份/恢复', '管理', svgBlind),
+            this.switch('bilibiliplayer', '重构播放器', '修复及增强', svgPlay, v => {
                 if (v) {
                     this.updateCheck();
                 }
             }, '旧版播放器已于 2019-10-31T07:38:36.004Z 失去官方维护，为了旧版播放器长期可持续维护，我们使用typescript完全重构了旧版播放器。修复了旧版播放器出现异常或失效的功能（如无法获取90分钟以后的弹幕问题），移植了一些B站后续推出的功能（如互动视频、全景视频、杜比视界、杜比全景声、AV1编码支持和DRM支持等）。能力有限无法做到100%复刻，如果您想体验原生的旧版播放器，可以禁用本功能。同时由于项目托管于Github，国内部分网络环境可能访问不畅，初次启动播放器可能耗时较久，加载失败后也会回滚原生播放器。如果您的网络环境始终无法正常加载，也请禁用本功能或者前往反馈。'),
             this.select('cdn', 'CDN', {
                 candidate: ['Github', 'jsdelivr']
-            }, '更新外部资源', svg.net, undefined, '用于加载外部资源的CDN，一般而言jsdelivr比GitHub好些，然而部分网路环境可能二者都无法访问。')
+            }, '更新外部资源', svgNet, undefined, '用于加载外部资源的CDN，一般而言jsdelivr比GitHub好些，然而部分网路环境可能二者都无法访问。')
         ]);
         this.menuitem.common.addCard('toastr');
         this.menuitem.common.addSetting([
@@ -165,11 +176,11 @@ export class UI {
             }, '有效期一般为一个月', undefined, undefined, '脚本不会代为检查鉴权是否失效，请失效时自行重新授权。'),
             this.button(<'accessKey'>'accessKey.action', '进行授权', () => {
                 new AccessKey();
-            }, '授权脚本使用登录鉴权', '授权', svg.warn)
+            }, '授权脚本使用登录鉴权', '授权', svgWarn)
         ], 2);
         if (_UserScript_) {
             this.menuitem.common.addSetting([
-                this.switch('checkUpdate', '检查更新', '自动更新播放器', svg.download, undefined, '启用【重构播放器】后，脚本会自动检查并更新播放器组件，但可能因为网络原因更新失败，出现反复更新->反复失败的问题。您可以禁用此功能，以继续使用【重构播放器】，等待网络环境改善后再尝试启用。')
+                this.switch('checkUpdate', '检查更新', '自动更新播放器', svgDownload, undefined, '启用【重构播放器】后，脚本会自动检查并更新播放器组件，但可能因为网络原因更新失败，出现反复更新->反复失败的问题。您可以禁用此功能，以继续使用【重构播放器】，等待网络环境改善后再尝试启用。')
             ]);
         }
     }

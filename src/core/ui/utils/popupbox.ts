@@ -1,6 +1,6 @@
 import { CustomElementsInterface } from "../../../utils/customelement";
 import html from '../../../html/popupbox.html';
-import { svg } from "../../../utils/svg";
+import svgFork from "../../../svg/fork.svg";
 
 /** 对节点添加点击事件监听，点击节点意外的地方自动移除改节点。注意：需要主动调用`enable`方法开始监听 */
 export class ClickOutRemove {
@@ -43,7 +43,7 @@ export class PopupBox extends HTMLElement implements CustomElementsInterface {
         root.innerHTML = html;
         this._contain = <HTMLDivElement>root.children[0].children[0];
         this._fork = <HTMLDivElement>root.children[0].children[1];
-        this._fork.innerHTML = svg.fork;
+        this._fork.innerHTML = svgFork;
         this._fork.addEventListener("click", () => this.remove());
         this.clickOutRemove = new ClickOutRemove(this);
         document.body.appendChild(this);

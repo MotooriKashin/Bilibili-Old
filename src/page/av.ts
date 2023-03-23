@@ -6,7 +6,7 @@ import { Like } from "../core/ui/like";
 import { urlCleaner } from "../core/url";
 import { user } from "../core/user";
 import { videoInfo } from "../core/video-info";
-import uplist from '../css/uplist.css';
+import cssUplist from '../css/uplist.css';
 import html from '../html/av.html';
 import { IStaf } from "../io/api";
 import { apiArticleCards } from "../io/api-article-cards";
@@ -203,7 +203,7 @@ export class PageAV extends Page {
                 return s;
             }, fl) + `</div>`;
             node.innerHTML = fl;
-            addCss(uplist, "up-list");
+            addCss(cssUplist, "up-list");
         });
     }
     /** 合集（使用播单模拟） */

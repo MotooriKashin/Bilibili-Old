@@ -1,12 +1,13 @@
 import { apiLike } from "../../io/api-like";
 import { apiLikeHas } from "../../io/api-like-has";
+import svgDislike from "../../svg/dislike.svg";
+import svgLike from "../../svg/like.svg";
 import { uid } from "../../utils/conf/uid";
 import { getCookies } from "../../utils/cookie";
 import { CustomElementsInterface } from "../../utils/customelement";
 import { debug } from "../../utils/debug";
 import { addCss } from "../../utils/element";
 import { unitFormat } from "../../utils/format/unit";
-import { svg } from "../../utils/svg";
 import { BLOD } from "../bilibili-old";
 import { biliQuickLogin } from "../quickLogin";
 import { toast } from "../toast";
@@ -61,7 +62,7 @@ export class Like extends HTMLSpanElement implements CustomElementsInterface {
         this.update();
     }
     protected update() {
-        this.innerHTML = (this.liked ? svg.like : svg.dislike) + '点赞 ' + unitFormat(this.number);
+        this.innerHTML = (this.liked ? svgLike : svgDislike) + '点赞 ' + unitFormat(this.number);
     }
 }
 customElements.get(`like-${_MUTEX_}`) || customElements.define(`like-${_MUTEX_}`, Like, { extends: 'span' });

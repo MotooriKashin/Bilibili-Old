@@ -1,8 +1,8 @@
 import html from "../html/toast.html";
+import svgFork from "../svg/fork.svg";
 import { CustomElementsInterface } from "../utils/customelement";
 import { debug } from "../utils/debug";
 import { propertryChangeHook } from "../utils/hook/method";
-import { svg } from "../utils/svg";
 import { toObject, toString } from "../utils/type";
 import { isArray } from "../utils/typeof";
 
@@ -39,7 +39,7 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
         this.appendChild(this.message);
         this.message.className = 'toast-message';
         this.closeButton.className = 'toast-close-button';
-        this.closeButton.innerHTML = svg.fork;
+        this.closeButton.innerHTML = svgFork;
         this.closeButton.addEventListener('click', e => {
             this.timeout = true;
             this.delay = 1;

@@ -1,8 +1,10 @@
 import { CustomElementsInterface } from "../../utils/customelement";
 import html from '../../html/preview-image.html'
-import { svg } from "../../utils/svg";
 import { isArray } from "../../utils/typeof";
 import { addElement } from "../../utils/element";
+import svgFork from "../../svg/fork.svg";
+import svgLeft from "../../svg/left.svg";
+import svgRight from "../../svg/right.svg";
 
 export class PreviewImage extends HTMLElement implements CustomElementsInterface {
     private _image: HTMLElement;
@@ -14,9 +16,9 @@ export class PreviewImage extends HTMLElement implements CustomElementsInterface
         const close = root.querySelector<HTMLElement>('.svg-icon.close.use-color')!;
         const left = root.querySelector<HTMLElement>('.svg-icon.left-arrow.use-color')!;
         const right = root.querySelector<HTMLElement>('.svg-icon.right-arrow.use-color')!;
-        close.innerHTML = svg.fork;
-        left.innerHTML = svg.left;
-        right.innerHTML = svg.right;
+        close.innerHTML = svgFork;
+        left.innerHTML = svgLeft;
+        right.innerHTML = svgRight;
         this._image = root.querySelector<HTMLElement>('.show-image-wrap')!;
         this._list = root.querySelector<HTMLElement>('.preview-list')!;
 
