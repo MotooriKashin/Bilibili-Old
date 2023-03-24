@@ -1,3 +1,4 @@
+import { escapeForbidHeader } from "./escape-header";
 import { postMessage } from "./message";
 
 /** 提权操作接口*/
@@ -7,28 +8,19 @@ export const GM = new (class GM {
     /** 【脚本限定】跨域XMLHttpRequest */
     xmlHttpRequest!: (details: GMxhrDetails) => { abort: () => void };
     /**
-     * 跨域fetch。请求完成后才会返回，原则上禁止请求**太大的二进制数据**！传递的参数也必须是JSON-serializable的数据类型！  
+     * 跨域fetch。  
      * 【用户脚本】里使用`GM.xmlHttpRequest`模拟成了fetch，**禁止请求二进制数据**！请直接使用`GM.xmlHttpRequest`。
      */
-    fetch(input: RequestInfo | URL, init?: RequestInit) {
-        return new Promise((resolve: (value: Response) => void, reject) => {
-            try {
-                input = (<Request>input).url ? (<Request>input).url : <URL>input;
-                // 正确处理相对路径
-                input = new URL(input, location.origin).toJSON();
-            } catch (e) {
-                reject(e);
-            }
-            postMessage({ $type: 'xmlHttpRequest', input, init }, ({ data, status, statusText, url, redirected, type }: any) => {
-                const response = new Response(new Uint8Array(data), { status, statusText });
-                Object.defineProperties(response, {
-                    url: { value: url },
-                    redirected: { value: redirected },
-                    type: { value: type },
-                })
-                resolve(response);
-            }, reject);
-        });
+    async fetch(input: RequestInfo | URL, init?: RequestInit) {
+        const [rule, id] = escapeForbidHeader(input, init?.headers);
+        try {
+            await this.updateSessionRules([rule]);
+            const response = await fetch(input, init);
+            this.removeSessionRules(id);
+            return response;
+        } catch {
+            this.removeSessionRules(id);
+        }
     }
     /**
      * 读取本地存储
@@ -89,7 +81,26 @@ export const GM = new (class GM {
             postMessage({ $type: 'updateSessionRules', rules }, resolve, reject);
         });
     }
+    /** 【扩展限定】移除网络规则集 */
+    removeSessionRules(ids: number | number[]) {
+        Array.isArray(ids) || (ids = [ids]);
+        postMessage({ $type: 'removeSessionRules', ids });
+    }
+    /**
+     * 【扩展限定】修改ajax请求头
+     * @param input url匹配规则
+     * @param headers 请求头，要删除某个请求头请传入非真值
+     * @returns 用于取消本拦截规则的回调
+     */
+    async modifyRequestheader(input: string, headers?: Record<string, any>) {
+        const [rule, id] = escapeForbidHeader(input, headers);
+        await this.updateSessionRules([rule]);
+        return () => {
+            this.removeSessionRules(id)
+        }
+    }
 })();
+
 interface GMxhrDetails {
     /** one of GET, HEAD, POST */
     method?: "GET" | "HEAD" | "POST";

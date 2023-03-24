@@ -1,6 +1,5 @@
 import { xhrHook } from "../utils/hook/xhr";
 import { user } from "./user";
-import mock from '../json/network-mock.json';
 
 let networkMocked = false;
 /**
@@ -152,7 +151,14 @@ export function networkMock() {
                 })
             })
         } else {
-            GM.updateSessionRules(mock);
+            GM.modifyRequestheader('.m4s?', {
+                'user-agent': 'Bilibili Freedoooooom/MarkII',
+                referer: undefined
+            });
+            GM.modifyRequestheader('.flv?', {
+                'user-agent': 'Bilibili Freedoooooom/MarkII',
+                referer: undefined
+            });
         }
     }
 }
