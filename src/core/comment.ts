@@ -1,3 +1,4 @@
+import { apiReply } from "../io/api-reply";
 import { BV2avAll } from "../utils/abv";
 import { addCss, loadScript } from "../utils/element";
 import { jsonpHook } from "../utils/hook/node";
@@ -13,6 +14,12 @@ let load = false;
 let events: Record<string, any> = {};
 export class Comment {
     static commentJumpUrlTitle = false;
+    /** 评论页数 */
+    protected count = 0;
+    /** 评论所属id */
+    protected oid = 0;
+    /** 评论类型 */
+    protected pageType = 1;
     constructor() {
         Feedback = undefined;
         loading = false;
@@ -24,6 +31,7 @@ export class Comment {
     }
     /** 捕获评论组件 */
     protected bbComment() {
+        const that = this;
         Reflect.defineProperty(window, "bbComment", {
             configurable: true,
             set: v => {
@@ -48,6 +56,16 @@ export class Comment {
                                 })
                             });
                             loading = true;
+                            // 记录oid
+                            if (arguments[1]) {
+                                if (typeof arguments[1] === 'object') {
+                                    that.oid = arguments[1].oid;
+                                    that.pageType = arguments[1].pageType;
+                                } else {
+                                    that.oid = arguments[1];
+                                    that.pageType = arguments[2];
+                                }
+                            }
                         }
                         setTimeout(() => {
                             let bbcomment = new (<any>window).bbComment(...arguments);
@@ -66,12 +84,15 @@ export class Comment {
         });
     }
     protected initComment() {
+        const that = this;
         Reflect.defineProperty(window, "initComment", {
             configurable: true,
             set: v => true,
             get: () => {
                 if (load) {
                     function initComment(tar: string, init: Record<"oid" | "pageType" | "userStatus", any>) {
+                        that.oid = init.oid; // 记录oid
+                        that.pageType = init.pageType; // 记录oid
                         new Feedback(tar, init.oid, init.pageType, init.userStatus);
                     }
                     Reflect.defineProperty(window, "initComment", { configurable: true, value: initComment });
@@ -92,21 +113,27 @@ export class Comment {
     }
     /** 修复按时间排序评论翻页数 */
     protected pageCount() {
-        let count = 0;
         jsonpHook("api.bilibili.com/x/v2/reply?", undefined, (res, url) => {
             if (0 === res.code && res.data?.page) {
                 if (res.data.page.count) {
-                    count = res.data.page.count;
-                } else if (count) {
-                    res.data.page.count = count;
+                    this.count = res.data.page.count;
+                } else if (this.count) {
+                    res.data.page.count = this.count;
                 }
-                if (res.data.mode === 3 && url.includes('sort=0')) {
-                    // 排序模式 2-新评
-                    res.data.mode = 2;
-                }
+                // if (res.data.mode === 3 && url.includes('sort=0')) {
+                //     // 排序模式 2-新评
+                //     res.data.mode = 2;
+                // }
             }
             return res;
         }, false);
+    }
+    /** 预取评论页数 */
+    protected async getPageCount() {
+        if (this.oid) {
+            const res = await apiReply(this.oid, 1, this.pageType)
+            res.page?.count && (this.count = res.page.count);
+        }
     }
     /** 修补评论组件 */
     protected bbCommentModify() {
@@ -132,9 +159,8 @@ export class Comment {
     }
     /** 退出abtest，获取翻页评论区 */
     protected initAbtest() {
+        const that = this;
         Feedback.prototype.initAbtest = function () {
-
-            this.sort = 0; // 热门排序无法获取评论总数，默认从调整为最新评论
 
             this.abtest = {};
             this.abtest.optimize = false; //abtest.web_reply_list
@@ -148,9 +174,12 @@ export class Comment {
                 this.abtest.optimize = false;
             }
 
-            this._registerEvent();
+            // 优先获取评论总数
+            that.getPageCount().finally(() => {
+                this.init();
+            });
 
-            this.init();
+            this._registerEvent();
         };
     }
     /** 添加回小页码区 */
