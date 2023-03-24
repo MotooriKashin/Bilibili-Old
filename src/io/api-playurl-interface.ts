@@ -1,5 +1,5 @@
-import { ApiSign } from "./api";
 import { IPlayurlDurl } from "./api-playurl";
+import { ApiSign } from "./api-sign";
 import { fnval, fnver } from "./fnval";
 import { URLS } from "./urls";
 

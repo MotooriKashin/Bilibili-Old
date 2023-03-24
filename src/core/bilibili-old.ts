@@ -1,5 +1,4 @@
 import md5 from "md5";
-import { urlSign } from "../io/api";
 import { base64 } from "../utils/base64";
 import { debug } from "../utils/debug";
 import { objUrl, urlObj } from "../utils/format/url";
@@ -9,6 +8,7 @@ import { download } from "./download";
 import { toast } from "./toast";
 import { UI } from "./ui";
 import { videoInfo } from "./video-info";
+import { urlSign } from "../io/api-sign";
 
 /** 用于暴露的统一接口 */
 export const BLOD = new (class {

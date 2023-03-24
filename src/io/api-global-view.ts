@@ -1,4 +1,5 @@
-import { ApiSign, jsonCheck } from "./api";
+import { ApiSign } from "./api-sign";
+import { jsonCheck } from "./api";
 import { URLS } from "./urls";
 
 interface ApiGlobalOgvViewDate {

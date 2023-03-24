@@ -1,5 +1,6 @@
 import { objUrl } from "../utils/format/url";
-import { ApiSign, jsonCheck } from "./api";
+import { jsonCheck } from "./api";
+import { ApiSign } from "./api-sign";
 import { fnval, fnver, qn } from "./fnval";
 import { URLS } from "./urls";
 
