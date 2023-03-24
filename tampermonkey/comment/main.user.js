@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.1.1
+// @version      2.1.2
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -21,6 +21,167 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
+
+// src/utils/typeof.ts
+var isArray = Array.isArray;
+var isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
+
+// src/utils/format/url.ts
+var URL = class {
+  /** 锚 */
+  hash;
+  /** 基链 */
+  base;
+  /** 参数对象。结果会格式化`undefined``null``NaN`等特殊值，但不会处理数字，以免丢失精度。 */
+  params = {};
+  /** 参数链（不含`?`） */
+  get param() {
+    return Object.entries(this.params).reduce((s, d) => {
+      return s += `${s ? "&" : ""}${d[0]}=${d[1]}`;
+    }, "");
+  }
+  /** 提取URL参数 */
+  constructor(url) {
+    const arr1 = url.split("#");
+    let str = arr1.shift();
+    this.hash = arr1.join("#");
+    (this.hash || url.includes("#")) && (this.hash = `#${this.hash}`);
+    const arr2 = str.split("?");
+    this.base = arr2.shift();
+    str = arr2.join("?");
+    if (str) {
+      str.split("&").forEach((d) => {
+        const arr3 = d.split("=");
+        const key = arr3.shift();
+        if (key) {
+          let value = arr3.join("=") || "";
+          try {
+            if (!isNumber(value)) {
+              value = JSON.parse(value);
+            }
+          } catch {
+            value === "undefined" && (value = void 0);
+            value === "NaN" && (value = NaN);
+          }
+          this.params[key] = value;
+        }
+      });
+    }
+  }
+  sort() {
+    this.params = Object.keys(this.params).sort().reduce((s, d) => {
+      s[d] = this.params[d];
+      return s;
+    }, {});
+  }
+  /** 还原url链接 */
+  toJSON() {
+    return `${this.base ? this.param ? this.base + "?" : this.base : ""}${this.param}${this.hash || ""}`;
+  }
+};
+function objUrl(url, obj) {
+  const res = new URL(url);
+  Object.entries(obj).forEach((d) => {
+    if (d[1] === void 0 || d[1] === null)
+      return;
+    res.params[d[0]] = d[1];
+  });
+  return res.toJSON();
+}
+function urlObj(url) {
+  const res = new URL(url);
+  return res.params;
+}
+
+// src/io/api.ts
+function jsonCheck(str) {
+  const result = typeof str === "string" ? JSON.parse(str) : str;
+  if (result.code === 0)
+    return result;
+  throw new Error(`${result.code} ${result.message}`, { cause: result.code });
+}
+
+// src/io/urls.ts
+var _URLS = class {
+};
+var URLS = _URLS;
+// protocol + //
+__publicField(URLS, "P_AUTO", "//");
+__publicField(URLS, "P_HTTP", "http://");
+__publicField(URLS, "P_HTTPS", "https://");
+__publicField(URLS, "P_WS", "ws://");
+__publicField(URLS, "P_WSS", "wss://");
+// domain
+__publicField(URLS, "D_WWW", "www.bilibili.com");
+__publicField(URLS, "D_API", "api.bilibili.com");
+__publicField(URLS, "D_APP", "app.bilibili.com");
+__publicField(URLS, "D_MANAGER", "manager.bilibili.co");
+__publicField(URLS, "D_INTERFACE", "interface.bilibili.com");
+__publicField(URLS, "D_PASSPORT", "passport.bilibili.com");
+__publicField(URLS, "D_BANGUMI", "bangumi.bilibili.com");
+__publicField(URLS, "D_SPACE", "space.bilibili.com");
+__publicField(URLS, "D_STATIC_S", "static.hdslb.com");
+__publicField(URLS, "D_CHAT", "chat.bilibili.com");
+__publicField(URLS, "D_DATA", "data.bilibili.com");
+__publicField(URLS, "D_COMMENT", "comment.bilibili.com");
+__publicField(URLS, "D_BROADCAST", "broadcast.bilibili.com");
+__publicField(URLS, "D_MISAKA_SW", "misaka-sw.bilibili.com");
+__publicField(URLS, "D_MEMBER", "member.bilibili.com");
+__publicField(URLS, "D_BVC", "bvc.bilivideo.com");
+__publicField(URLS, "D_S1", "s1.hdslb.com");
+__publicField(URLS, "D_API_GLOBAL", "api.global.bilibili.com");
+__publicField(URLS, "D_ACCOUNT", "account.bilibili.com");
+__publicField(URLS, "D_INTL", "apiintl.biliapi.net");
+__publicField(URLS, "WEBSHOW_LOCS", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/res/locs");
+__publicField(URLS, "INDEX_TOP_RCMD", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/index/top/rcmd");
+__publicField(URLS, "PAGE_HEADER", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/page/header");
+__publicField(URLS, "SEASON_RANK_LIST", _URLS.P_AUTO + _URLS.D_API + "/pgc/season/rank/web/list");
+__publicField(URLS, "VIDEO", _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/video.min.js");
+__publicField(URLS, "JQUERY", _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/jquery.min.js");
+__publicField(URLS, "ARTICLE_CARDS", _URLS.P_AUTO + _URLS.D_API + "/x/article/cards");
+__publicField(URLS, "VIEW_DETAIL", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view/detail");
+__publicField(URLS, "VIEW", _URLS.P_AUTO + _URLS.D_API + "/view");
+__publicField(URLS, "X_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view");
+__publicField(URLS, "PAGE_LIST", _URLS.P_AUTO + _URLS.D_API + "/x/player/pagelist");
+__publicField(URLS, "TAG_INFO", _URLS.P_AUTO + _URLS.D_API + "/x/tag/info");
+__publicField(URLS, "TAG_TOP", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/tag/top");
+__publicField(URLS, "BANGUMI_SEASON", _URLS.P_AUTO + _URLS.D_BANGUMI + "/view/web_api/season");
+__publicField(URLS, "SEASON_STATUS", _URLS.P_AUTO + _URLS.D_API + "/pgc/view/web/season/user/status");
+__publicField(URLS, "SEASON_SECTION", _URLS.P_AUTO + _URLS.D_API + "/pgc/web/season/section");
+__publicField(URLS, "GLOBAL_OGV_VIEW", _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/view/app/season");
+__publicField(URLS, "GLOBAL_OGV_PLAYURL", _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/playurl");
+__publicField(URLS, "APP_PGC_PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurl");
+__publicField(URLS, "ACCOUNT_GETCARDBYMID", _URLS.P_AUTO + _URLS.D_ACCOUNT + "/api/member/getCardByMid");
+__publicField(URLS, "LOGIN_APP_THIRD", _URLS.P_AUTO + _URLS.D_PASSPORT + "/login/app/third");
+__publicField(URLS, "PLAYER", _URLS.P_AUTO + _URLS.D_API + "/x/player/v2");
+__publicField(URLS, "PLAYURL_PROJ", _URLS.P_AUTO + _URLS.D_APP + "/v2/playurlproj");
+__publicField(URLS, "PGC_PLAYURL_PROJ", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurlproj");
+__publicField(URLS, "PGC_PLAYURL_TV", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurltv");
+__publicField(URLS, "UGC_PLAYURL_TV", _URLS.P_AUTO + _URLS.D_API + "/x/tv/ugc/playurl");
+__publicField(URLS, "PGC_PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/web/playurl");
+__publicField(URLS, "PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/x/player/playurl");
+__publicField(URLS, "INTL_PLAYURL", _URLS.P_AUTO + _URLS.D_APP + "/x/intl/playurl");
+__publicField(URLS, "INTL_OGV_PLAYURL", _URLS.P_AUTO + _URLS.D_INTL + "/intl/gateway/ogv/player/api/playurl");
+__publicField(URLS, "PLAYURL_INTERFACE", _URLS.P_AUTO + _URLS.D_INTERFACE + "/v2/playurl");
+__publicField(URLS, "PLAYURL_BANGUMI", _URLS.P_AUTO + _URLS.D_BANGUMI + "/player/web_api/v2/playurl");
+__publicField(URLS, "LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/like");
+__publicField(URLS, "HAS_LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/has/like");
+__publicField(URLS, "DM_WEB_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/view");
+__publicField(URLS, "DM_WEB_SEG_SO", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/seg.so");
+__publicField(URLS, "STAT", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/stat");
+__publicField(URLS, "SLIDE_SHOW", _URLS.P_AUTO + _URLS.D_API + "/pgc/operation/api/slideshow");
+__publicField(URLS, "SEARCH_SQUARE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/search/square");
+__publicField(URLS, "SPACE_ARC", _URLS.P_AUTO + _URLS.D_API + "/x/space/wbi/arc/search");
+__publicField(URLS, "NEWLIST", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/newlist");
+__publicField(URLS, "SEARCH", _URLS.P_AUTO + _URLS.D_API + "/search");
+__publicField(URLS, "REPLY", _URLS.P_AUTO + _URLS.D_API + "/x/v2/reply");
+
+// src/io/api-reply.ts
+async function apiReply(oid, pn = 1, type = 1, sort = 0) {
+  const reply = await fetch(objUrl(URLS.REPLY, { pn, type, oid, sort }), { credentials: "include" });
+  const json = await reply.json();
+  return jsonCheck(json).data;
+}
 
 // src/utils/abv.ts
 var Abv = class {
@@ -223,68 +384,6 @@ debug.warn = function(...data) {
   !group.i && setTimeout(group.call.shift());
   return debug;
 };
-
-// src/utils/typeof.ts
-var isArray = Array.isArray;
-var isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
-
-// src/utils/format/url.ts
-var URL = class {
-  /** 锚 */
-  hash;
-  /** 基链 */
-  base;
-  /** 参数对象。结果会格式化`undefined``null``NaN`等特殊值，但不会处理数字，以免丢失精度。 */
-  params = {};
-  /** 参数链（不含`?`） */
-  get param() {
-    return Object.entries(this.params).reduce((s, d) => {
-      return s += `${s ? "&" : ""}${d[0]}=${d[1]}`;
-    }, "");
-  }
-  /** 提取URL参数 */
-  constructor(url) {
-    const arr1 = url.split("#");
-    let str = arr1.shift();
-    this.hash = arr1.join("#");
-    (this.hash || url.includes("#")) && (this.hash = `#${this.hash}`);
-    const arr2 = str.split("?");
-    this.base = arr2.shift();
-    str = arr2.join("?");
-    if (str) {
-      str.split("&").forEach((d) => {
-        const arr3 = d.split("=");
-        const key = arr3.shift();
-        if (key) {
-          let value = arr3.join("=") || "";
-          try {
-            if (!isNumber(value)) {
-              value = JSON.parse(value);
-            }
-          } catch {
-            value === "undefined" && (value = void 0);
-            value === "NaN" && (value = NaN);
-          }
-          this.params[key] = value;
-        }
-      });
-    }
-  }
-  sort() {
-    this.params = Object.keys(this.params).sort().reduce((s, d) => {
-      s[d] = this.params[d];
-      return s;
-    }, {});
-  }
-  /** 还原url链接 */
-  toJSON() {
-    return `${this.base ? this.param ? this.base + "?" : this.base : ""}${this.param}${this.hash || ""}`;
-  }
-};
-function urlObj(url) {
-  const res = new URL(url);
-  return res.params;
-}
 
 // src/utils/hook/node.ts
 var appendChild = Element.prototype.appendChild;
@@ -509,7 +608,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"6ufj3qax4su"}`) || customElements.define(`preview-image-${"6ufj3qax4su"}`, PreviewImage);
+customElements.get(`preview-image-${"lycw8hh09tl"}`) || customElements.define(`preview-image-${"lycw8hh09tl"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -517,6 +616,12 @@ var loading = false;
 var load = false;
 var events = {};
 var _Comment = class {
+  /** 评论页数 */
+  count = 0;
+  /** 评论所属id */
+  oid = 0;
+  /** 评论类型 */
+  pageType = 1;
   constructor() {
     Feedback = void 0;
     loading = false;
@@ -528,6 +633,7 @@ var _Comment = class {
   }
   /** 捕获评论组件 */
   bbComment() {
+    const that = this;
     Reflect.defineProperty(window, "bbComment", {
       configurable: true,
       set: (v) => {
@@ -552,6 +658,15 @@ var _Comment = class {
                 });
               });
               loading = true;
+              if (arguments[1]) {
+                if (typeof arguments[1] === "object") {
+                  that.oid = arguments[1].oid;
+                  that.pageType = arguments[1].pageType;
+                } else {
+                  that.oid = arguments[1];
+                  that.pageType = arguments[2];
+                }
+              }
             }
             setTimeout(() => {
               let bbcomment = new window.bbComment(...arguments);
@@ -569,12 +684,15 @@ var _Comment = class {
     });
   }
   initComment() {
+    const that = this;
     Reflect.defineProperty(window, "initComment", {
       configurable: true,
       set: (v) => true,
       get: () => {
         if (load) {
           let initComment2 = function(tar, init) {
+            that.oid = init.oid;
+            that.pageType = init.pageType;
             new Feedback(tar, init.oid, init.pageType, init.userStatus);
           };
           var initComment = initComment2;
@@ -595,21 +713,25 @@ var _Comment = class {
   }
   /** 修复按时间排序评论翻页数 */
   pageCount() {
-    let count = 0;
     jsonpHook("api.bilibili.com/x/v2/reply?", void 0, (res, url) => {
       var _a;
       if (0 === res.code && ((_a = res.data) == null ? void 0 : _a.page)) {
         if (res.data.page.count) {
-          count = res.data.page.count;
-        } else if (count) {
-          res.data.page.count = count;
-        }
-        if (res.data.mode === 3 && url.includes("sort=0")) {
-          res.data.mode = 2;
+          this.count = res.data.page.count;
+        } else if (this.count) {
+          res.data.page.count = this.count;
         }
       }
       return res;
     }, false);
+  }
+  /** 预取评论页数 */
+  async getPageCount() {
+    var _a;
+    if (this.oid) {
+      const res = await apiReply(this.oid, 1, this.pageType);
+      ((_a = res.page) == null ? void 0 : _a.count) && (this.count = res.page.count);
+    }
   }
   /** 修补评论组件 */
   bbCommentModify() {
@@ -632,8 +754,8 @@ var _Comment = class {
   }
   /** 退出abtest，获取翻页评论区 */
   initAbtest() {
+    const that = this;
     Feedback.prototype.initAbtest = function() {
-      this.sort = 0;
       this.abtest = {};
       this.abtest.optimize = false;
       if (this.jumpId || this.noPage) {
@@ -642,8 +764,10 @@ var _Comment = class {
       if (this.appMode === "comic") {
         this.abtest.optimize = false;
       }
+      that.getPageCount().finally(() => {
+        this.init();
+      });
       this._registerEvent();
-      this.init();
     };
   }
   /** 添加回小页码区 */

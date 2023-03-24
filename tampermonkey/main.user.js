@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.4.0-91f6f5f11c47f13fb7f79ab811124cda994f77f7
+// @version      10.4.1-91f6f5f11c47f13fb7f79ab811124cda994f77f7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -6774,199 +6774,6 @@ const MODULES = `
   init_tampermonkey();
   var import_md52 = __toESM(require_md5());
 
-  // src/io/api.ts
-  init_tampermonkey();
-  var import_md5 = __toESM(require_md5());
-
-  // src/utils/format/url.ts
-  init_tampermonkey();
-
-  // src/utils/typeof.ts
-  init_tampermonkey();
-  var isArray = Array.isArray;
-  var isObject = (val) => val !== null && typeof val === "object";
-  var isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
-
-  // src/utils/format/url.ts
-  var URL2 = class {
-    /** 锚 */
-    hash;
-    /** 基链 */
-    base;
-    /** 参数对象。结果会格式化\`undefined\`\`null\`\`NaN\`等特殊值，但不会处理数字，以免丢失精度。 */
-    params = {};
-    /** 参数链（不含\`?\`） */
-    get param() {
-      return Object.entries(this.params).reduce((s, d) => {
-        return s += \`\${s ? "&" : ""}\${d[0]}=\${d[1]}\`;
-      }, "");
-    }
-    /** 提取URL参数 */
-    constructor(url) {
-      const arr1 = url.split("#");
-      let str = arr1.shift();
-      this.hash = arr1.join("#");
-      (this.hash || url.includes("#")) && (this.hash = \`#\${this.hash}\`);
-      const arr2 = str.split("?");
-      this.base = arr2.shift();
-      str = arr2.join("?");
-      if (str) {
-        str.split("&").forEach((d) => {
-          const arr3 = d.split("=");
-          const key = arr3.shift();
-          if (key) {
-            let value = arr3.join("=") || "";
-            try {
-              if (!isNumber(value)) {
-                value = JSON.parse(value);
-              }
-            } catch {
-              value === "undefined" && (value = void 0);
-              value === "NaN" && (value = NaN);
-            }
-            this.params[key] = value;
-          }
-        });
-      }
-    }
-    sort() {
-      this.params = Object.keys(this.params).sort().reduce((s, d) => {
-        s[d] = this.params[d];
-        return s;
-      }, {});
-    }
-    /** 还原url链接 */
-    toJSON() {
-      return \`\${this.base ? this.param ? this.base + "?" : this.base : ""}\${this.param}\${this.hash || ""}\`;
-    }
-  };
-  function objUrl(url, obj) {
-    const res = new URL2(url);
-    Object.entries(obj).forEach((d) => {
-      if (d[1] === void 0 || d[1] === null)
-        return;
-      res.params[d[0]] = d[1];
-    });
-    return res.toJSON();
-  }
-  function urlObj(url) {
-    const res = new URL2(url);
-    return res.params;
-  }
-
-  // src/io/api.ts
-  function jsonCheck(str) {
-    const result = typeof str === "string" ? JSON.parse(str) : str;
-    if (result.code === 0)
-      return result;
-    throw new Error(\`\${result.code} \${result.message}\`, { cause: result.code });
-  }
-  var APP_KEY = /* @__PURE__ */ ((APP_KEY2) => {
-    APP_KEY2["1d8b6e7d45233436"] = "560c52ccd288fed045859ed18bffd973";
-    APP_KEY2["c1b107428d337928"] = "ea85624dfcf12d7cc7b2b3a94fac1f2c";
-    APP_KEY2["07da50c9a0bf829f"] = "25bdede4e1581c836cab73a48790ca6e";
-    APP_KEY2["7d089525d3611b1c"] = "acd495b248ec528c2eed1e862d393126";
-    APP_KEY2["9e5ded06c39bf5c4"] = "583e398ed0f980290b5903aba30b4cc4";
-    APP_KEY2["27eb53fc9058f8c3"] = "c2ed53a74eeefe3cf99fbd01d8c9c375";
-    APP_KEY2["85eb6835b0a1034e"] = "2ad42749773c441109bdc0191257a664";
-    APP_KEY2["4409e2ce8ffd12b8"] = "59b43e04ad6965f34319062b478f83dd";
-    APP_KEY2["37207f2beaebf8d7"] = "e988e794d4d4b6dd43bc0e89d6e90c43";
-    APP_KEY2["84956560bc028eb7"] = "94aba54af9065f71de72f5508f1cd42e";
-    APP_KEY2["bb3101000e232e27"] = "36efcfed79309338ced0380abd824ac1";
-    APP_KEY2["fb06a25c6338edbc"] = "fd10bd177559780c2e4a44f1fa47fa83";
-    APP_KEY2["iVGUTjsxvpLeuDCf"] = "aHRmhWMLkdeMuILqORnYZocwMBpMEOdt";
-    APP_KEY2["178cf125136ca8ea"] = "34381a26236dd1171185c0beb042e1c6";
-    APP_KEY2["57263273bc6b67f6"] = "a0488e488d1567960d3a765e8d129f90";
-    APP_KEY2["8d23902c1688a798"] = "710f0212e62bd499b8d3ac6e1db9302a";
-    APP_KEY2["7d336ec01856996b"] = "a1ce6983bc89e20a36c37f40c4f1a0dd";
-    APP_KEY2["8e16697a1b4f8121"] = "f5dd03b752426f2e623d7badb28d190a";
-    APP_KEY2["aae92bc66f3edfab"] = "af125a0d5279fd576c1b4418a3e8276d";
-    APP_KEY2["ae57252b0c09105d"] = "c75875c596a69eb55bd119e74b07cfe3";
-    APP_KEY2["bca7e84c2d947ac6"] = "60698ba2f68e01ce44738920a0ffe768";
-    APP_KEY2["cc578d267072c94d"] = "ffb6bb4c4edae2566584dbcacfc6a6ad";
-    APP_KEY2["cc8617fd6961e070"] = "3131924b941aac971e45189f265262be";
-    APP_KEY2["YvirImLGlLANCLvM"] = "JNlZNgfNGKZEpaDTkCdPQVXntXhuiJEM";
-    APP_KEY2["f3bb208b3d081dc8"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["4fa4601d1caa8b48"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["452d3958f048c02a"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["86385cdc024c0f6c"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["5256c25b71989747"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["e97210393ad42219"] = "f7c926f549b9becf1c27644958676a21";
-    APP_KEY2["5dce947fe22167f9"] = "";
-    APP_KEY2["8e9fc618fbd41e28"] = "";
-    APP_KEY2["21087a09e533a072"] = "e5b8ba95cab6104100be35739304c23a";
-    return APP_KEY2;
-  })(APP_KEY || {});
-  var ApiSign = class {
-    constructor(url, appkey) {
-      this.url = url;
-      this.appkey = appkey;
-    }
-    get ts() {
-      return (/* @__PURE__ */ new Date()).getTime();
-    }
-    /** 查询参数，须要在子类中初始化好才能无参数调用\`sign\`方法 */
-    data = {};
-    /**
-     * URL签名
-     * @param searchParams 查询参数，会覆盖url原有参数
-     * @param api 授权api，**授权第三方登录专用**
-     * @returns 签名后的api
-     */
-    sign(searchParams = this.data, api = "") {
-      const url = new URL2(this.url);
-      Object.assign(url.params, searchParams, { ts: this.ts });
-      delete url.params.sign;
-      api && (this.appkey = "27eb53fc9058f8c3");
-      const appSecret = this.appSecret;
-      url.params.appkey = this.appkey;
-      url.sort();
-      url.params.sign = (0, import_md5.default)((api ? \`api=\${decodeURIComponent(api)}\` : url.param) + appSecret);
-      return url.toJSON();
-    }
-    get appSecret() {
-      switch (this.appkey) {
-        case "f3bb208b3d081dc8":
-        case "4fa4601d1caa8b48":
-        case "452d3958f048c02a":
-        case "86385cdc024c0f6c":
-        case "5256c25b71989747":
-        case "e97210393ad42219":
-          switch (Math.trunc((/* @__PURE__ */ new Date()).getHours() / 4)) {
-            case 0:
-              this.appkey = "f3bb208b3d081dc8";
-              break;
-            case 1:
-              this.appkey = "4fa4601d1caa8b48";
-              break;
-            case 2:
-              this.appkey = "452d3958f048c02a";
-              break;
-            case 3:
-              this.appkey = "86385cdc024c0f6c";
-              break;
-            case 4:
-              this.appkey = "5256c25b71989747";
-              break;
-            case 5:
-              this.appkey = "e97210393ad42219";
-              break;
-            default:
-              break;
-          }
-          break;
-        default:
-          break;
-      }
-      return APP_KEY[this.appkey];
-    }
-  };
-  async function urlSign(url, searchParams = {}, appkey = "c1b107428d337928") {
-    const api = new ApiSign(url, appkey);
-    const response = await fetch(api.sign(searchParams));
-    return await response.json();
-  }
-
   // src/utils/base64.ts
   init_tampermonkey();
   var base64 = new class {
@@ -7102,6 +6909,82 @@ const MODULES = `
     !group.i && setTimeout(group.call.shift());
     return debug;
   };
+
+  // src/utils/format/url.ts
+  init_tampermonkey();
+
+  // src/utils/typeof.ts
+  init_tampermonkey();
+  var isArray = Array.isArray;
+  var isObject = (val) => val !== null && typeof val === "object";
+  var isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
+
+  // src/utils/format/url.ts
+  var URL2 = class {
+    /** 锚 */
+    hash;
+    /** 基链 */
+    base;
+    /** 参数对象。结果会格式化\`undefined\`\`null\`\`NaN\`等特殊值，但不会处理数字，以免丢失精度。 */
+    params = {};
+    /** 参数链（不含\`?\`） */
+    get param() {
+      return Object.entries(this.params).reduce((s, d) => {
+        return s += \`\${s ? "&" : ""}\${d[0]}=\${d[1]}\`;
+      }, "");
+    }
+    /** 提取URL参数 */
+    constructor(url) {
+      const arr1 = url.split("#");
+      let str = arr1.shift();
+      this.hash = arr1.join("#");
+      (this.hash || url.includes("#")) && (this.hash = \`#\${this.hash}\`);
+      const arr2 = str.split("?");
+      this.base = arr2.shift();
+      str = arr2.join("?");
+      if (str) {
+        str.split("&").forEach((d) => {
+          const arr3 = d.split("=");
+          const key = arr3.shift();
+          if (key) {
+            let value = arr3.join("=") || "";
+            try {
+              if (!isNumber(value)) {
+                value = JSON.parse(value);
+              }
+            } catch {
+              value === "undefined" && (value = void 0);
+              value === "NaN" && (value = NaN);
+            }
+            this.params[key] = value;
+          }
+        });
+      }
+    }
+    sort() {
+      this.params = Object.keys(this.params).sort().reduce((s, d) => {
+        s[d] = this.params[d];
+        return s;
+      }, {});
+    }
+    /** 还原url链接 */
+    toJSON() {
+      return \`\${this.base ? this.param ? this.base + "?" : this.base : ""}\${this.param}\${this.hash || ""}\`;
+    }
+  };
+  function objUrl(url, obj) {
+    const res = new URL2(url);
+    Object.entries(obj).forEach((d) => {
+      if (d[1] === void 0 || d[1] === null)
+        return;
+      res.params[d[0]] = d[1];
+    });
+    return res.toJSON();
+  }
+  function urlObj(url) {
+    const res = new URL2(url);
+    return res.params;
+  }
 
   // src/utils/htmlvnode.ts
   init_tampermonkey();
@@ -7771,6 +7654,7 @@ const MODULES = `
   __publicField(URLS, "SPACE_ARC", _URLS.P_AUTO + _URLS.D_API + "/x/space/wbi/arc/search");
   __publicField(URLS, "NEWLIST", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/newlist");
   __publicField(URLS, "SEARCH", _URLS.P_AUTO + _URLS.D_API + "/search");
+  __publicField(URLS, "REPLY", _URLS.P_AUTO + _URLS.D_API + "/x/v2/reply");
 
   // src/io/grpc/api-dm-web.ts
   var _ApiDmWeb = class {
@@ -8089,6 +7973,17 @@ const MODULES = `
 
   // src/io/api-bangumi-season.ts
   init_tampermonkey();
+
+  // src/io/api.ts
+  init_tampermonkey();
+  function jsonCheck(str) {
+    const result = typeof str === "string" ? JSON.parse(str) : str;
+    if (result.code === 0)
+      return result;
+    throw new Error(\`\${result.code} \${result.message}\`, { cause: result.code });
+  }
+
+  // src/io/api-bangumi-season.ts
   async function apiBangumiSeason(data) {
     const response = await fetch(objUrl(URLS.BANGUMI_SEASON, data), { credentials: "include" });
     const json = await response.json();
@@ -9733,6 +9628,115 @@ const MODULES = `
 
   // src/io/api-playurl.ts
   init_tampermonkey();
+
+  // src/io/api-sign.ts
+  init_tampermonkey();
+  var import_md5 = __toESM(require_md5());
+  var APP_KEY = /* @__PURE__ */ ((APP_KEY2) => {
+    APP_KEY2["1d8b6e7d45233436"] = "560c52ccd288fed045859ed18bffd973";
+    APP_KEY2["c1b107428d337928"] = "ea85624dfcf12d7cc7b2b3a94fac1f2c";
+    APP_KEY2["07da50c9a0bf829f"] = "25bdede4e1581c836cab73a48790ca6e";
+    APP_KEY2["7d089525d3611b1c"] = "acd495b248ec528c2eed1e862d393126";
+    APP_KEY2["9e5ded06c39bf5c4"] = "583e398ed0f980290b5903aba30b4cc4";
+    APP_KEY2["27eb53fc9058f8c3"] = "c2ed53a74eeefe3cf99fbd01d8c9c375";
+    APP_KEY2["85eb6835b0a1034e"] = "2ad42749773c441109bdc0191257a664";
+    APP_KEY2["4409e2ce8ffd12b8"] = "59b43e04ad6965f34319062b478f83dd";
+    APP_KEY2["37207f2beaebf8d7"] = "e988e794d4d4b6dd43bc0e89d6e90c43";
+    APP_KEY2["84956560bc028eb7"] = "94aba54af9065f71de72f5508f1cd42e";
+    APP_KEY2["bb3101000e232e27"] = "36efcfed79309338ced0380abd824ac1";
+    APP_KEY2["fb06a25c6338edbc"] = "fd10bd177559780c2e4a44f1fa47fa83";
+    APP_KEY2["iVGUTjsxvpLeuDCf"] = "aHRmhWMLkdeMuILqORnYZocwMBpMEOdt";
+    APP_KEY2["178cf125136ca8ea"] = "34381a26236dd1171185c0beb042e1c6";
+    APP_KEY2["57263273bc6b67f6"] = "a0488e488d1567960d3a765e8d129f90";
+    APP_KEY2["8d23902c1688a798"] = "710f0212e62bd499b8d3ac6e1db9302a";
+    APP_KEY2["7d336ec01856996b"] = "a1ce6983bc89e20a36c37f40c4f1a0dd";
+    APP_KEY2["8e16697a1b4f8121"] = "f5dd03b752426f2e623d7badb28d190a";
+    APP_KEY2["aae92bc66f3edfab"] = "af125a0d5279fd576c1b4418a3e8276d";
+    APP_KEY2["ae57252b0c09105d"] = "c75875c596a69eb55bd119e74b07cfe3";
+    APP_KEY2["bca7e84c2d947ac6"] = "60698ba2f68e01ce44738920a0ffe768";
+    APP_KEY2["cc578d267072c94d"] = "ffb6bb4c4edae2566584dbcacfc6a6ad";
+    APP_KEY2["cc8617fd6961e070"] = "3131924b941aac971e45189f265262be";
+    APP_KEY2["YvirImLGlLANCLvM"] = "JNlZNgfNGKZEpaDTkCdPQVXntXhuiJEM";
+    APP_KEY2["f3bb208b3d081dc8"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["4fa4601d1caa8b48"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["452d3958f048c02a"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["86385cdc024c0f6c"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["5256c25b71989747"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["e97210393ad42219"] = "f7c926f549b9becf1c27644958676a21";
+    APP_KEY2["5dce947fe22167f9"] = "";
+    APP_KEY2["8e9fc618fbd41e28"] = "";
+    APP_KEY2["21087a09e533a072"] = "e5b8ba95cab6104100be35739304c23a";
+    return APP_KEY2;
+  })(APP_KEY || {});
+  var ApiSign = class {
+    constructor(url, appkey) {
+      this.url = url;
+      this.appkey = appkey;
+    }
+    get ts() {
+      return (/* @__PURE__ */ new Date()).getTime();
+    }
+    /** 查询参数，须要在子类中初始化好才能无参数调用\`sign\`方法 */
+    data = {};
+    /**
+     * URL签名
+     * @param searchParams 查询参数，会覆盖url原有参数
+     * @param api 授权api，**授权第三方登录专用**
+     * @returns 签名后的api
+     */
+    sign(searchParams = this.data, api = "") {
+      const url = new URL2(this.url);
+      Object.assign(url.params, searchParams, { ts: this.ts });
+      delete url.params.sign;
+      api && (this.appkey = "27eb53fc9058f8c3");
+      const appSecret = this.appSecret;
+      url.params.appkey = this.appkey;
+      url.sort();
+      url.params.sign = (0, import_md5.default)((api ? \`api=\${decodeURIComponent(api)}\` : url.param) + appSecret);
+      return url.toJSON();
+    }
+    get appSecret() {
+      switch (this.appkey) {
+        case "f3bb208b3d081dc8":
+        case "4fa4601d1caa8b48":
+        case "452d3958f048c02a":
+        case "86385cdc024c0f6c":
+        case "5256c25b71989747":
+        case "e97210393ad42219":
+          switch (Math.trunc((/* @__PURE__ */ new Date()).getHours() / 4)) {
+            case 0:
+              this.appkey = "f3bb208b3d081dc8";
+              break;
+            case 1:
+              this.appkey = "4fa4601d1caa8b48";
+              break;
+            case 2:
+              this.appkey = "452d3958f048c02a";
+              break;
+            case 3:
+              this.appkey = "86385cdc024c0f6c";
+              break;
+            case 4:
+              this.appkey = "5256c25b71989747";
+              break;
+            case 5:
+              this.appkey = "e97210393ad42219";
+              break;
+            default:
+              break;
+          }
+          break;
+        default:
+          break;
+      }
+      return APP_KEY[this.appkey];
+    }
+  };
+  async function urlSign(url, searchParams = {}, appkey = "c1b107428d337928") {
+    const api = new ApiSign(url, appkey);
+    const response = await fetch(api.sign(searchParams));
+    return await response.json();
+  }
 
   // src/io/fnval.ts
   init_tampermonkey();
@@ -17011,11 +17015,27 @@ const MODULES = `
 
   // src/core/comment.ts
   init_tampermonkey();
+
+  // src/io/api-reply.ts
+  init_tampermonkey();
+  async function apiReply(oid, pn = 1, type = 1, sort = 0) {
+    const reply = await fetch(objUrl(URLS.REPLY, { pn, type, oid, sort }), { credentials: "include" });
+    const json = await reply.json();
+    return jsonCheck(json).data;
+  }
+
+  // src/core/comment.ts
   var Feedback;
   var loading = false;
   var load = false;
   var events = {};
   var _Comment = class {
+    /** 评论页数 */
+    count = 0;
+    /** 评论所属id */
+    oid = 0;
+    /** 评论类型 */
+    pageType = 1;
     constructor() {
       Feedback = void 0;
       loading = false;
@@ -17027,6 +17047,7 @@ const MODULES = `
     }
     /** 捕获评论组件 */
     bbComment() {
+      const that = this;
       Reflect.defineProperty(window, "bbComment", {
         configurable: true,
         set: (v) => {
@@ -17051,6 +17072,15 @@ const MODULES = `
                   });
                 });
                 loading = true;
+                if (arguments[1]) {
+                  if (typeof arguments[1] === "object") {
+                    that.oid = arguments[1].oid;
+                    that.pageType = arguments[1].pageType;
+                  } else {
+                    that.oid = arguments[1];
+                    that.pageType = arguments[2];
+                  }
+                }
               }
               setTimeout(() => {
                 let bbcomment = new window.bbComment(...arguments);
@@ -17068,12 +17098,15 @@ const MODULES = `
       });
     }
     initComment() {
+      const that = this;
       Reflect.defineProperty(window, "initComment", {
         configurable: true,
         set: (v) => true,
         get: () => {
           if (load) {
             let initComment2 = function(tar, init) {
+              that.oid = init.oid;
+              that.pageType = init.pageType;
               new Feedback(tar, init.oid, init.pageType, init.userStatus);
             };
             var initComment = initComment2;
@@ -17094,21 +17127,25 @@ const MODULES = `
     }
     /** 修复按时间排序评论翻页数 */
     pageCount() {
-      let count = 0;
       jsonpHook("api.bilibili.com/x/v2/reply?", void 0, (res, url) => {
         var _a2;
         if (0 === res.code && ((_a2 = res.data) == null ? void 0 : _a2.page)) {
           if (res.data.page.count) {
-            count = res.data.page.count;
-          } else if (count) {
-            res.data.page.count = count;
-          }
-          if (res.data.mode === 3 && url.includes("sort=0")) {
-            res.data.mode = 2;
+            this.count = res.data.page.count;
+          } else if (this.count) {
+            res.data.page.count = this.count;
           }
         }
         return res;
       }, false);
+    }
+    /** 预取评论页数 */
+    async getPageCount() {
+      var _a2;
+      if (this.oid) {
+        const res = await apiReply(this.oid, 1, this.pageType);
+        ((_a2 = res.page) == null ? void 0 : _a2.count) && (this.count = res.page.count);
+      }
     }
     /** 修补评论组件 */
     bbCommentModify() {
@@ -17131,8 +17168,8 @@ const MODULES = `
     }
     /** 退出abtest，获取翻页评论区 */
     initAbtest() {
+      const that = this;
       Feedback.prototype.initAbtest = function() {
-        this.sort = 0;
         this.abtest = {};
         this.abtest.optimize = false;
         if (this.jumpId || this.noPage) {
@@ -17141,8 +17178,10 @@ const MODULES = `
         if (this.appMode === "comic") {
           this.abtest.optimize = false;
         }
+        that.getPageCount().finally(() => {
+          this.init();
+        });
         this._registerEvent();
-        this.init();
       };
     }
     /** 添加回小页码区 */
