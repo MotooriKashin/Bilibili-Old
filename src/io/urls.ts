@@ -71,4 +71,5 @@ export class URLS {
     static readonly NEWLIST = URLS.P_AUTO + URLS.D_API + '/x/web-interface/newlist';
     static readonly SEARCH = URLS.P_AUTO + URLS.D_API + '/search';
     static readonly REPLY = URLS.P_AUTO + URLS.D_API + '/x/v2/reply';
+    static readonly ARTICLE_UPCOVER = URLS.P_AUTO + URLS.D_API + '/x/article/creative/article/upcover';
 }
