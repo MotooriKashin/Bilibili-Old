@@ -16,10 +16,6 @@ export class Comment {
     static commentJumpUrlTitle = false;
     /** 评论页数 */
     protected count = 0;
-    /** 评论所属id */
-    protected oid = 0;
-    /** 评论类型 */
-    protected pageType = 1;
     constructor() {
         Feedback = undefined;
         loading = false;
@@ -56,16 +52,6 @@ export class Comment {
                                 })
                             });
                             loading = true;
-                            // 记录oid
-                            if (arguments[1]) {
-                                if (typeof arguments[1] === 'object') {
-                                    that.oid = arguments[1].oid;
-                                    that.pageType = arguments[1].pageType;
-                                } else {
-                                    that.oid = arguments[1];
-                                    that.pageType = arguments[2];
-                                }
-                            }
                         }
                         setTimeout(() => {
                             let bbcomment = new (<any>window).bbComment(...arguments);
@@ -91,8 +77,6 @@ export class Comment {
             get: () => {
                 if (load) {
                     function initComment(tar: string, init: Record<"oid" | "pageType" | "userStatus", any>) {
-                        that.oid = init.oid; // 记录oid
-                        that.pageType = init.pageType; // 记录oid
                         new Feedback(tar, init.oid, init.pageType, init.userStatus);
                     }
                     Reflect.defineProperty(window, "initComment", { configurable: true, value: initComment });
@@ -129,9 +113,9 @@ export class Comment {
         }, false);
     }
     /** 预取评论页数 */
-    protected async getPageCount() {
-        if (this.oid) {
-            const res = await apiReply(this.oid, 1, this.pageType)
+    protected async getPageCount(that: any) {
+        if (that.oid) {
+            const res = await apiReply(that.oid, 1, that.pageType)
             res.page?.count && (this.count = res.page.count);
         }
     }
@@ -175,7 +159,7 @@ export class Comment {
             }
 
             // 优先获取评论总数
-            that.getPageCount().finally(() => {
+            that.getPageCount(this).finally(() => {
                 this.init();
             });
 
