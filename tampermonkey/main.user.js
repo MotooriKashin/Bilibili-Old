@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.4.1-91f6f5f11c47f13fb7f79ab811124cda994f77f7
+// @version      10.4.2-91f6f5f11c47f13fb7f79ab811124cda994f77f7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -11174,7 +11174,14 @@ const MODULES = `
           });
         });
       } else {
-        GM.updateSessionRules(mock);
+        GM.modifyRequestheader(".m4s?", {
+          "user-agent": "Bilibili Freedoooooom/MarkII",
+          referer: void 0
+        });
+        GM.modifyRequestheader(".flv?", {
+          "user-agent": "Bilibili Freedoooooom/MarkII",
+          referer: void 0
+        });
       }
     }
   }
@@ -11345,7 +11352,7 @@ const MODULES = `
     }
     /** 访问泰区代理 */
     async th(obj) {
-      const d = await new ApiGlobalOgvPlayurl(obj, user.userStatus.uposReplace.th).toPlayurl();
+      const d = await new ApiGlobalOgvPlayurl(obj, user.userStatus.videoLimit.th).toPlayurl();
       toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${user.userStatus.uposReplace.th}\`, \`UPOS：\${UPOS[user.userStatus.uposReplace.th]}\`);
       return JSON.parse(this.uposReplace(JSON.stringify(d), user.userStatus.uposReplace.th));
     }
@@ -17032,10 +17039,6 @@ const MODULES = `
   var _Comment = class {
     /** 评论页数 */
     count = 0;
-    /** 评论所属id */
-    oid = 0;
-    /** 评论类型 */
-    pageType = 1;
     constructor() {
       Feedback = void 0;
       loading = false;
@@ -17072,15 +17075,6 @@ const MODULES = `
                   });
                 });
                 loading = true;
-                if (arguments[1]) {
-                  if (typeof arguments[1] === "object") {
-                    that.oid = arguments[1].oid;
-                    that.pageType = arguments[1].pageType;
-                  } else {
-                    that.oid = arguments[1];
-                    that.pageType = arguments[2];
-                  }
-                }
               }
               setTimeout(() => {
                 let bbcomment = new window.bbComment(...arguments);
@@ -17105,8 +17099,6 @@ const MODULES = `
         get: () => {
           if (load) {
             let initComment2 = function(tar, init) {
-              that.oid = init.oid;
-              that.pageType = init.pageType;
               new Feedback(tar, init.oid, init.pageType, init.userStatus);
             };
             var initComment = initComment2;
@@ -17140,10 +17132,10 @@ const MODULES = `
       }, false);
     }
     /** 预取评论页数 */
-    async getPageCount() {
+    async getPageCount(that) {
       var _a2;
-      if (this.oid) {
-        const res = await apiReply(this.oid, 1, this.pageType);
+      if (that.oid) {
+        const res = await apiReply(that.oid, 1, that.pageType);
         ((_a2 = res.page) == null ? void 0 : _a2.count) && (this.count = res.page.count);
       }
     }
@@ -17178,7 +17170,7 @@ const MODULES = `
         if (this.appMode === "comic") {
           this.abtest.optimize = false;
         }
-        that.getPageCount().finally(() => {
+        that.getPageCount(this).finally(() => {
           this.init();
         });
         this._registerEvent();
