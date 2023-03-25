@@ -12,6 +12,7 @@ import svgWarn from "../svg/warn.svg";
 import svgWrench from "../svg/wrench.svg";
 import { debug } from "../utils/debug";
 import { propertyHook } from "../utils/hook/method";
+import { PNG } from "../utils/png";
 import { poll } from "../utils/poll";
 import { AccessKey } from "./accesskey";
 import { BLOD } from "./bilibili-old";
@@ -20,6 +21,7 @@ import { danmaku } from "./danmaku";
 import { download } from "./download";
 import { Aria2 } from "./download/aria2";
 import { player } from "./player";
+import { uploadImg } from "./png";
 import { toast } from "./toast";
 import { alert } from "./ui/alert";
 import { Desc } from "./ui/desc";
@@ -160,7 +162,7 @@ export class UI {
                 candidate: ["Hello World!"]
             }, v => {
                 try {
-                    toast.toast(user.userStatus!.toast.delay, (<any>this).BLOD.status.toast.type, v);
+                    toast.toast(user.userStatus!.toast.delay, (<any>user).userStatus!.toast.type, v);
                 } catch (e) {
                     toast.error('非常抱歉！发生了错误', e);
                 }
@@ -183,6 +185,12 @@ export class UI {
                 this.switch('checkUpdate', '检查更新', '自动更新播放器', svgDownload, undefined, '启用【重构播放器】后，脚本会自动检查并更新播放器组件，但可能因为网络原因更新失败，出现反复更新->反复失败的问题。您可以禁用此功能，以继续使用【重构播放器】，等待网络环境改善后再尝试启用。')
             ]);
         }
+        this.menuitem.common.addCard('CDN');
+        this.menuitem.common.addSetting([
+            this.button(<'TVresource'>'pngEncode', '编码', () => { new PNG().encodeFile() }, '[原始] -> png', '选择'),
+            this.button(<'TVresource'>'pngDncode', '解码', () => { new PNG().decodeFile() }, 'png -> [原始]', '选择'),
+            this.button(<'TVresource'>'pngUpload', '上传', uploadImg, '更新CDN数据', '选择')
+        ], 3);
     }
     /** 重写设置 */
     protected initSettingRewrite() {
@@ -443,19 +451,19 @@ export class UI {
                 precision: 19
             }, '单位：/MB', undefined, undefined, '如果一个文件有多个下载源，那么此项会间接决定使用几个下载源。一旦要下载的文件不小于此项的2倍，aria2便会同时尝试连接多个下载源。这也是提高下载速率的有效方法。注意：某种意义上此项是越小越好，原因不言而喻。'),
             this.button(<'aria2'>'aria2.test', '测试RPC连接', () => {
-                const tst = toast.list('正在测试RPC连接~');
+                const msg = toast.list('正在测试RPC连接 >>>');
                 new Aria2().getVersion()
                     .then(d => {
-                        tst.type = 'success';
-                        tst.push(`-------aria2 v${d.version}-------`, ...d.enabledFeatures);
+                        msg.type = 'success';
+                        msg.push(`> -------aria2 v${d.version}-------`, ...d.enabledFeatures, 'fin <<<');
                     })
                     .catch(e => {
-                        tst.type = 'error';
-                        tst.push('RPC链接失败 ಥ_ಥ', e);
+                        msg.type = 'error';
+                        msg.push('> RPC链接失败 ಥ_ಥ', e, 'fin <<<');
                         debug.error('RPC链接失败 ಥ_ಥ', e);
                     })
                     .finally(() => {
-                        tst.delay = 4;
+                        msg.delay = 4;
                     });
             }, '获取aria2信息', 'ping', undefined, '请确定正确配置并启用了aria2的RPC服务器。')
         ], 1);

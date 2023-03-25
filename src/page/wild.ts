@@ -20,11 +20,11 @@ export class PageWild extends Page {
         typeof this.path === 'string' && this.init();
     }
     private init() {
-        this.toast.push(this.url, '已失效~', '请求远程备份>>>');
+        this.toast.push('页面重构 >>>', '> ' + this.url, '> 已失效~', '> 请求远程备份~');
         GM.fetch(cdn.encode(this.path, ''))
             .then(d => d.text())
             .then(d => {
-                this.toast.push('成功获取网页框架，刷新页面~');
+                this.toast.push('> 成功获取网页框架，刷新页面~', 'fin <<<');
                 this.url && urlCleaner.updateLocation(this.url);
                 this.updateHtml(d);
                 this.updateDom();
@@ -32,7 +32,7 @@ export class PageWild extends Page {
                 this.toast.type = 'success';
             })
             .catch(e => {
-                this.toast.push('重构页面错误', e);
+                this.toast.push('> 重构页面错误', e, 'fin <<<');
                 debug.error('重构页面错误', e);
                 this.toast.type = 'error';
             })
@@ -53,7 +53,7 @@ export class PageHttps extends Page {
         fetch(location.href)
             .then(d => d.text())
             .then(d => {
-                this.toast.push('刷新中>>>');
+                this.toast.push('刷新中 >>>');
                 console.clear();
                 this.updateHtml(https(d, true));
                 this.updateDom();
@@ -62,7 +62,7 @@ export class PageHttps extends Page {
                 this.toast.delay = 4;
             })
             .catch(e => {
-                this.toast.push('重构页面错误', e);
+                this.toast.push('> 重构页面错误', e, 'fin <<<');
                 debug.error('重构页面错误', e);
                 this.toast.type = 'error';
             })

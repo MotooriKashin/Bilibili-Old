@@ -99,26 +99,26 @@ export class PageSpace {
                     });
                 }
                 if (this.aids.length) {
-                    const tst = toast.list('检测到失效视频！', this.aids.join(' '));
+                    const msg = toast.list('失效视频 >>>', '> ' + this.aids.join(' '));
                     this.lostVideoView().then(() => {
                         setTimeout(() => {
-                            tst.push('数据返回，正在修复~');
+                            msg.push('> 数据返回，正在修复~');
                             let resolve = 0, reject = 0;
-                            tst.type = 'success';
+                            msg.type = 'success';
                             const ele = document.querySelector("#page-fav");
                             if (ele) {
                                 const medias = (<any>ele).__vue__.favListDetails.medias;
                                 medias?.forEach((d: any) => {
                                     if (d.attr % 2) {
-                                        tst.push(`-------- av${d.id} --------`);
+                                        msg.push(`> av${d.id}`);
                                         if (this.aidInfo[d.id].title) {
                                             resolve++;
                                             d.title = this.aidInfo[d.id].title;
-                                            tst.push(this.aidInfo[d.id].title);
+                                            msg.push('>' + this.aidInfo[d.id].title);
                                         } else {
                                             reject++;
                                             d.title = `av${d.id}`;
-                                            tst.push('未能获取到有效信息！');
+                                            msg.push('> 未能获取到有效信息！');
                                         }
                                         this.aidInfo[d.id].cover && (d.cover = this.aidInfo[d.id].cover);
                                         d.attr = 0;
@@ -126,8 +126,8 @@ export class PageSpace {
                                     }
                                 })
                             }
-                            tst.push('', `修复结束：成功 ${resolve} 失败 ${reject}`);
-                            tst.delay = 4;
+                            msg.push('> ', `> 修复结束：成功 ${resolve} 失败 ${reject}`, 'fin <<<');
+                            msg.delay = 4;
                         }, 100);
                     });
                 }

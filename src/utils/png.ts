@@ -36,7 +36,7 @@ export class PNG {
         new Uint32Array(res)[0] = buffer.length; // 写入原始文件大小（int）
         u8f.set(buffer, 4); // 写入原始数据
         const result = UPNG.encode([u8f.buffer], px, px, 0) // 编码为png文件
-        msg?.push(`> 编码用时：${timeFormat(new Date().getTime() - start)}`, `> 编码成功！`);
+        msg?.push(`> 编码用时：${timeFormat(new Date().getTime() - start)}`, `> 编码成功！`, 'fin <<<');
         msg && (msg.type = 'success');
         return result;
     }
@@ -68,7 +68,7 @@ export class PNG {
                     : saveAs(file, this.name!.split('.')[0] + '.png');
             })
             .catch(e => {
-                msg.push(`> Error：`, e);
+                msg.push(`> Error：`, e, 'fin <<<');
                 msg.type = 'error';
                 debug.error('PNG.encode', e);
             })
@@ -90,7 +90,7 @@ export class PNG {
         const png = UPNG.decode(file);
         const buff = new ArrayBuffer(png.data.length);
         const u8f = new Uint8Array(buff);
-        msg?.push(`> 解码用时：${timeFormat(new Date().getTime() - start)}`, `> 编码成功！`);
+        msg?.push(`> 解码用时：${timeFormat(new Date().getTime() - start)}`, `> 编码成功！`, 'fin <<<');
         u8f.set(png.data);
         const length = new Uint32Array(buff.slice(0, 4))[0];
         msg && (msg.type = 'success');
@@ -125,7 +125,7 @@ export class PNG {
                     : saveAs(file, this.name!.split('.')[0] + '.txt');
             })
             .catch(e => {
-                msg.push(`> Error：`, e);
+                msg.push(`> Error：`, e, 'fin <<<');
                 msg.type = 'error';
                 debug.error('PNG.decode', e);
             })

@@ -121,15 +121,11 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
     }
     /** 淡入 */
     fadeIn() {
-        this.style.paddingTop = '';
-        this.style.paddingBottom = '';
-        this.style.height = `${this.message.scrollHeight + 30}px`;
+        this.setAttribute('style', `height: ${this.message.scrollHeight + 30}px;`);
     }
     /** 淡出 */
     fadeOut(remove = false) {
-        this.style.paddingTop = '0px';
-        this.style.paddingBottom = '0px';
-        this.style.height = '0px';
+        this.setAttribute('style', 'padding-top: 0px;paddingbottom: 0px;height: 0px;');
         remove && setTimeout(() => this.remove(), 1e3);
     }
 }

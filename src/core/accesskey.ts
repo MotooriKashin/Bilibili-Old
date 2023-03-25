@@ -30,11 +30,11 @@ export class AccessKey {
     }
     get() {
         if (uid) {
-            const tst = toast.list('正在申请账户授权~');
+            const msg = toast.list('正在申请账户授权 >>>');
             new ApiLoginAppThird('https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png')
                 .getData()
                 .then(async d => {
-                    tst.push('成功获取到授权链接~');
+                    msg.push('> 成功获取到授权链接~');
                     return GM.fetch(d.confirm_uri, { credentials: 'include' })
                 })
                 .then(d => {
@@ -44,15 +44,15 @@ export class AccessKey {
                     user.userStatus!.accessKey.token = <string>obj.access_key;
                     user.userStatus!.accessKey.date = date;
                     user.userStatus!.accessKey.dateStr = dateStr;
-                    tst.push('------- 授权成功 -------', `鉴权: ${obj.access_key}`, `日期：${dateStr}`);
-                    tst.type = 'success';
-                    tst.delay = 4;
+                    msg.push('> ------- 授权成功 -------', `> 鉴权: ${obj.access_key}`, `> 日期：${dateStr}`, 'fin <<<');
+                    msg.type = 'success';
+                    msg.delay = 4;
                 })
                 .catch(e => {
                     debug.error('授权出错！', e);
-                    tst.push('授权出错！', e);
-                    tst.type = 'error';
-                    tst.delay = 4;
+                    msg.push('> 授权出错！', e, 'fin <<<');
+                    msg.type = 'error';
+                    msg.delay = 4;
                 })
         } else {
             toast.warning('请先登录B站账户！');

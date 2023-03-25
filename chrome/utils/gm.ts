@@ -18,8 +18,9 @@ export const GM = new (class GM {
             const response = await fetch(input, init);
             this.removeSessionRules(id);
             return response;
-        } catch {
+        } catch (e) {
             this.removeSessionRules(id);
+            throw e;
         }
     }
     /**

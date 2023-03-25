@@ -79,20 +79,20 @@ class User {
     }
     /** 恢复备份数据 */
     inputUserStatus() {
-        const tst = toast.list('请选择一个备份的数据文件（.json）', '注意：无效的数据文件可能导致异常！');
+        const msg = toast.list('恢复备份数据 >>>', '> 请选择一个备份的数据文件（.json）', '> 注意：无效的数据文件可能导致异常！');
         fileRead("application/json")
             .then(d => {
                 if (d && d[0]) {
-                    tst.push(`读取文件：${d[0].name}`);
-                    tst.type = 'info';
+                    msg.push(`> 读取文件：${d[0].name}`);
+                    msg.type = 'info';
                     return readAs(d[0])
                         .then(d => {
                             const data = JSON.parse(d);
                             if (typeof data === "object") {
                                 GM.setValue('userStatus', data);
                                 const text = '已恢复设置数据，请<strong>刷新</strong>页面以避免数据紊乱！';
-                                tst.push(text);
-                                tst.type = 'success';
+                                msg.push('> ' + text, 'fin <<<');
+                                msg.type = 'success';
                                 return alert(text, '刷新页面', [{
                                     text: '刷新',
                                     callback: () => location.reload()
@@ -100,17 +100,17 @@ class User {
                             }
                         })
                         .catch(e => {
-                            tst.push('读取文件出错！', e);
-                            tst.type = 'error';
+                            msg.push('> 读取文件出错！', e, 'fin <<<');
+                            msg.type = 'error';
                             debug.error('恢复设置数据', e);
                         })
                 }
             })
             .catch(e => {
-                tst.push(e);
+                msg.push(e, 'fin <<<');
             })
             .finally(() => {
-                tst.delay = 4;
+                msg.delay = 4;
             })
     }
 }
