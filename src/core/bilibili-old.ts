@@ -9,6 +9,8 @@ import { toast } from "./toast";
 import { UI } from "./ui";
 import { videoInfo } from "./video-info";
 import { urlSign } from "../io/api-sign";
+import { fileRead, saveAs } from "../utils/file";
+import { PNG } from "../utils/png";
 
 /** 用于暴露的统一接口 */
 export const BLOD = new (class {
@@ -59,6 +61,9 @@ export const BLOD = new (class {
     base64 = base64;
     md5 = md5;
     htmlVnode = htmlVnode;
+    saveAs = saveAs;
+    fileRead = fileRead;
+    PNG = PNG;
 
     /** 刷新toast，多用于重构页面后刷新显示 */
     flushToast() {
