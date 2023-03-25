@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.1.2
+// @version      2.1.3
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -608,7 +608,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"lycw8hh09tl"}`) || customElements.define(`preview-image-${"lycw8hh09tl"}`, PreviewImage);
+customElements.get(`preview-image-${"260ljfpemc3"}`) || customElements.define(`preview-image-${"260ljfpemc3"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -618,10 +618,6 @@ var events = {};
 var _Comment = class {
   /** 评论页数 */
   count = 0;
-  /** 评论所属id */
-  oid = 0;
-  /** 评论类型 */
-  pageType = 1;
   constructor() {
     Feedback = void 0;
     loading = false;
@@ -658,15 +654,6 @@ var _Comment = class {
                 });
               });
               loading = true;
-              if (arguments[1]) {
-                if (typeof arguments[1] === "object") {
-                  that.oid = arguments[1].oid;
-                  that.pageType = arguments[1].pageType;
-                } else {
-                  that.oid = arguments[1];
-                  that.pageType = arguments[2];
-                }
-              }
             }
             setTimeout(() => {
               let bbcomment = new window.bbComment(...arguments);
@@ -691,8 +678,6 @@ var _Comment = class {
       get: () => {
         if (load) {
           let initComment2 = function(tar, init) {
-            that.oid = init.oid;
-            that.pageType = init.pageType;
             new Feedback(tar, init.oid, init.pageType, init.userStatus);
           };
           var initComment = initComment2;
@@ -726,10 +711,10 @@ var _Comment = class {
     }, false);
   }
   /** 预取评论页数 */
-  async getPageCount() {
+  async getPageCount(that) {
     var _a;
-    if (this.oid) {
-      const res = await apiReply(this.oid, 1, this.pageType);
+    if (that.oid) {
+      const res = await apiReply(that.oid, 1, that.pageType);
       ((_a = res.page) == null ? void 0 : _a.count) && (this.count = res.page.count);
     }
   }
@@ -764,7 +749,7 @@ var _Comment = class {
       if (this.appMode === "comic") {
         this.abtest.optimize = false;
       }
-      that.getPageCount().finally(() => {
+      that.getPageCount(this).finally(() => {
         this.init();
       });
       this._registerEvent();
