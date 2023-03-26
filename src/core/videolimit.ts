@@ -105,7 +105,6 @@ class VideoLimit {
             } catch (e) {
                 this.toast.push('> 代理出错！', <any>e);
                 !obj.access_key && this.toast.push('代理服务器要求【账户授权】才能进一步操作！');
-                this.toast.push('fin <<<');
                 this.toast.type = 'error';
                 this.toast.delay = 4;
                 return { code: -404, message: e, data: null };
@@ -148,7 +147,6 @@ class VideoLimit {
             } catch (e) {
                 this.toast.push('> 代理出错！', <any>e);
                 !obj.access_key && this.toast.push('> 代理服务器要求【账户授权】才能进一步操作！');
-                this.toast.push('fin <<<');
                 this.toast.type = 'error';
                 this.toast.delay = 4;
                 return { code: -404, message: e, data: null };

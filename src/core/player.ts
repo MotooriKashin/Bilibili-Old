@@ -413,7 +413,6 @@ class Player {
                         this.updating = false;
                         msg.delay = user.userStatus!.toast.delay;
                         if (!data[0] || !data[1]) {
-                            msg.push('fin <<<');
                             throw new Error('获取播放器组件出错！');
                         }
                         msg.push('> -------加载成功-------');
