@@ -68,14 +68,11 @@ class Danmaku {
         if (!(<any>window).player) return toast.warning('未找到播放器实例！请在播放页面使用。');
         if (!(<any>window).player?.appendDm) return toast.warning('未启用【重构播放器】，无法载入弹幕！');
         const msg = toast.list('加载本地弹幕 >>>', '> 请选择一个弹幕文件，拓展名：.xml，编码：utf-8');
-        fileRead('.xml', false)
+        fileRead('.xml')
             .then(d => {
-                if (d && d[0]) {
-                    msg.push('> -------loading-------', `> 弹幕：${d[0].name}`, `> 类型：${d[0].type}`, `> 大小：${sizeFormat(d[0].size)}`);
-                    msg.type = 'warning';
-                    return readAs(d[0])
-                }
-                throw new Error(msg.data[0]);
+                msg.push('> -------loading-------', `> 弹幕：${d.name}`, `> 类型：${d.type}`, `> 大小：${sizeFormat(d.size)}`);
+                msg.type = 'warning';
+                return readAs(d)
             })
             .then(d => {
                 const dm = DanmakuBase.decodeXml(d);
@@ -97,14 +94,11 @@ class Danmaku {
         if (!(<any>window).player) return toast.warning('未找到播放器实例！请在播放页面使用。');
         if (!(<any>window).player?.appendDm) return toast.warning('未启用【重构播放器】，无法载入弹幕！');
         const msg = toast.list('加载本地弹幕 >>>', '> 请选择一个弹幕文件，拓展名：.json，编码：utf-8');
-        fileRead('.json', false)
+        fileRead('.json')
             .then(d => {
-                if (d && d[0]) {
-                    msg.push('> -------loading-------', `> 弹幕：${d[0].name}`, `> 类型：${d[0].type}`, `> 大小：${sizeFormat(d[0].size)}`);
-                    msg.type = 'warning';
-                    return readAs(d[0])
-                }
-                throw new Error(msg.data[0]);
+                msg.push('> -------loading-------', `> 弹幕：${d.name}`, `> 类型：${d.type}`, `> 大小：${sizeFormat(d.size)}`);
+                msg.type = 'warning';
+                return readAs(d)
             })
             .then(d => {
                 const dm = JSON.parse(d);

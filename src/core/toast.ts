@@ -125,7 +125,7 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
     }
     /** 淡出 */
     fadeOut(remove = false) {
-        this.setAttribute('style', 'padding-top: 0px;paddingbottom: 0px;height: 0px;');
+        this.setAttribute('style', 'padding-top: 0px;padding-bottom: 0px;height: 0px;');
         remove && setTimeout(() => this.remove(), 1e3);
     }
 }

@@ -48,20 +48,13 @@ export class PNG {
         const msg = toast.list('任意文件 => png >>>')
         fileRead()
             .then(d => {
-                if (d && d[0]) {
-                    this.name = d[0].name;
-                    this.size = d[0].size;
-                    this.type = d[0].type;
-                    msg.push(`> 读取文件：${this.name}`, `> 类型：${this.type}`, `> 大小：${sizeFormat(this.size)}`);
-                    return d[0].arrayBuffer();
-                } else {
-                    msg.push('> Warning：未识别到任何文件~');
-                    msg.type = 'warning';
-                    throw new Error(`读取文件出错~`);
-                }
+                this.name = d.name;
+                this.size = d.size;
+                this.type = d.type;
+                msg.push(`> 读取文件：${this.name}`, `> 类型：${this.type}`, `> 大小：${sizeFormat(this.size)}`);
+                return d.arrayBuffer();
             })
             .then(d => {
-                debug(d);
                 const file = this.encode(d, msg);
                 callback
                     ? callback({ file, name: this.name!, size: this.size!, type: this.type! })
@@ -105,20 +98,13 @@ export class PNG {
         const msg = toast.list('解码 png >>>')
         fileRead('.png')
             .then(d => {
-                if (d && d[0]) {
-                    this.name = d[0].name;
-                    this.size = d[0].size;
-                    this.type = d[0].type;
-                    msg.push(`> 读取文件：${this.name}`, `> 类型：${this.type}`, `> 大小：${sizeFormat(this.size)}`);
-                    return d[0].arrayBuffer();
-                } else {
-                    msg.push('> Warning：未识别到任何文件~');
-                    msg.type = 'warning';
-                    throw new Error(`读取文件出错~`);
-                }
+                this.name = d.name;
+                this.size = d.size;
+                this.type = d.type;
+                msg.push(`> 读取文件：${this.name}`, `> 类型：${this.type}`, `> 大小：${sizeFormat(this.size)}`);
+                return d.arrayBuffer();
             })
             .then(d => {
-                debug(d);
                 const file = this.decode(d, msg);
                 callback ?
                     callback({ file, name: this.name!, size: this.size!, type: this.type! })

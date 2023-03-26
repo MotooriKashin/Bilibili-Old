@@ -18,17 +18,11 @@ export function uploadImg() {
     msg.push('> 请选择图片文件');
     fileRead('.png')
         .then(d => {
-            if (d && d[0]) {
-                name = d[0].name;
-                size = d[0].size;
-                type = d[0].type;
-                msg.push(`> 读取文件：${name}`, `> 类型：${type}`, `> 大小：${sizeFormat(size)}`, '> 正在上传~');
-                return apiArticleUpcover(d[0], bili_jct);
-            } else {
-                msg.push('> Warning：未识别到任何文件~');
-                msg.type = 'warning';
-                throw new Error(`读取文件出错~`);
-            }
+            name = d.name;
+            size = d.size;
+            type = d.type;
+            msg.push(`> 读取文件：${name}`, `> 类型：${type}`, `> 大小：${sizeFormat(size)}`, '> 正在上传~');
+            return apiArticleUpcover(d, bili_jct);
         })
         .then(d => {
             msg.push('> 上传成功，请牢记图片地址！', d.url);
