@@ -27,6 +27,7 @@ export class URLS {
     private static readonly D_API_GLOBAL = 'api.global.bilibili.com';
     private static readonly D_ACCOUNT = 'account.bilibili.com';
     private static readonly D_INTL = 'apiintl.biliapi.net';
+    private static readonly D_API_VC = 'api.vc.bilibili.com';
 
     static readonly WEBSHOW_LOCS = URLS.P_AUTO + URLS.D_API + '/x/web-show/res/locs';
     static readonly INDEX_TOP_RCMD = URLS.P_AUTO + URLS.D_API + '/x/web-interface/index/top/rcmd';
@@ -71,4 +72,7 @@ export class URLS {
     static readonly NEWLIST = URLS.P_AUTO + URLS.D_API + '/x/web-interface/newlist';
     static readonly SEARCH = URLS.P_AUTO + URLS.D_API + '/search';
     static readonly REPLY = URLS.P_AUTO + URLS.D_API + '/x/v2/reply';
+    static readonly ARTICLE_UPCOVER = URLS.P_AUTO + URLS.D_API + '/x/article/creative/article/upcover';
+    static readonly DRAW_IMAGE_UPLOAD = URLS.P_AUTO + URLS.D_API_VC + '/api/v1/drawImage/upload';
+    static readonly DYNAMIC_UPLOAD_BFS = URLS.P_AUTO + URLS.D_API + '/x/dynamic/feed/draw/upload_bfs';
 }

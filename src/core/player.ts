@@ -327,25 +327,24 @@ class Player {
                 {
                     text: '确定',
                     callback: () => {
-                        const tst = toast.list('弹幕保护计划 >>>');
+                        const msg = toast.list('弹幕保护计划 >>>');
                         GM.fetch(cdn.encode(`/danmaku/${cid}.xml`, ''), { cache: 'force-cache' })
                             .then(d => {
-                                tst.push(`获取存档：${cid}.xml`);
-                                tst.type = 'success';
+                                msg.push(`> 获取存档：${cid}.xml`);
+                                msg.type = 'success';
                                 return d.text();
                             })
                             .then(d => {
                                 const dm = DanmakuBase.decodeXml(d);
                                 (<any>window).player.appendDm(dm, !user.userStatus!.dmContact);
-                                tst.push(`有效弹幕数：${dm.length}`, `加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
+                                msg.push(`> 有效弹幕数：${dm.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
                             })
                             .catch(e => {
-                                tst.push(e);
-                                debug.error('弹幕保护计划', e);
-                                tst.type = 'error';
+                                msg.push(e);
+                                msg.type = 'error';
                             })
                             .finally(() => {
-                                tst.delay = user.userStatus!.toast.delay;
+                                msg.delay = user.userStatus!.toast.delay;
                             })
                     }
                 },
@@ -385,37 +384,40 @@ class Player {
                         if (this.updating) throw new Error('一次只能运行一个更新实例！');
                         this.updating = true;
                         if (!BLOD.version) throw new Error(`未知错误导致脚本版本异常！version：${BLOD.version}`);
-                        const tst = toast.list('更新播放器组件中，可能需要花费一点时间，请不要关闭页面！',
-                            '如果弹出跨域提醒，推荐【总是允许全部域名】',
-                            '如果多次更新失败，请禁用【重构播放器】功能！');
+                        const msg = toast.list('更新播放器组件 >>>', '> 可能需要花费一点时间，请不要关闭页面！',
+                            '> 如果弹出跨域提醒，推荐【总是允许全部域名】',
+                            '> 如果多次更新失败，请禁用【重构播放器】功能！');
                         let i = 1;
                         await Promise.all([
                             GM.fetch(cdn.encode('/chrome/player/video.js'))
                                 .then(d => d.text())
                                 .then(d => {
                                     data[0] = d;
-                                    tst.push(`加载播放器组件：${i++}/2`);
+                                    msg.push(`> 加载播放器组件：${i++}/2`);
                                 })
                                 .catch(e => {
-                                    tst.push(`获取播放器组件出错！${i++}/2`, e);
-                                    tst.type = 'error';
+                                    msg.push(`> 获取播放器组件出错！${i++}/2`, e);
+                                    msg.type = 'error';
                                 }),
                             GM.fetch(cdn.encode('/chrome/player/video.css'))
                                 .then(d => d.text())
                                 .then(d => {
                                     data[1] = d;
-                                    tst.push(`加载播放器组件：${i++}/2`);
+                                    msg.push(`> 加载播放器组件：${i++}/2`);
                                 })
                                 .catch(e => {
-                                    tst.push(`获取播放器组件出错！${i++}/2`, e);
-                                    tst.type = 'error';
+                                    msg.push(`> 获取播放器组件出错！${i++}/2`, e);
+                                    msg.type = 'error';
                                 })
                         ]);
                         this.updating = false;
-                        tst.delay = user.userStatus!.toast.delay;
-                        if (!data[0] || !data[1]) throw new Error('获取播放器组件出错！');
-                        tst.push('-------加载成功-------');
-                        tst.type = 'success';
+                        msg.delay = user.userStatus!.toast.delay;
+                        if (!data[0] || !data[1]) {
+                            msg.push('fin <<<');
+                            throw new Error('获取播放器组件出错！');
+                        }
+                        msg.push('> -------加载成功-------');
+                        msg.type = 'success';
                         GM.setValue('bilibiliplayer', data[0]);
                         GM.setValue('bilibiliplayerstyle', data[1]);
                     }

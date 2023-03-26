@@ -1,6 +1,5 @@
 import { ApiDmWeb, DanmakuElem } from "../io/grpc/api-dm-web";
 import { DanmakuBase } from "../utils/danmaku";
-import { debug } from "../utils/debug";
 import { fileRead, readAs, saveAs } from "../utils/file";
 import { sizeFormat } from "../utils/format/size";
 import { urlObj } from "../utils/format/url";
@@ -67,58 +66,50 @@ class Danmaku {
     localDmXml() {
         if (!(<any>window).player) return toast.warning('未找到播放器实例！请在播放页面使用。');
         if (!(<any>window).player?.appendDm) return toast.warning('未启用【重构播放器】，无法载入弹幕！');
-        const tst = toast.list('请选择一个弹幕文件，拓展名：.xml，编码：utf-8');
-        fileRead('.xml', false)
+        const msg = toast.list('加载本地弹幕 >>>', '> 请选择一个弹幕文件，拓展名：.xml，编码：utf-8');
+        fileRead('.xml')
             .then(d => {
-                if (d && d[0]) {
-                    tst.push('-------loading-------', `弹幕：${d[0].name}`, `类型：${d[0].type}`, `大小：${sizeFormat(d[0].size)}`);
-                    tst.type = 'warning';
-                    return readAs(d[0])
-                }
-                throw new Error(tst.data[0]);
+                msg.push('> -------loading-------', `> 弹幕：${d.name}`, `> 类型：${d.type}`, `> 大小：${sizeFormat(d.size)}`);
+                msg.type = 'warning';
+                return readAs(d)
             })
             .then(d => {
                 const dm = DanmakuBase.decodeXml(d);
                 (<any>window).player.appendDm(dm, !user.userStatus!.dmContact);
-                tst.push('-------decoding-------', `有效弹幕数：${dm.length}`, `加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
-                tst.type = 'success';
+                msg.push('> -------decoding-------', `> 有效弹幕数：${dm.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
+                msg.type = 'success';
             })
             .catch(e => {
-                tst.push(e);
-                debug.error(e);
-                tst.type = 'error';
+                msg.push(e);
+                msg.type = 'error';
             })
             .finally(() => {
-                tst.delay = user.userStatus!.toast.delay;
+                msg.delay = user.userStatus!.toast.delay;
             })
     }
     /** 加载本地json弹幕 */
     localDmJson() {
         if (!(<any>window).player) return toast.warning('未找到播放器实例！请在播放页面使用。');
         if (!(<any>window).player?.appendDm) return toast.warning('未启用【重构播放器】，无法载入弹幕！');
-        const tst = toast.list('请选择一个弹幕文件，拓展名：.json，编码：utf-8');
-        fileRead('.json', false)
+        const msg = toast.list('加载本地弹幕 >>>', '> 请选择一个弹幕文件，拓展名：.json，编码：utf-8');
+        fileRead('.json')
             .then(d => {
-                if (d && d[0]) {
-                    tst.push('-------loading-------', `弹幕：${d[0].name}`, `类型：${d[0].type}`, `大小：${sizeFormat(d[0].size)}`);
-                    tst.type = 'warning';
-                    return readAs(d[0])
-                }
-                throw new Error(tst.data[0]);
+                msg.push('> -------loading-------', `> 弹幕：${d.name}`, `> 类型：${d.type}`, `> 大小：${sizeFormat(d.size)}`);
+                msg.type = 'warning';
+                return readAs(d)
             })
             .then(d => {
                 const dm = JSON.parse(d);
                 (<any>window).player.appendDm(dm, !user.userStatus!.dmContact);
-                tst.push('-------decoding-------', `有效弹幕数：${dm.length}`, `加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
-                tst.type = 'success';
+                msg.push('> -------decoding-------', `> 有效弹幕数：${dm.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
+                msg.type = 'success';
             })
             .catch(e => {
-                tst.push(e);
-                debug.error(e);
-                tst.type = 'error';
+                msg.push(e);
+                msg.type = 'error';
             })
             .finally(() => {
-                tst.delay = user.userStatus!.toast.delay;
+                msg.delay = user.userStatus!.toast.delay;
             })
     }
     /** 下载弹幕 */
@@ -136,27 +127,26 @@ class Danmaku {
     async onlineDm(str: string) {
         if (!(<any>window).player) return toast.warning('未找到播放器实例！请在播放页面使用。');
         if (!(<any>window).player?.appendDm) return toast.warning('未启用【重构播放器】，无法载入弹幕！');
-        const tst = toast.list('-------在线弹幕-------', `目标：${str}`);
+        const msg = toast.list('加载在线弹幕 >>>', '> -------在线弹幕-------', `> 目标：${str}`);
         const { aid, cid } = await urlParam(str);
-        tst.push(`aid：${aid}`, `cid：${cid}`);
+        msg.push(`> aid：${aid}`, `> cid：${cid}`);
         if (!aid || !cid) {
-            tst.push('查询cid信息失败，已退出！');
-            tst.type = 'error';
-            tst.delay = toast.delay;
+            msg.push('> 查询cid信息失败，已退出！');
+            msg.type = 'error';
+            msg.delay = toast.delay;
         } else {
             new ApiDmWeb(aid, cid).getData()
                 .then(d => {
                     (<any>window).player.appendDm(d, !user.userStatus!.dmContact);
-                    tst.push(`有效弹幕数：${d.length}`, `加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
-                    tst.type = 'success';
+                    msg.push(`> 有效弹幕数：${d.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
+                    msg.type = 'success';
                 })
                 .catch(e => {
-                    tst.push(e);
-                    debug.error(e);
-                    tst.type = 'error';
+                    msg.push(e);
+                    msg.type = 'error';
                 })
                 .finally(() => {
-                    tst.delay = user.userStatus!.toast.delay;
+                    msg.delay = user.userStatus!.toast.delay;
                 })
         }
     }

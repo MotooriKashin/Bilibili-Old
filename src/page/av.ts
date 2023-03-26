@@ -14,7 +14,6 @@ import { apiBiliplusView } from "../io/api-biliplus-view";
 import { apiViewDetail, ApiViewDetail } from "../io/api-view-detail";
 import menuConfig from '../json/sort.txt';
 import toview from '../json/toview.json';
-import { debug } from "../utils/debug";
 import { addCss } from "../utils/element";
 import { objUrl, urlObj } from "../utils/format/url";
 import { propertyHook } from "../utils/hook/method";
@@ -142,49 +141,48 @@ export class PageAV extends Page {
     }
     /** 通过其他接口获取aid数据 */
     protected async getVideoInfo() {
-        const tst = toast.list(`av${this.aid}可能无效，尝试其他接口~`);
+        const msg = toast.list(`av${this.aid}可能无效，尝试其他接口 >>>`);
         try {
             const card = await apiArticleCards({ av: this.aid });
             if (card[`av${this.aid}`]) {
                 if (card[`av${this.aid}`].redirect_url) {
-                    tst.push(`bangumi重定向：${card[`av${this.aid}`].redirect_url}`);
-                    tst.type = 'warning';
+                    msg.push(`> bangumi重定向：${card[`av${this.aid}`].redirect_url}`);
+                    msg.type = 'warning';
                     setTimeout(() => {
                         urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
                         new PageBangumi(); // 跳转Bangumi
                         BLOD.flushToast();
                         this.destroy = true;
-                        tst.delay = 4;
+                        msg.delay = 4;
                     }, 100);
                     return new ApiViewDetail(); // 必须先返回，否则超时跳转404
                 }
             }
             const view = await new apiBiliplusView(this.aid).toDetail();
             if (view?.data.View.season) {
-                tst.push(`bangumi重定向：${(<any>view).data.View.season.ogv_play_url}`);
-                tst.type = 'warning';
+                msg.push(`> bangumi重定向：${(<any>view).data.View.season.ogv_play_url}`);
+                msg.type = 'warning';
                 view.data.View.season = undefined;
                 setTimeout(() => {
                     urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
                     new PageBangumi(); // 跳转Bangumi
                     BLOD.flushToast();
                     this.destroy = true;
-                    tst.delay = 4;
+                    msg.delay = 4;
                 }, 100);
                 return new ApiViewDetail();
             }
             setTimeout(() => {
                 videoInfo.aidDatail(view.data.View); // 记录视频数据
-                tst.push('获取缓存数据成功！但这可能是个失效视频！');
-                tst.type = 'success';
-                tst.delay = 4;
+                msg.push('> 获取缓存数据成功！但这可能是个失效视频！');
+                msg.type = 'success';
+                msg.delay = 4;
             }, 100);
             return view;
         } catch (e) {
-            debug.error('获取数据出错！', e);
-            tst.push('获取数据出错！', <any>e);
-            tst.type = 'error';
-            tst.delay = 4;
+            msg.push('> 获取数据出错！', <any>e);
+            msg.type = 'error';
+            msg.delay = 4;
             throw e;
         }
     }

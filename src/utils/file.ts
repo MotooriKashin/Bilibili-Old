@@ -58,26 +58,53 @@ export async function saveAs(content: BufferSource | Blob | string, fileName: st
 /**
  * 弹出文件读取窗口
  * @param accept 文件类型：MMIE/拓展名，以逗号分隔
- * @param multiple 多选
+ * @link https://github.com/GoogleChromeLabs/browser-fs-access/blob/c4ce7f0313f9dde923a2220c798e4d5365cdcf32/src/legacy/file-open.mjs#L34-L50
  */
+export function fileRead(accept?: string): Promise<File>;
+/**
+ * 弹出文件读取窗口
+ * @param accept 文件类型：MMIE/拓展名，以逗号分隔
+ * @param multiple 单选 
+ * @link https://github.com/GoogleChromeLabs/browser-fs-access/blob/c4ce7f0313f9dde923a2220c798e4d5365cdcf32/src/legacy/file-open.mjs#L34-L50
+ */
+export function fileRead(accept: string | undefined, multiple: false): Promise<File>;
+/**
+ * 弹出文件读取窗口
+ * @param accept 文件类型：MMIE/拓展名，以逗号分隔
+ * @param multiple 多选
+ * @link https://github.com/GoogleChromeLabs/browser-fs-access/blob/c4ce7f0313f9dde923a2220c798e4d5365cdcf32/src/legacy/file-open.mjs#L34-L50
+ */
+export function fileRead(accept: string | undefined, multiple: true): Promise<FileList>;
 export function fileRead(accept?: string, multiple?: boolean) {
-    return new Promise((resolve: (value: FileList | null) => void, reject) => {
+    return new Promise((resolve, reject) => {
         const input = document.createElement("input");
-        let selected = false;
         input.type = "file";
         accept && (input.accept = accept);
         multiple && (input.multiple = multiple);
         input.style.opacity = "0";
-        input.addEventListener("change", () => {
-            selected = true;
-            resolve(input.files);
+
+        // ToDo: Remove this workaround once
+        // https://github.com/whatwg/html/issues/6376 is specified and supported.
+        // > 2023-02-25 chromium Implement cancel event on <input type=file>
+        // > https://bugs.chromium.org/p/chromium/issues/detail?id=1227424
+        const rejectOnPageInteraction = () => {
+            window.removeEventListener('pointermove', rejectOnPageInteraction);
+            window.removeEventListener('pointerdown', rejectOnPageInteraction);
+            window.removeEventListener('keydown', rejectOnPageInteraction);
+            reject(new DOMException('The user aborted a request.', 'AbortError'));
+        };
+
+        window.addEventListener('pointermove', rejectOnPageInteraction);
+        window.addEventListener('pointerdown', rejectOnPageInteraction);
+        window.addEventListener('keydown', rejectOnPageInteraction);
+
+        input.addEventListener('change', () => {
+            window.removeEventListener('pointermove', rejectOnPageInteraction);
+            window.removeEventListener('pointerdown', rejectOnPageInteraction);
+            window.removeEventListener('keydown', rejectOnPageInteraction);
+            resolve(input.multiple ? input.files : input.files![0]);
         });
-        document.body.appendChild(input);
+
         input.click();
-        window.addEventListener('focus', () => {
-            setTimeout(() => {
-                selected || reject('取消选择~');
-            }, 100);
-        }, { once: true });
     });
 }

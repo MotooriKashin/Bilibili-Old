@@ -10,7 +10,6 @@ import svgPlay from "../svg/play.svg";
 import svgStethoscope from "../svg/stethoscope.svg";
 import svgWarn from "../svg/warn.svg";
 import svgWrench from "../svg/wrench.svg";
-import { debug } from "../utils/debug";
 import { propertyHook } from "../utils/hook/method";
 import { poll } from "../utils/poll";
 import { AccessKey } from "./accesskey";
@@ -160,7 +159,7 @@ export class UI {
                 candidate: ["Hello World!"]
             }, v => {
                 try {
-                    toast.toast(user.userStatus!.toast.delay, (<any>this).BLOD.status.toast.type, v);
+                    toast.toast(user.userStatus!.toast.delay, (<any>user).userStatus!.toast.type, v);
                 } catch (e) {
                     toast.error('非常抱歉！发生了错误', e);
                 }
@@ -443,19 +442,18 @@ export class UI {
                 precision: 19
             }, '单位：/MB', undefined, undefined, '如果一个文件有多个下载源，那么此项会间接决定使用几个下载源。一旦要下载的文件不小于此项的2倍，aria2便会同时尝试连接多个下载源。这也是提高下载速率的有效方法。注意：某种意义上此项是越小越好，原因不言而喻。'),
             this.button(<'aria2'>'aria2.test', '测试RPC连接', () => {
-                const tst = toast.list('正在测试RPC连接~');
+                const msg = toast.list('正在测试RPC连接 >>>');
                 new Aria2().getVersion()
                     .then(d => {
-                        tst.type = 'success';
-                        tst.push(`-------aria2 v${d.version}-------`, ...d.enabledFeatures);
+                        msg.type = 'success';
+                        msg.push(`> -------aria2 v${d.version}-------`, ...d.enabledFeatures);
                     })
                     .catch(e => {
-                        tst.type = 'error';
-                        tst.push('RPC链接失败 ಥ_ಥ', e);
-                        debug.error('RPC链接失败 ಥ_ಥ', e);
+                        msg.type = 'error';
+                        msg.push('> RPC链接失败 ಥ_ಥ', e);
                     })
                     .finally(() => {
-                        tst.delay = 4;
+                        msg.delay = 4;
                     });
             }, '获取aria2信息', 'ping', undefined, '请确定正确配置并启用了aria2的RPC服务器。')
         ], 1);
