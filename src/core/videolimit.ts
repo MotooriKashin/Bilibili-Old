@@ -3,7 +3,6 @@ import { ApiGlobalOgvPlayurl } from "../io/api-global-ogv-playurl";
 import { apiPlayurl, IPlayurlDash } from "../io/api-playurl";
 import { fnval } from "../io/fnval";
 import { uid } from "../utils/conf/uid";
-import { debug } from "../utils/debug";
 import { objUrl, urlObj } from "../utils/format/url";
 import { xhrHook, XMLHttpRequestOpenParams } from "../utils/hook/xhr";
 import { BLOD } from "./bilibili-old";
@@ -101,14 +100,13 @@ class VideoLimit {
                 networkMock();
                 this.toast.push(`> 代理服务器：${user.userStatus!.videoLimit.th}`);
                 this.Backup[epid] = { code: 0, message: "success", result: await this.th(obj) };
-                this.toast.push('> 获取代理数据成功！', 'fin <<<');
+                this.toast.push('> 获取代理数据成功！');
                 this.toast.type = 'success';
             } catch (e) {
                 this.toast.push('> 代理出错！', <any>e);
                 !obj.access_key && this.toast.push('代理服务器要求【账户授权】才能进一步操作！');
                 this.toast.push('fin <<<');
                 this.toast.type = 'error';
-                debug.error(...this.toast.data);
                 this.toast.delay = 4;
                 return { code: -404, message: e, data: null };
             }
@@ -145,14 +143,13 @@ class VideoLimit {
                     this.Backup[epid] = JSON.parse(this.uposReplace(JSON.stringify(this.Backup[epid]), <'ks3（金山）'>user.userStatus!.uposReplace.gat));
                     toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.gat}`, `UPOS：${UPOS[<'ks3（金山）'>user.userStatus!.uposReplace.gat]}`);
                 };
-                this.toast.push('> 获取代理数据成功！', 'fin <<<');
+                this.toast.push('> 获取代理数据成功！');
                 this.toast.type = 'success';
             } catch (e) {
                 this.toast.push('> 代理出错！', <any>e);
                 !obj.access_key && this.toast.push('> 代理服务器要求【账户授权】才能进一步操作！');
                 this.toast.push('fin <<<');
                 this.toast.type = 'error';
-                debug.error(...this.toast.data);
                 this.toast.delay = 4;
                 return { code: -404, message: e, data: null };
             }

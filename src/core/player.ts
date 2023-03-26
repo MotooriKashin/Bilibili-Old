@@ -337,11 +337,10 @@ class Player {
                             .then(d => {
                                 const dm = DanmakuBase.decodeXml(d);
                                 (<any>window).player.appendDm(dm, !user.userStatus!.dmContact);
-                                msg.push(`> 有效弹幕数：${dm.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`, 'fin <<<');
+                                msg.push(`> 有效弹幕数：${dm.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
                             })
                             .catch(e => {
-                                msg.push(e, 'fin <<<');
-                                debug.error('弹幕保护计划', e);
+                                msg.push(e);
                                 msg.type = 'error';
                             })
                             .finally(() => {
@@ -417,7 +416,7 @@ class Player {
                             msg.push('fin <<<');
                             throw new Error('获取播放器组件出错！');
                         }
-                        msg.push('> -------加载成功-------', 'fin <<<');
+                        msg.push('> -------加载成功-------');
                         msg.type = 'success';
                         GM.setValue('bilibiliplayer', data[0]);
                         GM.setValue('bilibiliplayerstyle', data[1]);

@@ -30,6 +30,8 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
     protected hovering = false;
     /** 延时结束 */
     protected timeout = false;
+    /** 是否输出到控制台 */
+    debug = false;
     constructor() {
         super();
         this.classList.add('toast');
@@ -68,11 +70,13 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
     }
     /** 代理对象暂存 */
     protected _data: any[] = [];
+    protected $data: any[] = [];
     get data() {
         return this._data;
     }
     /** 内容 */
     set data(v: any[]) {
+        this.$data = v;
         this.value(v);
         this._data = propertryChangeHook(v, () => this.value(v));
     }
@@ -126,7 +130,14 @@ export class Toast extends HTMLDivElement implements CustomElementsInterface {
     /** 淡出 */
     fadeOut(remove = false) {
         this.setAttribute('style', 'padding-top: 0px;padding-bottom: 0px;height: 0px;');
-        remove && setTimeout(() => this.remove(), 1e3);
+        if (remove) {
+            setTimeout(() => this.remove(), 1e3);
+            if (this.debug && this.$data.length) {
+                debug.group(this.$data.shift());
+                this.$data.forEach(d => { (d instanceof Error) ? debug.error(d) : debug(d) });
+                debug.groupEnd();
+            }
+        }
     }
 }
 customElements.get(`toast-${_MUTEX_}`) || customElements.define(`toast-${_MUTEX_}`, Toast, { extends: 'div' });
@@ -159,6 +170,7 @@ class ToastContainer extends HTMLElement implements CustomElementsInterface {
         toast.type = type;
         toast.rtl = this.rtl;
         this.container.insertBefore(toast, this.container.firstChild);
+        delay === 0 && (toast.debug = true);
         toast.data = data;
         toast.delay = delay;
         return toast;

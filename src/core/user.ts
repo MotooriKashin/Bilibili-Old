@@ -1,4 +1,3 @@
-import { debug } from "../utils/debug";
 import { fileRead, readAs, saveAs } from "../utils/file";
 import { timeFormat } from "../utils/format/time";
 import { toast } from "./toast";
@@ -90,7 +89,7 @@ class User {
                         if (typeof data === "object") {
                             GM.setValue('userStatus', data);
                             const text = '已恢复设置数据，请<strong>刷新</strong>页面以避免数据紊乱！';
-                            msg.push('> ' + text, 'fin <<<');
+                            msg.push('> ' + text);
                             msg.type = 'success';
                             return alert(text, '刷新页面', [{
                                 text: '刷新',
@@ -99,13 +98,12 @@ class User {
                         }
                     })
                     .catch(e => {
-                        msg.push('> 读取文件出错！', e, 'fin <<<');
+                        msg.push('> 读取文件出错！', e);
                         msg.type = 'error';
-                        debug.error('恢复设置数据', e);
                     })
             })
             .catch(e => {
-                msg.push(e, 'fin <<<');
+                msg.push(e);
             })
             .finally(() => {
                 msg.delay = 4;

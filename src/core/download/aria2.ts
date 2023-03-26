@@ -1,5 +1,4 @@
 import { base64 } from "../../utils/base64";
-import { debug } from "../../utils/debug";
 import { objUrl } from "../../utils/format/url";
 import { getMetux } from "../../utils/mutex";
 
@@ -62,15 +61,13 @@ export class Aria2 {
                     d.result && r(d.result);
                 })
                 .catch(e => {
-                    debug.error('RPC<POST>', e);
                     fetch(objUrl(this.url, { method, id, params: base64.encode(JSON.stringify(params)) }))
                         .then(d => d.json())
                         .then(d => {
                             d.error && j(d.error);
                             d.result && r(d.result);
                         })
-                        .catch(e => {
-                            debug.error('RPC<GET>', e);
+                        .catch(() => {
                             j(e)
                         })
                 })

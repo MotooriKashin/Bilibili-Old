@@ -126,7 +126,7 @@ export class PageSpace {
                                     }
                                 })
                             }
-                            msg.push('> ', `> 修复结束：成功 ${resolve} 失败 ${reject}`, 'fin <<<');
+                            msg.push('> ', `> 修复结束：成功 ${resolve} 失败 ${reject}`);
                             msg.delay = 4;
                         }, 100);
                     });

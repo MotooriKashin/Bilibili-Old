@@ -2,7 +2,6 @@ import { BLOD } from "../core/bilibili-old";
 import { toast } from "../core/toast";
 import { urlCleaner } from "../core/url";
 import { cdn } from "../utils/cdn";
-import { debug } from "../utils/debug";
 import { https } from "../utils/format/http";
 import { Page } from "./page";
 
@@ -24,7 +23,7 @@ export class PageWild extends Page {
         GM.fetch(cdn.encode(this.path, ''))
             .then(d => d.text())
             .then(d => {
-                this.toast.push('> 成功获取网页框架，刷新页面~', 'fin <<<');
+                this.toast.push('> 成功获取网页框架，刷新页面~');
                 this.url && urlCleaner.updateLocation(this.url);
                 this.updateHtml(d);
                 this.updateDom();
@@ -32,8 +31,7 @@ export class PageWild extends Page {
                 this.toast.type = 'success';
             })
             .catch(e => {
-                this.toast.push('> 重构页面错误', e, 'fin <<<');
-                debug.error('重构页面错误', e);
+                this.toast.push('> 重构页面错误', e);
                 this.toast.type = 'error';
             })
             .finally(() => {
@@ -62,8 +60,7 @@ export class PageHttps extends Page {
                 this.toast.delay = 4;
             })
             .catch(e => {
-                this.toast.push('> 重构页面错误', e, 'fin <<<');
-                debug.error('重构页面错误', e);
+                this.toast.push('> 重构页面错误', e);
                 this.toast.type = 'error';
             })
             .finally(() => {

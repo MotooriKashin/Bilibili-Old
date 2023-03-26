@@ -1,6 +1,5 @@
 import { ApiDmWeb, DanmakuElem } from "../io/grpc/api-dm-web";
 import { DanmakuBase } from "../utils/danmaku";
-import { debug } from "../utils/debug";
 import { fileRead, readAs, saveAs } from "../utils/file";
 import { sizeFormat } from "../utils/format/size";
 import { urlObj } from "../utils/format/url";
@@ -77,12 +76,11 @@ class Danmaku {
             .then(d => {
                 const dm = DanmakuBase.decodeXml(d);
                 (<any>window).player.appendDm(dm, !user.userStatus!.dmContact);
-                msg.push('> -------decoding-------', `> 有效弹幕数：${dm.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`, 'fin <<<');
+                msg.push('> -------decoding-------', `> 有效弹幕数：${dm.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
                 msg.type = 'success';
             })
             .catch(e => {
-                msg.push(e, 'fin <<<');
-                debug.error(e);
+                msg.push(e);
                 msg.type = 'error';
             })
             .finally(() => {
@@ -103,12 +101,11 @@ class Danmaku {
             .then(d => {
                 const dm = JSON.parse(d);
                 (<any>window).player.appendDm(dm, !user.userStatus!.dmContact);
-                msg.push('> -------decoding-------', `> 有效弹幕数：${dm.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`, 'fin <<<');
+                msg.push('> -------decoding-------', `> 有效弹幕数：${dm.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
                 msg.type = 'success';
             })
             .catch(e => {
-                msg.push(e, 'fin <<<');
-                debug.error(e);
+                msg.push(e);
                 msg.type = 'error';
             })
             .finally(() => {
@@ -141,12 +138,11 @@ class Danmaku {
             new ApiDmWeb(aid, cid).getData()
                 .then(d => {
                     (<any>window).player.appendDm(d, !user.userStatus!.dmContact);
-                    msg.push(`> 有效弹幕数：${d.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`, 'fin <<<');
+                    msg.push(`> 有效弹幕数：${d.length}`, `> 加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
                     msg.type = 'success';
                 })
                 .catch(e => {
-                    msg.push(e, 'fin <<<');
-                    debug.error(e);
+                    msg.push(e);
                     msg.type = 'error';
                 })
                 .finally(() => {

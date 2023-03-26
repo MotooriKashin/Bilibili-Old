@@ -10,9 +10,7 @@ import svgPlay from "../svg/play.svg";
 import svgStethoscope from "../svg/stethoscope.svg";
 import svgWarn from "../svg/warn.svg";
 import svgWrench from "../svg/wrench.svg";
-import { debug } from "../utils/debug";
 import { propertyHook } from "../utils/hook/method";
-import { PNG } from "../utils/png";
 import { poll } from "../utils/poll";
 import { AccessKey } from "./accesskey";
 import { BLOD } from "./bilibili-old";
@@ -21,7 +19,6 @@ import { danmaku } from "./danmaku";
 import { download } from "./download";
 import { Aria2 } from "./download/aria2";
 import { player } from "./player";
-import { uploadImg } from "./png";
 import { toast } from "./toast";
 import { alert } from "./ui/alert";
 import { Desc } from "./ui/desc";
@@ -185,12 +182,6 @@ export class UI {
                 this.switch('checkUpdate', '检查更新', '自动更新播放器', svgDownload, undefined, '启用【重构播放器】后，脚本会自动检查并更新播放器组件，但可能因为网络原因更新失败，出现反复更新->反复失败的问题。您可以禁用此功能，以继续使用【重构播放器】，等待网络环境改善后再尝试启用。')
             ]);
         }
-        this.menuitem.common.addCard('CDN');
-        this.menuitem.common.addSetting([
-            this.button(<'TVresource'>'pngEncode', '编码', () => { new PNG().encodeFile() }, '[原始] -> png', '选择'),
-            this.button(<'TVresource'>'pngDncode', '解码', () => { new PNG().decodeFile() }, 'png -> [原始]', '选择'),
-            this.button(<'TVresource'>'pngUpload', '上传', uploadImg, '更新CDN数据', '选择')
-        ], 3);
     }
     /** 重写设置 */
     protected initSettingRewrite() {
@@ -455,12 +446,11 @@ export class UI {
                 new Aria2().getVersion()
                     .then(d => {
                         msg.type = 'success';
-                        msg.push(`> -------aria2 v${d.version}-------`, ...d.enabledFeatures, 'fin <<<');
+                        msg.push(`> -------aria2 v${d.version}-------`, ...d.enabledFeatures);
                     })
                     .catch(e => {
                         msg.type = 'error';
-                        msg.push('> RPC链接失败 ಥ_ಥ', e, 'fin <<<');
-                        debug.error('RPC链接失败 ಥ_ಥ', e);
+                        msg.push('> RPC链接失败 ಥ_ಥ', e);
                     })
                     .finally(() => {
                         msg.delay = 4;

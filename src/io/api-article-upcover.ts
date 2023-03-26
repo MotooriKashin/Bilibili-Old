@@ -8,10 +8,7 @@ export async function apiArticleUpcover(file: File, bili_jct: string) {
     const response = await fetch(URLS.ARTICLE_UPCOVER, {
         method: 'POST',
         body: formDate,
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
+        credentials: 'include'
     });
     const json = await response.json();
     return <IApiArticleUpcover>jsonCheck(json).data;
@@ -19,4 +16,5 @@ export async function apiArticleUpcover(file: File, bili_jct: string) {
 
 interface IApiArticleUpcover {
     url: string;
+    size: number;
 }

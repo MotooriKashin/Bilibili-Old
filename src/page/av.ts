@@ -14,7 +14,6 @@ import { apiBiliplusView } from "../io/api-biliplus-view";
 import { apiViewDetail, ApiViewDetail } from "../io/api-view-detail";
 import menuConfig from '../json/sort.txt';
 import toview from '../json/toview.json';
-import { debug } from "../utils/debug";
 import { addCss } from "../utils/element";
 import { objUrl, urlObj } from "../utils/format/url";
 import { propertyHook } from "../utils/hook/method";
@@ -147,7 +146,7 @@ export class PageAV extends Page {
             const card = await apiArticleCards({ av: this.aid });
             if (card[`av${this.aid}`]) {
                 if (card[`av${this.aid}`].redirect_url) {
-                    msg.push(`> bangumi重定向：${card[`av${this.aid}`].redirect_url}`, 'fin <<<');
+                    msg.push(`> bangumi重定向：${card[`av${this.aid}`].redirect_url}`);
                     msg.type = 'warning';
                     setTimeout(() => {
                         urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
@@ -161,7 +160,7 @@ export class PageAV extends Page {
             }
             const view = await new apiBiliplusView(this.aid).toDetail();
             if (view?.data.View.season) {
-                msg.push(`> bangumi重定向：${(<any>view).data.View.season.ogv_play_url}`, 'fin <<<');
+                msg.push(`> bangumi重定向：${(<any>view).data.View.season.ogv_play_url}`);
                 msg.type = 'warning';
                 view.data.View.season = undefined;
                 setTimeout(() => {
@@ -175,14 +174,13 @@ export class PageAV extends Page {
             }
             setTimeout(() => {
                 videoInfo.aidDatail(view.data.View); // 记录视频数据
-                msg.push('> 获取缓存数据成功！但这可能是个失效视频！', 'fin <<<');
+                msg.push('> 获取缓存数据成功！但这可能是个失效视频！');
                 msg.type = 'success';
                 msg.delay = 4;
             }, 100);
             return view;
         } catch (e) {
-            debug.error('获取数据出错！', e);
-            msg.push('> 获取数据出错！', <any>e, 'fin <<<');
+            msg.push('> 获取数据出错！', <any>e);
             msg.type = 'error';
             msg.delay = 4;
             throw e;

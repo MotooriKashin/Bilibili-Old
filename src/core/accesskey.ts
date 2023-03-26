@@ -1,6 +1,5 @@
 import { ApiLoginAppThird } from "../io/api-login-app-third";
 import { uid } from "../utils/conf/uid";
-import { debug } from "../utils/debug";
 import { timeFormat } from "../utils/format/time";
 import { urlObj } from "../utils/format/url";
 import { biliQuickLogin } from "./quickLogin";
@@ -44,13 +43,12 @@ export class AccessKey {
                     user.userStatus!.accessKey.token = <string>obj.access_key;
                     user.userStatus!.accessKey.date = date;
                     user.userStatus!.accessKey.dateStr = dateStr;
-                    msg.push('> ------- 授权成功 -------', `> 鉴权: ${obj.access_key}`, `> 日期：${dateStr}`, 'fin <<<');
+                    msg.push('> ------- 授权成功 -------', `> 鉴权: ${obj.access_key}`, `> 日期：${dateStr}`);
                     msg.type = 'success';
                     msg.delay = 4;
                 })
                 .catch(e => {
-                    debug.error('授权出错！', e);
-                    msg.push('> 授权出错！', e, 'fin <<<');
+                    msg.push('> 授权出错！', e);
                     msg.type = 'error';
                     msg.delay = 4;
                 })
