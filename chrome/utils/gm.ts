@@ -8,6 +8,13 @@ export const GM = new (class GM {
     /** 【脚本限定】跨域XMLHttpRequest */
     xmlHttpRequest!: (details: GMxhrDetails) => { abort: () => void };
     /**
+     * 向用户脚本的菜单添加新条目  
+     * @param name 菜单项显示的文本的字符串
+     * @param callback 菜单项时调用的函数
+     * @param accessKey 键盘访问键
+     */
+    registerMenuCommand!: (name: string, callback: (ev: MouseEvent | KeyboardEvent) => void, accessKey?: string) => number;
+    /**
      * 跨域fetch。  
      * 【用户脚本】里使用`GM.xmlHttpRequest`模拟成了fetch，**禁止请求二进制数据**！请直接使用`GM.xmlHttpRequest`。
      */
@@ -15,6 +22,7 @@ export const GM = new (class GM {
         const [rule, id] = escapeForbidHeader(input, init?.headers);
         try {
             await this.updateSessionRules([rule]);
+            delete init?.headers;
             const response = await fetch(input, init);
             this.removeSessionRules(id);
             return response;

@@ -1,0 +1,44 @@
+{
+  "nested": {
+    "bilibili": {
+      "nested": {
+        "metadata": {
+          "nested": {
+            "Metadata": {
+              "fields": {
+                "accessKey": {
+                  "type": "string",
+                  "id": 1
+                },
+                "mobiApp": {
+                  "type": "string",
+                  "id": 2
+                },
+                "device": {
+                  "type": "string",
+                  "id": 3
+                },
+                "build": {
+                  "type": "int32",
+                  "id": 4
+                },
+                "channel": {
+                  "type": "string",
+                  "id": 5
+                },
+                "buvid": {
+                  "type": "string",
+                  "id": 6
+                },
+                "platform": {
+                  "type": "string",
+                  "id": 7
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

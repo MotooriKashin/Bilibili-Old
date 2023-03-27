@@ -1,0 +1,1472 @@
+{
+  "nested": {
+    "bilibili": {
+      "nested": {
+        "pgc": {
+          "nested": {
+            "gateway": {
+              "nested": {
+                "player": {
+                  "nested": {
+                    "v1": {
+                      "nested": {
+                        "PlayViewReq": {
+                          "fields": {
+                            "epId": {
+                              "type": "int64",
+                              "id": 1
+                            },
+                            "cid": {
+                              "type": "int64",
+                              "id": 2
+                            },
+                            "qn": {
+                              "type": "int64",
+                              "id": 3
+                            },
+                            "fnver": {
+                              "type": "int32",
+                              "id": 4
+                            },
+                            "fnval": {
+                              "type": "int32",
+                              "id": 5
+                            },
+                            "download": {
+                              "type": "uint32",
+                              "id": 6
+                            },
+                            "forceHost": {
+                              "type": "int32",
+                              "id": 7
+                            },
+                            "fourk": {
+                              "type": "bool",
+                              "id": 8
+                            },
+                            "spmid": {
+                              "type": "string",
+                              "id": 9
+                            },
+                            "fromSpmid": {
+                              "type": "string",
+                              "id": 10
+                            },
+                            "teenagersMode": {
+                              "type": "int32",
+                              "id": 11
+                            },
+                            "preferCodecType": {
+                              "type": "bilibili.app.playurl.v1.CodeType",
+                              "id": 12
+                            },
+                            "isPreview": {
+                              "type": "bool",
+                              "id": 13
+                            },
+                            "roomId": {
+                              "type": "int64",
+                              "id": 14
+                            }
+                          }
+                        },
+                        "ProjectReq": {
+                          "fields": {
+                            "epId": {
+                              "type": "int64",
+                              "id": 1
+                            },
+                            "cid": {
+                              "type": "int64",
+                              "id": 2
+                            },
+                            "qn": {
+                              "type": "int64",
+                              "id": 3
+                            },
+                            "fnver": {
+                              "type": "int32",
+                              "id": 4
+                            },
+                            "fnval": {
+                              "type": "int32",
+                              "id": 5
+                            },
+                            "download": {
+                              "type": "uint32",
+                              "id": 6
+                            },
+                            "forceHost": {
+                              "type": "int32",
+                              "id": 7
+                            },
+                            "fourk": {
+                              "type": "bool",
+                              "id": 8
+                            },
+                            "spmid": {
+                              "type": "string",
+                              "id": 9
+                            },
+                            "fromSpmid": {
+                              "type": "string",
+                              "id": 10
+                            },
+                            "protocol": {
+                              "type": "int32",
+                              "id": 11
+                            },
+                            "deviceType": {
+                              "type": "int32",
+                              "id": 12
+                            }
+                          }
+                        },
+                        "PlayViewReply": {
+                          "fields": {
+                            "videoInfo": {
+                              "type": "bilibili.app.playurl.v1.VideoInfo",
+                              "id": 1
+                            },
+                            "playConf": {
+                              "type": "PlayAbilityConf",
+                              "id": 2
+                            },
+                            "business": {
+                              "type": "BusinessInfo",
+                              "id": 3
+                            },
+                            "event": {
+                              "type": "Event",
+                              "id": 4
+                            }
+                          }
+                        },
+                        "Event": {
+                          "fields": {
+                            "shake": {
+                              "type": "Shake",
+                              "id": 1
+                            }
+                          }
+                        },
+                        "Shake": {
+                          "fields": {
+                            "file": {
+                              "type": "string",
+                              "id": 1
+                            }
+                          }
+                        },
+                        "BusinessInfo": {
+                          "fields": {
+                            "isPreview": {
+                              "type": "bool",
+                              "id": 1
+                            },
+                            "bp": {
+                              "type": "bool",
+                              "id": 2
+                            },
+                            "marlinToken": {
+                              "type": "string",
+                              "id": 3
+                            }
+                          }
+                        },
+                        "PlayAbilityConf": {
+                          "fields": {
+                            "backgroundPlayDisable": {
+                              "type": "bool",
+                              "id": 1
+                            },
+                            "flipDisable": {
+                              "type": "bool",
+                              "id": 2
+                            },
+                            "castDisable": {
+                              "type": "bool",
+                              "id": 3
+                            },
+                            "feedbackDisable": {
+                              "type": "bool",
+                              "id": 4
+                            },
+                            "subtitleDisable": {
+                              "type": "bool",
+                              "id": 5
+                            },
+                            "playbackRateDisable": {
+                              "type": "bool",
+                              "id": 6
+                            },
+                            "timeUpDisable": {
+                              "type": "bool",
+                              "id": 7
+                            },
+                            "playbackModeDisable": {
+                              "type": "bool",
+                              "id": 8
+                            },
+                            "scaleModeDisable": {
+                              "type": "bool",
+                              "id": 9
+                            },
+                            "likeDisable": {
+                              "type": "bool",
+                              "id": 10
+                            },
+                            "dislikeDisable": {
+                              "type": "bool",
+                              "id": 11
+                            },
+                            "coinDisable": {
+                              "type": "bool",
+                              "id": 12
+                            },
+                            "elecDisable": {
+                              "type": "bool",
+                              "id": 13
+                            },
+                            "shareDisable": {
+                              "type": "bool",
+                              "id": 14
+                            },
+                            "screenShotDisable": {
+                              "type": "bool",
+                              "id": 15
+                            },
+                            "lockScreenDisable": {
+                              "type": "bool",
+                              "id": 16
+                            },
+                            "recommendDisable": {
+                              "type": "bool",
+                              "id": 17
+                            },
+                            "playbackSpeedDisable": {
+                              "type": "bool",
+                              "id": 18
+                            },
+                            "definitionDisable": {
+                              "type": "bool",
+                              "id": 19
+                            },
+                            "selectionsDisable": {
+                              "type": "bool",
+                              "id": 20
+                            },
+                            "nextDisable": {
+                              "type": "bool",
+                              "id": 21
+                            },
+                            "editDmDisable": {
+                              "type": "bool",
+                              "id": 22
+                            },
+                            "smallWindowDisable": {
+                              "type": "bool",
+                              "id": 23
+                            },
+                            "shakeDisable": {
+                              "type": "bool",
+                              "id": 24
+                            },
+                            "outerDmDisable": {
+                              "type": "bool",
+                              "id": 25
+                            },
+                            "innerDmDisable": {
+                              "type": "bool",
+                              "id": 26
+                            },
+                            "freyaEnterDisable": {
+                              "type": "bool",
+                              "id": 27
+                            },
+                            "dolbyDisable": {
+                              "type": "bool",
+                              "id": 28
+                            },
+                            "freyaFullDisable": {
+                              "type": "bool",
+                              "id": 29
+                            }
+                          }
+                        },
+                        "ProjectReply": {
+                          "fields": {
+                            "project": {
+                              "type": "bilibili.app.playurl.v1.PlayURLReply",
+                              "id": 1
+                            }
+                          }
+                        },
+                        "LivePlayViewReq": {
+                          "fields": {
+                            "epId": {
+                              "type": "int64",
+                              "id": 1
+                            },
+                            "quality": {
+                              "type": "uint32",
+                              "id": 2
+                            },
+                            "ptype": {
+                              "type": "uint32",
+                              "id": 3
+                            },
+                            "https": {
+                              "type": "bool",
+                              "id": 4
+                            },
+                            "playType": {
+                              "type": "uint32",
+                              "id": 5
+                            },
+                            "deviceType": {
+                              "type": "int32",
+                              "id": 6
+                            }
+                          }
+                        },
+                        "LivePlayViewReply": {
+                          "fields": {
+                            "roomInfo": {
+                              "type": "RoomInfo",
+                              "id": 1
+                            },
+                            "playInfo": {
+                              "type": "LivePlayInfo",
+                              "id": 2
+                            }
+                          }
+                        },
+                        "RoomInfo": {
+                          "fields": {
+                            "roomId": {
+                              "type": "int64",
+                              "id": 1
+                            },
+                            "uid": {
+                              "type": "int64",
+                              "id": 2
+                            },
+                            "status": {
+                              "type": "RoomStatusInfo",
+                              "id": 3
+                            },
+                            "show": {
+                              "type": "RoomShowInfo",
+                              "id": 4
+                            }
+                          }
+                        },
+                        "RoomStatusInfo": {
+                          "fields": {
+                            "liveStatus": {
+                              "type": "int64",
+                              "id": 1
+                            },
+                            "liveScreenType": {
+                              "type": "int64",
+                              "id": 2
+                            },
+                            "liveMark": {
+                              "type": "int64",
+                              "id": 3
+                            },
+                            "lockStatus": {
+                              "type": "int64",
+                              "id": 4
+                            },
+                            "lockTime": {
+                              "type": "int64",
+                              "id": 5
+                            },
+                            "hiddenStatus": {
+                              "type": "int64",
+                              "id": 6
+                            },
+                            "hiddenTime": {
+                              "type": "int64",
+                              "id": 7
+                            },
+                            "liveType": {
+                              "type": "int64",
+                              "id": 8
+                            },
+                            "roomShield": {
+                              "type": "int64",
+                              "id": 9
+                            }
+                          }
+                        },
+                        "RoomShowInfo": {
+                          "fields": {
+                            "shortId": {
+                              "type": "int64",
+                              "id": 1
+                            },
+                            "popularityCount": {
+                              "type": "int64",
+                              "id": 8
+                            },
+                            "liveStartTime": {
+                              "type": "int64",
+                              "id": 10
+                            }
+                          }
+                        },
+                        "LivePlayInfo": {
+                          "fields": {
+                            "currentQn": {
+                              "type": "int32",
+                              "id": 1
+                            },
+                            "qualityDescription": {
+                              "rule": "repeated",
+                              "type": "QualityDescription",
+                              "id": 2
+                            },
+                            "durl": {
+                              "rule": "repeated",
+                              "type": "ResponseDataUrl",
+                              "id": 3
+                            }
+                          }
+                        },
+                        "QualityDescription": {
+                          "fields": {
+                            "qn": {
+                              "type": "int32",
+                              "id": 1
+                            },
+                            "desc": {
+                              "type": "string",
+                              "id": 2
+                            }
+                          }
+                        },
+                        "ResponseDataUrl": {
+                          "fields": {
+                            "url": {
+                              "type": "string",
+                              "id": 1
+                            },
+                            "streamType": {
+                              "type": "uint32",
+                              "id": 2
+                            },
+                            "ptag": {
+                              "type": "uint32",
+                              "id": 3
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "app": {
+          "nested": {
+            "playurl": {
+              "nested": {
+                "v1": {
+                  "nested": {
+                    "PlayURLReq": {
+                      "fields": {
+                        "aid": {
+                          "type": "int64",
+                          "id": 1
+                        },
+                        "cid": {
+                          "type": "int64",
+                          "id": 2
+                        },
+                        "qn": {
+                          "type": "int64",
+                          "id": 3
+                        },
+                        "fnver": {
+                          "type": "int32",
+                          "id": 4
+                        },
+                        "fnval": {
+                          "type": "int32",
+                          "id": 5
+                        },
+                        "download": {
+                          "type": "uint32",
+                          "id": 6
+                        },
+                        "forceHost": {
+                          "type": "int32",
+                          "id": 7
+                        },
+                        "fourk": {
+                          "type": "bool",
+                          "id": 8
+                        },
+                        "spmid": {
+                          "type": "string",
+                          "id": 9
+                        },
+                        "fromSpmid": {
+                          "type": "string",
+                          "id": 10
+                        }
+                      }
+                    },
+                    "PlayURLReply": {
+                      "fields": {
+                        "quality": {
+                          "type": "uint32",
+                          "id": 1
+                        },
+                        "format": {
+                          "type": "string",
+                          "id": 2
+                        },
+                        "timelength": {
+                          "type": "uint64",
+                          "id": 3
+                        },
+                        "videoCodecid": {
+                          "type": "uint32",
+                          "id": 4
+                        },
+                        "fnver": {
+                          "type": "uint32",
+                          "id": 5
+                        },
+                        "fnval": {
+                          "type": "uint32",
+                          "id": 6
+                        },
+                        "videoProject": {
+                          "type": "bool",
+                          "id": 7
+                        },
+                        "durl": {
+                          "rule": "repeated",
+                          "type": "ResponseUrl",
+                          "id": 8
+                        },
+                        "dash": {
+                          "type": "ResponseDash",
+                          "id": 9
+                        },
+                        "noRexcode": {
+                          "type": "int32",
+                          "id": 10
+                        },
+                        "upgradeLimit": {
+                          "type": "UpgradeLimit",
+                          "id": 11
+                        },
+                        "supportFormats": {
+                          "rule": "repeated",
+                          "type": "FormatDescription",
+                          "id": 12
+                        },
+                        "type": {
+                          "type": "VideoType",
+                          "id": 13
+                        }
+                      }
+                    },
+                    "ResponseUrl": {
+                      "fields": {
+                        "order": {
+                          "type": "uint32",
+                          "id": 1
+                        },
+                        "length": {
+                          "type": "uint64",
+                          "id": 2
+                        },
+                        "size": {
+                          "type": "uint64",
+                          "id": 3
+                        },
+                        "url": {
+                          "type": "string",
+                          "id": 4
+                        },
+                        "backupUrl": {
+                          "rule": "repeated",
+                          "type": "string",
+                          "id": 5
+                        },
+                        "md5": {
+                          "type": "string",
+                          "id": 6
+                        }
+                      }
+                    },
+                    "ResponseDash": {
+                      "fields": {
+                        "video": {
+                          "rule": "repeated",
+                          "type": "DashItem",
+                          "id": 1
+                        },
+                        "audio": {
+                          "rule": "repeated",
+                          "type": "DashItem",
+                          "id": 2
+                        }
+                      }
+                    },
+                    "DashItem": {
+                      "fields": {
+                        "id": {
+                          "type": "uint32",
+                          "id": 1
+                        },
+                        "baseUrl": {
+                          "type": "string",
+                          "id": 2
+                        },
+                        "backupUrl": {
+                          "rule": "repeated",
+                          "type": "string",
+                          "id": 3
+                        },
+                        "bandwidth": {
+                          "type": "uint32",
+                          "id": 4
+                        },
+                        "codecid": {
+                          "type": "uint32",
+                          "id": 5
+                        },
+                        "md5": {
+                          "type": "string",
+                          "id": 6
+                        },
+                        "size": {
+                          "type": "uint64",
+                          "id": 7
+                        },
+                        "frameRate": {
+                          "type": "string",
+                          "id": 8
+                        }
+                      }
+                    },
+                    "UpgradeLimit": {
+                      "fields": {
+                        "code": {
+                          "type": "int32",
+                          "id": 1
+                        },
+                        "message": {
+                          "type": "string",
+                          "id": 2
+                        },
+                        "image": {
+                          "type": "string",
+                          "id": 3
+                        },
+                        "button": {
+                          "type": "UpgradeButton",
+                          "id": 4
+                        }
+                      }
+                    },
+                    "UpgradeButton": {
+                      "fields": {
+                        "title": {
+                          "type": "string",
+                          "id": 1
+                        },
+                        "link": {
+                          "type": "string",
+                          "id": 2
+                        }
+                      }
+                    },
+                    "FormatDescription": {
+                      "fields": {
+                        "quality": {
+                          "type": "uint32",
+                          "id": 1
+                        },
+                        "format": {
+                          "type": "string",
+                          "id": 2
+                        },
+                        "description": {
+                          "type": "string",
+                          "id": 3
+                        },
+                        "newDescription": {
+                          "type": "string",
+                          "id": 4
+                        },
+                        "displayDesc": {
+                          "type": "string",
+                          "id": 5
+                        },
+                        "superscript": {
+                          "type": "string",
+                          "id": 6
+                        }
+                      }
+                    },
+                    "ProjectReq": {
+                      "fields": {
+                        "aid": {
+                          "type": "int64",
+                          "id": 1
+                        },
+                        "cid": {
+                          "type": "int64",
+                          "id": 2
+                        },
+                        "qn": {
+                          "type": "int64",
+                          "id": 3
+                        },
+                        "fnver": {
+                          "type": "int32",
+                          "id": 4
+                        },
+                        "fnval": {
+                          "type": "int32",
+                          "id": 5
+                        },
+                        "download": {
+                          "type": "uint32",
+                          "id": 6
+                        },
+                        "forceHost": {
+                          "type": "int32",
+                          "id": 7
+                        },
+                        "fourk": {
+                          "type": "bool",
+                          "id": 8
+                        },
+                        "spmid": {
+                          "type": "string",
+                          "id": 9
+                        },
+                        "fromSpmid": {
+                          "type": "string",
+                          "id": 10
+                        },
+                        "protocol": {
+                          "type": "int32",
+                          "id": 11
+                        },
+                        "deviceType": {
+                          "type": "int32",
+                          "id": 12
+                        }
+                      }
+                    },
+                    "ProjectReply": {
+                      "fields": {
+                        "project": {
+                          "type": "PlayURLReply",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "PlayViewReq": {
+                      "fields": {
+                        "aid": {
+                          "type": "int64",
+                          "id": 1
+                        },
+                        "cid": {
+                          "type": "int64",
+                          "id": 2
+                        },
+                        "qn": {
+                          "type": "int64",
+                          "id": 3
+                        },
+                        "fnver": {
+                          "type": "int32",
+                          "id": 4
+                        },
+                        "fnval": {
+                          "type": "int32",
+                          "id": 5
+                        },
+                        "download": {
+                          "type": "uint32",
+                          "id": 6
+                        },
+                        "forceHost": {
+                          "type": "int32",
+                          "id": 7
+                        },
+                        "fourk": {
+                          "type": "bool",
+                          "id": 8
+                        },
+                        "spmid": {
+                          "type": "string",
+                          "id": 9
+                        },
+                        "fromSpmid": {
+                          "type": "string",
+                          "id": 10
+                        },
+                        "teenagersMode": {
+                          "type": "int32",
+                          "id": 11
+                        },
+                        "preferCodecType": {
+                          "type": "CodeType",
+                          "id": 12
+                        },
+                        "business": {
+                          "type": "Business",
+                          "id": 13
+                        }
+                      }
+                    },
+                    "Business": {
+                      "values": {
+                        "UNKNOWN": 0,
+                        "STORY": 1
+                      }
+                    },
+                    "CodeType": {
+                      "values": {
+                        "NOCODE": 0,
+                        "CODE264": 1,
+                        "CODE265": 2
+                      }
+                    },
+                    "PlayViewReply": {
+                      "fields": {
+                        "videoInfo": {
+                          "type": "VideoInfo",
+                          "id": 1
+                        },
+                        "playConf": {
+                          "type": "PlayAbilityConf",
+                          "id": 2
+                        },
+                        "upgradeLimit": {
+                          "type": "UpgradeLimit",
+                          "id": 3
+                        },
+                        "chronos": {
+                          "type": "Chronos",
+                          "id": 4
+                        },
+                        "playArc": {
+                          "type": "PlayArcConf",
+                          "id": 5
+                        },
+                        "event": {
+                          "type": "Event",
+                          "id": 6
+                        }
+                      }
+                    },
+                    "Event": {
+                      "fields": {
+                        "shake": {
+                          "type": "Shake",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "Shake": {
+                      "fields": {
+                        "file": {
+                          "type": "string",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "Chronos": {
+                      "fields": {
+                        "md5": {
+                          "type": "string",
+                          "id": 1
+                        },
+                        "file": {
+                          "type": "string",
+                          "id": 2
+                        }
+                      }
+                    },
+                    "PlayConfReq": {
+                      "fields": {}
+                    },
+                    "PlayConfReply": {
+                      "fields": {
+                        "playConf": {
+                          "type": "PlayAbilityConf",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "PlayAbilityConf": {
+                      "fields": {
+                        "backgroundPlayConf": {
+                          "type": "CloudConf",
+                          "id": 1
+                        },
+                        "flipConf": {
+                          "type": "CloudConf",
+                          "id": 2
+                        },
+                        "castConf": {
+                          "type": "CloudConf",
+                          "id": 3
+                        },
+                        "feedbackConf": {
+                          "type": "CloudConf",
+                          "id": 4
+                        },
+                        "subtitleConf": {
+                          "type": "CloudConf",
+                          "id": 5
+                        },
+                        "playbackRateConf": {
+                          "type": "CloudConf",
+                          "id": 6
+                        },
+                        "timeUpConf": {
+                          "type": "CloudConf",
+                          "id": 7
+                        },
+                        "playbackModeConf": {
+                          "type": "CloudConf",
+                          "id": 8
+                        },
+                        "scaleModeConf": {
+                          "type": "CloudConf",
+                          "id": 9
+                        },
+                        "likeConf": {
+                          "type": "CloudConf",
+                          "id": 10
+                        },
+                        "dislikeConf": {
+                          "type": "CloudConf",
+                          "id": 11
+                        },
+                        "coinConf": {
+                          "type": "CloudConf",
+                          "id": 12
+                        },
+                        "elecConf": {
+                          "type": "CloudConf",
+                          "id": 13
+                        },
+                        "shareConf": {
+                          "type": "CloudConf",
+                          "id": 14
+                        },
+                        "screenShotConf": {
+                          "type": "CloudConf",
+                          "id": 15
+                        },
+                        "lockScreenConf": {
+                          "type": "CloudConf",
+                          "id": 16
+                        },
+                        "recommendConf": {
+                          "type": "CloudConf",
+                          "id": 17
+                        },
+                        "playbackSpeedConf": {
+                          "type": "CloudConf",
+                          "id": 18
+                        },
+                        "definitionConf": {
+                          "type": "CloudConf",
+                          "id": 19
+                        },
+                        "selectionsConf": {
+                          "type": "CloudConf",
+                          "id": 20
+                        },
+                        "nextConf": {
+                          "type": "CloudConf",
+                          "id": 21
+                        },
+                        "editDmConf": {
+                          "type": "CloudConf",
+                          "id": 22
+                        },
+                        "smallWindowConf": {
+                          "type": "CloudConf",
+                          "id": 23
+                        },
+                        "shakeConf": {
+                          "type": "CloudConf",
+                          "id": 24
+                        },
+                        "outerDmConf": {
+                          "type": "CloudConf",
+                          "id": 25
+                        },
+                        "innerDmConf": {
+                          "type": "CloudConf",
+                          "id": 26
+                        },
+                        "panoramaConf": {
+                          "type": "CloudConf",
+                          "id": 27
+                        },
+                        "dolbyConf": {
+                          "type": "CloudConf",
+                          "id": 28
+                        }
+                      }
+                    },
+                    "PlayArcConf": {
+                      "fields": {
+                        "backgroundPlayConf": {
+                          "type": "ArcConf",
+                          "id": 1
+                        },
+                        "flipConf": {
+                          "type": "ArcConf",
+                          "id": 2
+                        },
+                        "castConf": {
+                          "type": "ArcConf",
+                          "id": 3
+                        },
+                        "feedbackConf": {
+                          "type": "ArcConf",
+                          "id": 4
+                        },
+                        "subtitleConf": {
+                          "type": "ArcConf",
+                          "id": 5
+                        },
+                        "playbackRateConf": {
+                          "type": "ArcConf",
+                          "id": 6
+                        },
+                        "timeUpConf": {
+                          "type": "ArcConf",
+                          "id": 7
+                        },
+                        "playbackModeConf": {
+                          "type": "ArcConf",
+                          "id": 8
+                        },
+                        "scaleModeConf": {
+                          "type": "ArcConf",
+                          "id": 9
+                        },
+                        "likeConf": {
+                          "type": "ArcConf",
+                          "id": 10
+                        },
+                        "dislikeConf": {
+                          "type": "ArcConf",
+                          "id": 11
+                        },
+                        "coinConf": {
+                          "type": "ArcConf",
+                          "id": 12
+                        },
+                        "elecConf": {
+                          "type": "ArcConf",
+                          "id": 13
+                        },
+                        "shareConf": {
+                          "type": "ArcConf",
+                          "id": 14
+                        },
+                        "screenShotConf": {
+                          "type": "ArcConf",
+                          "id": 15
+                        },
+                        "lockScreenConf": {
+                          "type": "ArcConf",
+                          "id": 16
+                        },
+                        "recommendConf": {
+                          "type": "ArcConf",
+                          "id": 17
+                        },
+                        "playbackSpeedConf": {
+                          "type": "ArcConf",
+                          "id": 18
+                        },
+                        "definitionConf": {
+                          "type": "ArcConf",
+                          "id": 19
+                        },
+                        "selectionsConf": {
+                          "type": "ArcConf",
+                          "id": 20
+                        },
+                        "nextConf": {
+                          "type": "ArcConf",
+                          "id": 21
+                        },
+                        "editDmConf": {
+                          "type": "ArcConf",
+                          "id": 22
+                        },
+                        "smallWindowConf": {
+                          "type": "ArcConf",
+                          "id": 23
+                        },
+                        "shakeConf": {
+                          "type": "ArcConf",
+                          "id": 24
+                        },
+                        "outerDmConf": {
+                          "type": "ArcConf",
+                          "id": 25
+                        },
+                        "innerDmConf": {
+                          "type": "ArcConf",
+                          "id": 26
+                        },
+                        "panoramaConf": {
+                          "type": "ArcConf",
+                          "id": 27
+                        },
+                        "dolbyConf": {
+                          "type": "ArcConf",
+                          "id": 28
+                        }
+                      }
+                    },
+                    "ConfType": {
+                      "values": {
+                        "NoType": 0,
+                        "FLIPCONF": 1,
+                        "CASTCONF": 2,
+                        "FEEDBACK": 3,
+                        "SUBTITLE": 4,
+                        "PLAYBACKRATE": 5,
+                        "TIMEUP": 6,
+                        "PLAYBACKMODE": 7,
+                        "SCALEMODE": 8,
+                        "BACKGROUNDPLAY": 9,
+                        "LIKE": 10,
+                        "DISLIKE": 11,
+                        "COIN": 12,
+                        "ELEC": 13,
+                        "SHARE": 14,
+                        "SCREENSHOT": 15,
+                        "LOCKSCREEN": 16,
+                        "RECOMMEND": 17,
+                        "PLAYBACKSPEED": 18,
+                        "DEFINITION": 19,
+                        "SELECTIONS": 20,
+                        "NEXT": 21,
+                        "EDITDM": 22,
+                        "SMALLWINDOW": 23,
+                        "SHAKE": 24,
+                        "OUTERDM": 25,
+                        "INNERDM": 26,
+                        "PANORAMA": 27,
+                        "DOLBY": 28
+                      }
+                    },
+                    "CloudConf": {
+                      "fields": {
+                        "show": {
+                          "type": "bool",
+                          "id": 1
+                        },
+                        "confType": {
+                          "type": "ConfType",
+                          "id": 2
+                        },
+                        "fieldValue": {
+                          "type": "FieldValue",
+                          "id": 3
+                        }
+                      }
+                    },
+                    "FieldValue": {
+                      "oneofs": {
+                        "value": {
+                          "oneof": [
+                            "switch"
+                          ]
+                        }
+                      },
+                      "fields": {
+                        "switch": {
+                          "type": "bool",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "ArcConf": {
+                      "fields": {
+                        "isSupport": {
+                          "type": "bool",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "VideoInfo": {
+                      "fields": {
+                        "quality": {
+                          "type": "uint32",
+                          "id": 1
+                        },
+                        "format": {
+                          "type": "string",
+                          "id": 2
+                        },
+                        "timelength": {
+                          "type": "uint64",
+                          "id": 3
+                        },
+                        "videoCodecid": {
+                          "type": "uint32",
+                          "id": 4
+                        },
+                        "streamList": {
+                          "rule": "repeated",
+                          "type": "Stream",
+                          "id": 5
+                        },
+                        "dashAudio": {
+                          "rule": "repeated",
+                          "type": "DashItem",
+                          "id": 6
+                        },
+                        "dolby": {
+                          "type": "DolbyItem",
+                          "id": 7
+                        }
+                      }
+                    },
+                    "DolbyItem": {
+                      "fields": {
+                        "type": {
+                          "type": "Type",
+                          "id": 1
+                        },
+                        "audio": {
+                          "rule": "repeated",
+                          "type": "DashItem",
+                          "id": 2
+                        }
+                      },
+                      "nested": {
+                        "Type": {
+                          "values": {
+                            "NONE": 0,
+                            "COMMON": 1,
+                            "ATMOS": 2
+                          }
+                        }
+                      }
+                    },
+                    "Stream": {
+                      "oneofs": {
+                        "content": {
+                          "oneof": [
+                            "dashVideo",
+                            "segmentVideo"
+                          ]
+                        }
+                      },
+                      "fields": {
+                        "streamInfo": {
+                          "type": "StreamInfo",
+                          "id": 1
+                        },
+                        "dashVideo": {
+                          "type": "DashVideo",
+                          "id": 2
+                        },
+                        "segmentVideo": {
+                          "type": "SegmentVideo",
+                          "id": 3
+                        }
+                      }
+                    },
+                    "SegmentVideo": {
+                      "fields": {
+                        "segment": {
+                          "rule": "repeated",
+                          "type": "ResponseUrl",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "PlayErr": {
+                      "values": {
+                        "NoErr": 0,
+                        "WithMultiDeviceLoginErr": 1
+                      }
+                    },
+                    "StreamInfo": {
+                      "fields": {
+                        "quality": {
+                          "type": "uint32",
+                          "id": 1
+                        },
+                        "format": {
+                          "type": "string",
+                          "id": 2
+                        },
+                        "description": {
+                          "type": "string",
+                          "id": 3
+                        },
+                        "errCode": {
+                          "type": "PlayErr",
+                          "id": 4
+                        },
+                        "limit": {
+                          "type": "StreamLimit",
+                          "id": 5
+                        },
+                        "needVip": {
+                          "type": "bool",
+                          "id": 6
+                        },
+                        "needLogin": {
+                          "type": "bool",
+                          "id": 7
+                        },
+                        "intact": {
+                          "type": "bool",
+                          "id": 8
+                        },
+                        "noRexcode": {
+                          "type": "bool",
+                          "id": 9
+                        },
+                        "attribute": {
+                          "type": "int64",
+                          "id": 10
+                        },
+                        "newDescription": {
+                          "type": "string",
+                          "id": 11
+                        },
+                        "displayDesc": {
+                          "type": "string",
+                          "id": 12
+                        },
+                        "superscript": {
+                          "type": "string",
+                          "id": 13
+                        }
+                      }
+                    },
+                    "StreamLimit": {
+                      "fields": {
+                        "title": {
+                          "type": "string",
+                          "id": 1
+                        },
+                        "uri": {
+                          "type": "string",
+                          "id": 2
+                        },
+                        "msg": {
+                          "type": "string",
+                          "id": 3
+                        }
+                      }
+                    },
+                    "PlayConfEditReply": {
+                      "fields": {}
+                    },
+                    "PlayConfEditReq": {
+                      "fields": {
+                        "playConf": {
+                          "rule": "repeated",
+                          "type": "PlayConfState",
+                          "id": 1
+                        }
+                      }
+                    },
+                    "PlayConfState": {
+                      "fields": {
+                        "confType": {
+                          "type": "ConfType",
+                          "id": 1
+                        },
+                        "show": {
+                          "type": "bool",
+                          "id": 2
+                        },
+                        "fieldValue": {
+                          "type": "FieldValue",
+                          "id": 3
+                        }
+                      }
+                    },
+                    "DashVideo": {
+                      "fields": {
+                        "baseUrl": {
+                          "type": "string",
+                          "id": 1
+                        },
+                        "backupUrl": {
+                          "rule": "repeated",
+                          "type": "string",
+                          "id": 2
+                        },
+                        "bandwidth": {
+                          "type": "uint32",
+                          "id": 3
+                        },
+                        "codecid": {
+                          "type": "uint32",
+                          "id": 4
+                        },
+                        "md5": {
+                          "type": "string",
+                          "id": 5
+                        },
+                        "size": {
+                          "type": "uint64",
+                          "id": 6
+                        },
+                        "audioId": {
+                          "type": "uint32",
+                          "id": 7
+                        },
+                        "noRexcode": {
+                          "type": "bool",
+                          "id": 8
+                        }
+                      }
+                    },
+                    "VideoType": {
+                      "values": {
+                        "Unknown": 0,
+                        "FLV": 1,
+                        "DASH": 2,
+                        "MP4": 3
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

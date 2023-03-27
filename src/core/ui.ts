@@ -62,7 +62,11 @@ export class UI {
         this.entry.addEventListener('click', e => {
             this.show();
             e.stopPropagation();
-        })
+        });
+
+        if (_UserScript_) {
+            GM.registerMenuCommand('设置', () => { this.show() });
+        }
     }
     /** 检查播放器脚本更新 */
     protected async updateCheck() {
