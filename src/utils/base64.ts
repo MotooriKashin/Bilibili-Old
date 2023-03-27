@@ -21,4 +21,20 @@ export const base64 = new (class {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
     }
+    /**
+     * Base64编码
+     * @param buffer Uint8Array
+     * @returns 编码结果
+     */
+    encodeFromUint8Array(buffer: Uint8Array) {
+        return btoa(String.fromCharCode(...buffer));
+    }
+    /**
+     * Base64编码
+     * @param str 
+     * @returns 
+     */
+    decodeToUint8Array(str: string) {
+        return new Uint8Array(atob(str).split('').map(d => d.charCodeAt(0)));
+    }
 })()

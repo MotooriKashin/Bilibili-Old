@@ -166,10 +166,10 @@ export interface DanmakuCmd {
     uname?: string;
 }
 export class ApiDmWeb {
-    static Root: Root;
-    static DmWebViewReply: Type;
-    static DmSegMobileReply: Type;
-    static RootInit() {
+    protected static Root: Root;
+    protected static DmWebViewReply: Type;
+    protected static DmSegMobileReply: Type;
+    protected static RootInit() {
         this.Root = Root.fromJSON(dmproto);
         this.DmWebViewReply = this.Root.lookupType('DmWebViewReply');
         this.DmSegMobileReply = this.Root.lookupType('DmSegMobileReply');
