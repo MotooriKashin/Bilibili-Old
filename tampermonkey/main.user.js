@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.4.3-91f6f5f11c47f13fb7f79ab811124cda994f77f7
+// @version      10.4.4-91f6f5f11c47f13fb7f79ab811124cda994f77f7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -14,6 +14,7 @@
 // @grant        GM.setValue
 // @grant        GM.deleteValue
 // @grant        GM.cookie
+// @grant        GM.registerMenuCommand
 // @run-at       document-start
 // @license      MIT
 // ==/UserScript==
@@ -6797,6 +6798,22 @@ const MODULES = `
         return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(""));
     }
+    /**
+     * Base64编码
+     * @param buffer Uint8Array
+     * @returns 编码结果
+     */
+    encodeFromUint8Array(buffer) {
+      return btoa(String.fromCharCode(...buffer));
+    }
+    /**
+     * Base64编码
+     * @param str 
+     * @returns 
+     */
+    decodeToUint8Array(str) {
+      return new Uint8Array(atob(str).split("").map((d) => d.charCodeAt(0)));
+    }
   }();
 
   // src/utils/debug.ts
@@ -11286,8 +11303,7 @@ const MODULES = `
           this.toast.type = "success";
         } catch (e) {
           this.toast.push("> 代理出错！", e);
-          !obj.access_key && this.toast.push("代理服务器要求【账户授权】才能进一步操作！");
-          this.toast.push("fin <<<");
+          !obj.access_key && this.toast.push("> 代理服务器要求【账户授权】才能进一步操作！");
           this.toast.type = "error";
           this.toast.delay = 4;
           return { code: -404, message: e, data: null };
@@ -11331,7 +11347,6 @@ const MODULES = `
         } catch (e) {
           this.toast.push("> 代理出错！", e);
           !obj.access_key && this.toast.push("> 代理服务器要求【账户授权】才能进一步操作！");
-          this.toast.push("fin <<<");
           this.toast.type = "error";
           this.toast.delay = 4;
           return { code: -404, message: e, data: null };
@@ -16995,7 +17010,6 @@ const MODULES = `
               this.updating = false;
               msg.delay = user.userStatus.toast.delay;
               if (!data[0] || !data[1]) {
-                msg.push("fin <<<");
                 throw new Error("获取播放器组件出错！");
               }
               msg.push("> -------加载成功-------");
@@ -27413,6 +27427,11 @@ const MODULES = `
         this.show();
         e.stopPropagation();
       });
+      if (true) {
+        GM.registerMenuCommand("设置", () => {
+          this.show();
+        });
+      }
     }
     /** 检查播放器脚本更新 */
     async updateCheck() {
