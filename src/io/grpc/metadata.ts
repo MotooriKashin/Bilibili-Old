@@ -24,8 +24,8 @@ export abstract class GrpcMetaData {
         buvid: '5848738A7B27474C9C407F25701EFAC28527C',
         build: 7220300,
         // channel: 'bilibili',
-        mobiApp: 'android',
-        platform: 'android'
+        mobiApp: 'iphone',
+        platform: 'ios'
         // device: 'phone'
     };
     /** Base64化metadata */
