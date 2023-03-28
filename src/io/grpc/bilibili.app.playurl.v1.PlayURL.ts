@@ -6,27 +6,13 @@ import { fnval, fnver, qn } from "../fnval";
 export class GrpcBilibiliAppPlayUrlV1 extends GrpcMetaData {
     /** 命名空间 */
     protected static Root: Root;
-    /** Type<PlayURLReq> */
-    protected static PlayURLReq: Type<PlayURLReq>;
-    /** Type<PlayURLReply> */
-    protected static PlayURLReply: Type<PlayURLReply>;
     /** 初始化命名空间及Type */
     protected static RootInit() {
         this.Root = Root.fromJSON(playurl);
-        this.PlayURLReq = <any>this.Root.lookupType('PlayURLReq');
-        this.PlayURLReply = <any>this.Root.lookupType('PlayURLReply');
     }
     protected package = 'bilibili.app.playurl.v1.PlayURL';
-    /** Type<PlayURLReq> */
-    protected get PlayURLReq() {
-        return GrpcBilibiliAppPlayUrlV1.PlayURLReq;
-    }
-    /** Type<PlayURLReply> */
-    protected get PlayURLReply() {
-        return GrpcBilibiliAppPlayUrlV1.PlayURLReply;
-    }
-    constructor(protected access_key?: string) {
-        super(access_key);
+    constructor(protected accessKey?: string) {
+        super(accessKey);
         GrpcBilibiliAppPlayUrlV1.Root || GrpcBilibiliAppPlayUrlV1.RootInit();
     }
     /**
@@ -36,31 +22,31 @@ export class GrpcBilibiliAppPlayUrlV1 extends GrpcMetaData {
      * await new GrpcBilibiliAppPlayUrlV1().PlayURL({aid:589936965,cid:392681949})
      */
     async PlayURL(req: PlayURLReq) {
-        const response = await this.fetch(
+        const typeReq = <Type<PlayURLReq>>GrpcBilibiliAppPlayUrlV1.Root.lookupType('PlayURLReq');
+        const typeReply = <Type<PlayURLReply>>GrpcBilibiliAppPlayUrlV1.Root.lookupType('PlayURLReply');
+        return this.request(
             'PlayURL',
-            this.PlayURLReq.encode(this.PlayURLReq.fromObject(Object.assign(<PlayURLReq>{
+            Object.assign(<PlayURLReq>{
                 qn,
                 fnval,
                 fnver,
-                // download: 2,
                 force_host: 2
-            }, req))).finish()
-        );
-        const arraybuffer = await response.arrayBuffer();
-        // 需要剔除5字节的grpc压缩及字节标记！
-        return this.PlayURLReply.toObject(this.PlayURLReply.decode(new Uint8Array(arraybuffer.slice(5))))
+            }, req),
+            typeReq,
+            typeReply
+        )
     }
 }
 /** 播放地址请求参数 */
-interface PlayURLReq {
+export interface PlayURLReq {
     /** aid */
     aid: number;
     /** cid */
     cid: number;
     /** qn清晰度 */
-    qn: number;
+    qn?: number;
     /** fnval */
-    fnver: number;
+    fnver?: number;
     /**
      * 0 flv请求，优先返回flv格式视频地址  
      * 1 flv请求，只返回mp4格式的视频地址  
@@ -70,17 +56,17 @@ interface PlayURLReq {
      * 256 是否需要杜比音频，此位为0，代表不需要杜比音频，为1，代表需要杜比音频  
      * fnval 每位(为1)标识一个功能, 其中HDR/4K位数 与 视频格式位数是可 或 关系，如：80 (01010000) 代表需要请求DASH格式的视频且设备支持HDR  
      */
-    fnval: number;
+    fnval?: number;
     /** 下载参数 0-非下载 1-下载flv 2-下载dash */
-    download: number;
+    download?: number;
     /** 返回url是否强制使用域名(非ip地址), 1-http域名 2-https域名 */
-    force_host: number;
+    force_host?: number;
     /** 是否需要4k清晰度 */
-    fourk: boolean;
+    fourk?: boolean;
     /** 当前页面 */
-    spmid: string;
+    spmid?: string;
     /** 上级页面 */
-    from_spmid: string;
+    from_spmid?: string;
 }
 /** 播放地址返回结果 */
 interface PlayURLReply {

@@ -1,6 +1,7 @@
 import { Constructor, Field, IConversionOptions, IToJSONOptions, IType, Message, NamespaceBase, OneOf, Reader, ReflectionObject, Root, Writer } from "protobufjs/light";
 import metadata from '../../json/metadata.json'
 import { base64 } from "../../utils/base64";
+import { debug } from "../../utils/debug";
 
 export abstract class GrpcMetaData {
     /** 命名空间 */
@@ -23,7 +24,7 @@ export abstract class GrpcMetaData {
         buvid: '5848738A7B27474C9C407F25701EFAC28527C',
         build: 7220300,
         // channel: 'bilibili',
-        mobi_app: 'android',
+        mobiApp: 'android',
         platform: 'android'
         // device: 'phone'
     };
@@ -31,44 +32,51 @@ export abstract class GrpcMetaData {
     private get metadataBase64() {
         return base64.encodeFromUint8Array(GrpcMetaData.metadata.encode(GrpcMetaData.metadata.fromObject(this.metadata)).finish());
     }
-    constructor(protected access_key?: string) {
+    constructor(protected accessKey?: string) {
         GrpcMetaData.Root || GrpcMetaData.RootInit();
-        access_key && (this.metadata.access_key = access_key);
+        accessKey && (this.metadata.accessKey = accessKey);
     }
     /**
      * 发起grpc请求
      * @param method 方法名
-     * @param body grpc序列化二进制数据
+     * @param body grpc请求参数
+     * @param typeReq grpc请求序列化Type
+     * @param typeReply grpc结果反序列化Type
      */
-    protected async fetch(method: string, body: Uint8Array) {
+    protected async request<T extends object, K extends object>(method: string, req: T, typeReq: Type<T>, typeReply: Type<K>) {
+        const body = typeReq.encode(typeReq.fromObject(req)).finish()
         const buffer = new ArrayBuffer(body.length + 5);
         const dataview = new DataView(buffer);
         dataview.setUint32(1, body.length); // 写入grpc压缩及字节标记
         const uInt8 = new Uint8Array(buffer);
         uInt8.set(body, 5);
-        const respnse = await GM.fetch(`${this.hostGrpc}/${this.package}/${method}`, {
+        const headers: HeadersInit = {
+            'Content-Type': 'application/grpc',
+            'x-bili-metadata-bin': this.metadataBase64,
+            'user-agent': 'Bilibili Freedoooooom/MarkII',
+            'referer': ''
+        };
+        this.accessKey && (headers.authorization = `identify_v1 ${this.accessKey}`); // 登录鉴权
+        debug('grpc:', this.package, 'PlayURL', req);
+        const response = await GM.fetch(`${this.hostGrpc}/${this.package}/${method}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/grpc',
-                // 'authorization': `identify_v1 ${this.access_key || ''}`,
-                'x-bili-metadata-bin': this.metadataBase64,
-                'user-agent': 'Bilibili Freedoooooom/MarkII',
-                'referer': ''
-            },
+            headers,
             body: uInt8
         });
-        if (respnse.headers.has('grpc-status') && respnse.headers.has('grpc-message')) {
+        if (response.headers.has('grpc-status') && response.headers.has('grpc-message')) {
             // 抛出grpc错误
-            throw new Error(respnse.headers.get('grpc-message')!);
+            throw new Error(response.headers.get('grpc-message')!);
         }
-        return respnse;
+        const arraybuffer = await response.arrayBuffer();
+        // 需要剔除5字节的grpc压缩及字节标记！
+        return typeReply.toObject(typeReply.decode(new Uint8Array(arraybuffer.slice(5))));
     }
 }
 interface Metadata {
     /** 登录鉴权 */
-    access_key?: string;
+    accessKey?: string;
     /** 包类型 */
-    mobi_app: 'android' | 'iphone' | 'ipad' | 'white';
+    mobiApp: 'android' | 'iphone' | 'ipad' | 'white';
     /** 运行设备 */
     device?: string;
     /** 构建号 */
