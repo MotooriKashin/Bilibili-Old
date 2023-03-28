@@ -8,10 +8,13 @@ export abstract class GrpcMetaData {
     protected static Root: Root;
     /** Type<Metadata> */
     protected static metadata: Type<Metadata>;
+    /** Type<Status> */
+    protected static status: Type<Status>;
     /** 初始化命名空间及Type */
     protected static RootInit() {
         this.Root = Root.fromJSON(metadata);
         this.metadata = <any>this.Root.lookupType('Metadata');
+        this.status = <any>this.Root.lookupType('bilibili.rpc.Status');
     }
     /** grpc app host */
     protected hostAPP = '//app.bilibili.com';
@@ -75,9 +78,15 @@ export abstract class GrpcMetaData {
             headers,
             body: uInt8
         });
-        if (response.headers.has('grpc-status') && response.headers.has('grpc-message')) {
+        if (response.headers.has('grpc-status-details-bin')) {
             // 抛出grpc错误
-            throw new Error(response.headers.get('grpc-message')!);
+            const bin = response.headers.get('grpc-status-details-bin')!;
+            const uInt8 = base64.decodeToUint8Array(bin);
+            const details = GrpcMetaData.status.toObject(GrpcMetaData.status.decode(uInt8));
+            if (details.details && details.details.length) {
+                throw details.details[0].value;
+            }
+            throw details;
         }
         const arraybuffer = await response.arrayBuffer();
         // 需要剔除5字节的grpc压缩及字节标记！
@@ -99,6 +108,18 @@ interface Metadata {
     buvid: string;
     /** 设备类型 */
     platform: 'android' | 'ios';
+}
+interface Status {
+    /** 业务错误码 */
+    code: number;
+    /** 对错误码的的解释 */
+    message: string;
+    /** 是调用方和被调用方约定好的额外的proto结构，包含一些详细的错误处理方案等 */
+    details: GoogleProtobufAny[];
+}
+interface GoogleProtobufAny {
+    type_url: string;
+    value: string;
 }
 /**
  * protobuf.Type 的拓展，使用泛型进行数据类型约束。  

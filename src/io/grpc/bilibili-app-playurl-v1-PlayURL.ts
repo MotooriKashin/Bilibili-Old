@@ -92,7 +92,7 @@ interface PlayURLReq {
     fromSpmid?: string;
 }
 /** 播放地址返回结果 */
-interface PlayURLReply {
+export interface PlayURLReply {
     /** 视频的清晰度 */
     quality: number;
     /** 视频的格式 */
@@ -394,7 +394,7 @@ interface PlayArcConf {
     dolbyConf: ArcConf;
 }
 /** 播放地址返回结果 */
-interface VideoInfo {
+export interface VideoInfo {
     /** 视频的清晰度 */
     quality: number;
     /** 视频的格式 */
@@ -606,7 +606,7 @@ enum ConfType {
     DOLBY = 28
 }
 /** 视频格式(h264 ,h265) */
-enum CodeType {
+export enum CodeType {
     /** default */
     NOCODE = 0,
     /** 编码264 */

@@ -5,6 +5,7 @@ import { ApiPlayurlTv } from "../io/api-playurl-tv";
 import { ApiPlayurlProj } from "../io/api-playurlproj";
 import { qn } from "../io/fnval";
 import { GrpcBilibiliAppPlayUrlV1 } from "../io/grpc/bilibili-app-playurl-v1-PlayURL";
+import { GrpcBilibiliPgcGatewayPlayerV1 } from "../io/grpc/bilibili-pgc-gateway-player-v1-PlayURL";
 import { BLOD } from "./bilibili-old";
 import { Aria2 } from "./download/aria2";
 import { Ef2 } from "./download/ef2";
@@ -195,10 +196,15 @@ export class Download {
     private interface(cid: number, quality = qn) {
         return new ApiPlayurlInterface({ cid, quality }, BLOD.pgc).getData();
     }
-    private _grpc?: GrpcBilibiliAppPlayUrlV1;
-    get grpc() {
-        this._grpc || (this._grpc = new GrpcBilibiliAppPlayUrlV1(user.userStatus!.accessKey.token));
-        return this._grpc
+    private _grpcUgc?: GrpcBilibiliAppPlayUrlV1;
+    get grpcUgc() {
+        this._grpcUgc || (this._grpcUgc = new GrpcBilibiliAppPlayUrlV1(user.userStatus!.accessKey.token));
+        return this._grpcUgc
+    }
+    private _grpcPgc?: GrpcBilibiliPgcGatewayPlayerV1;
+    get grpcPgc() {
+        this._grpcPgc || (this._grpcPgc = new GrpcBilibiliPgcGatewayPlayerV1(user.userStatus!.accessKey.token));
+        return this._grpcPgc
     }
     image() {
         const src: string[] = [];

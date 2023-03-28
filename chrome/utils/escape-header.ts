@@ -69,7 +69,7 @@ export function escapeForbidHeader(input: RequestInfo | URL, headers?: Record<st
             rule.action.responseHeaders?.push({
                 header: 'Access-Control-Expose-Headers',
                 operation: <any>'set',
-                value: 'grpc-status,grpc-message'
+                value: 'grpc-status,grpc-message,grpc-status-details-bin'
             });
         }
     });
