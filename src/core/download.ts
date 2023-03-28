@@ -4,7 +4,7 @@ import { ApiPlayurlIntl } from "../io/api-playurl-intl";
 import { ApiPlayurlTv } from "../io/api-playurl-tv";
 import { ApiPlayurlProj } from "../io/api-playurlproj";
 import { qn } from "../io/fnval";
-import { GrpcBilibiliAppPlayUrlV1, PlayURLReq } from "../io/grpc/bilibili.app.playurl.v1.PlayURL";
+import { GrpcBilibiliAppPlayUrlV1, PlayURLReq } from "../io/grpc/bilibili-app-playurl-v1-PlayURL";
 import { BLOD } from "./bilibili-old";
 import { Aria2 } from "./download/aria2";
 import { Ef2 } from "./download/ef2";
@@ -195,8 +195,10 @@ export class Download {
     private interface(cid: number, quality = qn) {
         return new ApiPlayurlInterface({ cid, quality }, BLOD.pgc).getData();
     }
-    private grpcPlayurl(req: PlayURLReq) {
-        return new GrpcBilibiliAppPlayUrlV1(user.userStatus!.accessKey.token).PlayURL(req);
+    private _grpc?: GrpcBilibiliAppPlayUrlV1;
+    get grpc() {
+        this._grpc || (this._grpc = new GrpcBilibiliAppPlayUrlV1(user.userStatus!.accessKey.token));
+        return this._grpc
     }
     image() {
         const src: string[] = [];

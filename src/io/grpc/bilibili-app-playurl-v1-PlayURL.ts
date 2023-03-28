@@ -1,19 +1,15 @@
 import { Root } from "protobufjs/light";
 import playurl from '../../json/playurl.json';
-import { GrpcMetaData, Type } from "./metadata";
+import { GrpcMetaData, Type } from "./bilibili-metadata-Metadata";
 import { fnval, fnver, qn } from "../fnval";
 
 export class GrpcBilibiliAppPlayUrlV1 extends GrpcMetaData {
     /** 命名空间 */
     protected static Root: Root;
-    /** 初始化命名空间及Type */
-    protected static RootInit() {
-        this.Root = Root.fromJSON(playurl);
-    }
     protected package = 'bilibili.app.playurl.v1.PlayURL';
     constructor(protected accessKey?: string) {
         super(accessKey);
-        GrpcBilibiliAppPlayUrlV1.Root || GrpcBilibiliAppPlayUrlV1.RootInit();
+        GrpcBilibiliAppPlayUrlV1.Root || (GrpcBilibiliAppPlayUrlV1.Root = Root.fromJSON(playurl));
     }
     /**
      * 获取播放地址
@@ -21,7 +17,7 @@ export class GrpcBilibiliAppPlayUrlV1 extends GrpcMetaData {
      * @example 
      * await new GrpcBilibiliAppPlayUrlV1().PlayURL({aid:589936965,cid:392681949})
      */
-    async PlayURL(req: PlayURLReq) {
+    PlayURL(req: PlayURLReq) {
         const typeReq = <Type<PlayURLReq>>GrpcBilibiliAppPlayUrlV1.Root.lookupType('PlayURLReq');
         const typeReply = <Type<PlayURLReply>>GrpcBilibiliAppPlayUrlV1.Root.lookupType('PlayURLReply');
         return this.request(
@@ -30,7 +26,24 @@ export class GrpcBilibiliAppPlayUrlV1 extends GrpcMetaData {
                 qn,
                 fnval,
                 fnver,
-                force_host: 2
+                forceHost: 2
+            }, req),
+            typeReq,
+            typeReply
+        )
+    }
+    Project(req: ProjectReq) {
+        const typeReq = <Type<ProjectReq>>GrpcBilibiliAppPlayUrlV1.Root.lookupType('ProjectReq');
+        const typeReply = <Type<ProjectReply>>GrpcBilibiliAppPlayUrlV1.Root.lookupType('ProjectReply');
+        return this.request(
+            'Project',
+            Object.assign(<ProjectReq>{
+                qn,
+                fnval,
+                fnver,
+                forceHost: 2,
+                protocol: 0,
+                deviceType: 0
             }, req),
             typeReq,
             typeReply
@@ -60,13 +73,13 @@ export interface PlayURLReq {
     /** 下载参数 0-非下载 1-下载flv 2-下载dash */
     download?: number;
     /** 返回url是否强制使用域名(非ip地址), 1-http域名 2-https域名 */
-    force_host?: number;
+    forceHost?: number;
     /** 是否需要4k清晰度 */
     fourk?: boolean;
     /** 当前页面 */
     spmid?: string;
     /** 上级页面 */
-    from_spmid?: string;
+    fromSpmid?: string;
 }
 /** 播放地址返回结果 */
 interface PlayURLReply {
@@ -77,23 +90,23 @@ interface PlayURLReply {
     /** 视频的总时长, 单位为ms */
     timelength: number;
     /** 视频的编码号 */
-    video_codecid: number;
+    videoCodecid: number;
     /** 请求的fnver */
     fnver: number;
     /** 请求的fnval */
     fnval: number;
     /** 是否支持投影 */
-    video_project: boolean;
+    videoProject: boolean;
     /** 视频播放url的列表，有durl则没dash字段 */
     durl: ResponseUrl[];
     /** DASH视频的MPD格式文件,有dash则没durl字段 */
     dash: ResponseDash;
     /** 表示cid是否非全二压，1表示非全二压 */
-    no_rexcode: number;
+    noRexcode: number;
     /** 互动视频升级提示 */
-    upgrade_limit: UpgradeLimit;
+    upgradeLimit: UpgradeLimit;
     /** 清晰度描述的列表 */
-    support_formats: FormatDescription[];
+    supportFormats: FormatDescription[];
     /** 视频类型 1-flv 2-dash 3-mp4（只标识一个清晰度的格式） */
     type: VideoType;
 }
@@ -108,7 +121,7 @@ interface ResponseUrl {
     /** 分片的url地址 */
     url: string;
     /** 分片的备用url地址列表 */
-    backup_url: string[];
+    backupUrl: string[];
     /** 分片的md5,只有离线下载才有值 */
     md5: string;
 }
@@ -123,9 +136,9 @@ interface DashItem {
     /** dash的清晰度 */
     id: number;
     /** dash的url地址 */
-    base_url: string;
+    baseUrl: string;
     /** dash的backup url地址 */
-    backup_url: string[];
+    backupUrl: string[];
     /** dash的信息 */
     bandwidth: number;
     /** dash的信息 */
@@ -135,7 +148,7 @@ interface DashItem {
     /** 视频分片的大小, 单位Byte,只有dash离线下载才有值 */
     size: number;
     /** dash的信息 */
-    frame_rate: string;
+    frameRate: string;
 }
 /** 互动视频升级信息 */
 interface UpgradeLimit {
@@ -164,38 +177,38 @@ interface FormatDescription {
     /** 清晰度描述 */
     description: string;
     /** 新描述（6.9版本开始使用） */
-    new_description: string;
+    newDescription: string;
     /** 选中态的清晰度描述 */
-    display_desc: string;
+    displayDesc: string;
     /** 选中态的清晰度描述的角标 */
     superscript: string;
 }
 /** 投屏地址请求参数 */
-interface ProjectReq {
+export interface ProjectReq {
     /** aid */
     aid: number;
     /** cid */
     cid: number;
     /** qn清晰度 */
-    qn: number;
+    qn?: number;
     /** fnver */
-    fnver: number;
+    fnver?: number;
     /** fnval */
-    fnval: number;
+    fnval?: number;
     /** 下载参数 0-非下载 1-下载flv 2-下载dash */
-    download: number;
+    download?: number;
     /** 返回url是否强制使用域名(非ip地址), 1-http域名 2-https域名 */
-    force_host: number;
+    forceHost?: number;
     /** 是否需要4k清晰度（6.8版本开始已集成到fnval表示，该字段可不传） */
-    fourk: number;
+    fourk?: number;
     /** 当前页面 */
-    spmid: string;
+    spmid?: string;
     /** 上级页面 */
-    from_spmid: string;
+    fromSpmid?: string;
     /** 使用协议 默认乐播=0，自建协议=1，云投屏=2，airplay=3 */
-    protocol: number;
+    protocol?: number;
     /** 投屏设备 默认其他=0，OTT设备=1 */
-    device_type: number;
+    deviceType?: number;
 }
 /** 投屏地址返回结果 */
 interface ProjectReply {
@@ -216,32 +229,32 @@ interface PlayViewReq {
     /** 下载参数 0-非下载 1-下载flv 2-下载dash */
     download: number;
     /** 返回url是否强制使用域名(非ip地址), 1-http域名 2-https域名 */
-    force_host: number;
+    forceHost: number;
     /** 是否需要4k清晰度（6.8版本开始已集成到fnval表示，该字段可不传） */
     fourk: number;
     /** 当前页面 */
     spmid: string;
     /** 上级页面 */
-    from_spmid: string;
+    fromSpmid: string;
     /** 青少年模式 */
-    teenagers_mode: number;
+    teenagersMode: number;
     /** 优先返回视频格式(h264 ,h265) */
-    prefer_codec_type: CodeType;
+    preferCodecType: CodeType;
     /** 业务类型 */
     business: Business;
 }
 /** 播放页返回结果 */
 interface PlayViewReply {
     /** play基础信息 */
-    video_info: VideoInfo;
+    videoInfo: VideoInfo;
     /** 云控配置信息-用户维度 */
-    play_conf: PlayAbilityConf;
+    playConf: PlayAbilityConf;
     /** 互动视频升级提示 */
-    upgrade_limit: UpgradeLimit;
+    upgradeLimit: UpgradeLimit;
     /** Chronos灰度管理（6.6版本开始不返回，已迁移到ViewProgress接口） */
     chronos: Chronos;
     /** 云控是否可用配置-稿件维度 */
-    play_arc: PlayArcConf;
+    playArc: PlayArcConf;
     /** 播放事件 */
     event: Event;
 }
@@ -250,125 +263,125 @@ interface PlayConfReq { }
 /** 控制面板信息reply */
 interface PlayConfReply {
     /** 云控配置信息 */
-    play_conf: PlayAbilityConf;
+    playConf: PlayAbilityConf;
 }
 /** 播放三点配置信息 */
 interface PlayAbilityConf {
     /** 后台播放 */
-    background_play_conf: CloudConf;
+    backgroundPlayConf: CloudConf;
     /** 镜像反转 */
-    flip_conf: CloudConf;
+    flipConf: CloudConf;
     /** 视频的是否支持投屏 */
-    cast_conf: CloudConf;
+    castConf: CloudConf;
     /** 反馈 */
-    feedback_conf: CloudConf;
+    feedbackConf: CloudConf;
     /** 字幕 */
-    subtitle_conf: CloudConf;
+    subtitleConf: CloudConf;
     /** 播放速度 */
-    playback_rate_conf: CloudConf;
+    playbackRateConf: CloudConf;
     /** 定时停止播放 */
-    time_up_conf: CloudConf;
+    timeUpConf: CloudConf;
     /** 播放方式 */
-    playback_mode_conf: CloudConf;
+    playbackModeConf: CloudConf;
     /** 画面尺寸 */
-    scale_mode_conf: CloudConf;
+    scaleModeConf: CloudConf;
     /** 顶 */
-    like_conf: CloudConf;
+    likeConf: CloudConf;
     /** 踩 */
-    dislike_conf: CloudConf;
+    dislikeConf: CloudConf;
     /** 投币 */
-    coin_conf: CloudConf;
+    coinConf: CloudConf;
     /** 充电 */
-    elec_conf: CloudConf;
+    elecConf: CloudConf;
     /** 分享 */
-    share_conf: CloudConf;
+    shareConf: CloudConf;
     /** 截图/gif */
-    screen_shot_conf: CloudConf;
+    screenShotConf: CloudConf;
     /** 锁屏 */
-    lock_screen_conf: CloudConf;
+    lockScreenConf: CloudConf;
     /** 相关推荐 */
-    recommend_conf: CloudConf;
+    recommendConf: CloudConf;
     /** 倍速 */
-    playback_speed_conf: CloudConf;
+    playbackSpeedConf: CloudConf;
     /** 清晰度 */
-    definition_conf: CloudConf;
+    definitionConf: CloudConf;
     /** 选集 */
-    selections_conf: CloudConf;
+    selectionsConf: CloudConf;
     /** 下一集 */
-    next_conf: CloudConf;
+    nextConf: CloudConf;
     /** 编辑弹幕 */
-    edit_dm_conf: CloudConf;
+    editDmConf: CloudConf;
     /** 小窗 */
-    small_window_conf: CloudConf;
+    smallWindowConf: CloudConf;
     /** 播放震动 */
-    shake_conf: CloudConf;
+    shakeConf: CloudConf;
     /** 外层面板弹幕设置（实验组1） */
-    outer_dm_conf: CloudConf;
+    outerDmConf: CloudConf;
     /** 三点内弹幕设置（实验组2） */
-    inner_dm_conf: CloudConf;
+    innerDmConf: CloudConf;
     /** 全景 */
-    panorama_conf: CloudConf;
+    panoramaConf: CloudConf;
     /** 杜比 */
-    dolby_conf: CloudConf;
+    dolbyConf: CloudConf;
 }
 /** 播放三点配置信息-稿件维度 */
 interface PlayArcConf {
     /** 后台播放 */
-    background_play_conf: ArcConf;
+    backgroundPlayConf: ArcConf;
     /** 镜像反转 */
-    flip_conf: ArcConf;
+    flipConf: ArcConf;
     /** 视频的是否支持投屏 */
-    cast_conf: ArcConf;
+    castConf: ArcConf;
     /** 反馈 */
-    feedback_conf: ArcConf;
+    feedbackConf: ArcConf;
     /** 字幕 */
-    subtitle_conf: ArcConf;
+    subtitleConf: ArcConf;
     /** 播放速度 */
-    playback_rate_conf: ArcConf;
+    playbackRateConf: ArcConf;
     /** 定时停止播放 */
-    time_up_conf: ArcConf;
+    timeUpConf: ArcConf;
     /** 播放方式 */
-    playback_mode_conf: ArcConf;
+    playbackModeConf: ArcConf;
     /** 画面尺寸 */
-    scale_mode_conf: ArcConf;
+    scaleModeConf: ArcConf;
     /** 顶 */
-    like_conf: ArcConf;
+    likeConf: ArcConf;
     /** 踩 */
-    dislike_conf: ArcConf;
+    dislikeConf: ArcConf;
     /** 投币 */
-    coin_conf: ArcConf;
+    coinConf: ArcConf;
     /** 充电 */
-    elec_conf: ArcConf;
+    elecConf: ArcConf;
     /** 分享 */
-    share_conf: ArcConf;
+    shareConf: ArcConf;
     /** 截图/gif */
-    screen_shot_conf: ArcConf;
+    screenShotConf: ArcConf;
     /** 锁屏 */
-    lock_screen_conf: ArcConf;
+    lockScreenConf: ArcConf;
     /** 相关推荐 */
-    recommend_conf: ArcConf;
+    recommendConf: ArcConf;
     /** 倍速 */
-    playback_speed_conf: ArcConf;
+    playbackSpeedConf: ArcConf;
     /** 清晰度 */
-    definition_conf: ArcConf;
+    definitionConf: ArcConf;
     /** 选集 */
-    selections_conf: ArcConf;
+    selectionsConf: ArcConf;
     /** 下一集 */
-    next_conf: ArcConf;
+    nextConf: ArcConf;
     /** 编辑弹幕 */
-    edit_dm_conf: ArcConf;
+    editDmConf: ArcConf;
     /** 小窗 */
-    small_window_conf: ArcConf;
+    smallWindowConf: ArcConf;
     /** 播放震动 */
-    shake_conf: ArcConf;
+    shakeConf: ArcConf;
     /** 外层面板弹幕设置（实验组1 */
-    outer_dm_conf: ArcConf;
+    outerDmConf: ArcConf;
     /** 三点内弹幕设置（实验组2） */
-    inner_dm_conf: ArcConf;
+    innerDmConf: ArcConf;
     /** 全景 */
-    panorama_conf: ArcConf;
+    panoramaConf: ArcConf;
     /** 杜比 */
-    dolby_conf: ArcConf;
+    dolbyConf: ArcConf;
 }
 /** 播放地址返回结果 */
 interface VideoInfo {
@@ -379,23 +392,23 @@ interface VideoInfo {
     /** 视频的总时长, 单位为ms */
     timelength: number;
     /** 视频的编码号 */
-    video_codecid: number;
+    videoCodecid: number;
     /** 流信息 */
-    stream_list: Stream[];
+    streamList: Stream[];
     /** aduio */
-    dash_audio: DashItem;
+    dashAudio: DashItem;
     /** dolby */
     dolby: DolbyItem;
 }
 interface PlayAbilityConf { }
 /** 视频的拥有的清晰度描述的列表 */
 interface Stream {
-    stream_info: StreamInfo;
+    streamInfo: StreamInfo;
     content: {
         /** DASH视频的MPD格式文件,有dash则没durl字段 */
-        dash_video: DashVideo;
+        dashVideo: DashVideo;
         /** 视频播放url的列表，有durl则没dash字段 */
-        segment_video: SegmentVideo;
+        segmentVideo: SegmentVideo;
     }
 }
 interface StreamInfo {
@@ -406,21 +419,21 @@ interface StreamInfo {
     /** 清晰度描述 */
     description: string;
     /** 错误码 */
-    err_code: PlayErr;
+    errCode: PlayErr;
     /** 不满足播放条件时的提示文案 */
     limit: StreamLimit;
-    need_vip: boolean;
-    need_login: boolean;
+    needVip: boolean;
+    needLogin: boolean;
     /** 是否是完整的 */
     intact: boolean;
     /** 表示cid是否非全二压，true表示非全二压 */
-    no_rexcode: boolean;
+    noRexcode: boolean;
     /** 清晰度属性位（每位为1表示不同属性，第0位为1->是HDR） */
     attribute: number;
     /** 新描述（6.9版本开始使用） */
-    new_description: string;
+    newDescription: string;
     /** 选中态的清晰度描述 */
-    display_desc: string;
+    displayDesc: string;
     /** 选中态的清晰度描述的角标 */
     superscript: string;
 }
@@ -436,9 +449,9 @@ interface StreamLimit {
 /** dash信息 */
 interface DashVideo {
     /** dash的url地址 */
-    base_url: string;
+    baseUrl: string;
     /** dash的backup url地址 */
-    backup_url: string[];
+    backupUrl: string[];
     /** dash的信息 */
     bandwidth: number;
     /** dash的信息 */
@@ -448,22 +461,22 @@ interface DashVideo {
     /** 视频分片的大小, 单位Byte,只有dash离线下载才有值 */
     size: number;
     /** dash视频信息id,default id */
-    audio_id: number;
+    audioId: number;
     /** 表示cid是否非全二压，true表示非全二压 */
-    no_rexcode: boolean;
+    noRexcode: boolean;
 }
 interface PlayConfEditReply { }
 /** 编辑控制面板 */
 interface PlayConfEditReq {
-    play_conf: PlayConfState[];
+    playConf: PlayConfState[];
 }
 interface PlayConfState {
     /** 云控类型 */
-    conf_type: ConfType;
+    confType: ConfType;
     /** true:展示 false:隐藏 */
     show: boolean;
     /** 云控value */
-    field_value: FieldValue;
+    fieldValue: FieldValue;
 }
 /** DASH视频的MPD格式文件,有dash则没durl字段 */
 interface SegmentVideo {
@@ -494,8 +507,8 @@ interface CloudConf {
     /** 是否展示功能 */
     show: boolean;
     /** 标记类型 */
-    conf_type: ConfType;
-    field_value: FieldValue;
+    confType: ConfType;
+    fieldValue: FieldValue;
 }
 interface FieldValue {
     value: {
@@ -505,7 +518,7 @@ interface FieldValue {
 /** 稿件维度 */
 interface ArcConf {
     /** 是否可用 */
-    is_support: boolean;
+    isSupport: boolean;
 }
 /** Chronos灰度管理 */
 interface Chronos {
