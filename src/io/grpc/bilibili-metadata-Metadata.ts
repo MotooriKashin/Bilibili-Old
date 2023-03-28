@@ -19,6 +19,13 @@ export abstract class GrpcMetaData {
     protected hostGrpc = '//grpc.biliapi.net';
     /** grpc package */
     protected abstract package: string;
+    /** grpc service */
+    protected abstract service: string;
+    /**
+     * 使用泛型拓展protobuf Root.lookupType
+     * @param type Type名称
+     */
+    protected abstract lookupType<T extends object>(type: string): Type<T>;
     /** 默认metadata */
     private metadata: Metadata = {
         buvid: '5848738A7B27474C9C407F25701EFAC28527C',
@@ -37,13 +44,18 @@ export abstract class GrpcMetaData {
         accessKey && (this.metadata.accessKey = accessKey);
     }
     /**
-     * 发起grpc请求
-     * @param method 方法名
-     * @param body grpc请求参数
-     * @param typeReq grpc请求序列化Type
-     * @param typeReply grpc结果反序列化Type
+     * 发起grpc请求  
+     * - T 用于序列化请求参数的Type类型  
+     * - K 用于反序列化返回值的Type类型
+     * @param method 请求方法名
+     * @param repType 用于序列化请求参数的Type名
+     * @param replyType 用于反序列化返回值的Type名
+     * @param req 序列化前的请求参数
+     * @returns 请求返回值
      */
-    protected async request<T extends object, K extends object>(method: string, req: T, typeReq: Type<T>, typeReply: Type<K>) {
+    protected async request<T extends object, K extends object>(method: string, repType: string, replyType: string, req: T) {
+        const typeReq = this.lookupType<T>(repType);
+        const typeReply = this.lookupType<K>(replyType);
         const body = typeReq.encode(typeReq.fromObject(req)).finish()
         const buffer = new ArrayBuffer(body.length + 5);
         const dataview = new DataView(buffer);
@@ -57,8 +69,8 @@ export abstract class GrpcMetaData {
             'referer': ''
         };
         this.accessKey && (headers.authorization = `identify_v1 ${this.accessKey}`); // 登录鉴权
-        debug('grpc:', this.package, 'PlayURL', req);
-        const response = await GM.fetch(`${this.hostGrpc}/${this.package}/${method}`, {
+        debug('grpc:', this.package, method, req);
+        const response = await GM.fetch(`${this.hostGrpc}/${this.package}.${this.service}/${method}`, {
             method: 'POST',
             headers,
             body: uInt8

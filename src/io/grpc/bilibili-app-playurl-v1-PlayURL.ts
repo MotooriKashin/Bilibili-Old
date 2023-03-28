@@ -6,52 +6,62 @@ import { fnval, fnver, qn } from "../fnval";
 export class GrpcBilibiliAppPlayUrlV1 extends GrpcMetaData {
     /** 命名空间 */
     protected static Root: Root;
-    protected package = 'bilibili.app.playurl.v1.PlayURL';
+    protected package = 'bilibili.app.playurl.v1';
+    protected service = 'PlayURL';
     constructor(protected accessKey?: string) {
         super(accessKey);
         GrpcBilibiliAppPlayUrlV1.Root || (GrpcBilibiliAppPlayUrlV1.Root = Root.fromJSON(playurl));
     }
-    /**
-     * 获取播放地址
-     * @param req PlayURLReq
-     * @example 
-     * await new GrpcBilibiliAppPlayUrlV1().PlayURL({aid:589936965,cid:392681949})
-     */
+    protected lookupType<T extends object>(type: string) {
+        return <Type<T>>GrpcBilibiliAppPlayUrlV1.Root.lookupType(`${this.package}.${type}`)
+    }
+    /** 获取播放地址 */
     PlayURL(req: PlayURLReq) {
-        const typeReq = <Type<PlayURLReq>>GrpcBilibiliAppPlayUrlV1.Root.lookupType('PlayURLReq');
-        const typeReply = <Type<PlayURLReply>>GrpcBilibiliAppPlayUrlV1.Root.lookupType('PlayURLReply');
-        return this.request(
+        return this.request<PlayURLReq, PlayURLReply>(
             'PlayURL',
-            Object.assign(<PlayURLReq>{
+            'PlayURLReq',
+            'PlayURLReply',
+            Object.assign({
                 qn,
                 fnval,
                 fnver,
                 forceHost: 2
-            }, req),
-            typeReq,
-            typeReply
+            }, req)
         )
     }
+    /** 获取投屏地址 */
     Project(req: ProjectReq) {
-        const typeReq = <Type<ProjectReq>>GrpcBilibiliAppPlayUrlV1.Root.lookupType('ProjectReq');
-        const typeReply = <Type<ProjectReply>>GrpcBilibiliAppPlayUrlV1.Root.lookupType('ProjectReply');
-        return this.request(
+        return this.request<ProjectReq, ProjectReply>(
             'Project',
-            Object.assign(<ProjectReq>{
+            'ProjectReq',
+            'ProjectReply',
+            Object.assign({
                 qn,
                 fnval,
                 fnver,
                 forceHost: 2,
                 protocol: 0,
                 deviceType: 0
-            }, req),
-            typeReq,
-            typeReply
+            }, req)
+        )
+    }
+    /** 获取播放地址和云控配置信息 */
+    PlayView(req: PlayViewReq) {
+        return this.request<PlayViewReq, PlayViewReply>(
+            'PlayView',
+            'PlayViewReq',
+            'PlayViewReply',
+            Object.assign({
+                qn,
+                fnval,
+                fnver,
+                forceHost: 2
+            }, req)
         )
     }
 }
 /** 播放地址请求参数 */
-export interface PlayURLReq {
+interface PlayURLReq {
     /** aid */
     aid: number;
     /** cid */
@@ -184,7 +194,7 @@ interface FormatDescription {
     superscript: string;
 }
 /** 投屏地址请求参数 */
-export interface ProjectReq {
+interface ProjectReq {
     /** aid */
     aid: number;
     /** cid */
@@ -221,27 +231,27 @@ interface PlayViewReq {
     /** cid */
     cid: number;
     /** qn清晰度 */
-    qn: number;
+    qn?: number;
     /** fnver */
-    fnver: number;
+    fnver?: number;
     /** fnval */
-    fnval: number;
+    fnval?: number;
     /** 下载参数 0-非下载 1-下载flv 2-下载dash */
-    download: number;
+    download?: number;
     /** 返回url是否强制使用域名(非ip地址), 1-http域名 2-https域名 */
-    forceHost: number;
+    forceHost?: number;
     /** 是否需要4k清晰度（6.8版本开始已集成到fnval表示，该字段可不传） */
-    fourk: number;
+    fourk?: number;
     /** 当前页面 */
-    spmid: string;
+    spmid?: string;
     /** 上级页面 */
-    fromSpmid: string;
+    fromSpmid?: string;
     /** 青少年模式 */
-    teenagersMode: number;
+    teenagersMode?: number;
     /** 优先返回视频格式(h264 ,h265) */
-    preferCodecType: CodeType;
+    preferCodecType?: CodeType;
     /** 业务类型 */
-    business: Business;
+    business?: Business;
 }
 /** 播放页返回结果 */
 interface PlayViewReply {
