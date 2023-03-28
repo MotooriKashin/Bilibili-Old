@@ -4,7 +4,7 @@ import { IDownloadCell, IDownloadColor, IDownlodData } from "../ui/download";
 
 export interface IDownlodDataFilter extends IDownlodData {
     type: IDownloadCell;
-    flv?: number;
+    order?: number;
 }
 export class PlayinfoFilter {
     /** 数据 */
@@ -119,7 +119,6 @@ export class PlayinfoFilter {
      * @param durl durl信息
      */
     durl(durl: any[]) {
-        let index = 0; // flv分段标记
         durl.forEach(d => {
             const url: any[] = d.backupUrl || d.backup_url || [];
             url.unshift(d.url);
@@ -134,7 +133,7 @@ export class PlayinfoFilter {
             switch (d.url.includes("mp4?")) {
                 case true: link.type = "mp4";
                     break;
-                case false: link.type = "flv"; index++; link.flv = index;
+                case false: link.type = "flv"; link.order = d.order;
                     break;
             }
             this.fileName && (link.fileName = `${this.fileName}${qua}.${link.type}`);

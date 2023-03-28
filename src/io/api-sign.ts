@@ -65,7 +65,11 @@ enum APP_KEY {
     '5dce947fe22167f9' = '',
     /** 上古 */
     '8e9fc618fbd41e28' = '',
-    '21087a09e533a072' = 'e5b8ba95cab6104100be35739304c23a'
+    '21087a09e533a072' = 'e5b8ba95cab6104100be35739304c23a',
+    /** oauth2 login */
+    '783bbb7264451d82' = '2653583c8873dea268ab9386918b1d65',
+    /** ios */
+    '4ebafd7c4951b366' = '8cb98205e9b2ad3669aad0fce12a4c13'
 }
 export class ApiSign {
     protected get ts() {
@@ -84,7 +88,6 @@ export class ApiSign {
         const url = new URL(this.url);
         Object.assign(url.params, searchParams, { ts: this.ts });
         delete url.params.sign;
-        api && (this.appkey = "27eb53fc9058f8c3");
         const appSecret = this.appSecret;
         url.params.appkey = this.appkey;
         url.sort();

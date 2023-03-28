@@ -17,8 +17,27 @@ export const GM = new (class GM {
     /**
      * 跨域fetch。  
      * 【用户脚本】里使用`GM.xmlHttpRequest`模拟成了fetch，**禁止请求二进制数据**！请直接使用`GM.xmlHttpRequest`。
+     * @param sw 【扩展限定】申请后台脚本发起请求，当且仅当跨域出错时的无奈之举。**暂时不支持发送body为非简单类型的POST请求！**
      */
-    async fetch(input: RequestInfo | URL, init?: RequestInit) {
+    async fetch(input: RequestInfo | URL, init?: RequestInit, sw = false) {
+        if (sw) {
+            return new Promise((resolve: (value: Response) => void, reject) => {
+                if (input instanceof Request) {
+                    input = input.url;
+                } else if (input instanceof URL) {
+                    input = input.toJSON();
+                }
+                postMessage({ $type: 'fetch', input, init }, ({ data, status, statusText, url, redirected, type }: any) => {
+                    const response = new Response(new Uint8Array(data), { status, statusText });
+                    Object.defineProperties(response, {
+                        url: { value: url },
+                        redirected: { value: redirected },
+                        type: { value: type },
+                    })
+                    resolve(response);
+                }, reject);
+            });
+        }
         const [rule, id] = escapeForbidHeader(input, init?.headers);
         try {
             await this.updateSessionRules([rule]);
