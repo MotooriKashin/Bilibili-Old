@@ -8,7 +8,7 @@ const CORS_safelisted_request_header = [
     "referer"
 ];
 /**
- * 【内容脚本】拦截修改ajax禁止修改表头
+ * 拦截修改ajax禁止修改表头
  * @param input 目标url
  * @param headers 请求头
  * @returns 请求完成后用于取消对于该请求的拦截
@@ -78,6 +78,46 @@ export function escapeForbidHeader(input: RequestInfo | URL, headers?: Record<st
         header: 'Access-Control-Allow-Headers',
         operation: <any>'set',
         value: forbiddenHeader.join(',')
+    });
+    return <[chrome.declarativeNetRequest.Rule, number]>[rule, id];
+}
+/**
+ * 【后台脚本】拦截修改ajax禁止修改表头
+ * @param input 目标url
+ * @param headers 请求头
+ * @returns 请求完成后用于取消对于该请求的拦截
+ */
+export function swFetchHeader(input: RequestInfo | URL, headers?: Record<string, any>) {
+    if (input instanceof Request) {
+        input = input.url;
+    } else if (input instanceof URL) {
+        input = input.toJSON();
+    }
+    /** 随机互斥ID */
+    const id = Math.ceil(Math.random() * 1e8);
+    /** 拦截规则 */
+    const rule: chrome.declarativeNetRequest.Rule = {
+        id,
+        action: {
+            type: <any>'modifyHeaders',
+            requestHeaders: [
+                {
+                    header: 'origin', // origin会暴露拓展名，必须去掉
+                    operation: <any>'remove'
+                }
+            ]
+        },
+        condition: {
+            urlFilter: input, // 精确匹配网址
+        }
+    };
+    headers && Object.entries(headers).forEach(d => {
+        const header: chrome.declarativeNetRequest.ModifyHeaderInfo = {
+            header: d[0],
+            operation: d[1] ? <any>'set' : <any>'remove'
+        };
+        d[1] && (header.value = d[1]);
+        rule.action.requestHeaders?.push(header);
     });
     return <[chrome.declarativeNetRequest.Rule, number]>[rule, id];
 }

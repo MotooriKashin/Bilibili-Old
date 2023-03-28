@@ -34,12 +34,13 @@ export class AccessKey {
                 .getData()
                 .then(async d => {
                     msg.push('> 成功获取到授权链接~');
-                    return GM.fetch(d.confirm_uri, { credentials: 'include' })
+                    return GM.fetch(d.confirm_uri, { credentials: 'include' }, true)
                 })
                 .then(d => {
                     const date = new Date().getTime();
                     const dateStr = timeFormat(date, true);
                     const obj = urlObj(d.url);
+                    if (!obj.access_key) throw new Error('未能获取到鉴权参数~');
                     user.userStatus!.accessKey.token = <string>obj.access_key;
                     user.userStatus!.accessKey.date = date;
                     user.userStatus!.accessKey.dateStr = dateStr;

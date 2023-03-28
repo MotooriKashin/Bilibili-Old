@@ -1,9 +1,29 @@
 import { getCookie } from "./utils/cookie";
+import { swFetchHeader } from "./utils/escape-header";
 import { updateSessionRules } from "./utils/session-rule";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (sender.tab && typeof message === "object") {
         switch (message.$type) {
+            case 'fetch': {
+                const [rule, id] = swFetchHeader(message.data.input, message.data.init?.headers);
+                chrome.declarativeNetRequest.updateSessionRules({ addRules: [rule] })
+                    .then(() => fetch(message.data.input, message.data.init))
+                    .then(async d => {
+                        return {
+                            status: d.status,
+                            statusText: d.statusText,
+                            url: d.url,
+                            redirected: d.redirected,
+                            type: d.type,
+                            data: Array.from(new Uint8Array(await d.arrayBuffer())) // JSON-serializable
+                        };
+                    })
+                    .then(data => sendResponse({ data }))
+                    .catch(err => sendResponse({ err: err.toString() }))
+                    .finally(() => chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds: [id] }));
+                return true;
+            }
             case 'cookie': {
                 getCookie(message.data)
                     .then(data => sendResponse({ data }))

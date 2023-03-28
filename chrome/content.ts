@@ -8,6 +8,18 @@ const SessionRules = new Set<number>();
 window.addEventListener(_MUTEX_, ev => {
     if (ev instanceof CustomEvent) {
         switch (ev.detail.data.$type) {
+            case 'fetch': {
+                chrome.runtime.sendMessage({
+                    $type: 'fetch',
+                    data: ev.detail.data
+                }).then(data => {
+                    if (data.err) { throw data.err }
+                    dispatchCustomEvent(ev.detail.mutex, { data: data.data });
+                }).catch(e => {
+                    dispatchCustomEvent(ev.detail.mutex, { data: e, reject: true })
+                });
+                break;
+            }
             case 'getValue': {
                 chrome.storage.local.get().then(d => {
                     dispatchCustomEvent(ev.detail.mutex, { data: Reflect.has(d, ev.detail.data.key) ? d[ev.detail.data.key] : ev.detail.data.def });
