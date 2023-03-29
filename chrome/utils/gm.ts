@@ -27,8 +27,10 @@ export const GM = new (class GM {
                 } else if (input instanceof URL) {
                     input = input.toJSON();
                 }
-                postMessage({ $type: 'fetch', input, init }, ({ data, status, statusText, url, redirected, type }: any) => {
-                    const response = new Response(new Uint8Array(data), { status, statusText });
+                postMessage({ $type: 'fetch', input, init }, ({ data, status, statusText, url, redirected, type, header }: any) => {
+                    const headers: Record<string, string> = {};
+                    (<string[]>header)?.forEach(d => headers[d[0]] = d[1] || '');
+                    const response = new Response(new Uint8Array(data), { status, statusText, headers });
                     Object.defineProperties(response, {
                         url: { value: url },
                         redirected: { value: redirected },
@@ -188,7 +190,7 @@ interface GMxhrResponse {
     /** the request status text */
     statusText: string;
     /** the request response headers */
-    responseHeaders: any;
+    responseHeaders: string;
     /** the response data as object if details.responseType was set: ArrayBuffer | Blob | JSON | string */
     response: any;
     /** the response data as XML document */

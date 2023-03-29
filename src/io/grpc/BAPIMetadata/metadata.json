@@ -1,0 +1,97 @@
+{
+  "nested": {
+    "bilibili": {
+      "nested": {
+        "metadata": {
+          "nested": {
+            "Metadata": {
+              "fields": {
+                "accessKey": {
+                  "type": "string",
+                  "id": 1
+                },
+                "mobiApp": {
+                  "type": "string",
+                  "id": 2
+                },
+                "device": {
+                  "type": "string",
+                  "id": 3
+                },
+                "build": {
+                  "type": "int32",
+                  "id": 4
+                },
+                "channel": {
+                  "type": "string",
+                  "id": 5
+                },
+                "buvid": {
+                  "type": "string",
+                  "id": 6
+                },
+                "platform": {
+                  "type": "string",
+                  "id": 7
+                }
+              }
+            }
+          }
+        },
+        "rpc": {
+          "nested": {
+            "Status": {
+              "fields": {
+                "code": {
+                  "type": "int32",
+                  "id": 1
+                },
+                "message": {
+                  "type": "string",
+                  "id": 2
+                },
+                "details": {
+                  "rule": "repeated",
+                  "type": "google.protobuf.Any",
+                  "id": 3
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "google": {
+      "nested": {
+        "protobuf": {
+          "nested": {
+            "Any": {
+              "fields": {
+                "type_url": {
+                  "type": "string",
+                  "id": 1
+                },
+                "value": {
+                  "type": "google.protobuf.RequestInfo",
+                  "id": 2
+                }
+              }
+            },
+            "RequestInfo": {
+              "fields": {
+                "request_id": {
+                  "type": "int64",
+                  "id": 1
+                },
+                "serving_data": {
+                  "type": "string",
+                  "id": 2
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
