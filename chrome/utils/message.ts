@@ -8,11 +8,11 @@ export function postMessage(data: any, resolve?: Function, reject: Function = ()
     const mutex = Math.random().toString(36).substring(2);
     if (resolve && typeof resolve === "function") {
         window.addEventListener(mutex, (ev) => {
-            if (typeof (<CustomEvent>ev).detail === "object") {
-                (<CustomEvent>ev).detail.reject ? reject((<CustomEvent>ev).detail.data) : resolve((<CustomEvent>ev).detail.data);
+            if (ev instanceof CustomEvent) {
+                ev.detail.reject ? reject(ev.detail.data) : resolve(ev.detail.data);
                 ev.stopImmediatePropagation();
             }
         }, { once: true });
     }
-    window.dispatchEvent(new CustomEvent(_MUTEX_, { detail: JSON.parse(JSON.stringify({ mutex, data })) }));
+    window.dispatchEvent(new CustomEvent(_MUTEX_, { detail: { mutex, data } }));
 }

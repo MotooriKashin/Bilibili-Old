@@ -7,17 +7,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         switch (message.$type) {
             case 'fetch': {
                 const [rule, id] = swFetchHeader(message.data.input, message.data.init?.headers);
+                if (Array.isArray(message.data.init?.body)) {
+                    // 数组还原为二进制数据
+                    message.data.init.body = new Uint8Array(message.data.init.body);
+                }
                 chrome.declarativeNetRequest.updateSessionRules({ addRules: [rule] })
                     .then(() => fetch(message.data.input, message.data.init))
-                    .then(async ({ status, statusText, url, redirected, type, headers, arrayBuffer }) => {
+                    .then(async d => {
                         return {
-                            status,
-                            statusText,
-                            header: [...headers],
-                            url,
-                            redirected,
-                            type,
-                            data: Array.from(new Uint8Array(await arrayBuffer())) // JSON-serializable
+                            status: d.status,
+                            statusText: d.statusText,
+                            header: [...d.headers],
+                            url: d.url,
+                            redirected: d.redirected,
+                            type: d.type,
+                            data: Array.from(new Uint8Array(await d.arrayBuffer())) // JSON-serializable
                         };
                     })
                     .then(data => sendResponse({ data }))

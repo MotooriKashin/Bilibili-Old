@@ -21,11 +21,32 @@ export const GM = new (class GM {
      */
     async fetch(input: RequestInfo | URL, init?: RequestInit, sw = false) {
         if (sw) {
-            return new Promise((resolve: (value: Response) => void, reject) => {
+            return new Promise(async (resolve: (value: Response) => void, reject) => {
                 if (input instanceof Request) {
                     input = input.url;
                 } else if (input instanceof URL) {
                     input = input.toJSON();
+                }
+                input = new URL(input, location.href).toJSON();
+                if (init?.body) {
+                    const body = init.body;
+                    if (typeof body === 'string') {
+                        // 什么都不做
+                    } else if (body instanceof Uint8Array) {
+                        // 二进制数据无法传递到后台脚本，转化为数组，下同
+                        init.body = <any>Array.from(body);
+                    } else if (body instanceof ArrayBuffer) {
+                        init.body = <any>Array.from(new Uint8Array(body));
+                    } else if (body instanceof Blob) {
+                        init.body = <any>Array.from(new Uint8Array(await body.arrayBuffer()));
+                    } else if (body instanceof FormData) {
+                        // 不支持传递的数据类型，抛出错误，下同
+                        return reject('FormData is not JSON-serializable!')
+                    } else if (body instanceof ReadableStream) {
+                        return reject('ReadableStream is not JSON-serializable!');
+                    } else {
+                        return reject('Something is not JSON-serializable!');
+                    }
                 }
                 postMessage({ $type: 'fetch', input, init }, ({ data, status, statusText, url, redirected, type, header }: any) => {
                     const headers: Record<string, string> = {};
