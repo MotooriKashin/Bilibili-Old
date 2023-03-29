@@ -63,24 +63,35 @@ const MODULES = `
       init_tampermonkey();
       GM.fetch = function(input, init) {
         return new Promise((resolve, reject) => {
-          try {
-            input = input.url ? input.url : input;
-            input = new URL(input, location.origin).toJSON();
-          } catch (e) {
-            reject(e);
+          if (input instanceof Request) {
+            input = input.url;
+          } else if (input instanceof URL) {
+            input = input.toJSON();
           }
+          if ((init == null ? void 0 : init.body) instanceof ArrayBuffer) {
+            init.body = new Blob([init.body]);
+          }
+          input = new URL(input, location.href).toJSON();
           GM.xmlHttpRequest({
             url: input,
             method: init == null ? void 0 : init.method,
             data: init == null ? void 0 : init.body,
             anonymous: init ? init.credentials === "include" ? false : true : true,
             headers: init == null ? void 0 : init.headers,
-            onload: (xhr) => {
-              const response = new Response(xhr.response, { status: xhr.status, statusText: xhr.statusText });
-              Object.defineProperties(response, {
-                url: { value: xhr.finalUrl }
+            responseType: "arraybuffer",
+            onload: ({ response, status, statusText, finalUrl, responseHeaders }) => {
+              const headers = responseHeaders.replace(/\\r/g, "").split("\\n").reduce((s, d) => {
+                const arr2 = d.split(":");
+                s[arr2[0]] = arr2[1] || "";
+                return s;
+              }, {});
+              if (!response)
+                return reject(statusText);
+              const res = new Response(response, { status, statusText, headers });
+              Object.defineProperties(res, {
+                url: { value: finalUrl }
               });
-              resolve(response);
+              resolve(res);
             },
             onerror: reject
           });
@@ -429,11 +440,11 @@ const MODULES = `
         while (index < arguments.length)
           params[offset2++] = arguments[index++];
         return new Promise(function executor(resolve, reject) {
-          params[offset2] = function callback(err) {
+          params[offset2] = function callback(err2) {
             if (pending) {
               pending = false;
-              if (err)
-                reject(err);
+              if (err2)
+                reject(err2);
               else {
                 var params2 = new Array(arguments.length - 1), offset3 = 0;
                 while (offset3 < params2.length)
@@ -444,10 +455,10 @@ const MODULES = `
           };
           try {
             fn.apply(ctx || null, params);
-          } catch (err) {
+          } catch (err2) {
             if (pending) {
               pending = false;
-              reject(err);
+              reject(err2);
             }
           }
         });
@@ -1102,10 +1113,10 @@ const MODULES = `
         return value ? util.LongBits.from(value).toHash() : util.LongBits.zeroHash;
       };
       util.longFromHash = function longFromHash(hash, unsigned) {
-        var bits = util.LongBits.fromHash(hash);
+        var bits2 = util.LongBits.fromHash(hash);
         if (util.Long)
-          return util.Long.fromBits(bits.lo, bits.hi, unsigned);
-        return bits.toNumber(Boolean(unsigned));
+          return util.Long.fromBits(bits2.lo, bits2.hi, unsigned);
+        return bits2.toNumber(Boolean(unsigned));
       };
       function merge(dst, src, ifNotSet) {
         for (var keys = Object.keys(src), i = 0; i < keys.length; ++i)
@@ -1209,7 +1220,7 @@ const MODULES = `
     "node_modules/protobufjs/src/writer.js"(exports2, module2) {
       "use strict";
       init_tampermonkey();
-      module2.exports = Writer;
+      module2.exports = Writer2;
       var util = require_minimal();
       var BufferWriter;
       var LongBits = util.LongBits;
@@ -1229,7 +1240,7 @@ const MODULES = `
         this.len = writer.len;
         this.next = writer.states;
       }
-      function Writer() {
+      function Writer2() {
         this.len = 0;
         this.head = new Op(noop, 0, 0);
         this.tail = this.head;
@@ -1237,20 +1248,20 @@ const MODULES = `
       }
       var create = function create2() {
         return util.Buffer ? function create_buffer_setup() {
-          return (Writer.create = function create_buffer() {
+          return (Writer2.create = function create_buffer() {
             return new BufferWriter();
           })();
         } : function create_array() {
-          return new Writer();
+          return new Writer2();
         };
       };
-      Writer.create = create();
-      Writer.alloc = function alloc(size) {
+      Writer2.create = create();
+      Writer2.alloc = function alloc(size) {
         return new util.Array(size);
       };
       if (util.Array !== Array)
-        Writer.alloc = util.pool(Writer.alloc, util.Array.prototype.subarray);
-      Writer.prototype._push = function push(fn, len, val) {
+        Writer2.alloc = util.pool(Writer2.alloc, util.Array.prototype.subarray);
+      Writer2.prototype._push = function push(fn, len, val) {
         this.tail = this.tail.next = new Op(fn, len, val);
         this.len += len;
         return this;
@@ -1272,17 +1283,17 @@ const MODULES = `
       }
       VarintOp.prototype = Object.create(Op.prototype);
       VarintOp.prototype.fn = writeVarint32;
-      Writer.prototype.uint32 = function write_uint32(value) {
+      Writer2.prototype.uint32 = function write_uint32(value) {
         this.len += (this.tail = this.tail.next = new VarintOp(
           (value = value >>> 0) < 128 ? 1 : value < 16384 ? 2 : value < 2097152 ? 3 : value < 268435456 ? 4 : 5,
           value
         )).len;
         return this;
       };
-      Writer.prototype.int32 = function write_int32(value) {
+      Writer2.prototype.int32 = function write_int32(value) {
         return value < 0 ? this._push(writeVarint64, 10, LongBits.fromNumber(value)) : this.uint32(value);
       };
-      Writer.prototype.sint32 = function write_sint32(value) {
+      Writer2.prototype.sint32 = function write_sint32(value) {
         return this.uint32((value << 1 ^ value >> 31) >>> 0);
       };
       function writeVarint64(val, buf, pos) {
@@ -1297,16 +1308,16 @@ const MODULES = `
         }
         buf[pos++] = val.lo;
       }
-      Writer.prototype.uint64 = function write_uint64(value) {
-        var bits = LongBits.from(value);
-        return this._push(writeVarint64, bits.length(), bits);
+      Writer2.prototype.uint64 = function write_uint64(value) {
+        var bits2 = LongBits.from(value);
+        return this._push(writeVarint64, bits2.length(), bits2);
       };
-      Writer.prototype.int64 = Writer.prototype.uint64;
-      Writer.prototype.sint64 = function write_sint64(value) {
-        var bits = LongBits.from(value).zzEncode();
-        return this._push(writeVarint64, bits.length(), bits);
+      Writer2.prototype.int64 = Writer2.prototype.uint64;
+      Writer2.prototype.sint64 = function write_sint64(value) {
+        var bits2 = LongBits.from(value).zzEncode();
+        return this._push(writeVarint64, bits2.length(), bits2);
       };
-      Writer.prototype.bool = function write_bool(value) {
+      Writer2.prototype.bool = function write_bool(value) {
         return this._push(writeByte, 1, value ? 1 : 0);
       };
       function writeFixed32(val, buf, pos) {
@@ -1315,19 +1326,19 @@ const MODULES = `
         buf[pos + 2] = val >>> 16 & 255;
         buf[pos + 3] = val >>> 24;
       }
-      Writer.prototype.fixed32 = function write_fixed32(value) {
+      Writer2.prototype.fixed32 = function write_fixed32(value) {
         return this._push(writeFixed32, 4, value >>> 0);
       };
-      Writer.prototype.sfixed32 = Writer.prototype.fixed32;
-      Writer.prototype.fixed64 = function write_fixed64(value) {
-        var bits = LongBits.from(value);
-        return this._push(writeFixed32, 4, bits.lo)._push(writeFixed32, 4, bits.hi);
+      Writer2.prototype.sfixed32 = Writer2.prototype.fixed32;
+      Writer2.prototype.fixed64 = function write_fixed64(value) {
+        var bits2 = LongBits.from(value);
+        return this._push(writeFixed32, 4, bits2.lo)._push(writeFixed32, 4, bits2.hi);
       };
-      Writer.prototype.sfixed64 = Writer.prototype.fixed64;
-      Writer.prototype.float = function write_float(value) {
+      Writer2.prototype.sfixed64 = Writer2.prototype.fixed64;
+      Writer2.prototype.float = function write_float(value) {
         return this._push(util.float.writeFloatLE, 4, value);
       };
-      Writer.prototype.double = function write_double(value) {
+      Writer2.prototype.double = function write_double(value) {
         return this._push(util.float.writeDoubleLE, 8, value);
       };
       var writeBytes = util.Array.prototype.set ? function writeBytes_set(val, buf, pos) {
@@ -1336,28 +1347,28 @@ const MODULES = `
         for (var i = 0; i < val.length; ++i)
           buf[pos + i] = val[i];
       };
-      Writer.prototype.bytes = function write_bytes(value) {
+      Writer2.prototype.bytes = function write_bytes(value) {
         var len = value.length >>> 0;
         if (!len)
           return this._push(writeByte, 1, 0);
         if (util.isString(value)) {
-          var buf = Writer.alloc(len = base642.length(value));
+          var buf = Writer2.alloc(len = base642.length(value));
           base642.decode(value, buf, 0);
           value = buf;
         }
         return this.uint32(len)._push(writeBytes, len, value);
       };
-      Writer.prototype.string = function write_string(value) {
+      Writer2.prototype.string = function write_string(value) {
         var len = utf8.length(value);
         return len ? this.uint32(len)._push(utf8.write, len, value) : this._push(writeByte, 1, 0);
       };
-      Writer.prototype.fork = function fork() {
+      Writer2.prototype.fork = function fork() {
         this.states = new State(this);
         this.head = this.tail = new Op(noop, 0, 0);
         this.len = 0;
         return this;
       };
-      Writer.prototype.reset = function reset() {
+      Writer2.prototype.reset = function reset() {
         if (this.states) {
           this.head = this.states.head;
           this.tail = this.states.tail;
@@ -1369,7 +1380,7 @@ const MODULES = `
         }
         return this;
       };
-      Writer.prototype.ldelim = function ldelim() {
+      Writer2.prototype.ldelim = function ldelim() {
         var head = this.head, tail = this.tail, len = this.len;
         this.reset().uint32(len);
         if (len) {
@@ -1379,7 +1390,7 @@ const MODULES = `
         }
         return this;
       };
-      Writer.prototype.finish = function finish() {
+      Writer2.prototype.finish = function finish() {
         var head = this.head.next, buf = this.constructor.alloc(this.len), pos = 0;
         while (head) {
           head.fn(head.val, buf, pos);
@@ -1388,9 +1399,9 @@ const MODULES = `
         }
         return buf;
       };
-      Writer._configure = function(BufferWriter_) {
+      Writer2._configure = function(BufferWriter_) {
         BufferWriter = BufferWriter_;
-        Writer.create = create();
+        Writer2.create = create();
         BufferWriter._configure();
       };
     }
@@ -1402,11 +1413,11 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       module2.exports = BufferWriter;
-      var Writer = require_writer();
-      (BufferWriter.prototype = Object.create(Writer.prototype)).constructor = BufferWriter;
+      var Writer2 = require_writer();
+      (BufferWriter.prototype = Object.create(Writer2.prototype)).constructor = BufferWriter;
       var util = require_minimal();
       function BufferWriter() {
-        Writer.call(this);
+        Writer2.call(this);
       }
       BufferWriter._configure = function() {
         BufferWriter.alloc = util._Buffer_allocUnsafe;
@@ -1453,7 +1464,7 @@ const MODULES = `
     "node_modules/protobufjs/src/reader.js"(exports2, module2) {
       "use strict";
       init_tampermonkey();
-      module2.exports = Reader;
+      module2.exports = Reader2;
       var util = require_minimal();
       var BufferReader;
       var LongBits = util.LongBits;
@@ -1461,31 +1472,31 @@ const MODULES = `
       function indexOutOfRange(reader, writeLength) {
         return RangeError("index out of range: " + reader.pos + " + " + (writeLength || 1) + " > " + reader.len);
       }
-      function Reader(buffer) {
+      function Reader2(buffer) {
         this.buf = buffer;
         this.pos = 0;
         this.len = buffer.length;
       }
       var create_array = typeof Uint8Array !== "undefined" ? function create_typed_array(buffer) {
         if (buffer instanceof Uint8Array || Array.isArray(buffer))
-          return new Reader(buffer);
+          return new Reader2(buffer);
         throw Error("illegal buffer");
       } : function create_array2(buffer) {
         if (Array.isArray(buffer))
-          return new Reader(buffer);
+          return new Reader2(buffer);
         throw Error("illegal buffer");
       };
       var create = function create2() {
         return util.Buffer ? function create_buffer_setup(buffer) {
-          return (Reader.create = function create_buffer(buffer2) {
+          return (Reader2.create = function create_buffer(buffer2) {
             return util.Buffer.isBuffer(buffer2) ? new BufferReader(buffer2) : create_array(buffer2);
           })(buffer);
         } : create_array;
       };
-      Reader.create = create();
-      Reader.prototype._slice = util.Array.prototype.subarray || /* istanbul ignore next */
+      Reader2.create = create();
+      Reader2.prototype._slice = util.Array.prototype.subarray || /* istanbul ignore next */
       util.Array.prototype.slice;
-      Reader.prototype.uint32 = function read_uint32_setup() {
+      Reader2.prototype.uint32 = function read_uint32_setup() {
         var value = 4294967295;
         return function read_uint32() {
           value = (this.buf[this.pos] & 127) >>> 0;
@@ -1510,67 +1521,67 @@ const MODULES = `
           return value;
         };
       }();
-      Reader.prototype.int32 = function read_int32() {
+      Reader2.prototype.int32 = function read_int32() {
         return this.uint32() | 0;
       };
-      Reader.prototype.sint32 = function read_sint32() {
+      Reader2.prototype.sint32 = function read_sint32() {
         var value = this.uint32();
         return value >>> 1 ^ -(value & 1) | 0;
       };
       function readLongVarint() {
-        var bits = new LongBits(0, 0);
+        var bits2 = new LongBits(0, 0);
         var i = 0;
         if (this.len - this.pos > 4) {
           for (; i < 4; ++i) {
-            bits.lo = (bits.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
+            bits2.lo = (bits2.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
             if (this.buf[this.pos++] < 128)
-              return bits;
+              return bits2;
           }
-          bits.lo = (bits.lo | (this.buf[this.pos] & 127) << 28) >>> 0;
-          bits.hi = (bits.hi | (this.buf[this.pos] & 127) >> 4) >>> 0;
+          bits2.lo = (bits2.lo | (this.buf[this.pos] & 127) << 28) >>> 0;
+          bits2.hi = (bits2.hi | (this.buf[this.pos] & 127) >> 4) >>> 0;
           if (this.buf[this.pos++] < 128)
-            return bits;
+            return bits2;
           i = 0;
         } else {
           for (; i < 3; ++i) {
             if (this.pos >= this.len)
               throw indexOutOfRange(this);
-            bits.lo = (bits.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
+            bits2.lo = (bits2.lo | (this.buf[this.pos] & 127) << i * 7) >>> 0;
             if (this.buf[this.pos++] < 128)
-              return bits;
+              return bits2;
           }
-          bits.lo = (bits.lo | (this.buf[this.pos++] & 127) << i * 7) >>> 0;
-          return bits;
+          bits2.lo = (bits2.lo | (this.buf[this.pos++] & 127) << i * 7) >>> 0;
+          return bits2;
         }
         if (this.len - this.pos > 4) {
           for (; i < 5; ++i) {
-            bits.hi = (bits.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
+            bits2.hi = (bits2.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
             if (this.buf[this.pos++] < 128)
-              return bits;
+              return bits2;
           }
         } else {
           for (; i < 5; ++i) {
             if (this.pos >= this.len)
               throw indexOutOfRange(this);
-            bits.hi = (bits.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
+            bits2.hi = (bits2.hi | (this.buf[this.pos] & 127) << i * 7 + 3) >>> 0;
             if (this.buf[this.pos++] < 128)
-              return bits;
+              return bits2;
           }
         }
         throw Error("invalid varint encoding");
       }
-      Reader.prototype.bool = function read_bool() {
+      Reader2.prototype.bool = function read_bool() {
         return this.uint32() !== 0;
       };
       function readFixed32_end(buf, end) {
         return (buf[end - 4] | buf[end - 3] << 8 | buf[end - 2] << 16 | buf[end - 1] << 24) >>> 0;
       }
-      Reader.prototype.fixed32 = function read_fixed32() {
+      Reader2.prototype.fixed32 = function read_fixed32() {
         if (this.pos + 4 > this.len)
           throw indexOutOfRange(this, 4);
         return readFixed32_end(this.buf, this.pos += 4);
       };
-      Reader.prototype.sfixed32 = function read_sfixed32() {
+      Reader2.prototype.sfixed32 = function read_sfixed32() {
         if (this.pos + 4 > this.len)
           throw indexOutOfRange(this, 4);
         return readFixed32_end(this.buf, this.pos += 4) | 0;
@@ -1580,21 +1591,21 @@ const MODULES = `
           throw indexOutOfRange(this, 8);
         return new LongBits(readFixed32_end(this.buf, this.pos += 4), readFixed32_end(this.buf, this.pos += 4));
       }
-      Reader.prototype.float = function read_float() {
+      Reader2.prototype.float = function read_float() {
         if (this.pos + 4 > this.len)
           throw indexOutOfRange(this, 4);
         var value = util.float.readFloatLE(this.buf, this.pos);
         this.pos += 4;
         return value;
       };
-      Reader.prototype.double = function read_double() {
+      Reader2.prototype.double = function read_double() {
         if (this.pos + 8 > this.len)
           throw indexOutOfRange(this, 4);
         var value = util.float.readDoubleLE(this.buf, this.pos);
         this.pos += 8;
         return value;
       };
-      Reader.prototype.bytes = function read_bytes() {
+      Reader2.prototype.bytes = function read_bytes() {
         var length2 = this.uint32(), start = this.pos, end = this.pos + length2;
         if (end > this.len)
           throw indexOutOfRange(this, length2);
@@ -1603,11 +1614,11 @@ const MODULES = `
           return this.buf.slice(start, end);
         return start === end ? new this.buf.constructor(0) : this._slice.call(this.buf, start, end);
       };
-      Reader.prototype.string = function read_string() {
+      Reader2.prototype.string = function read_string() {
         var bytes = this.bytes();
         return utf8.read(bytes, 0, bytes.length);
       };
-      Reader.prototype.skip = function skip(length2) {
+      Reader2.prototype.skip = function skip(length2) {
         if (typeof length2 === "number") {
           if (this.pos + length2 > this.len)
             throw indexOutOfRange(this, length2);
@@ -1620,7 +1631,7 @@ const MODULES = `
         }
         return this;
       };
-      Reader.prototype.skipType = function(wireType) {
+      Reader2.prototype.skipType = function(wireType) {
         switch (wireType) {
           case 0:
             this.skip();
@@ -1644,15 +1655,15 @@ const MODULES = `
         }
         return this;
       };
-      Reader._configure = function(BufferReader_) {
+      Reader2._configure = function(BufferReader_) {
         BufferReader = BufferReader_;
-        Reader.create = create();
+        Reader2.create = create();
         BufferReader._configure();
         var fn = util.Long ? "toLong" : (
           /* istanbul ignore next */
           "toNumber"
         );
-        util.merge(Reader.prototype, {
+        util.merge(Reader2.prototype, {
           int64: function read_int64() {
             return readLongVarint.call(this)[fn](false);
           },
@@ -1679,11 +1690,11 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       module2.exports = BufferReader;
-      var Reader = require_reader();
-      (BufferReader.prototype = Object.create(Reader.prototype)).constructor = BufferReader;
+      var Reader2 = require_reader();
+      (BufferReader.prototype = Object.create(Reader2.prototype)).constructor = BufferReader;
       var util = require_minimal();
       function BufferReader(buffer) {
-        Reader.call(this, buffer);
+        Reader2.call(this, buffer);
       }
       BufferReader._configure = function() {
         if (util.Buffer)
@@ -1729,10 +1740,10 @@ const MODULES = `
           return self2.rpcImpl(
             method,
             requestCtor[self2.requestDelimited ? "encodeDelimited" : "encode"](request).finish(),
-            function rpcCallback(err, response) {
-              if (err) {
-                self2.emit("error", err, method);
-                return callback(err);
+            function rpcCallback(err2, response) {
+              if (err2) {
+                self2.emit("error", err2, method);
+                return callback(err2);
               }
               if (response === null) {
                 self2.end(
@@ -1744,19 +1755,19 @@ const MODULES = `
               if (!(response instanceof responseCtor)) {
                 try {
                   response = responseCtor[self2.responseDelimited ? "decodeDelimited" : "decode"](response);
-                } catch (err2) {
-                  self2.emit("error", err2, method);
-                  return callback(err2);
+                } catch (err3) {
+                  self2.emit("error", err3, method);
+                  return callback(err3);
                 }
               }
               self2.emit("data", response, method);
               return callback(null, response);
             }
           );
-        } catch (err) {
-          self2.emit("error", err, method);
+        } catch (err2) {
+          self2.emit("error", err2, method);
           setTimeout(function() {
-            callback(err);
+            callback(err2);
           }, 0);
           return void 0;
         }
@@ -1897,8 +1908,8 @@ const MODULES = `
         if (!callback)
           return asPromise(fetch2, this, filename, options);
         if (!options.xhr && fs && fs.readFile)
-          return fs.readFile(filename, function fetchReadFileCallback(err, contents) {
-            return err && typeof XMLHttpRequest !== "undefined" ? fetch2.xhr(filename, options, callback) : err ? callback(err) : callback(null, options.binary ? contents : contents.toString("utf8"));
+          return fs.readFile(filename, function fetchReadFileCallback(err2, contents) {
+            return err2 && typeof XMLHttpRequest !== "undefined" ? fetch2.xhr(filename, options, callback) : err2 ? callback(err2) : callback(null, options.binary ? contents : contents.toString("utf8"));
           });
         return fetch2.xhr(filename, options, callback);
       }
@@ -2172,18 +2183,18 @@ const MODULES = `
     "node_modules/protobufjs/src/field.js"(exports2, module2) {
       "use strict";
       init_tampermonkey();
-      module2.exports = Field;
-      var ReflectionObject = require_object();
-      ((Field.prototype = Object.create(ReflectionObject.prototype)).constructor = Field).className = "Field";
+      module2.exports = Field2;
+      var ReflectionObject2 = require_object();
+      ((Field2.prototype = Object.create(ReflectionObject2.prototype)).constructor = Field2).className = "Field";
       var Enum = require_enum();
       var types = require_types();
       var util = require_util();
-      var Type2;
+      var Type3;
       var ruleRe = /^required|optional|repeated\$/;
-      Field.fromJSON = function fromJSON(name, json) {
-        return new Field(name, json.id, json.type, json.rule, json.extend, json.options, json.comment);
+      Field2.fromJSON = function fromJSON(name, json) {
+        return new Field2(name, json.id, json.type, json.rule, json.extend, json.options, json.comment);
       };
-      function Field(name, id, type, rule, extend, options, comment) {
+      function Field2(name, id, type, rule, extend, options, comment) {
         if (util.isObject(rule)) {
           comment = extend;
           options = rule;
@@ -2193,7 +2204,7 @@ const MODULES = `
           options = extend;
           extend = void 0;
         }
-        ReflectionObject.call(this, name, options);
+        ReflectionObject2.call(this, name, options);
         if (!util.isInteger(id) || id < 0)
           throw TypeError("id must be a non-negative integer");
         if (!util.isString(type))
@@ -2228,19 +2239,19 @@ const MODULES = `
         this._packed = null;
         this.comment = comment;
       }
-      Object.defineProperty(Field.prototype, "packed", {
+      Object.defineProperty(Field2.prototype, "packed", {
         get: function() {
           if (this._packed === null)
             this._packed = this.getOption("packed") !== false;
           return this._packed;
         }
       });
-      Field.prototype.setOption = function setOption(name, value, ifNotSet) {
+      Field2.prototype.setOption = function setOption(name, value, ifNotSet) {
         if (name === "packed")
           this._packed = null;
-        return ReflectionObject.prototype.setOption.call(this, name, value, ifNotSet);
+        return ReflectionObject2.prototype.setOption.call(this, name, value, ifNotSet);
       };
-      Field.prototype.toJSON = function toJSON(toJSONOptions) {
+      Field2.prototype.toJSON = function toJSON(toJSONOptions) {
         var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
         return util.toObject([
           "rule",
@@ -2257,12 +2268,12 @@ const MODULES = `
           keepComments ? this.comment : void 0
         ]);
       };
-      Field.prototype.resolve = function resolve() {
+      Field2.prototype.resolve = function resolve() {
         if (this.resolved)
           return this;
         if ((this.typeDefault = types.defaults[this.type]) === void 0) {
           this.resolvedType = (this.declaringField ? this.declaringField.parent : this.parent).lookupTypeOrEnum(this.type);
-          if (this.resolvedType instanceof Type2)
+          if (this.resolvedType instanceof Type3)
             this.typeDefault = null;
           else
             this.typeDefault = this.resolvedType.values[Object.keys(this.resolvedType.values)[0]];
@@ -2298,21 +2309,21 @@ const MODULES = `
           this.defaultValue = util.emptyArray;
         else
           this.defaultValue = this.typeDefault;
-        if (this.parent instanceof Type2)
+        if (this.parent instanceof Type3)
           this.parent.ctor.prototype[this.name] = this.defaultValue;
-        return ReflectionObject.prototype.resolve.call(this);
+        return ReflectionObject2.prototype.resolve.call(this);
       };
-      Field.d = function decorateField(fieldId, fieldType, fieldRule, defaultValue) {
+      Field2.d = function decorateField(fieldId, fieldType, fieldRule, defaultValue) {
         if (typeof fieldType === "function")
           fieldType = util.decorateType(fieldType).name;
         else if (fieldType && typeof fieldType === "object")
           fieldType = util.decorateEnum(fieldType).name;
         return function fieldDecorator(prototype, fieldName) {
-          util.decorateType(prototype.constructor).add(new Field(fieldName, fieldId, fieldType, fieldRule, { "default": defaultValue }));
+          util.decorateType(prototype.constructor).add(new Field2(fieldName, fieldId, fieldType, fieldRule, { "default": defaultValue }));
         };
       };
-      Field._configure = function configure(Type_) {
-        Type2 = Type_;
+      Field2._configure = function configure(Type_) {
+        Type3 = Type_;
       };
     }
   });
@@ -2322,27 +2333,27 @@ const MODULES = `
     "node_modules/protobufjs/src/oneof.js"(exports2, module2) {
       "use strict";
       init_tampermonkey();
-      module2.exports = OneOf;
-      var ReflectionObject = require_object();
-      ((OneOf.prototype = Object.create(ReflectionObject.prototype)).constructor = OneOf).className = "OneOf";
-      var Field = require_field();
+      module2.exports = OneOf2;
+      var ReflectionObject2 = require_object();
+      ((OneOf2.prototype = Object.create(ReflectionObject2.prototype)).constructor = OneOf2).className = "OneOf";
+      var Field2 = require_field();
       var util = require_util();
-      function OneOf(name, fieldNames, options, comment) {
+      function OneOf2(name, fieldNames, options, comment) {
         if (!Array.isArray(fieldNames)) {
           options = fieldNames;
           fieldNames = void 0;
         }
-        ReflectionObject.call(this, name, options);
+        ReflectionObject2.call(this, name, options);
         if (!(fieldNames === void 0 || Array.isArray(fieldNames)))
           throw TypeError("fieldNames must be an Array");
         this.oneof = fieldNames || [];
         this.fieldsArray = [];
         this.comment = comment;
       }
-      OneOf.fromJSON = function fromJSON(name, json) {
-        return new OneOf(name, json.oneof, json.options, json.comment);
+      OneOf2.fromJSON = function fromJSON(name, json) {
+        return new OneOf2(name, json.oneof, json.options, json.comment);
       };
-      OneOf.prototype.toJSON = function toJSON(toJSONOptions) {
+      OneOf2.prototype.toJSON = function toJSON(toJSONOptions) {
         var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
         return util.toObject([
           "options",
@@ -2360,8 +2371,8 @@ const MODULES = `
               oneof.parent.add(oneof.fieldsArray[i]);
         }
       }
-      OneOf.prototype.add = function add(field) {
-        if (!(field instanceof Field))
+      OneOf2.prototype.add = function add(field) {
+        if (!(field instanceof Field2))
           throw TypeError("field must be a Field");
         if (field.parent && field.parent !== this.parent)
           field.parent.remove(field);
@@ -2371,8 +2382,8 @@ const MODULES = `
         addFieldsToParent(this);
         return this;
       };
-      OneOf.prototype.remove = function remove(field) {
-        if (!(field instanceof Field))
+      OneOf2.prototype.remove = function remove(field) {
+        if (!(field instanceof Field2))
           throw TypeError("field must be a Field");
         var index = this.fieldsArray.indexOf(field);
         if (index < 0)
@@ -2384,8 +2395,8 @@ const MODULES = `
         field.partOf = null;
         return this;
       };
-      OneOf.prototype.onAdd = function onAdd(parent) {
-        ReflectionObject.prototype.onAdd.call(this, parent);
+      OneOf2.prototype.onAdd = function onAdd(parent) {
+        ReflectionObject2.prototype.onAdd.call(this, parent);
         var self2 = this;
         for (var i = 0; i < this.oneof.length; ++i) {
           var field = parent.get(this.oneof[i]);
@@ -2396,18 +2407,18 @@ const MODULES = `
         }
         addFieldsToParent(this);
       };
-      OneOf.prototype.onRemove = function onRemove(parent) {
+      OneOf2.prototype.onRemove = function onRemove(parent) {
         for (var i = 0, field; i < this.fieldsArray.length; ++i)
           if ((field = this.fieldsArray[i]).parent)
             field.parent.remove(field);
-        ReflectionObject.prototype.onRemove.call(this, parent);
+        ReflectionObject2.prototype.onRemove.call(this, parent);
       };
-      OneOf.d = function decorateOneOf() {
+      OneOf2.d = function decorateOneOf() {
         var fieldNames = new Array(arguments.length), index = 0;
         while (index < arguments.length)
           fieldNames[index] = arguments[index++];
         return function oneOfDecorator(prototype, oneofName) {
-          util.decorateType(prototype.constructor).add(new OneOf(oneofName, fieldNames));
+          util.decorateType(prototype.constructor).add(new OneOf2(oneofName, fieldNames));
           Object.defineProperty(prototype, oneofName, {
             get: util.oneOfGetter(fieldNames),
             set: util.oneOfSetter(fieldNames)
@@ -2423,12 +2434,12 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       module2.exports = Namespace;
-      var ReflectionObject = require_object();
-      ((Namespace.prototype = Object.create(ReflectionObject.prototype)).constructor = Namespace).className = "Namespace";
-      var Field = require_field();
+      var ReflectionObject2 = require_object();
+      ((Namespace.prototype = Object.create(ReflectionObject2.prototype)).constructor = Namespace).className = "Namespace";
+      var Field2 = require_field();
       var util = require_util();
-      var OneOf = require_oneof();
-      var Type2;
+      var OneOf2 = require_oneof();
+      var Type3;
       var Service;
       var Enum;
       Namespace.fromJSON = function fromJSON(name, json) {
@@ -2460,7 +2471,7 @@ const MODULES = `
         return false;
       };
       function Namespace(name, options) {
-        ReflectionObject.call(this, name, options);
+        ReflectionObject2.call(this, name, options);
         this.nested = void 0;
         this._nestedArray = null;
       }
@@ -2488,7 +2499,7 @@ const MODULES = `
             nested = nestedJson[names[i]];
             ns.add(
               // most to least likely
-              (nested.fields !== void 0 ? Type2.fromJSON : nested.values !== void 0 ? Enum.fromJSON : nested.methods !== void 0 ? Service.fromJSON : nested.id !== void 0 ? Field.fromJSON : Namespace.fromJSON)(names[i], nested)
+              (nested.fields !== void 0 ? Type3.fromJSON : nested.values !== void 0 ? Enum.fromJSON : nested.methods !== void 0 ? Service.fromJSON : nested.id !== void 0 ? Field2.fromJSON : Namespace.fromJSON)(names[i], nested)
             );
           }
         }
@@ -2503,14 +2514,14 @@ const MODULES = `
         throw Error("no such enum: " + name);
       };
       Namespace.prototype.add = function add(object) {
-        if (!(object instanceof Field && object.extend !== void 0 || object instanceof Type2 || object instanceof OneOf || object instanceof Enum || object instanceof Service || object instanceof Namespace))
+        if (!(object instanceof Field2 && object.extend !== void 0 || object instanceof Type3 || object instanceof OneOf2 || object instanceof Enum || object instanceof Service || object instanceof Namespace))
           throw TypeError("object must be a valid nested object");
         if (!this.nested)
           this.nested = {};
         else {
           var prev = this.get(object.name);
           if (prev) {
-            if (prev instanceof Namespace && object instanceof Namespace && !(prev instanceof Type2 || prev instanceof Service)) {
+            if (prev instanceof Namespace && object instanceof Namespace && !(prev instanceof Type3 || prev instanceof Service)) {
               var nested = prev.nestedArray;
               for (var i = 0; i < nested.length; ++i)
                 object.add(nested[i]);
@@ -2527,7 +2538,7 @@ const MODULES = `
         return clearCache(this);
       };
       Namespace.prototype.remove = function remove(object) {
-        if (!(object instanceof ReflectionObject))
+        if (!(object instanceof ReflectionObject2))
           throw TypeError("object must be a ReflectionObject");
         if (object.parent !== this)
           throw Error(object + " is not a member of " + this);
@@ -2597,7 +2608,7 @@ const MODULES = `
         return this.parent.lookup(path, filterTypes);
       };
       Namespace.prototype.lookupType = function lookupType(path) {
-        var found = this.lookup(path, [Type2]);
+        var found = this.lookup(path, [Type3]);
         if (!found)
           throw Error("no such type: " + path);
         return found;
@@ -2609,7 +2620,7 @@ const MODULES = `
         return found;
       };
       Namespace.prototype.lookupTypeOrEnum = function lookupTypeOrEnum(path) {
-        var found = this.lookup(path, [Type2, Enum]);
+        var found = this.lookup(path, [Type3, Enum]);
         if (!found)
           throw Error("no such Type or Enum '" + path + "' in " + this);
         return found;
@@ -2621,7 +2632,7 @@ const MODULES = `
         return found;
       };
       Namespace._configure = function(Type_, Service_, Enum_) {
-        Type2 = Type_;
+        Type3 = Type_;
         Service = Service_;
         Enum = Enum_;
       };
@@ -2634,12 +2645,12 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       module2.exports = MapField;
-      var Field = require_field();
-      ((MapField.prototype = Object.create(Field.prototype)).constructor = MapField).className = "MapField";
+      var Field2 = require_field();
+      ((MapField.prototype = Object.create(Field2.prototype)).constructor = MapField).className = "MapField";
       var types = require_types();
       var util = require_util();
       function MapField(name, id, keyType, type, options, comment) {
-        Field.call(this, name, id, type, void 0, void 0, options, comment);
+        Field2.call(this, name, id, type, void 0, void 0, options, comment);
         if (!util.isString(keyType))
           throw TypeError("keyType must be a string");
         this.keyType = keyType;
@@ -2671,7 +2682,7 @@ const MODULES = `
           return this;
         if (types.mapKey[this.keyType] === void 0)
           throw Error("invalid key type: " + this.keyType);
-        return Field.prototype.resolve.call(this);
+        return Field2.prototype.resolve.call(this);
       };
       MapField.d = function decorateMapField(fieldId, fieldKeyType, fieldValueType) {
         if (typeof fieldValueType === "function")
@@ -2691,8 +2702,8 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       module2.exports = Method;
-      var ReflectionObject = require_object();
-      ((Method.prototype = Object.create(ReflectionObject.prototype)).constructor = Method).className = "Method";
+      var ReflectionObject2 = require_object();
+      ((Method.prototype = Object.create(ReflectionObject2.prototype)).constructor = Method).className = "Method";
       var util = require_util();
       function Method(name, type, requestType, responseType, requestStream, responseStream, options, comment, parsedOptions) {
         if (util.isObject(requestStream)) {
@@ -2708,7 +2719,7 @@ const MODULES = `
           throw TypeError("requestType must be a string");
         if (!util.isString(responseType))
           throw TypeError("responseType must be a string");
-        ReflectionObject.call(this, name, options);
+        ReflectionObject2.call(this, name, options);
         this.type = type || "rpc";
         this.requestType = requestType;
         this.requestStream = requestStream ? true : void 0;
@@ -2749,7 +2760,7 @@ const MODULES = `
           return this;
         this.resolvedRequestType = this.parent.lookupType(this.requestType);
         this.resolvedResponseType = this.parent.lookupType(this.responseType);
-        return ReflectionObject.prototype.resolve.call(this);
+        return ReflectionObject2.prototype.resolve.call(this);
       };
     }
   });
@@ -2854,38 +2865,38 @@ const MODULES = `
     "node_modules/protobufjs/src/message.js"(exports2, module2) {
       "use strict";
       init_tampermonkey();
-      module2.exports = Message;
+      module2.exports = Message2;
       var util = require_minimal();
-      function Message(properties) {
+      function Message2(properties) {
         if (properties)
           for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
             this[keys[i]] = properties[keys[i]];
       }
-      Message.create = function create(properties) {
+      Message2.create = function create(properties) {
         return this.\$type.create(properties);
       };
-      Message.encode = function encode(message, writer) {
+      Message2.encode = function encode(message, writer) {
         return this.\$type.encode(message, writer);
       };
-      Message.encodeDelimited = function encodeDelimited(message, writer) {
+      Message2.encodeDelimited = function encodeDelimited(message, writer) {
         return this.\$type.encodeDelimited(message, writer);
       };
-      Message.decode = function decode(reader) {
+      Message2.decode = function decode(reader) {
         return this.\$type.decode(reader);
       };
-      Message.decodeDelimited = function decodeDelimited(reader) {
+      Message2.decodeDelimited = function decodeDelimited(reader) {
         return this.\$type.decodeDelimited(reader);
       };
-      Message.verify = function verify(message) {
+      Message2.verify = function verify(message) {
         return this.\$type.verify(message);
       };
-      Message.fromObject = function fromObject(object) {
+      Message2.fromObject = function fromObject(object) {
         return this.\$type.fromObject(object);
       };
-      Message.toObject = function toObject2(message, options) {
+      Message2.toObject = function toObject2(message, options) {
         return this.\$type.toObject(message, options);
       };
-      Message.prototype.toJSON = function toJSON() {
+      Message2.prototype.toJSON = function toJSON() {
         return this.\$type.toObject(this, util.toJSONOptions);
       };
     }
@@ -3293,7 +3304,7 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       var wrappers = exports2;
-      var Message = require_message();
+      var Message2 = require_message();
       wrappers[".google.protobuf.Any"] = {
         fromObject: function(object) {
           if (object && object["@type"]) {
@@ -3323,7 +3334,7 @@ const MODULES = `
             if (type)
               message = type.decode(message.value);
           }
-          if (!(message instanceof this.ctor) && message instanceof Message) {
+          if (!(message instanceof this.ctor) && message instanceof Message2) {
             var object = message.\$type.toObject(message, options);
             var messageName = message.\$type.fullName[0] === "." ? message.\$type.fullName.slice(1) : message.\$type.fullName;
             if (prefix === "") {
@@ -3344,24 +3355,24 @@ const MODULES = `
     "node_modules/protobufjs/src/type.js"(exports2, module2) {
       "use strict";
       init_tampermonkey();
-      module2.exports = Type2;
+      module2.exports = Type3;
       var Namespace = require_namespace();
-      ((Type2.prototype = Object.create(Namespace.prototype)).constructor = Type2).className = "Type";
+      ((Type3.prototype = Object.create(Namespace.prototype)).constructor = Type3).className = "Type";
       var Enum = require_enum();
-      var OneOf = require_oneof();
-      var Field = require_field();
+      var OneOf2 = require_oneof();
+      var Field2 = require_field();
       var MapField = require_mapfield();
       var Service = require_service2();
-      var Message = require_message();
-      var Reader = require_reader();
-      var Writer = require_writer();
+      var Message2 = require_message();
+      var Reader2 = require_reader();
+      var Writer2 = require_writer();
       var util = require_util();
       var encoder = require_encoder();
       var decoder = require_decoder();
       var verifier = require_verifier();
       var converter = require_converter();
       var wrappers = require_wrappers();
-      function Type2(name, options) {
+      function Type3(name, options) {
         Namespace.call(this, name, options);
         this.fields = {};
         this.oneofs = void 0;
@@ -3373,7 +3384,7 @@ const MODULES = `
         this._oneofsArray = null;
         this._ctor = null;
       }
-      Object.defineProperties(Type2.prototype, {
+      Object.defineProperties(Type3.prototype, {
         /**
          * Message fields by id.
          * @name Type#fieldsById
@@ -3424,16 +3435,16 @@ const MODULES = `
          */
         ctor: {
           get: function() {
-            return this._ctor || (this.ctor = Type2.generateConstructor(this)());
+            return this._ctor || (this.ctor = Type3.generateConstructor(this)());
           },
           set: function(ctor) {
             var prototype = ctor.prototype;
-            if (!(prototype instanceof Message)) {
-              (ctor.prototype = new Message()).constructor = ctor;
+            if (!(prototype instanceof Message2)) {
+              (ctor.prototype = new Message2()).constructor = ctor;
               util.merge(ctor.prototype, prototype);
             }
             ctor.\$type = ctor.prototype.\$type = this;
-            util.merge(ctor, Message, true);
+            util.merge(ctor, Message2, true);
             this._ctor = ctor;
             var i = 0;
             for (; i < /* initializes */
@@ -3451,7 +3462,7 @@ const MODULES = `
           }
         }
       });
-      Type2.generateConstructor = function generateConstructor(mtype) {
+      Type3.generateConstructor = function generateConstructor(mtype) {
         var gen = util.codegen(["p"], mtype.name);
         for (var i = 0, field; i < mtype.fieldsArray.length; ++i)
           if ((field = mtype._fieldsArray[i]).map)
@@ -3467,24 +3478,24 @@ const MODULES = `
         delete type.verify;
         return type;
       }
-      Type2.fromJSON = function fromJSON(name, json) {
-        var type = new Type2(name, json.options);
+      Type3.fromJSON = function fromJSON(name, json) {
+        var type = new Type3(name, json.options);
         type.extensions = json.extensions;
         type.reserved = json.reserved;
         var names = Object.keys(json.fields), i = 0;
         for (; i < names.length; ++i)
           type.add(
-            (typeof json.fields[names[i]].keyType !== "undefined" ? MapField.fromJSON : Field.fromJSON)(names[i], json.fields[names[i]])
+            (typeof json.fields[names[i]].keyType !== "undefined" ? MapField.fromJSON : Field2.fromJSON)(names[i], json.fields[names[i]])
           );
         if (json.oneofs)
           for (names = Object.keys(json.oneofs), i = 0; i < names.length; ++i)
-            type.add(OneOf.fromJSON(names[i], json.oneofs[names[i]]));
+            type.add(OneOf2.fromJSON(names[i], json.oneofs[names[i]]));
         if (json.nested)
           for (names = Object.keys(json.nested), i = 0; i < names.length; ++i) {
             var nested = json.nested[names[i]];
             type.add(
               // most to least likely
-              (nested.id !== void 0 ? Field.fromJSON : nested.fields !== void 0 ? Type2.fromJSON : nested.values !== void 0 ? Enum.fromJSON : nested.methods !== void 0 ? Service.fromJSON : Namespace.fromJSON)(names[i], nested)
+              (nested.id !== void 0 ? Field2.fromJSON : nested.fields !== void 0 ? Type3.fromJSON : nested.values !== void 0 ? Enum.fromJSON : nested.methods !== void 0 ? Service.fromJSON : Namespace.fromJSON)(names[i], nested)
             );
           }
         if (json.extensions && json.extensions.length)
@@ -3497,7 +3508,7 @@ const MODULES = `
           type.comment = json.comment;
         return type;
       };
-      Type2.prototype.toJSON = function toJSON(toJSONOptions) {
+      Type3.prototype.toJSON = function toJSON(toJSONOptions) {
         var inherited = Namespace.prototype.toJSON.call(this, toJSONOptions);
         var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
         return util.toObject([
@@ -3521,7 +3532,7 @@ const MODULES = `
           keepComments ? this.comment : void 0
         ]);
       };
-      Type2.prototype.resolveAll = function resolveAll() {
+      Type3.prototype.resolveAll = function resolveAll() {
         var fields = this.fieldsArray, i = 0;
         while (i < fields.length)
           fields[i++].resolve();
@@ -3531,13 +3542,13 @@ const MODULES = `
           oneofs[i++].resolve();
         return Namespace.prototype.resolveAll.call(this);
       };
-      Type2.prototype.get = function get(name) {
+      Type3.prototype.get = function get(name) {
         return this.fields[name] || this.oneofs && this.oneofs[name] || this.nested && this.nested[name] || null;
       };
-      Type2.prototype.add = function add(object) {
+      Type3.prototype.add = function add(object) {
         if (this.get(object.name))
           throw Error("duplicate name '" + object.name + "' in " + this);
-        if (object instanceof Field && object.extend === void 0) {
+        if (object instanceof Field2 && object.extend === void 0) {
           if (this._fieldsById ? (
             /* istanbul ignore next */
             this._fieldsById[object.id]
@@ -3554,7 +3565,7 @@ const MODULES = `
           object.onAdd(this);
           return clearCache(this);
         }
-        if (object instanceof OneOf) {
+        if (object instanceof OneOf2) {
           if (!this.oneofs)
             this.oneofs = {};
           this.oneofs[object.name] = object;
@@ -3563,8 +3574,8 @@ const MODULES = `
         }
         return Namespace.prototype.add.call(this, object);
       };
-      Type2.prototype.remove = function remove(object) {
-        if (object instanceof Field && object.extend === void 0) {
+      Type3.prototype.remove = function remove(object) {
+        if (object instanceof Field2 && object.extend === void 0) {
           if (!this.fields || this.fields[object.name] !== object)
             throw Error(object + " is not a member of " + this);
           delete this.fields[object.name];
@@ -3572,7 +3583,7 @@ const MODULES = `
           object.onRemove(this);
           return clearCache(this);
         }
-        if (object instanceof OneOf) {
+        if (object instanceof OneOf2) {
           if (!this.oneofs || this.oneofs[object.name] !== object)
             throw Error(object + " is not a member of " + this);
           delete this.oneofs[object.name];
@@ -3582,27 +3593,27 @@ const MODULES = `
         }
         return Namespace.prototype.remove.call(this, object);
       };
-      Type2.prototype.isReservedId = function isReservedId(id) {
+      Type3.prototype.isReservedId = function isReservedId(id) {
         return Namespace.isReservedId(this.reserved, id);
       };
-      Type2.prototype.isReservedName = function isReservedName(name) {
+      Type3.prototype.isReservedName = function isReservedName(name) {
         return Namespace.isReservedName(this.reserved, name);
       };
-      Type2.prototype.create = function create(properties) {
+      Type3.prototype.create = function create(properties) {
         return new this.ctor(properties);
       };
-      Type2.prototype.setup = function setup() {
+      Type3.prototype.setup = function setup() {
         var fullName = this.fullName, types = [];
         for (var i = 0; i < /* initializes */
         this.fieldsArray.length; ++i)
           types.push(this._fieldsArray[i].resolve().resolvedType);
         this.encode = encoder(this)({
-          Writer,
+          Writer: Writer2,
           types,
           util
         });
         this.decode = decoder(this)({
-          Reader,
+          Reader: Reader2,
           types,
           util
         });
@@ -3628,30 +3639,30 @@ const MODULES = `
         }
         return this;
       };
-      Type2.prototype.encode = function encode_setup(message, writer) {
+      Type3.prototype.encode = function encode_setup(message, writer) {
         return this.setup().encode(message, writer);
       };
-      Type2.prototype.encodeDelimited = function encodeDelimited(message, writer) {
+      Type3.prototype.encodeDelimited = function encodeDelimited(message, writer) {
         return this.encode(message, writer && writer.len ? writer.fork() : writer).ldelim();
       };
-      Type2.prototype.decode = function decode_setup(reader, length2) {
+      Type3.prototype.decode = function decode_setup(reader, length2) {
         return this.setup().decode(reader, length2);
       };
-      Type2.prototype.decodeDelimited = function decodeDelimited(reader) {
-        if (!(reader instanceof Reader))
-          reader = Reader.create(reader);
+      Type3.prototype.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof Reader2))
+          reader = Reader2.create(reader);
         return this.decode(reader, reader.uint32());
       };
-      Type2.prototype.verify = function verify_setup(message) {
+      Type3.prototype.verify = function verify_setup(message) {
         return this.setup().verify(message);
       };
-      Type2.prototype.fromObject = function fromObject(object) {
+      Type3.prototype.fromObject = function fromObject(object) {
         return this.setup().fromObject(object);
       };
-      Type2.prototype.toObject = function toObject2(message, options) {
+      Type3.prototype.toObject = function toObject2(message, options) {
         return this.setup().toObject(message, options);
       };
-      Type2.d = function decorateType(typeName) {
+      Type3.d = function decorateType(typeName) {
         return function typeDecorator(target) {
           util.decorateType(target, typeName);
         };
@@ -3664,33 +3675,33 @@ const MODULES = `
     "node_modules/protobufjs/src/root.js"(exports2, module2) {
       "use strict";
       init_tampermonkey();
-      module2.exports = Root2;
+      module2.exports = Root4;
       var Namespace = require_namespace();
-      ((Root2.prototype = Object.create(Namespace.prototype)).constructor = Root2).className = "Root";
-      var Field = require_field();
+      ((Root4.prototype = Object.create(Namespace.prototype)).constructor = Root4).className = "Root";
+      var Field2 = require_field();
       var Enum = require_enum();
-      var OneOf = require_oneof();
+      var OneOf2 = require_oneof();
       var util = require_util();
-      var Type2;
+      var Type3;
       var parse;
       var common;
-      function Root2(options) {
+      function Root4(options) {
         Namespace.call(this, "", options);
         this.deferred = [];
         this.files = [];
       }
-      Root2.fromJSON = function fromJSON(json, root) {
+      Root4.fromJSON = function fromJSON(json, root) {
         if (!root)
-          root = new Root2();
+          root = new Root4();
         if (json.options)
           root.setOptions(json.options);
         return root.addJSON(json.nested);
       };
-      Root2.prototype.resolvePath = util.path.resolve;
-      Root2.prototype.fetch = util.fetch;
+      Root4.prototype.resolvePath = util.path.resolve;
+      Root4.prototype.fetch = util.fetch;
       function SYNC() {
       }
-      Root2.prototype.load = function load2(filename, options, callback) {
+      Root4.prototype.load = function load2(filename, options, callback) {
         if (typeof options === "function") {
           callback = options;
           options = void 0;
@@ -3699,14 +3710,14 @@ const MODULES = `
         if (!callback)
           return util.asPromise(load2, self2, filename, options);
         var sync = callback === SYNC;
-        function finish(err, root) {
+        function finish(err2, root) {
           if (!callback)
             return;
           var cb = callback;
           callback = null;
           if (sync)
-            throw err;
-          cb(err, root);
+            throw err2;
+          cb(err2, root);
         }
         function getBundledFileName(filename2) {
           var idx = filename2.lastIndexOf("google/protobuf/");
@@ -3737,8 +3748,8 @@ const MODULES = `
                     fetch2(resolved2, true);
               }
             }
-          } catch (err) {
-            finish(err);
+          } catch (err2) {
+            finish(err2);
           }
           if (!sync && !queued)
             finish(null, self2);
@@ -3764,21 +3775,21 @@ const MODULES = `
             var source;
             try {
               source = util.fs.readFileSync(filename2).toString("utf8");
-            } catch (err) {
+            } catch (err2) {
               if (!weak)
-                finish(err);
+                finish(err2);
               return;
             }
             process(filename2, source);
           } else {
             ++queued;
-            self2.fetch(filename2, function(err, source2) {
+            self2.fetch(filename2, function(err2, source2) {
               --queued;
               if (!callback)
                 return;
-              if (err) {
+              if (err2) {
                 if (!weak)
-                  finish(err);
+                  finish(err2);
                 else if (!queued)
                   finish(null, self2);
                 return;
@@ -3799,12 +3810,12 @@ const MODULES = `
           finish(null, self2);
         return void 0;
       };
-      Root2.prototype.loadSync = function loadSync(filename, options) {
+      Root4.prototype.loadSync = function loadSync(filename, options) {
         if (!util.isNode)
           throw Error("not supported");
         return this.load(filename, options, SYNC);
       };
-      Root2.prototype.resolveAll = function resolveAll() {
+      Root4.prototype.resolveAll = function resolveAll() {
         if (this.deferred.length)
           throw Error("unresolvable extensions: " + this.deferred.map(function(field) {
             return "'extend " + field.extend + "' in " + field.parent.fullName;
@@ -3815,7 +3826,7 @@ const MODULES = `
       function tryHandleExtension(root, field) {
         var extendedType = field.parent.lookup(field.extend);
         if (extendedType) {
-          var sisterField = new Field(field.fullName, field.id, field.type, field.rule, void 0, field.options);
+          var sisterField = new Field2(field.fullName, field.id, field.type, field.rule, void 0, field.options);
           if (extendedType.get(sisterField.name)) {
             return true;
           }
@@ -3826,8 +3837,8 @@ const MODULES = `
         }
         return false;
       }
-      Root2.prototype._handleAdd = function _handleAdd(object) {
-        if (object instanceof Field) {
+      Root4.prototype._handleAdd = function _handleAdd(object) {
+        if (object instanceof Field2) {
           if (
             /* an extension field (implies not part of a oneof) */
             object.extend !== void 0 && /* not already handled */
@@ -3839,8 +3850,8 @@ const MODULES = `
         } else if (object instanceof Enum) {
           if (exposeRe.test(object.name))
             object.parent[object.name] = object.values;
-        } else if (!(object instanceof OneOf)) {
-          if (object instanceof Type2)
+        } else if (!(object instanceof OneOf2)) {
+          if (object instanceof Type3)
             for (var i = 0; i < this.deferred.length; )
               if (tryHandleExtension(this, this.deferred[i]))
                 this.deferred.splice(i, 1);
@@ -3853,8 +3864,8 @@ const MODULES = `
             object.parent[object.name] = object;
         }
       };
-      Root2.prototype._handleRemove = function _handleRemove(object) {
-        if (object instanceof Field) {
+      Root4.prototype._handleRemove = function _handleRemove(object) {
+        if (object instanceof Field2) {
           if (
             /* an extension field */
             object.extend !== void 0
@@ -3882,8 +3893,8 @@ const MODULES = `
             delete object.parent[object.name];
         }
       };
-      Root2._configure = function(Type_, parse_, common_) {
-        Type2 = Type_;
+      Root4._configure = function(Type_, parse_, common_) {
+        Type3 = Type_;
         parse = parse_;
         common = common_;
       };
@@ -3897,7 +3908,7 @@ const MODULES = `
       init_tampermonkey();
       var util = module2.exports = require_minimal();
       var roots = require_roots();
-      var Type2;
+      var Type3;
       var Enum;
       util.codegen = require_codegen();
       util.fetch = require_fetch();
@@ -3952,9 +3963,9 @@ const MODULES = `
           }
           return ctor.\$type;
         }
-        if (!Type2)
-          Type2 = require_type();
-        var type = new Type2(typeName || ctor.name);
+        if (!Type3)
+          Type3 = require_type();
+        var type = new Type3(typeName || ctor.name);
         util.decorateRoot.add(type);
         type.ctor = ctor;
         Object.defineProperty(ctor, "\$type", { value: type, enumerable: false });
@@ -4008,11 +4019,11 @@ const MODULES = `
     "node_modules/protobufjs/src/object.js"(exports2, module2) {
       "use strict";
       init_tampermonkey();
-      module2.exports = ReflectionObject;
-      ReflectionObject.className = "ReflectionObject";
+      module2.exports = ReflectionObject2;
+      ReflectionObject2.className = "ReflectionObject";
       var util = require_util();
-      var Root2;
-      function ReflectionObject(name, options) {
+      var Root4;
+      function ReflectionObject2(name, options) {
         if (!util.isString(name))
           throw TypeError("name must be a string");
         if (options && !util.isObject(options))
@@ -4025,7 +4036,7 @@ const MODULES = `
         this.comment = null;
         this.filename = null;
       }
-      Object.defineProperties(ReflectionObject.prototype, {
+      Object.defineProperties(ReflectionObject2.prototype, {
         /**
          * Reference to the root namespace.
          * @name ReflectionObject#root
@@ -4057,44 +4068,44 @@ const MODULES = `
           }
         }
       });
-      ReflectionObject.prototype.toJSON = /* istanbul ignore next */
+      ReflectionObject2.prototype.toJSON = /* istanbul ignore next */
       function toJSON() {
         throw Error();
       };
-      ReflectionObject.prototype.onAdd = function onAdd(parent) {
+      ReflectionObject2.prototype.onAdd = function onAdd(parent) {
         if (this.parent && this.parent !== parent)
           this.parent.remove(this);
         this.parent = parent;
         this.resolved = false;
         var root = parent.root;
-        if (root instanceof Root2)
+        if (root instanceof Root4)
           root._handleAdd(this);
       };
-      ReflectionObject.prototype.onRemove = function onRemove(parent) {
+      ReflectionObject2.prototype.onRemove = function onRemove(parent) {
         var root = parent.root;
-        if (root instanceof Root2)
+        if (root instanceof Root4)
           root._handleRemove(this);
         this.parent = null;
         this.resolved = false;
       };
-      ReflectionObject.prototype.resolve = function resolve() {
+      ReflectionObject2.prototype.resolve = function resolve() {
         if (this.resolved)
           return this;
-        if (this.root instanceof Root2)
+        if (this.root instanceof Root4)
           this.resolved = true;
         return this;
       };
-      ReflectionObject.prototype.getOption = function getOption(name) {
+      ReflectionObject2.prototype.getOption = function getOption(name) {
         if (this.options)
           return this.options[name];
         return void 0;
       };
-      ReflectionObject.prototype.setOption = function setOption(name, value, ifNotSet) {
+      ReflectionObject2.prototype.setOption = function setOption(name, value, ifNotSet) {
         if (!ifNotSet || !this.options || this.options[name] === void 0)
           (this.options || (this.options = {}))[name] = value;
         return this;
       };
-      ReflectionObject.prototype.setParsedOption = function setParsedOption(name, value, propName) {
+      ReflectionObject2.prototype.setParsedOption = function setParsedOption(name, value, propName) {
         if (!this.parsedOptions) {
           this.parsedOptions = [];
         }
@@ -4118,20 +4129,20 @@ const MODULES = `
         }
         return this;
       };
-      ReflectionObject.prototype.setOptions = function setOptions(options, ifNotSet) {
+      ReflectionObject2.prototype.setOptions = function setOptions(options, ifNotSet) {
         if (options)
           for (var keys = Object.keys(options), i = 0; i < keys.length; ++i)
             this.setOption(keys[i], options[keys[i]], ifNotSet);
         return this;
       };
-      ReflectionObject.prototype.toString = function toString2() {
+      ReflectionObject2.prototype.toString = function toString2() {
         var className = this.constructor.className, fullName = this.fullName;
         if (fullName.length)
           return className + " " + fullName;
         return className;
       };
-      ReflectionObject._configure = function(Root_) {
-        Root2 = Root_;
+      ReflectionObject2._configure = function(Root_) {
+        Root4 = Root_;
       };
     }
   });
@@ -4142,12 +4153,12 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       module2.exports = Enum;
-      var ReflectionObject = require_object();
-      ((Enum.prototype = Object.create(ReflectionObject.prototype)).constructor = Enum).className = "Enum";
+      var ReflectionObject2 = require_object();
+      ((Enum.prototype = Object.create(ReflectionObject2.prototype)).constructor = Enum).className = "Enum";
       var Namespace = require_namespace();
       var util = require_util();
       function Enum(name, values, options, comment, comments, valuesOptions) {
-        ReflectionObject.call(this, name, options);
+        ReflectionObject2.call(this, name, options);
         if (values && typeof values !== "object")
           throw TypeError("values must be an object");
         this.valuesById = {};
@@ -4568,13 +4579,13 @@ const MODULES = `
       var nativeGetSymbols = Object.getOwnPropertySymbols;
       var nativeIsBuffer = Buffer2 ? Buffer2.isBuffer : void 0;
       var nativeKeys = overArg(Object.keys, Object);
-      var DataView = getNative(root, "DataView");
+      var DataView2 = getNative(root, "DataView");
       var Map = getNative(root, "Map");
       var Promise2 = getNative(root, "Promise");
       var Set2 = getNative(root, "Set");
       var WeakMap = getNative(root, "WeakMap");
       var nativeCreate = getNative(Object, "create");
-      var dataViewCtorString = toSource(DataView);
+      var dataViewCtorString = toSource(DataView2);
       var mapCtorString = toSource(Map);
       var promiseCtorString = toSource(Promise2);
       var setCtorString = toSource(Set2);
@@ -5026,7 +5037,7 @@ const MODULES = `
         });
       };
       var getTag = baseGetTag;
-      if (DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag || Map && getTag(new Map()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap && getTag(new WeakMap()) != weakMapTag) {
+      if (DataView2 && getTag(new DataView2(new ArrayBuffer(1))) != dataViewTag || Map && getTag(new Map()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap && getTag(new WeakMap()) != weakMapTag) {
         getTag = function(value) {
           var result = baseGetTag(value), Ctor = result == objectTag ? value.constructor : void 0, ctorString = Ctor ? toSource(Ctor) : "";
           if (ctorString) {
@@ -5387,13 +5398,13 @@ const MODULES = `
           ["\\\\)", "&#41;"]
         ];
         if (mtype === EncodeTarget.Html) {
-          return maps.filter(function(_a2) {
-            var v = _a2[0], _ = _a2[1];
+          return maps.filter(function(_a3) {
+            var v = _a3[0], _ = _a3[1];
             return v.indexOf("(") === -1 && v.indexOf(")") === -1;
           });
         } else {
-          return maps.filter(function(_a2) {
-            var v = _a2[0], _ = _a2[1];
+          return maps.filter(function(_a3) {
+            var v = _a3[0], _ = _a3[1];
             return v.indexOf("/") === -1;
           });
         }
@@ -7533,7 +7544,7 @@ const MODULES = `
     /** 重构为旧版弹幕类型 */
     static parseCmd(dms) {
       return dms.map((d) => {
-        var _a2;
+        var _a3;
         const dm = {
           class: d.pool || 0,
           color: d.color || 0,
@@ -7549,7 +7560,7 @@ const MODULES = `
           weight: d.weight,
           attr: d.attr
         };
-        ((_a2 = d.action) == null ? void 0 : _a2.startsWith("picture:")) && (dm.html = \`<img src="\${d.action.replace("picture:", "//")}" style="width:auto;height:28.13px;">\`);
+        ((_a3 = d.action) == null ? void 0 : _a3.startsWith("picture:")) && (dm.html = \`<img src="\${d.action.replace("picture:", "//")}" style="width:auto;height:28.13px;">\`);
         return dm;
       });
     }
@@ -7585,8 +7596,8 @@ const MODULES = `
     /** 编码xml弹幕 */
     static encodeXml(dms, cid) {
       return dms.reduce((s, d) => {
-        var _a2;
-        const text = d.mode === 8 || d.mode === 9 ? d.text : ((_a2 = d.text) != null ? _a2 : "").replace(/(\\n|\\r\\n)/g, "/n");
+        var _a3;
+        const text = d.mode === 8 || d.mode === 9 ? d.text : ((_a3 = d.text) != null ? _a3 : "").replace(/(\\n|\\r\\n)/g, "/n");
         s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${text.replace(/[<&]/g, (a) => {
           return { "<": "&lt;", "&": "&amp;" }[a];
         })}</d>
@@ -7692,11 +7703,11 @@ const MODULES = `
     danmaku = [];
     /** 获取新版弹幕 */
     async getData() {
-      var _a2, _b;
+      var _a3, _b2;
       if (!this.danmaku.length) {
         const dmWebView = await this.DmWebViewReply();
         const pageSize = dmWebView.dmSge.pageSize ? dmWebView.dmSge.pageSize / 1e3 : 360;
-        const total = this.aid == window.aid && ((_b = (_a2 = window.player) == null ? void 0 : _a2.getDuration) == null ? void 0 : _b.call(_a2)) / pageSize + 1 || dmWebView.dmSge.total;
+        const total = this.aid == window.aid && ((_b2 = (_a3 = window.player) == null ? void 0 : _a3.getDuration) == null ? void 0 : _b2.call(_a3)) / pageSize + 1 || dmWebView.dmSge.total;
         const promises = [];
         for (let i = 1; i <= total; i++) {
           promises.push(
@@ -8077,14 +8088,14 @@ const MODULES = `
           delete rules[id - 1];
           this.send = () => true;
           (!args[2] || args[2] === true) && (this.timeout = 0);
-          const et = setInterval(() => {
+          const et2 = setInterval(() => {
             this.dispatchEvent(new ProgressEvent("progress"));
           }, 50);
           Reflect.defineProperty(this, "status", { configurable: true, value: 200 });
           Reflect.defineProperty(this, "readyState", { configurable: true, value: 2 });
           this.dispatchEvent(new ProgressEvent("readystatechange"));
           modifyResponse ? modifyResponse(args).then((d) => {
-            clearInterval(et);
+            clearInterval(et2);
             if (d) {
               Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
               d.responseType && setResponseType(d.responseType, this);
@@ -8116,10 +8127,10 @@ const MODULES = `
             }
             debug.error("modifyResponse of xhrhookasync", one, d);
           }).finally(() => {
-            clearInterval(et);
+            clearInterval(et2);
             !once && (id = rules.push(temp));
           }) : (this.abort(), !once && (id = rules.push(temp)));
-          clearInterval(et);
+          clearInterval(et2);
         }
       } catch (e) {
         debug.error("condition of xhrhook", one, e);
@@ -8226,11 +8237,11 @@ const MODULES = `
       return this.view2Detail(json);
     }
     view2Detail(data) {
-      var _a2;
+      var _a3;
       const result = new ApiViewDetail();
       if (data.v2_app_api) {
         delete data.v2_app_api.redirect_url;
-        result.data.Card.follower = (_a2 = data.v2_app_api.owner_ext) == null ? void 0 : _a2.fans;
+        result.data.Card.follower = (_a3 = data.v2_app_api.owner_ext) == null ? void 0 : _a3.fans;
         result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
         result.data.Tags = data.v2_app_api.tag;
         result.data.View = data.v2_app_api;
@@ -8247,7 +8258,7 @@ const MODULES = `
         return this.view2Detail_v1(data);
     }
     view2Detail_v1(data) {
-      var _a2, _b, _c, _d, _e, _f, _g;
+      var _a3, _b2, _c, _d, _e, _f, _g;
       if ("code" in data) {
         jsonCheck(data);
       }
@@ -8267,7 +8278,7 @@ const MODULES = `
         aid: data.aid || data.id || this.aid,
         cid: data.list[p ? p - 1 : 0].cid,
         copyright: 1,
-        ctime: (_a2 = data.created) != null ? _a2 : 0,
+        ctime: (_a3 = data.created) != null ? _a3 : 0,
         dimension: { width: 1920, height: 1080, rotate: 0 },
         duration: -1,
         owner: result.data.Card.card,
@@ -8275,7 +8286,7 @@ const MODULES = `
           d.dimension = { width: 1920, height: 1080, rotate: 0 };
           return d;
         }),
-        pic: (_b = data.pic) != null ? _b : "",
+        pic: (_b2 = data.pic) != null ? _b2 : "",
         pubdate: (_c = data.lastupdatets) != null ? _c : 0,
         rights: {},
         stat: {
@@ -9248,8 +9259,8 @@ const MODULES = `
         const button = new PushButton();
         button.text = d.text;
         button.addEventListener("change", () => {
-          var _a2;
-          (_a2 = d.callback) == null ? void 0 : _a2.call(d);
+          var _a3;
+          (_a3 = d.callback) == null ? void 0 : _a3.call(d);
           popup.remove();
         });
         div.appendChild(button);
@@ -9273,7 +9284,7 @@ const MODULES = `
     userLoadedCallbacks = [];
     constructor() {
       GM.getValue("userStatus", userStatus).then((status) => {
-        var _a2;
+        var _a3;
         status = Object.assign(userStatus, status);
         const proxy = propertryChangeHook(status, (key, value) => {
           clearTimeout(this.timer);
@@ -9283,7 +9294,7 @@ const MODULES = `
         this.userStatus = proxy;
         this.initialized = true;
         while (this.userLoadedCallbacks.length) {
-          (_a2 = this.userLoadedCallbacks.shift()) == null ? void 0 : _a2(proxy);
+          (_a3 = this.userLoadedCallbacks.shift()) == null ? void 0 : _a3(proxy);
         }
       });
     }
@@ -9372,20 +9383,20 @@ const MODULES = `
       return cid ? this.cids[cid] : void 0;
     }
     get album() {
-      var _a2;
-      return ((_a2 = this.metadata) == null ? void 0 : _a2.album) || this.title;
+      var _a3;
+      return ((_a3 = this.metadata) == null ? void 0 : _a3.album) || this.title;
     }
     get artist() {
-      var _a2;
-      return (_a2 = this.metadata) == null ? void 0 : _a2.artist;
+      var _a3;
+      return (_a3 = this.metadata) == null ? void 0 : _a3.artist;
     }
     get title() {
-      var _a2;
-      return ((_a2 = this.metadata) == null ? void 0 : _a2.title) || document.title.slice(0, -26);
+      var _a3;
+      return ((_a3 = this.metadata) == null ? void 0 : _a3.title) || document.title.slice(0, -26);
     }
     get artwork() {
-      var _a2;
-      return (_a2 = this.metadata) == null ? void 0 : _a2.artwork;
+      var _a3;
+      return (_a3 = this.metadata) == null ? void 0 : _a3.artwork;
     }
     get stat() {
       const aid = BLOD.aid;
@@ -9452,11 +9463,11 @@ const MODULES = `
     }
     /** 从\`IBangumiSeasonResponse\`中提取 */
     bangumiSeason(data) {
-      var _a2, _b;
+      var _a3, _b2;
       const album = data.title || data.jp_title;
-      const artist = data.actors || data.staff || ((_a2 = data.up_info) == null ? void 0 : _a2.name);
+      const artist = data.actors || data.staff || ((_a3 = data.up_info) == null ? void 0 : _a3.name);
       const pic = data.cover.replace("http:", "");
-      const bkg_cover = (_b = data.bkg_cover) == null ? void 0 : _b.replace("http:", "");
+      const bkg_cover = (_b2 = data.bkg_cover) == null ? void 0 : _b2.replace("http:", "");
       this.bangumiEpisode(data.episodes, album, artist, pic, bkg_cover);
       this.emitChange();
     }
@@ -9557,10 +9568,10 @@ const MODULES = `
     }
     /** 加载本地xml弹幕 */
     localDmXml() {
-      var _a2;
+      var _a3;
       if (!window.player)
         return toast.warning("未找到播放器实例！请在播放页面使用。");
-      if (!((_a2 = window.player) == null ? void 0 : _a2.appendDm))
+      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm))
         return toast.warning("未启用【重构播放器】，无法载入弹幕！");
       const msg = toast.list("加载本地弹幕 >>>", "> 请选择一个弹幕文件，拓展名：.xml，编码：utf-8");
       fileRead(".xml").then((d) => {
@@ -9581,10 +9592,10 @@ const MODULES = `
     }
     /** 加载本地json弹幕 */
     localDmJson() {
-      var _a2;
+      var _a3;
       if (!window.player)
         return toast.warning("未找到播放器实例！请在播放页面使用。");
-      if (!((_a2 = window.player) == null ? void 0 : _a2.appendDm))
+      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm))
         return toast.warning("未启用【重构播放器】，无法载入弹幕！");
       const msg = toast.list("加载本地弹幕 >>>", "> 请选择一个弹幕文件，拓展名：.json，编码：utf-8");
       fileRead(".json").then((d) => {
@@ -9605,10 +9616,10 @@ const MODULES = `
     }
     /** 下载弹幕 */
     async download(aid = BLOD.aid, cid = BLOD.cid) {
-      var _a2;
+      var _a3;
       if (!cid)
         return toast.warning("未找到播放器实例！请在播放页面使用。");
-      const dms = ((_a2 = window.player) == null ? void 0 : _a2.getDanmaku) ? window.player.getDanmaku() : await new ApiDmWeb(aid, cid).getData();
+      const dms = ((_a3 = window.player) == null ? void 0 : _a3.getDanmaku) ? window.player.getDanmaku() : await new ApiDmWeb(aid, cid).getData();
       const metadata = videoInfo.metadata;
       const title = metadata ? \`\${metadata.album}(\${metadata.title})\` : \`\${aid}.\${cid}\`;
       if (user.userStatus.dmExtension === "json") {
@@ -9618,10 +9629,10 @@ const MODULES = `
     }
     /** 加载在线弹幕 */
     async onlineDm(str) {
-      var _a2;
+      var _a3;
       if (!window.player)
         return toast.warning("未找到播放器实例！请在播放页面使用。");
-      if (!((_a2 = window.player) == null ? void 0 : _a2.appendDm))
+      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm))
         return toast.warning("未启用【重构播放器】，无法载入弹幕！");
       const msg = toast.list("加载在线弹幕 >>>", "> -------在线弹幕-------", \`> 目标：\${str}\`);
       const { aid, cid } = await urlParam(str);
@@ -9689,6 +9700,8 @@ const MODULES = `
     APP_KEY2["5dce947fe22167f9"] = "";
     APP_KEY2["8e9fc618fbd41e28"] = "";
     APP_KEY2["21087a09e533a072"] = "e5b8ba95cab6104100be35739304c23a";
+    APP_KEY2["783bbb7264451d82"] = "2653583c8873dea268ab9386918b1d65";
+    APP_KEY2["4ebafd7c4951b366"] = "8cb98205e9b2ad3669aad0fce12a4c13";
     return APP_KEY2;
   })(APP_KEY || {});
   var ApiSign = class {
@@ -9711,7 +9724,6 @@ const MODULES = `
       const url = new URL2(this.url);
       Object.assign(url.params, searchParams, { ts: this.ts });
       delete url.params.sign;
-      api && (this.appkey = "27eb53fc9058f8c3");
       const appSecret = this.appSecret;
       url.params.appkey = this.appkey;
       url.sort();
@@ -10135,6 +10147,2465 @@ const MODULES = `
     }
   };
 
+  // src/io/grpc/BAPIAppPlayurl/v1/playurl.ts
+  init_tampermonkey();
+  var import_light3 = __toESM(require_light());
+
+  // src/io/grpc/BAPIAppPlayurl/v1/playurl.json
+  var playurl_default = {
+    nested: {
+      bilibili: {
+        nested: {
+          pgc: {
+            nested: {
+              gateway: {
+                nested: {
+                  player: {
+                    nested: {
+                      v1: {
+                        nested: {
+                          PlayViewReq: {
+                            fields: {
+                              epId: {
+                                type: "int64",
+                                id: 1
+                              },
+                              cid: {
+                                type: "int64",
+                                id: 2
+                              },
+                              qn: {
+                                type: "int64",
+                                id: 3
+                              },
+                              fnver: {
+                                type: "int32",
+                                id: 4
+                              },
+                              fnval: {
+                                type: "int32",
+                                id: 5
+                              },
+                              download: {
+                                type: "uint32",
+                                id: 6
+                              },
+                              forceHost: {
+                                type: "int32",
+                                id: 7
+                              },
+                              fourk: {
+                                type: "bool",
+                                id: 8
+                              },
+                              spmid: {
+                                type: "string",
+                                id: 9
+                              },
+                              fromSpmid: {
+                                type: "string",
+                                id: 10
+                              },
+                              teenagersMode: {
+                                type: "int32",
+                                id: 11
+                              },
+                              preferCodecType: {
+                                type: "bilibili.app.playurl.v1.CodeType",
+                                id: 12
+                              },
+                              isPreview: {
+                                type: "bool",
+                                id: 13
+                              },
+                              roomId: {
+                                type: "int64",
+                                id: 14
+                              }
+                            }
+                          },
+                          ProjectReq: {
+                            fields: {
+                              epId: {
+                                type: "int64",
+                                id: 1
+                              },
+                              cid: {
+                                type: "int64",
+                                id: 2
+                              },
+                              qn: {
+                                type: "int64",
+                                id: 3
+                              },
+                              fnver: {
+                                type: "int32",
+                                id: 4
+                              },
+                              fnval: {
+                                type: "int32",
+                                id: 5
+                              },
+                              download: {
+                                type: "uint32",
+                                id: 6
+                              },
+                              forceHost: {
+                                type: "int32",
+                                id: 7
+                              },
+                              fourk: {
+                                type: "bool",
+                                id: 8
+                              },
+                              spmid: {
+                                type: "string",
+                                id: 9
+                              },
+                              fromSpmid: {
+                                type: "string",
+                                id: 10
+                              },
+                              protocol: {
+                                type: "int32",
+                                id: 11
+                              },
+                              deviceType: {
+                                type: "int32",
+                                id: 12
+                              }
+                            }
+                          },
+                          PlayViewReply: {
+                            fields: {
+                              videoInfo: {
+                                type: "bilibili.app.playurl.v1.VideoInfo",
+                                id: 1
+                              },
+                              playConf: {
+                                type: "PlayAbilityConf",
+                                id: 2
+                              },
+                              business: {
+                                type: "BusinessInfo",
+                                id: 3
+                              },
+                              event: {
+                                type: "Event",
+                                id: 4
+                              }
+                            }
+                          },
+                          Event: {
+                            fields: {
+                              shake: {
+                                type: "Shake",
+                                id: 1
+                              }
+                            }
+                          },
+                          Shake: {
+                            fields: {
+                              file: {
+                                type: "string",
+                                id: 1
+                              }
+                            }
+                          },
+                          BusinessInfo: {
+                            fields: {
+                              isPreview: {
+                                type: "bool",
+                                id: 1
+                              },
+                              bp: {
+                                type: "bool",
+                                id: 2
+                              },
+                              marlinToken: {
+                                type: "string",
+                                id: 3
+                              }
+                            }
+                          },
+                          PlayAbilityConf: {
+                            fields: {
+                              backgroundPlayDisable: {
+                                type: "bool",
+                                id: 1
+                              },
+                              flipDisable: {
+                                type: "bool",
+                                id: 2
+                              },
+                              castDisable: {
+                                type: "bool",
+                                id: 3
+                              },
+                              feedbackDisable: {
+                                type: "bool",
+                                id: 4
+                              },
+                              subtitleDisable: {
+                                type: "bool",
+                                id: 5
+                              },
+                              playbackRateDisable: {
+                                type: "bool",
+                                id: 6
+                              },
+                              timeUpDisable: {
+                                type: "bool",
+                                id: 7
+                              },
+                              playbackModeDisable: {
+                                type: "bool",
+                                id: 8
+                              },
+                              scaleModeDisable: {
+                                type: "bool",
+                                id: 9
+                              },
+                              likeDisable: {
+                                type: "bool",
+                                id: 10
+                              },
+                              dislikeDisable: {
+                                type: "bool",
+                                id: 11
+                              },
+                              coinDisable: {
+                                type: "bool",
+                                id: 12
+                              },
+                              elecDisable: {
+                                type: "bool",
+                                id: 13
+                              },
+                              shareDisable: {
+                                type: "bool",
+                                id: 14
+                              },
+                              screenShotDisable: {
+                                type: "bool",
+                                id: 15
+                              },
+                              lockScreenDisable: {
+                                type: "bool",
+                                id: 16
+                              },
+                              recommendDisable: {
+                                type: "bool",
+                                id: 17
+                              },
+                              playbackSpeedDisable: {
+                                type: "bool",
+                                id: 18
+                              },
+                              definitionDisable: {
+                                type: "bool",
+                                id: 19
+                              },
+                              selectionsDisable: {
+                                type: "bool",
+                                id: 20
+                              },
+                              nextDisable: {
+                                type: "bool",
+                                id: 21
+                              },
+                              editDmDisable: {
+                                type: "bool",
+                                id: 22
+                              },
+                              smallWindowDisable: {
+                                type: "bool",
+                                id: 23
+                              },
+                              shakeDisable: {
+                                type: "bool",
+                                id: 24
+                              },
+                              outerDmDisable: {
+                                type: "bool",
+                                id: 25
+                              },
+                              innerDmDisable: {
+                                type: "bool",
+                                id: 26
+                              },
+                              freyaEnterDisable: {
+                                type: "bool",
+                                id: 27
+                              },
+                              dolbyDisable: {
+                                type: "bool",
+                                id: 28
+                              },
+                              freyaFullDisable: {
+                                type: "bool",
+                                id: 29
+                              }
+                            }
+                          },
+                          ProjectReply: {
+                            fields: {
+                              project: {
+                                type: "bilibili.app.playurl.v1.PlayURLReply",
+                                id: 1
+                              }
+                            }
+                          },
+                          LivePlayViewReq: {
+                            fields: {
+                              epId: {
+                                type: "int64",
+                                id: 1
+                              },
+                              quality: {
+                                type: "uint32",
+                                id: 2
+                              },
+                              ptype: {
+                                type: "uint32",
+                                id: 3
+                              },
+                              https: {
+                                type: "bool",
+                                id: 4
+                              },
+                              playType: {
+                                type: "uint32",
+                                id: 5
+                              },
+                              deviceType: {
+                                type: "int32",
+                                id: 6
+                              }
+                            }
+                          },
+                          LivePlayViewReply: {
+                            fields: {
+                              roomInfo: {
+                                type: "RoomInfo",
+                                id: 1
+                              },
+                              playInfo: {
+                                type: "LivePlayInfo",
+                                id: 2
+                              }
+                            }
+                          },
+                          RoomInfo: {
+                            fields: {
+                              roomId: {
+                                type: "int64",
+                                id: 1
+                              },
+                              uid: {
+                                type: "int64",
+                                id: 2
+                              },
+                              status: {
+                                type: "RoomStatusInfo",
+                                id: 3
+                              },
+                              show: {
+                                type: "RoomShowInfo",
+                                id: 4
+                              }
+                            }
+                          },
+                          RoomStatusInfo: {
+                            fields: {
+                              liveStatus: {
+                                type: "int64",
+                                id: 1
+                              },
+                              liveScreenType: {
+                                type: "int64",
+                                id: 2
+                              },
+                              liveMark: {
+                                type: "int64",
+                                id: 3
+                              },
+                              lockStatus: {
+                                type: "int64",
+                                id: 4
+                              },
+                              lockTime: {
+                                type: "int64",
+                                id: 5
+                              },
+                              hiddenStatus: {
+                                type: "int64",
+                                id: 6
+                              },
+                              hiddenTime: {
+                                type: "int64",
+                                id: 7
+                              },
+                              liveType: {
+                                type: "int64",
+                                id: 8
+                              },
+                              roomShield: {
+                                type: "int64",
+                                id: 9
+                              }
+                            }
+                          },
+                          RoomShowInfo: {
+                            fields: {
+                              shortId: {
+                                type: "int64",
+                                id: 1
+                              },
+                              popularityCount: {
+                                type: "int64",
+                                id: 8
+                              },
+                              liveStartTime: {
+                                type: "int64",
+                                id: 10
+                              }
+                            }
+                          },
+                          LivePlayInfo: {
+                            fields: {
+                              currentQn: {
+                                type: "int32",
+                                id: 1
+                              },
+                              qualityDescription: {
+                                rule: "repeated",
+                                type: "QualityDescription",
+                                id: 2
+                              },
+                              durl: {
+                                rule: "repeated",
+                                type: "ResponseDataUrl",
+                                id: 3
+                              }
+                            }
+                          },
+                          QualityDescription: {
+                            fields: {
+                              qn: {
+                                type: "int32",
+                                id: 1
+                              },
+                              desc: {
+                                type: "string",
+                                id: 2
+                              }
+                            }
+                          },
+                          ResponseDataUrl: {
+                            fields: {
+                              url: {
+                                type: "string",
+                                id: 1
+                              },
+                              streamType: {
+                                type: "uint32",
+                                id: 2
+                              },
+                              ptag: {
+                                type: "uint32",
+                                id: 3
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          app: {
+            nested: {
+              playurl: {
+                nested: {
+                  v1: {
+                    nested: {
+                      PlayURLReq: {
+                        fields: {
+                          aid: {
+                            type: "int64",
+                            id: 1
+                          },
+                          cid: {
+                            type: "int64",
+                            id: 2
+                          },
+                          qn: {
+                            type: "int64",
+                            id: 3
+                          },
+                          fnver: {
+                            type: "int32",
+                            id: 4
+                          },
+                          fnval: {
+                            type: "int32",
+                            id: 5
+                          },
+                          download: {
+                            type: "uint32",
+                            id: 6
+                          },
+                          forceHost: {
+                            type: "int32",
+                            id: 7
+                          },
+                          fourk: {
+                            type: "bool",
+                            id: 8
+                          },
+                          spmid: {
+                            type: "string",
+                            id: 9
+                          },
+                          fromSpmid: {
+                            type: "string",
+                            id: 10
+                          }
+                        }
+                      },
+                      PlayURLReply: {
+                        fields: {
+                          quality: {
+                            type: "uint32",
+                            id: 1
+                          },
+                          format: {
+                            type: "string",
+                            id: 2
+                          },
+                          timelength: {
+                            type: "uint64",
+                            id: 3
+                          },
+                          videoCodecid: {
+                            type: "uint32",
+                            id: 4
+                          },
+                          fnver: {
+                            type: "uint32",
+                            id: 5
+                          },
+                          fnval: {
+                            type: "uint32",
+                            id: 6
+                          },
+                          videoProject: {
+                            type: "bool",
+                            id: 7
+                          },
+                          durl: {
+                            rule: "repeated",
+                            type: "ResponseUrl",
+                            id: 8
+                          },
+                          dash: {
+                            type: "ResponseDash",
+                            id: 9
+                          },
+                          noRexcode: {
+                            type: "int32",
+                            id: 10
+                          },
+                          upgradeLimit: {
+                            type: "UpgradeLimit",
+                            id: 11
+                          },
+                          supportFormats: {
+                            rule: "repeated",
+                            type: "FormatDescription",
+                            id: 12
+                          },
+                          type: {
+                            type: "VideoType",
+                            id: 13
+                          }
+                        }
+                      },
+                      ResponseUrl: {
+                        fields: {
+                          order: {
+                            type: "uint32",
+                            id: 1
+                          },
+                          length: {
+                            type: "uint64",
+                            id: 2
+                          },
+                          size: {
+                            type: "uint64",
+                            id: 3
+                          },
+                          url: {
+                            type: "string",
+                            id: 4
+                          },
+                          backupUrl: {
+                            rule: "repeated",
+                            type: "string",
+                            id: 5
+                          },
+                          md5: {
+                            type: "string",
+                            id: 6
+                          }
+                        }
+                      },
+                      ResponseDash: {
+                        fields: {
+                          video: {
+                            rule: "repeated",
+                            type: "DashItem",
+                            id: 1
+                          },
+                          audio: {
+                            rule: "repeated",
+                            type: "DashItem",
+                            id: 2
+                          }
+                        }
+                      },
+                      DashItem: {
+                        fields: {
+                          id: {
+                            type: "uint32",
+                            id: 1
+                          },
+                          baseUrl: {
+                            type: "string",
+                            id: 2
+                          },
+                          backupUrl: {
+                            rule: "repeated",
+                            type: "string",
+                            id: 3
+                          },
+                          bandwidth: {
+                            type: "uint32",
+                            id: 4
+                          },
+                          codecid: {
+                            type: "uint32",
+                            id: 5
+                          },
+                          md5: {
+                            type: "string",
+                            id: 6
+                          },
+                          size: {
+                            type: "uint64",
+                            id: 7
+                          },
+                          frameRate: {
+                            type: "string",
+                            id: 8
+                          }
+                        }
+                      },
+                      UpgradeLimit: {
+                        fields: {
+                          code: {
+                            type: "int32",
+                            id: 1
+                          },
+                          message: {
+                            type: "string",
+                            id: 2
+                          },
+                          image: {
+                            type: "string",
+                            id: 3
+                          },
+                          button: {
+                            type: "UpgradeButton",
+                            id: 4
+                          }
+                        }
+                      },
+                      UpgradeButton: {
+                        fields: {
+                          title: {
+                            type: "string",
+                            id: 1
+                          },
+                          link: {
+                            type: "string",
+                            id: 2
+                          }
+                        }
+                      },
+                      FormatDescription: {
+                        fields: {
+                          quality: {
+                            type: "uint32",
+                            id: 1
+                          },
+                          format: {
+                            type: "string",
+                            id: 2
+                          },
+                          description: {
+                            type: "string",
+                            id: 3
+                          },
+                          newDescription: {
+                            type: "string",
+                            id: 4
+                          },
+                          displayDesc: {
+                            type: "string",
+                            id: 5
+                          },
+                          superscript: {
+                            type: "string",
+                            id: 6
+                          }
+                        }
+                      },
+                      ProjectReq: {
+                        fields: {
+                          aid: {
+                            type: "int64",
+                            id: 1
+                          },
+                          cid: {
+                            type: "int64",
+                            id: 2
+                          },
+                          qn: {
+                            type: "int64",
+                            id: 3
+                          },
+                          fnver: {
+                            type: "int32",
+                            id: 4
+                          },
+                          fnval: {
+                            type: "int32",
+                            id: 5
+                          },
+                          download: {
+                            type: "uint32",
+                            id: 6
+                          },
+                          forceHost: {
+                            type: "int32",
+                            id: 7
+                          },
+                          fourk: {
+                            type: "bool",
+                            id: 8
+                          },
+                          spmid: {
+                            type: "string",
+                            id: 9
+                          },
+                          fromSpmid: {
+                            type: "string",
+                            id: 10
+                          },
+                          protocol: {
+                            type: "int32",
+                            id: 11
+                          },
+                          deviceType: {
+                            type: "int32",
+                            id: 12
+                          }
+                        }
+                      },
+                      ProjectReply: {
+                        fields: {
+                          project: {
+                            type: "PlayURLReply",
+                            id: 1
+                          }
+                        }
+                      },
+                      PlayViewReq: {
+                        fields: {
+                          aid: {
+                            type: "int64",
+                            id: 1
+                          },
+                          cid: {
+                            type: "int64",
+                            id: 2
+                          },
+                          qn: {
+                            type: "int64",
+                            id: 3
+                          },
+                          fnver: {
+                            type: "int32",
+                            id: 4
+                          },
+                          fnval: {
+                            type: "int32",
+                            id: 5
+                          },
+                          download: {
+                            type: "uint32",
+                            id: 6
+                          },
+                          forceHost: {
+                            type: "int32",
+                            id: 7
+                          },
+                          fourk: {
+                            type: "bool",
+                            id: 8
+                          },
+                          spmid: {
+                            type: "string",
+                            id: 9
+                          },
+                          fromSpmid: {
+                            type: "string",
+                            id: 10
+                          },
+                          teenagersMode: {
+                            type: "int32",
+                            id: 11
+                          },
+                          preferCodecType: {
+                            type: "CodeType",
+                            id: 12
+                          },
+                          business: {
+                            type: "Business",
+                            id: 13
+                          }
+                        }
+                      },
+                      Business: {
+                        values: {
+                          UNKNOWN: 0,
+                          STORY: 1
+                        }
+                      },
+                      CodeType: {
+                        values: {
+                          NOCODE: 0,
+                          CODE264: 1,
+                          CODE265: 2
+                        }
+                      },
+                      PlayViewReply: {
+                        fields: {
+                          videoInfo: {
+                            type: "VideoInfo",
+                            id: 1
+                          },
+                          playConf: {
+                            type: "PlayAbilityConf",
+                            id: 2
+                          },
+                          upgradeLimit: {
+                            type: "UpgradeLimit",
+                            id: 3
+                          },
+                          chronos: {
+                            type: "Chronos",
+                            id: 4
+                          },
+                          playArc: {
+                            type: "PlayArcConf",
+                            id: 5
+                          },
+                          event: {
+                            type: "Event",
+                            id: 6
+                          }
+                        }
+                      },
+                      Event: {
+                        fields: {
+                          shake: {
+                            type: "Shake",
+                            id: 1
+                          }
+                        }
+                      },
+                      Shake: {
+                        fields: {
+                          file: {
+                            type: "string",
+                            id: 1
+                          }
+                        }
+                      },
+                      Chronos: {
+                        fields: {
+                          md5: {
+                            type: "string",
+                            id: 1
+                          },
+                          file: {
+                            type: "string",
+                            id: 2
+                          }
+                        }
+                      },
+                      PlayConfReq: {
+                        fields: {}
+                      },
+                      PlayConfReply: {
+                        fields: {
+                          playConf: {
+                            type: "PlayAbilityConf",
+                            id: 1
+                          }
+                        }
+                      },
+                      PlayAbilityConf: {
+                        fields: {
+                          backgroundPlayConf: {
+                            type: "CloudConf",
+                            id: 1
+                          },
+                          flipConf: {
+                            type: "CloudConf",
+                            id: 2
+                          },
+                          castConf: {
+                            type: "CloudConf",
+                            id: 3
+                          },
+                          feedbackConf: {
+                            type: "CloudConf",
+                            id: 4
+                          },
+                          subtitleConf: {
+                            type: "CloudConf",
+                            id: 5
+                          },
+                          playbackRateConf: {
+                            type: "CloudConf",
+                            id: 6
+                          },
+                          timeUpConf: {
+                            type: "CloudConf",
+                            id: 7
+                          },
+                          playbackModeConf: {
+                            type: "CloudConf",
+                            id: 8
+                          },
+                          scaleModeConf: {
+                            type: "CloudConf",
+                            id: 9
+                          },
+                          likeConf: {
+                            type: "CloudConf",
+                            id: 10
+                          },
+                          dislikeConf: {
+                            type: "CloudConf",
+                            id: 11
+                          },
+                          coinConf: {
+                            type: "CloudConf",
+                            id: 12
+                          },
+                          elecConf: {
+                            type: "CloudConf",
+                            id: 13
+                          },
+                          shareConf: {
+                            type: "CloudConf",
+                            id: 14
+                          },
+                          screenShotConf: {
+                            type: "CloudConf",
+                            id: 15
+                          },
+                          lockScreenConf: {
+                            type: "CloudConf",
+                            id: 16
+                          },
+                          recommendConf: {
+                            type: "CloudConf",
+                            id: 17
+                          },
+                          playbackSpeedConf: {
+                            type: "CloudConf",
+                            id: 18
+                          },
+                          definitionConf: {
+                            type: "CloudConf",
+                            id: 19
+                          },
+                          selectionsConf: {
+                            type: "CloudConf",
+                            id: 20
+                          },
+                          nextConf: {
+                            type: "CloudConf",
+                            id: 21
+                          },
+                          editDmConf: {
+                            type: "CloudConf",
+                            id: 22
+                          },
+                          smallWindowConf: {
+                            type: "CloudConf",
+                            id: 23
+                          },
+                          shakeConf: {
+                            type: "CloudConf",
+                            id: 24
+                          },
+                          outerDmConf: {
+                            type: "CloudConf",
+                            id: 25
+                          },
+                          innerDmConf: {
+                            type: "CloudConf",
+                            id: 26
+                          },
+                          panoramaConf: {
+                            type: "CloudConf",
+                            id: 27
+                          },
+                          dolbyConf: {
+                            type: "CloudConf",
+                            id: 28
+                          }
+                        }
+                      },
+                      PlayArcConf: {
+                        fields: {
+                          backgroundPlayConf: {
+                            type: "ArcConf",
+                            id: 1
+                          },
+                          flipConf: {
+                            type: "ArcConf",
+                            id: 2
+                          },
+                          castConf: {
+                            type: "ArcConf",
+                            id: 3
+                          },
+                          feedbackConf: {
+                            type: "ArcConf",
+                            id: 4
+                          },
+                          subtitleConf: {
+                            type: "ArcConf",
+                            id: 5
+                          },
+                          playbackRateConf: {
+                            type: "ArcConf",
+                            id: 6
+                          },
+                          timeUpConf: {
+                            type: "ArcConf",
+                            id: 7
+                          },
+                          playbackModeConf: {
+                            type: "ArcConf",
+                            id: 8
+                          },
+                          scaleModeConf: {
+                            type: "ArcConf",
+                            id: 9
+                          },
+                          likeConf: {
+                            type: "ArcConf",
+                            id: 10
+                          },
+                          dislikeConf: {
+                            type: "ArcConf",
+                            id: 11
+                          },
+                          coinConf: {
+                            type: "ArcConf",
+                            id: 12
+                          },
+                          elecConf: {
+                            type: "ArcConf",
+                            id: 13
+                          },
+                          shareConf: {
+                            type: "ArcConf",
+                            id: 14
+                          },
+                          screenShotConf: {
+                            type: "ArcConf",
+                            id: 15
+                          },
+                          lockScreenConf: {
+                            type: "ArcConf",
+                            id: 16
+                          },
+                          recommendConf: {
+                            type: "ArcConf",
+                            id: 17
+                          },
+                          playbackSpeedConf: {
+                            type: "ArcConf",
+                            id: 18
+                          },
+                          definitionConf: {
+                            type: "ArcConf",
+                            id: 19
+                          },
+                          selectionsConf: {
+                            type: "ArcConf",
+                            id: 20
+                          },
+                          nextConf: {
+                            type: "ArcConf",
+                            id: 21
+                          },
+                          editDmConf: {
+                            type: "ArcConf",
+                            id: 22
+                          },
+                          smallWindowConf: {
+                            type: "ArcConf",
+                            id: 23
+                          },
+                          shakeConf: {
+                            type: "ArcConf",
+                            id: 24
+                          },
+                          outerDmConf: {
+                            type: "ArcConf",
+                            id: 25
+                          },
+                          innerDmConf: {
+                            type: "ArcConf",
+                            id: 26
+                          },
+                          panoramaConf: {
+                            type: "ArcConf",
+                            id: 27
+                          },
+                          dolbyConf: {
+                            type: "ArcConf",
+                            id: 28
+                          }
+                        }
+                      },
+                      ConfType: {
+                        values: {
+                          NoType: 0,
+                          FLIPCONF: 1,
+                          CASTCONF: 2,
+                          FEEDBACK: 3,
+                          SUBTITLE: 4,
+                          PLAYBACKRATE: 5,
+                          TIMEUP: 6,
+                          PLAYBACKMODE: 7,
+                          SCALEMODE: 8,
+                          BACKGROUNDPLAY: 9,
+                          LIKE: 10,
+                          DISLIKE: 11,
+                          COIN: 12,
+                          ELEC: 13,
+                          SHARE: 14,
+                          SCREENSHOT: 15,
+                          LOCKSCREEN: 16,
+                          RECOMMEND: 17,
+                          PLAYBACKSPEED: 18,
+                          DEFINITION: 19,
+                          SELECTIONS: 20,
+                          NEXT: 21,
+                          EDITDM: 22,
+                          SMALLWINDOW: 23,
+                          SHAKE: 24,
+                          OUTERDM: 25,
+                          INNERDM: 26,
+                          PANORAMA: 27,
+                          DOLBY: 28
+                        }
+                      },
+                      CloudConf: {
+                        fields: {
+                          show: {
+                            type: "bool",
+                            id: 1
+                          },
+                          confType: {
+                            type: "ConfType",
+                            id: 2
+                          },
+                          fieldValue: {
+                            type: "FieldValue",
+                            id: 3
+                          }
+                        }
+                      },
+                      FieldValue: {
+                        oneofs: {
+                          value: {
+                            oneof: [
+                              "switch"
+                            ]
+                          }
+                        },
+                        fields: {
+                          switch: {
+                            type: "bool",
+                            id: 1
+                          }
+                        }
+                      },
+                      ArcConf: {
+                        fields: {
+                          isSupport: {
+                            type: "bool",
+                            id: 1
+                          }
+                        }
+                      },
+                      VideoInfo: {
+                        fields: {
+                          quality: {
+                            type: "uint32",
+                            id: 1
+                          },
+                          format: {
+                            type: "string",
+                            id: 2
+                          },
+                          timelength: {
+                            type: "uint64",
+                            id: 3
+                          },
+                          videoCodecid: {
+                            type: "uint32",
+                            id: 4
+                          },
+                          streamList: {
+                            rule: "repeated",
+                            type: "Stream",
+                            id: 5
+                          },
+                          dashAudio: {
+                            rule: "repeated",
+                            type: "DashItem",
+                            id: 6
+                          },
+                          dolby: {
+                            type: "DolbyItem",
+                            id: 7
+                          }
+                        }
+                      },
+                      DolbyItem: {
+                        fields: {
+                          type: {
+                            type: "Type",
+                            id: 1
+                          },
+                          audio: {
+                            rule: "repeated",
+                            type: "DashItem",
+                            id: 2
+                          }
+                        },
+                        nested: {
+                          Type: {
+                            values: {
+                              NONE: 0,
+                              COMMON: 1,
+                              ATMOS: 2
+                            }
+                          }
+                        }
+                      },
+                      Stream: {
+                        oneofs: {
+                          content: {
+                            oneof: [
+                              "dashVideo",
+                              "segmentVideo"
+                            ]
+                          }
+                        },
+                        fields: {
+                          streamInfo: {
+                            type: "StreamInfo",
+                            id: 1
+                          },
+                          dashVideo: {
+                            type: "DashVideo",
+                            id: 2
+                          },
+                          segmentVideo: {
+                            type: "SegmentVideo",
+                            id: 3
+                          }
+                        }
+                      },
+                      SegmentVideo: {
+                        fields: {
+                          segment: {
+                            rule: "repeated",
+                            type: "ResponseUrl",
+                            id: 1
+                          }
+                        }
+                      },
+                      PlayErr: {
+                        values: {
+                          NoErr: 0,
+                          WithMultiDeviceLoginErr: 1
+                        }
+                      },
+                      StreamInfo: {
+                        fields: {
+                          quality: {
+                            type: "uint32",
+                            id: 1
+                          },
+                          format: {
+                            type: "string",
+                            id: 2
+                          },
+                          description: {
+                            type: "string",
+                            id: 3
+                          },
+                          errCode: {
+                            type: "PlayErr",
+                            id: 4
+                          },
+                          limit: {
+                            type: "StreamLimit",
+                            id: 5
+                          },
+                          needVip: {
+                            type: "bool",
+                            id: 6
+                          },
+                          needLogin: {
+                            type: "bool",
+                            id: 7
+                          },
+                          intact: {
+                            type: "bool",
+                            id: 8
+                          },
+                          noRexcode: {
+                            type: "bool",
+                            id: 9
+                          },
+                          attribute: {
+                            type: "int64",
+                            id: 10
+                          },
+                          newDescription: {
+                            type: "string",
+                            id: 11
+                          },
+                          displayDesc: {
+                            type: "string",
+                            id: 12
+                          },
+                          superscript: {
+                            type: "string",
+                            id: 13
+                          }
+                        }
+                      },
+                      StreamLimit: {
+                        fields: {
+                          title: {
+                            type: "string",
+                            id: 1
+                          },
+                          uri: {
+                            type: "string",
+                            id: 2
+                          },
+                          msg: {
+                            type: "string",
+                            id: 3
+                          }
+                        }
+                      },
+                      PlayConfEditReply: {
+                        fields: {}
+                      },
+                      PlayConfEditReq: {
+                        fields: {
+                          playConf: {
+                            rule: "repeated",
+                            type: "PlayConfState",
+                            id: 1
+                          }
+                        }
+                      },
+                      PlayConfState: {
+                        fields: {
+                          confType: {
+                            type: "ConfType",
+                            id: 1
+                          },
+                          show: {
+                            type: "bool",
+                            id: 2
+                          },
+                          fieldValue: {
+                            type: "FieldValue",
+                            id: 3
+                          }
+                        }
+                      },
+                      DashVideo: {
+                        fields: {
+                          baseUrl: {
+                            type: "string",
+                            id: 1
+                          },
+                          backupUrl: {
+                            rule: "repeated",
+                            type: "string",
+                            id: 2
+                          },
+                          bandwidth: {
+                            type: "uint32",
+                            id: 3
+                          },
+                          codecid: {
+                            type: "uint32",
+                            id: 4
+                          },
+                          md5: {
+                            type: "string",
+                            id: 5
+                          },
+                          size: {
+                            type: "uint64",
+                            id: 6
+                          },
+                          audioId: {
+                            type: "uint32",
+                            id: 7
+                          },
+                          noRexcode: {
+                            type: "bool",
+                            id: 8
+                          }
+                        }
+                      },
+                      VideoType: {
+                        values: {
+                          Unknown: 0,
+                          FLV: 1,
+                          DASH: 2,
+                          MP4: 3
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+
+  // src/io/grpc/BAPIMetadata/metadata.ts
+  init_tampermonkey();
+  var import_light2 = __toESM(require_light());
+
+  // src/io/grpc/BAPIMetadata/metadata.json
+  var metadata_default = {
+    nested: {
+      bilibili: {
+        nested: {
+          metadata: {
+            nested: {
+              Metadata: {
+                fields: {
+                  accessKey: {
+                    type: "string",
+                    id: 1
+                  },
+                  mobiApp: {
+                    type: "string",
+                    id: 2
+                  },
+                  device: {
+                    type: "string",
+                    id: 3
+                  },
+                  build: {
+                    type: "int32",
+                    id: 4
+                  },
+                  channel: {
+                    type: "string",
+                    id: 5
+                  },
+                  buvid: {
+                    type: "string",
+                    id: 6
+                  },
+                  platform: {
+                    type: "string",
+                    id: 7
+                  }
+                }
+              }
+            }
+          },
+          rpc: {
+            nested: {
+              Status: {
+                fields: {
+                  code: {
+                    type: "int32",
+                    id: 1
+                  },
+                  message: {
+                    type: "string",
+                    id: 2
+                  },
+                  details: {
+                    rule: "repeated",
+                    type: "google.protobuf.Any",
+                    id: 3
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      google: {
+        nested: {
+          protobuf: {
+            nested: {
+              Any: {
+                fields: {
+                  type_url: {
+                    type: "string",
+                    id: 1
+                  },
+                  value: {
+                    type: "google.protobuf.RequestInfo",
+                    id: 2
+                  }
+                }
+              },
+              RequestInfo: {
+                fields: {
+                  request_id: {
+                    type: "int64",
+                    id: 1
+                  },
+                  serving_data: {
+                    type: "string",
+                    id: 2
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+
+  // node_modules/fflate/esm/browser.js
+  init_tampermonkey();
+  var u8 = Uint8Array;
+  var u16 = Uint16Array;
+  var u32 = Uint32Array;
+  var fleb = new u8([
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5,
+    5,
+    0,
+    /* unused */
+    0,
+    0,
+    /* impossible */
+    0
+  ]);
+  var fdeb = new u8([
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    4,
+    5,
+    5,
+    6,
+    6,
+    7,
+    7,
+    8,
+    8,
+    9,
+    9,
+    10,
+    10,
+    11,
+    11,
+    12,
+    12,
+    13,
+    13,
+    /* unused */
+    0,
+    0
+  ]);
+  var clim = new u8([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
+  var freb = function(eb, start) {
+    var b = new u16(31);
+    for (var i = 0; i < 31; ++i) {
+      b[i] = start += 1 << eb[i - 1];
+    }
+    var r = new u32(b[30]);
+    for (var i = 1; i < 30; ++i) {
+      for (var j = b[i]; j < b[i + 1]; ++j) {
+        r[j] = j - b[i] << 5 | i;
+      }
+    }
+    return [b, r];
+  };
+  var _a = freb(fleb, 2);
+  var fl = _a[0];
+  var revfl = _a[1];
+  fl[28] = 258, revfl[258] = 28;
+  var _b = freb(fdeb, 0);
+  var fd = _b[0];
+  var revfd = _b[1];
+  var rev = new u16(32768);
+  for (i = 0; i < 32768; ++i) {
+    x = (i & 43690) >>> 1 | (i & 21845) << 1;
+    x = (x & 52428) >>> 2 | (x & 13107) << 2;
+    x = (x & 61680) >>> 4 | (x & 3855) << 4;
+    rev[i] = ((x & 65280) >>> 8 | (x & 255) << 8) >>> 1;
+  }
+  var x;
+  var i;
+  var hMap = function(cd, mb, r) {
+    var s = cd.length;
+    var i = 0;
+    var l = new u16(mb);
+    for (; i < s; ++i) {
+      if (cd[i])
+        ++l[cd[i] - 1];
+    }
+    var le = new u16(mb);
+    for (i = 0; i < mb; ++i) {
+      le[i] = le[i - 1] + l[i - 1] << 1;
+    }
+    var co;
+    if (r) {
+      co = new u16(1 << mb);
+      var rvb = 15 - mb;
+      for (i = 0; i < s; ++i) {
+        if (cd[i]) {
+          var sv = i << 4 | cd[i];
+          var r_1 = mb - cd[i];
+          var v = le[cd[i] - 1]++ << r_1;
+          for (var m = v | (1 << r_1) - 1; v <= m; ++v) {
+            co[rev[v] >>> rvb] = sv;
+          }
+        }
+      }
+    } else {
+      co = new u16(s);
+      for (i = 0; i < s; ++i) {
+        if (cd[i]) {
+          co[i] = rev[le[cd[i] - 1]++] >>> 15 - cd[i];
+        }
+      }
+    }
+    return co;
+  };
+  var flt = new u8(288);
+  for (i = 0; i < 144; ++i)
+    flt[i] = 8;
+  var i;
+  for (i = 144; i < 256; ++i)
+    flt[i] = 9;
+  var i;
+  for (i = 256; i < 280; ++i)
+    flt[i] = 7;
+  var i;
+  for (i = 280; i < 288; ++i)
+    flt[i] = 8;
+  var i;
+  var fdt = new u8(32);
+  for (i = 0; i < 32; ++i)
+    fdt[i] = 5;
+  var i;
+  var flm = /* @__PURE__ */ hMap(flt, 9, 0);
+  var flrm = /* @__PURE__ */ hMap(flt, 9, 1);
+  var fdm = /* @__PURE__ */ hMap(fdt, 5, 0);
+  var fdrm = /* @__PURE__ */ hMap(fdt, 5, 1);
+  var max = function(a) {
+    var m = a[0];
+    for (var i = 1; i < a.length; ++i) {
+      if (a[i] > m)
+        m = a[i];
+    }
+    return m;
+  };
+  var bits = function(d, p, m) {
+    var o = p / 8 | 0;
+    return (d[o] | d[o + 1] << 8) >> (p & 7) & m;
+  };
+  var bits16 = function(d, p) {
+    var o = p / 8 | 0;
+    return (d[o] | d[o + 1] << 8 | d[o + 2] << 16) >> (p & 7);
+  };
+  var shft = function(p) {
+    return (p + 7) / 8 | 0;
+  };
+  var slc = function(v, s, e) {
+    if (s == null || s < 0)
+      s = 0;
+    if (e == null || e > v.length)
+      e = v.length;
+    var n = new (v.BYTES_PER_ELEMENT == 2 ? u16 : v.BYTES_PER_ELEMENT == 4 ? u32 : u8)(e - s);
+    n.set(v.subarray(s, e));
+    return n;
+  };
+  var ec = [
+    "unexpected EOF",
+    "invalid block type",
+    "invalid length/literal",
+    "invalid distance",
+    "stream finished",
+    "no stream handler",
+    ,
+    "no callback",
+    "invalid UTF-8 data",
+    "extra field too long",
+    "date not in range 1980-2099",
+    "filename too long",
+    "stream finishing",
+    "invalid zip data"
+    // determined by unknown compression method
+  ];
+  var err = function(ind, msg, nt) {
+    var e = new Error(msg || ec[ind]);
+    e.code = ind;
+    if (Error.captureStackTrace)
+      Error.captureStackTrace(e, err);
+    if (!nt)
+      throw e;
+    return e;
+  };
+  var inflt = function(dat, buf, st) {
+    var sl = dat.length;
+    if (!sl || st && st.f && !st.l)
+      return buf || new u8(0);
+    var noBuf = !buf || st;
+    var noSt = !st || st.i;
+    if (!st)
+      st = {};
+    if (!buf)
+      buf = new u8(sl * 3);
+    var cbuf = function(l2) {
+      var bl = buf.length;
+      if (l2 > bl) {
+        var nbuf = new u8(Math.max(bl * 2, l2));
+        nbuf.set(buf);
+        buf = nbuf;
+      }
+    };
+    var final = st.f || 0, pos = st.p || 0, bt = st.b || 0, lm = st.l, dm = st.d, lbt = st.m, dbt = st.n;
+    var tbts = sl * 8;
+    do {
+      if (!lm) {
+        final = bits(dat, pos, 1);
+        var type = bits(dat, pos + 1, 3);
+        pos += 3;
+        if (!type) {
+          var s = shft(pos) + 4, l = dat[s - 4] | dat[s - 3] << 8, t = s + l;
+          if (t > sl) {
+            if (noSt)
+              err(0);
+            break;
+          }
+          if (noBuf)
+            cbuf(bt + l);
+          buf.set(dat.subarray(s, t), bt);
+          st.b = bt += l, st.p = pos = t * 8, st.f = final;
+          continue;
+        } else if (type == 1)
+          lm = flrm, dm = fdrm, lbt = 9, dbt = 5;
+        else if (type == 2) {
+          var hLit = bits(dat, pos, 31) + 257, hcLen = bits(dat, pos + 10, 15) + 4;
+          var tl = hLit + bits(dat, pos + 5, 31) + 1;
+          pos += 14;
+          var ldt = new u8(tl);
+          var clt = new u8(19);
+          for (var i = 0; i < hcLen; ++i) {
+            clt[clim[i]] = bits(dat, pos + i * 3, 7);
+          }
+          pos += hcLen * 3;
+          var clb = max(clt), clbmsk = (1 << clb) - 1;
+          var clm = hMap(clt, clb, 1);
+          for (var i = 0; i < tl; ) {
+            var r = clm[bits(dat, pos, clbmsk)];
+            pos += r & 15;
+            var s = r >>> 4;
+            if (s < 16) {
+              ldt[i++] = s;
+            } else {
+              var c = 0, n = 0;
+              if (s == 16)
+                n = 3 + bits(dat, pos, 3), pos += 2, c = ldt[i - 1];
+              else if (s == 17)
+                n = 3 + bits(dat, pos, 7), pos += 3;
+              else if (s == 18)
+                n = 11 + bits(dat, pos, 127), pos += 7;
+              while (n--)
+                ldt[i++] = c;
+            }
+          }
+          var lt = ldt.subarray(0, hLit), dt = ldt.subarray(hLit);
+          lbt = max(lt);
+          dbt = max(dt);
+          lm = hMap(lt, lbt, 1);
+          dm = hMap(dt, dbt, 1);
+        } else
+          err(1);
+        if (pos > tbts) {
+          if (noSt)
+            err(0);
+          break;
+        }
+      }
+      if (noBuf)
+        cbuf(bt + 131072);
+      var lms = (1 << lbt) - 1, dms = (1 << dbt) - 1;
+      var lpos = pos;
+      for (; ; lpos = pos) {
+        var c = lm[bits16(dat, pos) & lms], sym = c >>> 4;
+        pos += c & 15;
+        if (pos > tbts) {
+          if (noSt)
+            err(0);
+          break;
+        }
+        if (!c)
+          err(2);
+        if (sym < 256)
+          buf[bt++] = sym;
+        else if (sym == 256) {
+          lpos = pos, lm = null;
+          break;
+        } else {
+          var add = sym - 254;
+          if (sym > 264) {
+            var i = sym - 257, b = fleb[i];
+            add = bits(dat, pos, (1 << b) - 1) + fl[i];
+            pos += b;
+          }
+          var d = dm[bits16(dat, pos) & dms], dsym = d >>> 4;
+          if (!d)
+            err(3);
+          pos += d & 15;
+          var dt = fd[dsym];
+          if (dsym > 3) {
+            var b = fdeb[dsym];
+            dt += bits16(dat, pos) & (1 << b) - 1, pos += b;
+          }
+          if (pos > tbts) {
+            if (noSt)
+              err(0);
+            break;
+          }
+          if (noBuf)
+            cbuf(bt + 131072);
+          var end = bt + add;
+          for (; bt < end; bt += 4) {
+            buf[bt] = buf[bt - dt];
+            buf[bt + 1] = buf[bt + 1 - dt];
+            buf[bt + 2] = buf[bt + 2 - dt];
+            buf[bt + 3] = buf[bt + 3 - dt];
+          }
+          bt = end;
+        }
+      }
+      st.l = lm, st.p = lpos, st.b = bt, st.f = final;
+      if (lm)
+        final = 1, st.m = lbt, st.d = dm, st.n = dbt;
+    } while (!final);
+    return bt == buf.length ? buf : slc(buf, 0, bt);
+  };
+  var wbits = function(d, p, v) {
+    v <<= p & 7;
+    var o = p / 8 | 0;
+    d[o] |= v;
+    d[o + 1] |= v >>> 8;
+  };
+  var wbits16 = function(d, p, v) {
+    v <<= p & 7;
+    var o = p / 8 | 0;
+    d[o] |= v;
+    d[o + 1] |= v >>> 8;
+    d[o + 2] |= v >>> 16;
+  };
+  var hTree = function(d, mb) {
+    var t = [];
+    for (var i = 0; i < d.length; ++i) {
+      if (d[i])
+        t.push({ s: i, f: d[i] });
+    }
+    var s = t.length;
+    var t2 = t.slice();
+    if (!s)
+      return [et, 0];
+    if (s == 1) {
+      var v = new u8(t[0].s + 1);
+      v[t[0].s] = 1;
+      return [v, 1];
+    }
+    t.sort(function(a, b) {
+      return a.f - b.f;
+    });
+    t.push({ s: -1, f: 25001 });
+    var l = t[0], r = t[1], i0 = 0, i1 = 1, i2 = 2;
+    t[0] = { s: -1, f: l.f + r.f, l, r };
+    while (i1 != s - 1) {
+      l = t[t[i0].f < t[i2].f ? i0++ : i2++];
+      r = t[i0 != i1 && t[i0].f < t[i2].f ? i0++ : i2++];
+      t[i1++] = { s: -1, f: l.f + r.f, l, r };
+    }
+    var maxSym = t2[0].s;
+    for (var i = 1; i < s; ++i) {
+      if (t2[i].s > maxSym)
+        maxSym = t2[i].s;
+    }
+    var tr = new u16(maxSym + 1);
+    var mbt = ln(t[i1 - 1], tr, 0);
+    if (mbt > mb) {
+      var i = 0, dt = 0;
+      var lft = mbt - mb, cst = 1 << lft;
+      t2.sort(function(a, b) {
+        return tr[b.s] - tr[a.s] || a.f - b.f;
+      });
+      for (; i < s; ++i) {
+        var i2_1 = t2[i].s;
+        if (tr[i2_1] > mb) {
+          dt += cst - (1 << mbt - tr[i2_1]);
+          tr[i2_1] = mb;
+        } else
+          break;
+      }
+      dt >>>= lft;
+      while (dt > 0) {
+        var i2_2 = t2[i].s;
+        if (tr[i2_2] < mb)
+          dt -= 1 << mb - tr[i2_2]++ - 1;
+        else
+          ++i;
+      }
+      for (; i >= 0 && dt; --i) {
+        var i2_3 = t2[i].s;
+        if (tr[i2_3] == mb) {
+          --tr[i2_3];
+          ++dt;
+        }
+      }
+      mbt = mb;
+    }
+    return [new u8(tr), mbt];
+  };
+  var ln = function(n, l, d) {
+    return n.s == -1 ? Math.max(ln(n.l, l, d + 1), ln(n.r, l, d + 1)) : l[n.s] = d;
+  };
+  var lc = function(c) {
+    var s = c.length;
+    while (s && !c[--s])
+      ;
+    var cl = new u16(++s);
+    var cli = 0, cln = c[0], cls = 1;
+    var w = function(v) {
+      cl[cli++] = v;
+    };
+    for (var i = 1; i <= s; ++i) {
+      if (c[i] == cln && i != s)
+        ++cls;
+      else {
+        if (!cln && cls > 2) {
+          for (; cls > 138; cls -= 138)
+            w(32754);
+          if (cls > 2) {
+            w(cls > 10 ? cls - 11 << 5 | 28690 : cls - 3 << 5 | 12305);
+            cls = 0;
+          }
+        } else if (cls > 3) {
+          w(cln), --cls;
+          for (; cls > 6; cls -= 6)
+            w(8304);
+          if (cls > 2)
+            w(cls - 3 << 5 | 8208), cls = 0;
+        }
+        while (cls--)
+          w(cln);
+        cls = 1;
+        cln = c[i];
+      }
+    }
+    return [cl.subarray(0, cli), s];
+  };
+  var clen = function(cf, cl) {
+    var l = 0;
+    for (var i = 0; i < cl.length; ++i)
+      l += cf[i] * cl[i];
+    return l;
+  };
+  var wfblk = function(out, pos, dat) {
+    var s = dat.length;
+    var o = shft(pos + 2);
+    out[o] = s & 255;
+    out[o + 1] = s >>> 8;
+    out[o + 2] = out[o] ^ 255;
+    out[o + 3] = out[o + 1] ^ 255;
+    for (var i = 0; i < s; ++i)
+      out[o + i + 4] = dat[i];
+    return (o + 4 + s) * 8;
+  };
+  var wblk = function(dat, out, final, syms, lf, df, eb, li, bs, bl, p) {
+    wbits(out, p++, final);
+    ++lf[256];
+    var _a3 = hTree(lf, 15), dlt = _a3[0], mlb = _a3[1];
+    var _b2 = hTree(df, 15), ddt = _b2[0], mdb = _b2[1];
+    var _c = lc(dlt), lclt = _c[0], nlc = _c[1];
+    var _d = lc(ddt), lcdt = _d[0], ndc = _d[1];
+    var lcfreq = new u16(19);
+    for (var i = 0; i < lclt.length; ++i)
+      lcfreq[lclt[i] & 31]++;
+    for (var i = 0; i < lcdt.length; ++i)
+      lcfreq[lcdt[i] & 31]++;
+    var _e = hTree(lcfreq, 7), lct = _e[0], mlcb = _e[1];
+    var nlcc = 19;
+    for (; nlcc > 4 && !lct[clim[nlcc - 1]]; --nlcc)
+      ;
+    var flen = bl + 5 << 3;
+    var ftlen = clen(lf, flt) + clen(df, fdt) + eb;
+    var dtlen = clen(lf, dlt) + clen(df, ddt) + eb + 14 + 3 * nlcc + clen(lcfreq, lct) + (2 * lcfreq[16] + 3 * lcfreq[17] + 7 * lcfreq[18]);
+    if (flen <= ftlen && flen <= dtlen)
+      return wfblk(out, p, dat.subarray(bs, bs + bl));
+    var lm, ll, dm, dl;
+    wbits(out, p, 1 + (dtlen < ftlen)), p += 2;
+    if (dtlen < ftlen) {
+      lm = hMap(dlt, mlb, 0), ll = dlt, dm = hMap(ddt, mdb, 0), dl = ddt;
+      var llm = hMap(lct, mlcb, 0);
+      wbits(out, p, nlc - 257);
+      wbits(out, p + 5, ndc - 1);
+      wbits(out, p + 10, nlcc - 4);
+      p += 14;
+      for (var i = 0; i < nlcc; ++i)
+        wbits(out, p + 3 * i, lct[clim[i]]);
+      p += 3 * nlcc;
+      var lcts = [lclt, lcdt];
+      for (var it = 0; it < 2; ++it) {
+        var clct = lcts[it];
+        for (var i = 0; i < clct.length; ++i) {
+          var len = clct[i] & 31;
+          wbits(out, p, llm[len]), p += lct[len];
+          if (len > 15)
+            wbits(out, p, clct[i] >>> 5 & 127), p += clct[i] >>> 12;
+        }
+      }
+    } else {
+      lm = flm, ll = flt, dm = fdm, dl = fdt;
+    }
+    for (var i = 0; i < li; ++i) {
+      if (syms[i] > 255) {
+        var len = syms[i] >>> 18 & 31;
+        wbits16(out, p, lm[len + 257]), p += ll[len + 257];
+        if (len > 7)
+          wbits(out, p, syms[i] >>> 23 & 31), p += fleb[len];
+        var dst = syms[i] & 31;
+        wbits16(out, p, dm[dst]), p += dl[dst];
+        if (dst > 3)
+          wbits16(out, p, syms[i] >>> 5 & 8191), p += fdeb[dst];
+      } else {
+        wbits16(out, p, lm[syms[i]]), p += ll[syms[i]];
+      }
+    }
+    wbits16(out, p, lm[256]);
+    return p + ll[256];
+  };
+  var deo = /* @__PURE__ */ new u32([65540, 131080, 131088, 131104, 262176, 1048704, 1048832, 2114560, 2117632]);
+  var et = /* @__PURE__ */ new u8(0);
+  var dflt = function(dat, lvl, plvl, pre, post, lst) {
+    var s = dat.length;
+    var o = new u8(pre + s + 5 * (1 + Math.ceil(s / 7e3)) + post);
+    var w = o.subarray(pre, o.length - post);
+    var pos = 0;
+    if (!lvl || s < 8) {
+      for (var i = 0; i <= s; i += 65535) {
+        var e = i + 65535;
+        if (e >= s) {
+          w[pos >> 3] = lst;
+        }
+        pos = wfblk(w, pos + 1, dat.subarray(i, e));
+      }
+    } else {
+      var opt = deo[lvl - 1];
+      var n = opt >>> 13, c = opt & 8191;
+      var msk_1 = (1 << plvl) - 1;
+      var prev = new u16(32768), head = new u16(msk_1 + 1);
+      var bs1_1 = Math.ceil(plvl / 3), bs2_1 = 2 * bs1_1;
+      var hsh = function(i2) {
+        return (dat[i2] ^ dat[i2 + 1] << bs1_1 ^ dat[i2 + 2] << bs2_1) & msk_1;
+      };
+      var syms = new u32(25e3);
+      var lf = new u16(288), df = new u16(32);
+      var lc_1 = 0, eb = 0, i = 0, li = 0, wi = 0, bs = 0;
+      for (; i < s; ++i) {
+        var hv = hsh(i);
+        var imod = i & 32767, pimod = head[hv];
+        prev[imod] = pimod;
+        head[hv] = imod;
+        if (wi <= i) {
+          var rem = s - i;
+          if ((lc_1 > 7e3 || li > 24576) && rem > 423) {
+            pos = wblk(dat, w, 0, syms, lf, df, eb, li, bs, i - bs, pos);
+            li = lc_1 = eb = 0, bs = i;
+            for (var j = 0; j < 286; ++j)
+              lf[j] = 0;
+            for (var j = 0; j < 30; ++j)
+              df[j] = 0;
+          }
+          var l = 2, d = 0, ch_1 = c, dif = imod - pimod & 32767;
+          if (rem > 2 && hv == hsh(i - dif)) {
+            var maxn = Math.min(n, rem) - 1;
+            var maxd = Math.min(32767, i);
+            var ml = Math.min(258, rem);
+            while (dif <= maxd && --ch_1 && imod != pimod) {
+              if (dat[i + l] == dat[i + l - dif]) {
+                var nl = 0;
+                for (; nl < ml && dat[i + nl] == dat[i + nl - dif]; ++nl)
+                  ;
+                if (nl > l) {
+                  l = nl, d = dif;
+                  if (nl > maxn)
+                    break;
+                  var mmd = Math.min(dif, nl - 2);
+                  var md = 0;
+                  for (var j = 0; j < mmd; ++j) {
+                    var ti = i - dif + j + 32768 & 32767;
+                    var pti = prev[ti];
+                    var cd = ti - pti + 32768 & 32767;
+                    if (cd > md)
+                      md = cd, pimod = ti;
+                  }
+                }
+              }
+              imod = pimod, pimod = prev[imod];
+              dif += imod - pimod + 32768 & 32767;
+            }
+          }
+          if (d) {
+            syms[li++] = 268435456 | revfl[l] << 18 | revfd[d];
+            var lin = revfl[l] & 31, din = revfd[d] & 31;
+            eb += fleb[lin] + fdeb[din];
+            ++lf[257 + lin];
+            ++df[din];
+            wi = i + l;
+            ++lc_1;
+          } else {
+            syms[li++] = dat[i];
+            ++lf[dat[i]];
+          }
+        }
+      }
+      pos = wblk(dat, w, lst, syms, lf, df, eb, li, bs, i - bs, pos);
+      if (!lst && pos & 7)
+        pos = wfblk(w, pos + 1, et);
+    }
+    return slc(o, 0, pre + shft(pos) + post);
+  };
+  var crct = /* @__PURE__ */ function() {
+    var t = new Int32Array(256);
+    for (var i = 0; i < 256; ++i) {
+      var c = i, k = 9;
+      while (--k)
+        c = (c & 1 && -306674912) ^ c >>> 1;
+      t[i] = c;
+    }
+    return t;
+  }();
+  var crc = function() {
+    var c = -1;
+    return {
+      p: function(d) {
+        var cr = c;
+        for (var i = 0; i < d.length; ++i)
+          cr = crct[cr & 255 ^ d[i]] ^ cr >>> 8;
+        c = cr;
+      },
+      d: function() {
+        return ~c;
+      }
+    };
+  };
+  var dopt = function(dat, opt, pre, post, st) {
+    return dflt(dat, opt.level == null ? 6 : opt.level, opt.mem == null ? Math.ceil(Math.max(8, Math.min(13, Math.log(dat.length))) * 1.5) : 12 + opt.mem, pre, post, !st);
+  };
+  var wbytes = function(d, b, v) {
+    for (; v; ++b)
+      d[b] = v, v >>>= 8;
+  };
+  var gzh = function(c, o) {
+    var fn = o.filename;
+    c[0] = 31, c[1] = 139, c[2] = 8, c[8] = o.level < 2 ? 4 : o.level == 9 ? 2 : 0, c[9] = 3;
+    if (o.mtime != 0)
+      wbytes(c, 4, Math.floor(new Date(o.mtime || Date.now()) / 1e3));
+    if (fn) {
+      c[3] = 8;
+      for (var i = 0; i <= fn.length; ++i)
+        c[i + 10] = fn.charCodeAt(i);
+    }
+  };
+  var gzs = function(d) {
+    if (d[0] != 31 || d[1] != 139 || d[2] != 8)
+      err(6, "invalid gzip data");
+    var flg = d[3];
+    var st = 10;
+    if (flg & 4)
+      st += d[10] | (d[11] << 8) + 2;
+    for (var zs = (flg >> 3 & 1) + (flg >> 4 & 1); zs > 0; zs -= !d[st++])
+      ;
+    return st + (flg & 2);
+  };
+  var gzl = function(d) {
+    var l = d.length;
+    return (d[l - 4] | d[l - 3] << 8 | d[l - 2] << 16 | d[l - 1] << 24) >>> 0;
+  };
+  var gzhl = function(o) {
+    return 10 + (o.filename && o.filename.length + 1 || 0);
+  };
+  function gzipSync(data, opts) {
+    if (!opts)
+      opts = {};
+    var c = crc(), l = data.length;
+    c.p(data);
+    var d = dopt(data, opts, gzhl(opts), 8), s = d.length;
+    return gzh(d, opts), wbytes(d, s - 8, c.d()), wbytes(d, s - 4, l), d;
+  }
+  function gunzipSync(data, out) {
+    return inflt(data.subarray(gzs(data), -8), out || new u8(gzl(data)));
+  }
+  var td = typeof TextDecoder != "undefined" && /* @__PURE__ */ new TextDecoder();
+  var tds = 0;
+  try {
+    td.decode(et, { stream: true });
+    tds = 1;
+  } catch (e) {
+  }
+
+  // src/io/grpc/BAPIMetadata/metadata.ts
+  var _BAPIMetadata = class {
+    constructor(accessKey) {
+      this.accessKey = accessKey;
+      _BAPIMetadata.Root || _BAPIMetadata.RootInit();
+      accessKey && (this.metadata.accessKey = accessKey);
+    }
+    /** 初始化命名空间及Type */
+    static RootInit() {
+      this.Root = import_light2.Root.fromJSON(metadata_default);
+      this.metadata = this.Root.lookupType("Metadata");
+      this.status = this.Root.lookupType("bilibili.rpc.Status");
+    }
+    /** grpc app host */
+    hostAPP = "//app.bilibili.com";
+    /** grpc host */
+    hostGrpc = "//grpc.biliapi.net";
+    /** 默认metadata */
+    metadata = {
+      buvid: "5848738A7B27474C9C407F25701EFAC28527C",
+      build: 7220300,
+      // channel: 'bilibili',
+      mobiApp: "iphone",
+      platform: "ios"
+      // device: 'phone'
+    };
+    /** Base64化metadata */
+    get metadataBase64() {
+      return base64.encodeFromUint8Array(_BAPIMetadata.metadata.encode(_BAPIMetadata.metadata.fromObject(this.metadata)).finish());
+    }
+    /**
+     * 发起grpc请求  
+     * - T 用于序列化请求参数的Type类型  
+     * - K 用于反序列化返回值的Type类型
+     * @param method 请求方法名
+     * @param repType 用于序列化请求参数的Type名
+     * @param replyType 用于反序列化返回值的Type名
+     * @param req 序列化前的请求参数
+     * @returns 请求返回值
+     */
+    async request(method, repType, replyType, req) {
+      const typeReq = this.lookupType(repType);
+      const typeReply = this.lookupType(replyType);
+      const body = gzipSync(typeReq.encode(typeReq.fromObject(req)).finish());
+      const buffer = new ArrayBuffer(body.length + 5);
+      const dataview = new DataView(buffer);
+      dataview.setUint32(1, body.length);
+      const uInt8 = new Uint8Array(buffer);
+      uInt8[0] = 1;
+      uInt8.set(body, 5);
+      const headers = {
+        "Content-Type": "application/grpc",
+        "x-bili-metadata-bin": this.metadataBase64,
+        "user-agent": "Bilibili Freedoooooom/MarkII",
+        "referer": "",
+        "grpc-encoding": "gzip",
+        "grpc-accept-encoding": "identify,gzip",
+        "grpc-timeout": "17989265u"
+        // 1680058967939
+      };
+      this.accessKey && (headers.authorization = \`identify_v1 \${this.accessKey}\`);
+      const response = await GM.fetch(\`\${this.hostAPP}/\${this.package}.\${this.service}/\${method}\`, {
+        method: "POST",
+        headers,
+        body: buffer
+      });
+      if (response.headers.has("grpc-status-details-bin")) {
+        const bin = response.headers.get("grpc-status-details-bin");
+        const uInt82 = base64.decodeToUint8Array(bin);
+        const details = _BAPIMetadata.status.toObject(_BAPIMetadata.status.decode(uInt82));
+        if (details.details && details.details.length) {
+          throw details.details[0].value;
+        }
+        throw details;
+      } else if (response.headers.has("grpc-message")) {
+        throw response.headers.get("grpc-message");
+      }
+      const arraybuffer = await response.arrayBuffer();
+      const uint8Array = new Uint8Array(arraybuffer.slice(5));
+      if (response.headers.get("grpc-encoding") === "gzip") {
+        return typeReply.toObject(typeReply.decode(gunzipSync(uint8Array)));
+      }
+      return typeReply.toObject(typeReply.decode(uint8Array));
+    }
+  };
+  var BAPIMetadata = _BAPIMetadata;
+  /** 命名空间 */
+  __publicField(BAPIMetadata, "Root");
+  /** Type<Metadata> */
+  __publicField(BAPIMetadata, "metadata");
+  /** Type<Status> */
+  __publicField(BAPIMetadata, "status");
+
+  // src/io/grpc/BAPIAppPlayurl/v1/playurl.ts
+  var _BAPIAppPlayurlV1 = class extends BAPIMetadata {
+    constructor(accessKey) {
+      super(accessKey);
+      this.accessKey = accessKey;
+      _BAPIAppPlayurlV1.Root || (_BAPIAppPlayurlV1.Root = import_light3.Root.fromJSON(playurl_default));
+    }
+    package = "bilibili.app.playurl.v1";
+    service = "PlayURL";
+    lookupType(type) {
+      return _BAPIAppPlayurlV1.Root.lookupType(\`\${this.package}.\${type}\`);
+    }
+    /** 获取播放地址 */
+    PlayURL(req) {
+      return this.request(
+        "PlayURL",
+        "PlayURLReq",
+        "PlayURLReply",
+        Object.assign({
+          qn,
+          fnval,
+          fnver,
+          forceHost: 2
+        }, req)
+      );
+    }
+    /** 获取投屏地址 */
+    Project(req) {
+      return this.request(
+        "Project",
+        "ProjectReq",
+        "ProjectReply",
+        Object.assign({
+          qn,
+          fnval,
+          fnver,
+          forceHost: 2,
+          protocol: 0,
+          deviceType: 0
+        }, req)
+      );
+    }
+    /** 获取播放地址和云控配置信息 */
+    PlayView(req) {
+      return this.request(
+        "PlayView",
+        "PlayViewReq",
+        "PlayViewReply",
+        Object.assign({
+          qn,
+          fnval,
+          fnver,
+          forceHost: 2
+        }, req)
+      );
+    }
+  };
+  var BAPIAppPlayurlV1 = _BAPIAppPlayurlV1;
+  /** 命名空间 */
+  __publicField(BAPIAppPlayurlV1, "Root");
+
   // src/core/download/aria2.ts
   init_tampermonkey();
 
@@ -10522,7 +12993,6 @@ const MODULES = `
      * @param durl durl信息
      */
     durl(durl) {
-      let index = 0;
       durl.forEach((d) => {
         const url = d.backupUrl || d.backup_url || [];
         url.unshift(d.url);
@@ -10540,8 +13010,7 @@ const MODULES = `
             break;
           case false:
             link.type = "flv";
-            index++;
-            link.flv = index;
+            link.order = d.order;
             break;
         }
         this.fileName && (link.fileName = \`\${this.fileName}\${qua}.\${link.type}\`);
@@ -10692,7 +13161,7 @@ const MODULES = `
       this._noData = addElement("div", void 0, this._container, "正在获取下载数据~");
     }
     updateItem = (key, value) => {
-      var _a2;
+      var _a3;
       this._container.contains(this._noData) && this._noData.remove();
       this._cells[key] || (this._cells[key] = addElement("div", { class: "cell" }, this._container));
       this._cells[key].innerHTML = \`<div class="type \${key}">\${key}</div>\`;
@@ -10701,7 +13170,7 @@ const MODULES = `
         d.url && (a.href = d.url[0]);
         d.fileName && (a.download = d.fileName);
         d.onClick && a.addEventListener("click", (e) => d.onClick(e));
-      }) : (_a2 = this._cells[key]) == null ? void 0 : _a2.remove();
+      }) : (_a3 = this._cells[key]) == null ? void 0 : _a3.remove();
       this._container.firstChild || this._container.replaceChildren(this._noData);
     };
     show() {
@@ -10808,8 +13277,8 @@ const MODULES = `
           style: "min-width: 54px; max-width: 54px; height: 54px;"
         }, this._list, \`<div class="preview-item-wrap\${vertical ? " vertical" : ""}"><img src="\${d}"></div>\`);
         item.addEventListener("click", (e) => {
-          var _a2;
-          (_a2 = this._list.querySelector(".preview-item-box.active")) == null ? void 0 : _a2.classList.remove("active");
+          var _a3;
+          (_a3 = this._list.querySelector(".preview-item-box.active")) == null ? void 0 : _a3.classList.remove("active");
           item.classList.add("active");
           this._image.innerHTML = \`<img class="image-content" src="\${d}">\`;
           e.stopPropagation();
@@ -10926,7 +13395,7 @@ const MODULES = `
           playurl.dash.minBufferTime = playurl.dash.min_buffer_time = 1.5;
           Promise.all([
             ...d.video_info.stream_list.map((d2) => (async () => {
-              var _a2, _b;
+              var _a3, _b2;
               if (d2.dash_video && d2.dash_video.base_url) {
                 const id = d2.stream_info.quality;
                 playurl.accept_description.push(PlayurlDescriptionMap[id]);
@@ -10960,14 +13429,14 @@ const MODULES = `
                   codecs: PlayurlCodecsAPP[id] || PlayurlCodecs[id],
                   frameRate: PlayurlFrameRate[id],
                   frame_rate: PlayurlFrameRate[id],
-                  height: (_a2 = PlayurlResolution[id]) == null ? void 0 : _a2[1],
+                  height: (_a3 = PlayurlResolution[id]) == null ? void 0 : _a3[1],
                   id: d2.stream_info.quality,
                   mimeType: "video/mp4",
                   mime_type: "video/mp4",
                   sar: "1:1",
                   startWithSap: 1,
                   start_with_sap: 1,
-                  width: (_b = PlayurlResolution[id]) == null ? void 0 : _b[0]
+                  width: (_b2 = PlayurlResolution[id]) == null ? void 0 : _b2[0]
                 });
               }
             })()),
@@ -11315,7 +13784,7 @@ const MODULES = `
     }
     /** 处理港澳台 */
     async _gat(args) {
-      var _a2;
+      var _a3;
       this.toast || (this.toast = toast.list());
       this.toast.data = ["港澳台限制视频 >>>"];
       const obj = urlObj(args[1]);
@@ -11326,7 +13795,7 @@ const MODULES = `
         try {
           if (user.userStatus.videoLimit.server === "内置") {
             obj.module = "bangumi";
-            const upInfo = (_a2 = window.__INITIAL_STATE__) == null ? void 0 : _a2.upInfo;
+            const upInfo = (_a3 = window.__INITIAL_STATE__) == null ? void 0 : _a3.upInfo;
             if (upInfo) {
               (upInfo.mid == 1988098633 || upInfo.mid == 2042149112) && (obj.module = "movie");
             }
@@ -11447,7 +13916,7 @@ const MODULES = `
         this.data[d.type].push({
           url: d.url,
           fileName,
-          quality: Reflect.has(d, "flv") ? \`\${d.quality}*\${d.flv}\` : d.quality,
+          quality: Reflect.has(d, "order") ? \`\${d.quality}*\${d.order}\` : d.quality,
           size: d.size,
           color: d.color,
           onClick: (ev) => this.pushDownload(d, ev)
@@ -11586,10 +14055,15 @@ const MODULES = `
     interface(cid, quality = qn) {
       return new ApiPlayurlInterface({ cid, quality }, BLOD.pgc).getData();
     }
+    _BAPIAppPlayurlV1;
+    get BAPIAppPlayurlV1() {
+      this._BAPIAppPlayurlV1 || (this._BAPIAppPlayurlV1 = new BAPIAppPlayurlV1(user.userStatus.accessKey.token));
+      return this._BAPIAppPlayurlV1;
+    }
     image() {
-      var _a2, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+      var _a3, _b2, _c, _d, _e, _f, _g, _h, _i, _j;
       const src = [];
-      (_b = (_a2 = videoInfo.metadata) == null ? void 0 : _a2.artwork) == null ? void 0 : _b.forEach((d) => src.push(d.src));
+      (_b2 = (_a3 = videoInfo.metadata) == null ? void 0 : _a3.artwork) == null ? void 0 : _b2.forEach((d) => src.push(d.src));
       if (location.host === "live.bilibili.com" && ((_f = (_e = (_d = (_c = window.__NEPTUNE_IS_MY_WAIFU__) == null ? void 0 : _c.roomInfoRes) == null ? void 0 : _d.data) == null ? void 0 : _e.room_info) == null ? void 0 : _f.cover)) {
         src.push((_j = (_i = (_h = (_g = window.__NEPTUNE_IS_MY_WAIFU__) == null ? void 0 : _g.roomInfoRes) == null ? void 0 : _h.data) == null ? void 0 : _i.room_info) == null ? void 0 : _j.cover);
       }
@@ -11607,19 +14081,19 @@ const MODULES = `
     }
     /** 添加播放器下载按钮 */
     bgrayButton() {
-      var _a2;
+      var _a3;
       if (!this.bgrayButtonBtn) {
         this.bgrayButtonBtn = document.createElement("div");
         this.bgrayButtonBtn.classList.add("bgray-btn", "show");
         this.bgrayButtonBtn.title = "下载当前视频";
         this.bgrayButtonBtn.innerHTML = "下载<br>视频";
         this.bgrayButtonBtn.addEventListener("click", (e) => {
-          var _a3;
-          (_a3 = BLOD.ui) == null ? void 0 : _a3.show("download");
+          var _a4;
+          (_a4 = BLOD.ui) == null ? void 0 : _a4.show("download");
           e.stopPropagation();
         });
       }
-      (_a2 = document.querySelector(".bgray-btn-wrap")) == null ? void 0 : _a2.appendChild(this.bgrayButtonBtn);
+      (_a3 = document.querySelector(".bgray-btn-wrap")) == null ? void 0 : _a3.appendChild(this.bgrayButtonBtn);
     }
   };
   var download = new Download();
@@ -11928,10 +14402,10 @@ const MODULES = `
      * @returns resourceId
      */
     static resourceId() {
-      var _a2;
+      var _a3;
       const tid = window.bid || window.tid || window.topid;
       if (tid) {
-        return (_a2 = this.tid[tid]) != null ? _a2 : 142;
+        return (_a3 = this.tid[tid]) != null ? _a3 : 142;
       }
       if (location.href.includes("v/douga"))
         return 1576;
@@ -12123,11 +14597,11 @@ const MODULES = `
     loadOldFooter(target) {
       addElement("div", { class: "footer bili-footer report-wrap-module" }, void 0, void 0, void 0, target);
       (window.jQuery ? Promise.resolve() : loadScript("//static.hdslb.com/js/jquery.min.js")).then(() => loadScript("//static.hdslb.com/common/js/footer.js")).then(() => {
-        var _a2;
+        var _a3;
         target && (target.style.display = "none");
         this.styleClear();
         addCss(".bili-footer {position: relative;}");
-        (_a2 = document.getElementsByClassName("bili-header-m")[1]) == null ? void 0 : _a2.remove();
+        (_a3 = document.getElementsByClassName("bili-header-m")[1]) == null ? void 0 : _a3.remove();
       });
     }
     /** 顶栏样式修复 */
@@ -12138,10 +14612,10 @@ const MODULES = `
     }
     /** 禁用新版顶栏相关样式 */
     async styleClear() {
-      var _a2;
+      var _a3;
       const d = document.styleSheets;
       for (let i = 0; i < d.length; i++) {
-        ((_a2 = d[i].href) == null ? void 0 : _a2.includes("laputa-header")) && (d[i].disabled = true);
+        ((_a3 = d[i].href) == null ? void 0 : _a3.includes("laputa-header")) && (d[i].disabled = true);
       }
       _Header.styleFix();
     }
@@ -12343,7 +14817,7 @@ const MODULES = `
       }
     }
     removeEventListener(target, type) {
-      var _a2;
+      var _a3;
       try {
         const arr2 = target.split("");
         let dom = this.vdom;
@@ -12355,7 +14829,7 @@ const MODULES = `
             dom = ele.children;
           }
         }
-        (_a2 = ele.event) == null ? true : delete _a2[type];
+        (_a3 = ele.event) == null ? true : delete _a3[type];
       } catch (e) {
         debug.error(e);
       }
@@ -12420,10 +14894,10 @@ const MODULES = `
     /** 动态重定向回相簿 */
     static album() {
       xhrHook(["x/polymer/web-dynamic", "detail?"], void 0, (res) => {
-        var _a2;
+        var _a3;
         const result = res.responseType === "json" ? res.response : JSON.parse(res.response);
         if (result.code === 0) {
-          if (((_a2 = result.data) == null ? void 0 : _a2.item.type) === "DYNAMIC_TYPE_DRAW")
+          if (((_a3 = result.data) == null ? void 0 : _a3.item.type) === "DYNAMIC_TYPE_DRAW")
             location.replace(\`https://h.bilibili.com/\${result.data.item.basic.rid_str}\`);
         }
       }, false);
@@ -12462,7 +14936,7 @@ const MODULES = `
                 if (ele) {
                   const medias = ele.__vue__.favListDetails.medias;
                   medias == null ? void 0 : medias.forEach((d) => {
-                    var _a2, _b;
+                    var _a3, _b2;
                     if (d.attr % 2) {
                       msg.push(\`> av\${d.id}\`);
                       if (this.aidInfo[d.id].title) {
@@ -12476,7 +14950,7 @@ const MODULES = `
                       }
                       this.aidInfo[d.id].cover && (d.cover = this.aidInfo[d.id].cover);
                       d.attr = 0;
-                      (_b = (_a2 = ele.querySelector(\`[data-aid=\${d.bvid}]\`)) == null ? void 0 : _a2.children[1]) == null ? void 0 : _b.setAttribute("style", "text-decoration : line-through;color : #ff0000;");
+                      (_b2 = (_a3 = ele.querySelector(\`[data-aid=\${d.bvid}]\`)) == null ? void 0 : _a3.children[1]) == null ? void 0 : _b2.setAttribute("style", "text-decoration : line-through;color : #ff0000;");
                     }
                   });
                 }
@@ -12569,8 +15043,8 @@ const MODULES = `
     /** 纯视频历史记录 */
     archive() {
       xhrHook(["api.bilibili.com/x/web-interface/history/cursor", "business"], function(args) {
-        let obj = new URL(args[1]), max = obj.searchParams.get("max") || "", view_at = obj.searchParams.get("view_at") || "";
-        args[1] = objUrl("//api.bilibili.com/x/web-interface/history/cursor", { max, view_at, type: "archive", ps: "20" });
+        let obj = new URL(args[1]), max2 = obj.searchParams.get("max") || "", view_at = obj.searchParams.get("view_at") || "";
+        args[1] = objUrl("//api.bilibili.com/x/web-interface/history/cursor", { max: max2, view_at, type: "archive", ps: "20" });
       }, void 0, false);
     }
   };
@@ -12806,9 +15280,9 @@ const MODULES = `
     /** 精准爆破序列 */
     paramArr = paramArr;
     constructor() {
-      var _a2;
+      var _a3;
       this.location();
-      (_a2 = window.navigation) == null ? void 0 : _a2.addEventListener("navigate", (e) => {
+      (_a3 = window.navigation) == null ? void 0 : _a3.addEventListener("navigate", (e) => {
         const newURL = this.clear(e.destination.url);
         if (e.destination.url != newURL) {
           e.preventDefault();
@@ -12939,8 +15413,8 @@ const MODULES = `
         try {
           const response = jsonCheck(r.response);
           response.data.items = response.data.items.filter((d) => {
-            var _a2, _b, _c, _d, _e;
-            return ((_e = (_d = (_c = (_b = (_a2 = d.modules) == null ? void 0 : _a2.module_dynamic) == null ? void 0 : _b.major) == null ? void 0 : _c.archive) == null ? void 0 : _d.badge) == null ? void 0 : _e.text) != "直播回放";
+            var _a3, _b2, _c, _d, _e;
+            return ((_e = (_d = (_c = (_b2 = (_a3 = d.modules) == null ? void 0 : _a3.module_dynamic) == null ? void 0 : _b2.major) == null ? void 0 : _c.archive) == null ? void 0 : _d.badge) == null ? void 0 : _e.text) != "直播回放";
           });
           r.responseType === "json" ? r.response = response : r.response = r.responseText = JSON.stringify(response);
         } catch (e) {
@@ -13210,8 +15684,8 @@ const MODULES = `
       xhrHook("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRec", (args) => {
         args[1] = args[1].includes("List") ? args[1].replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList", "api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web") : args[1].replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore", "api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web");
       }, (obj) => {
-        var _a2;
-        let response = (_a2 = obj.responseText) == null ? void 0 : _a2.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
+        var _a3;
+        let response = (_a3 = obj.responseText) == null ? void 0 : _a3.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
         if (response) {
           response = JSON.parse(response);
           response.data.text_link = { text: "233秒居然能做这些！", link: "//vc.bilibili.com" };
@@ -13250,14 +15724,14 @@ const MODULES = `
         }
         if (arr2) {
           apiSeasonRankList({ season_type: arr2[1] }).then((d) => {
-            var _a2;
+            var _a3;
             let html = \`<header class="rank-head"><h3>排行</h3><div class="bili-dropdown rank-dropdown"><span class="selected">三日</span><i class="icon icon-arrow-down"></i><ul class="dropdown-list"><li class="dropdown-item" style="display: none;">三日</li><li class="dropdown-item">一周</li></ul></div></header><div class="rank-list-wrap"><ul class="bangumi-rank-list rank-list">\`;
             for (let i = 0; i < 8; i++) {
               html += \`<li class="rank-item\${i < 3 ? " highlight" : ""}"><i class="ri-num">\${i + 1}</i><a href="\${d[i].url}" target="_blank" title="\${d[i].title} 播放:\${d[i].stat.view}" class="ri-info-wrap"><p class="ri-title">\${d[i].title}</p><span class="ri-total">\${d[i].new_ep.index_show}</span></a></li>\`;
             }
             html += \`</ul></div><a href="\${arr2[2]}" target="_blank" class="more-link">查看更多<i class="icon icon-arrow-r"></i></a>\`;
             const vnode = htmlVnode(html);
-            (_a2 = vnode[1].children[0].children) == null ? void 0 : _a2.forEach((t, i) => {
+            (_a3 = vnode[1].children[0].children) == null ? void 0 : _a3.forEach((t, i) => {
               let node;
               t.event = {
                 "mouseover": (e) => {
@@ -13283,8 +15757,8 @@ const MODULES = `
     /** 港澳台新番时间表 */
     timeLine() {
       poll(() => {
-        var _a2;
-        return (_a2 = document.querySelector("#bili_bangumi > .bangumi-module")) == null ? void 0 : _a2.__vue__;
+        var _a3;
+        return (_a3 = document.querySelector("#bili_bangumi > .bangumi-module")) == null ? void 0 : _a3.__vue__;
       }, (vue) => {
         apiNewlist(33).then(async (d) => {
           const eps = d.reduce((s, d2) => {
@@ -16601,7 +19075,7 @@ const MODULES = `
     playLoaded = false;
     constructor() {
       propertyHook.modify(window, "nano", (v) => {
-        var _a2;
+        var _a3;
         debug("捕获新版播放器！");
         const createPlayer = v.createPlayer;
         const that = this;
@@ -16613,10 +19087,10 @@ const MODULES = `
           that.createPlayer(...arguments);
           that.connect = that.nanoPlayer.connect;
           that.nanoPlayer.connect = function() {
-            var _a3;
+            var _a4;
             if (that.isConnect) {
               debug("允许新版播放器启动！");
-              return (_a3 = that.connect) == null ? void 0 : _a3.call(that);
+              return (_a4 = that.connect) == null ? void 0 : _a4.call(that);
             } else {
               that.isConnect = true;
               return Promise.resolve(true);
@@ -16626,7 +19100,7 @@ const MODULES = `
         });
         if (window.player) {
           try {
-            const manifest = (_a2 = window.player) == null ? void 0 : _a2.getManifest();
+            const manifest = (_a3 = window.player) == null ? void 0 : _a3.getManifest();
             debug("播放器实例已存在，可能脚本注入过慢！", manifest);
             manifest && this.createPlayer(manifest);
           } catch (e) {
@@ -16643,9 +19117,9 @@ const MODULES = `
     }
     /** 修改播放器启动参数 */
     modifyArgument(args) {
-      var _a2;
+      var _a3;
       while (this.modifyArgumentCallback.length) {
-        (_a2 = this.modifyArgumentCallback.shift()) == null ? void 0 : _a2(args);
+        (_a3 = this.modifyArgumentCallback.shift()) == null ? void 0 : _a3(args);
       }
     }
     initData = {};
@@ -16674,12 +19148,12 @@ const MODULES = `
     isEmbedPlayer = false;
     /** 旧版播放器正常引导 */
     EmbedPlayer(loadPlayer, isEmbedPlayer = true) {
-      var _a2;
+      var _a3;
       this.nanoPermit = () => {
       };
       this.isEmbedPlayer = isEmbedPlayer;
       methodHook(window, "EmbedPlayer", () => loadPlayer(), (d) => this.modifyArgument(d));
-      if ((_a2 = window.player) == null ? void 0 : _a2.disconnect) {
+      if ((_a3 = window.player) == null ? void 0 : _a3.disconnect) {
         try {
           debug("爆破新版播放器!");
           window.player.disconnect();
@@ -16698,64 +19172,64 @@ const MODULES = `
         if (this.nanoPlayer) {
           Object.defineProperties(this.nanoPlayer, {
             addEventListener: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.addEventListener;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.addEventListener;
             } },
             directiveDispatcher: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.directiveDispatcher;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.directiveDispatcher;
             } },
             editorCenter: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.editorCenter;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.editorCenter;
             } },
             exitFullScreen: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.exitFullScreen;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.exitFullScreen;
             } },
             getCurrentTime: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.getCurrentTime;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.getCurrentTime;
             } },
             getDuration: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.getDuration;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.getDuration;
             } },
             next: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.next;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.next;
             } },
             ogvUpdate: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.ogvUpdate;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.ogvUpdate;
             } },
             pause: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.pause;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.pause;
             } },
             play: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.play;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.play;
             } },
             prev: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.prev;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.prev;
             } },
             reload: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.reload;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.reload;
             } },
             seek: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.seek;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.seek;
             } },
             stop: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.stop;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.stop;
             } },
             volume: { get: () => {
-              var _a2;
-              return (_a2 = window.player) == null ? void 0 : _a2.volume;
+              var _a3;
+              return (_a3 = window.player) == null ? void 0 : _a3.volume;
             } },
             isInitialized: { value: () => true }
           });
@@ -16765,10 +19239,10 @@ const MODULES = `
     }
     /** 不启用旧版播放器允许新版播放器启动 */
     nanoPermit() {
-      var _a2;
+      var _a3;
       if (this.isConnect) {
         debug("允许新版播放器启动！");
-        (_a2 = this.connect) == null ? void 0 : _a2.call(this);
+        (_a3 = this.connect) == null ? void 0 : _a3.call(this);
       } else {
         this.isConnect = true;
       }
@@ -16793,11 +19267,11 @@ const MODULES = `
     dataInitedCallbacks = [];
     /** 捕获启动数据后启动播放器 */
     dataInitedCallback(callback) {
-      var _a2;
+      var _a3;
       callback && this.dataInitedCallbacks.push(callback);
       if (this.dataInited) {
         while (this.dataInitedCallbacks.length) {
-          (_a2 = this.dataInitedCallbacks.shift()) == null ? void 0 : _a2();
+          (_a3 = this.dataInitedCallbacks.shift()) == null ? void 0 : _a3();
         }
       }
     }
@@ -16881,10 +19355,10 @@ const MODULES = `
     simpleChinese() {
       if (user.userStatus.simpleChinese) {
         xhrHook("x/player/v2?", void 0, (res) => {
-          var _a2, _b, _c;
+          var _a3, _b2, _c;
           try {
             const response = jsonCheck(res.response);
-            if ((_c = (_b = (_a2 = response == null ? void 0 : response.data) == null ? void 0 : _a2.subtitle) == null ? void 0 : _b.subtitles) == null ? void 0 : _c.length) {
+            if ((_c = (_b2 = (_a3 = response == null ? void 0 : response.data) == null ? void 0 : _a3.subtitle) == null ? void 0 : _b2.subtitles) == null ? void 0 : _c.length) {
               response.data.subtitle.subtitles.forEach((d) => {
                 if (typeof d.subtitle_url === "string") {
                   switch (d.lan) {
@@ -16919,8 +19393,8 @@ const MODULES = `
     }
     /** 弹幕保护计划 */
     danmakuProtect() {
-      var _a2;
-      if (!((_a2 = window.player) == null ? void 0 : _a2.appendDm))
+      var _a3;
+      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm))
         return;
       const cid = Number(BLOD.cid);
       if (cid && danmakuProtect.includes(cid)) {
@@ -17142,8 +19616,8 @@ const MODULES = `
     /** 修复按时间排序评论翻页数 */
     pageCount() {
       jsonpHook("api.bilibili.com/x/v2/reply?", void 0, (res, url) => {
-        var _a2;
-        if (0 === res.code && ((_a2 = res.data) == null ? void 0 : _a2.page)) {
+        var _a3;
+        if (0 === res.code && ((_a3 = res.data) == null ? void 0 : _a3.page)) {
           if (res.data.page.count) {
             this.count = res.data.page.count;
           } else if (this.count) {
@@ -17155,10 +19629,10 @@ const MODULES = `
     }
     /** 预取评论页数 */
     async getPageCount(that) {
-      var _a2;
+      var _a3;
       if (that.oid) {
         const res = await apiReply(that.oid, 1, that.pageType);
-        ((_a2 = res.page) == null ? void 0 : _a2.count) && (this.count = res.page.count);
+        ((_a3 = res.page) == null ? void 0 : _a3.count) && (this.count = res.page.count);
       }
     }
     /** 修补评论组件 */
@@ -17255,7 +19729,7 @@ const MODULES = `
     /** 顶层评论ip属地 */
     _createListCon() {
       Feedback.prototype._createListCon = function(item, i, pos) {
-        var _a2, _b;
+        var _a3, _b2;
         const blCon = this._parentBlacklistDom(item, i, pos);
         const con = [
           '<div class="con ' + (pos == i ? "no-border" : "") + '">',
@@ -17271,7 +19745,7 @@ const MODULES = `
           this._createPlatformDom(item.content.plat),
           '<span class="time-location">',
           '<span class="reply-time">'.concat(this._formateTime(item.ctime), "</span>"),
-          ((_a2 = item == null ? void 0 : item.reply_control) == null ? void 0 : _a2.location) ? \`<span class="reply-location">\${((_b = item == null ? void 0 : item.reply_control) == null ? void 0 : _b.location) || ""}</span>\` : "",
+          ((_a3 = item == null ? void 0 : item.reply_control) == null ? void 0 : _a3.location) ? \`<span class="reply-location">\${((_b2 = item == null ? void 0 : item.reply_control) == null ? void 0 : _b2.location) || ""}</span>\` : "",
           "</span>",
           item.lottery_id ? "" : '<span class="like ' + (item.action == 1 ? "liked" : "") + '"><i></i><span>' + (item.like ? item.like : "") + "</span></span>",
           item.lottery_id ? "" : '<span class="hate ' + (item.action == 2 ? "hated" : "") + '"><i></i></span>',
@@ -17294,7 +19768,7 @@ const MODULES = `
     /** 楼中楼评论ip属地 */
     _createSubReplyItem() {
       Feedback.prototype._createSubReplyItem = function(item, i) {
-        var _a2, _b;
+        var _a3, _b2;
         if (item.invisible) {
           return "";
         }
@@ -17314,7 +19788,7 @@ const MODULES = `
           this._createPlatformDom(item.content.plat),
           '<span class="time-location">',
           '<span class="reply-time">'.concat(this._formateTime(item.ctime), "</span>"),
-          ((_a2 = item == null ? void 0 : item.reply_control) == null ? void 0 : _a2.location) ? \`<span class="reply-location">\${((_b = item == null ? void 0 : item.reply_control) == null ? void 0 : _b.location) || ""}</span>\` : "",
+          ((_a3 = item == null ? void 0 : item.reply_control) == null ? void 0 : _a3.location) ? \`<span class="reply-location">\${((_b2 = item == null ? void 0 : item.reply_control) == null ? void 0 : _b2.location) || ""}</span>\` : "",
           "</span>",
           '<span class="like ' + (item.action == 1 ? "liked" : "") + '"><i></i><span>' + (item.like ? item.like : "") + "</span></span>",
           '<span class="hate ' + (item.action == 2 ? "hated" : "") + '"><i></i></span>',
@@ -17430,10 +19904,10 @@ const MODULES = `
             operalist && (operalist.style.display = "none");
         });
         n.on("click.image-exhibition", ".image-item-img", function(e2) {
-          var _a2, _b, _c;
+          var _a3, _b2, _c;
           const src = this.src;
           const srcs = [];
-          (_b = (_a2 = this.parentElement) == null ? void 0 : _a2.parentElement) == null ? void 0 : _b.querySelectorAll("img").forEach((d) => {
+          (_b2 = (_a3 = this.parentElement) == null ? void 0 : _a3.parentElement) == null ? void 0 : _b2.querySelectorAll("img").forEach((d) => {
             srcs.push(d.src);
           });
           srcs.length || srcs.push(src);
@@ -17482,10 +19956,10 @@ const MODULES = `
     /** 评论图片 */
     _resolvePictures() {
       Feedback.prototype._resolvePictures = function(content) {
-        var _a2, _b;
+        var _a3, _b2;
         const pictureList = [];
         if (content) {
-          if ((_b = (_a2 = content.rich_text) == null ? void 0 : _a2.note) == null ? void 0 : _b.images) {
+          if ((_b2 = (_a3 = content.rich_text) == null ? void 0 : _a3.note) == null ? void 0 : _b2.images) {
             content.pictures || (content.pictures = []);
             content.rich_text.note.images.forEach((d) => {
               content.pictures.push({
@@ -24862,8 +27336,8 @@ const MODULES = `
         },
         get: () => {
           return this.backup && ((chunkIds, moreModules, executeModules) => {
-            var _a2;
-            const len = (_a2 = moreModules.length) != null ? _a2 : length;
+            var _a3;
+            const len = (_a3 = moreModules.length) != null ? _a3 : length;
             if (len in arr) {
               const obj = arr[len];
               const pam = param[len];
@@ -25092,7 +27566,7 @@ const MODULES = `
     /** 字幕暂存 */
     subtitles = [];
     constructor() {
-      var _a2;
+      var _a3;
       super(bangumi_default);
       Reflect.deleteProperty(window, "__INITIAL_STATE__");
       Reflect.defineProperty(window, "__NEXT_DATA__", { value: true });
@@ -25104,7 +27578,7 @@ const MODULES = `
       location.href.replace(/[eE][pP]\\d+/, (d) => this.epid = Number(d.substring(2)));
       this.recommend();
       this.seasonCount();
-      ((_a2 = user.userStatus.videoLimit) == null ? void 0 : _a2.status) && this.videoLimit();
+      ((_a3 = user.userStatus.videoLimit) == null ? void 0 : _a3.status) && this.videoLimit();
       this.related();
       this.initialState();
       this.enLike();
@@ -25163,12 +27637,12 @@ const MODULES = `
     related() {
       const related = {};
       xhrHook.async("x/web-interface/archive/related", () => {
-        var _a2, _b;
-        return (_b = (_a2 = window.__INITIAL_STATE__) == null ? void 0 : _a2.mediaInfo) == null ? void 0 : _b.title;
+        var _a3, _b2;
+        return (_b2 = (_a3 = window.__INITIAL_STATE__) == null ? void 0 : _a3.mediaInfo) == null ? void 0 : _b2.title;
       }, async () => {
-        var _a2, _b;
+        var _a3, _b2;
         let response = { code: 0, data: [], message: "0" };
-        if (related[(_b = (_a2 = window.__INITIAL_STATE__) == null ? void 0 : _a2.mediaInfo) == null ? void 0 : _b.title]) {
+        if (related[(_b2 = (_a3 = window.__INITIAL_STATE__) == null ? void 0 : _a3.mediaInfo) == null ? void 0 : _b2.title]) {
           response.data = related[window.__INITIAL_STATE__.mediaInfo.title];
         } else {
           await apiTagInfo(window.__INITIAL_STATE__.mediaInfo.title).then((d) => {
@@ -25186,7 +27660,7 @@ const MODULES = `
     initialState() {
       const data = this.epid ? { ep_id: this.epid } : { season_id: this.ssid };
       Promise.allSettled([apiBangumiSeason(data), apiSeasonStatus(data), new Promise((r) => poll(() => this.initilized, r))]).then((d) => d.map((d2) => d2.status === "fulfilled" && d2.value)).then(async (d) => {
-        var _a2;
+        var _a3;
         const t = window.__INITIAL_STATE__;
         const bangumi = d[0];
         const status = d[1];
@@ -25225,7 +27699,7 @@ const MODULES = `
             });
           };
           var loopTitle = loopTitle2;
-          if (bangumi.season_id && bangumi.total_ep && !((_a2 = bangumi.episodes) == null ? void 0 : _a2[0])) {
+          if (bangumi.season_id && bangumi.total_ep && !((_a3 = bangumi.episodes) == null ? void 0 : _a3[0])) {
             await new ApiSeasonSection(bangumi.season_id).toEpisodes().then((d2) => {
               bangumi.episodes = d2;
             }).catch((e) => {
@@ -25341,7 +27815,7 @@ const MODULES = `
     }
     /** 尝试东南亚接口 */
     async initGlobal() {
-      var _a2, _b, _c, _d, _e, _f, _g;
+      var _a3, _b2, _c, _d, _e, _f, _g;
       const data = this.epid ? { ep_id: this.epid } : { season_id: this.ssid };
       Object.assign(data, { access_key: user.userStatus.accessKey.token });
       const d = await new ApiGlobalOgvView(data, user.userStatus.videoLimit.th).getDate();
@@ -25382,7 +27856,7 @@ const MODULES = `
         return s;
       }, []);
       t.mediaInfo = {
-        actors: (_a2 = i.actor) == null ? void 0 : _a2.info,
+        actors: (_a3 = i.actor) == null ? void 0 : _a3.info,
         alias: i.alias,
         areas: i.areas,
         cover: i.cover,
@@ -25399,7 +27873,7 @@ const MODULES = `
         season_type: i.type,
         series_title: i.title,
         square_cover: i.square_cover,
-        staff: (_b = i.actor) == null ? void 0 : _b.info,
+        staff: (_b2 = i.actor) == null ? void 0 : _b2.info,
         stat: i.stat,
         style: (_c = i.styles) == null ? void 0 : _c.map((d_3) => d_3.name),
         title: i.title,
@@ -25477,8 +27951,8 @@ const MODULES = `
     enLike() {
       if (user.userStatus.like) {
         poll(() => document.querySelector("#bangumi_header > div.header-info > div.count-wrapper.clearfix > div.bangumi-coin-wrap"), (d) => {
-          var _a2;
-          (_a2 = d.parentElement) == null ? void 0 : _a2.insertBefore(this.like, d);
+          var _a3;
+          (_a3 = d.parentElement) == null ? void 0 : _a3.insertBefore(this.like, d);
           addCss(".ulike {margin-left: 15px;position: relative;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;}", "ulike-bangumi");
         });
         xhrHook("pgc/web/season/stat?", void 0, async (res) => {
@@ -25691,8 +28165,8 @@ const MODULES = `
     /** 合作UP */
     staff(staff) {
       poll(() => document.querySelector("#v_upinfo"), (node) => {
-        let fl = '<span class="title">UP主列表</span><div class="up-card-box">';
-        fl = staff.reduce((s, d) => {
+        let fl2 = '<span class="title">UP主列表</span><div class="up-card-box">';
+        fl2 = staff.reduce((s, d) => {
           s = s + \`<div class="up-card">
                     <a href="//space.bilibili.com/\${d.mid}" data-usercard-mid="\${d.mid}" target="_blank" class="avatar">
                     <img src="\${d.face}@48w_48h.webp" /><!---->
@@ -25701,8 +28175,8 @@ const MODULES = `
                     <a href="//space.bilibili.com/\${d.mid}" data-usercard-mid="\${d.mid}" target="_blank" class="\${d.vip && d.vip.status ? "name-text is-vip" : "name-text"}">\${d.name}</a>
                     </div></div>\`;
           return s;
-        }, fl) + \`</div>\`;
-        node.innerHTML = fl;
+        }, fl2) + \`</div>\`;
+        node.innerHTML = fl2;
         addCss(uplist_default, "up-list");
       });
     }
@@ -25759,16 +28233,16 @@ const MODULES = `
     }
     /** hook合集切p回调 */
     callAppointPart = (p, state) => {
-      var _a2;
+      var _a3;
       if (this.destroy)
         return Reflect.deleteProperty(window, "callAppointPart");
-      const vue = (_a2 = document.querySelector("#app")) == null ? void 0 : _a2.__vue__;
+      const vue = (_a3 = document.querySelector("#app")) == null ? void 0 : _a3.__vue__;
       if (vue) {
         vue.\$store.state.aid = state.aid;
         apiViewDetail(state.aid).then((d) => {
-          var _a3;
+          var _a4;
           vue.setVideoData(d.View);
-          (_a3 = document.querySelector("#recommend_report")) == null ? void 0 : _a3.__vue__.init(d.Related);
+          (_a4 = document.querySelector("#recommend_report")) == null ? void 0 : _a4.__vue__.init(d.Related);
           document.querySelector("#v_tag").__vue__.\$data.tags = d.Tags;
           videoInfo.aidDatail(d.View);
         }).catch((e) => {
@@ -25782,19 +28256,19 @@ const MODULES = `
     enLike() {
       if (user.userStatus.like) {
         poll(() => document.querySelector("#viewbox_report > div.number > span.u.coin"), (d) => {
-          var _a2;
+          var _a3;
           if (this.destroy)
             return this.like.remove();
-          (_a2 = d.parentElement) == null ? void 0 : _a2.insertBefore(this.like, d);
+          (_a3 = d.parentElement) == null ? void 0 : _a3.insertBefore(this.like, d);
           addCss(".video-info-m .number .ulike {margin-left: 15px;margin-right: 5px;}", "ulike-av");
         });
         const destroy = videoInfo.bindChange((v) => {
-          var _a2;
+          var _a3;
           if (this.destroy) {
             destroy();
             return this.like.remove();
           }
-          this.like.likes = (_a2 = v.stat) == null ? void 0 : _a2.like;
+          this.like.likes = (_a3 = v.stat) == null ? void 0 : _a3.like;
           this.like.init();
         });
       }
@@ -25835,8 +28309,8 @@ const MODULES = `
     enLike() {
       if (user.userStatus.like) {
         poll(() => document.querySelector("#viewlater-app > div > div > div > div.video-top-info.clearfix.bili-wrapper.bili-wrapper > div.video-info-module > div.number > span.u.coin.on"), (d) => {
-          var _a2;
-          (_a2 = d.parentElement) == null ? void 0 : _a2.insertBefore(this.like, d);
+          var _a3;
+          (_a3 = d.parentElement) == null ? void 0 : _a3.insertBefore(this.like, d);
           addCss(".video-info-module .number .ulike {margin-left: 15px;margin-right: 5px;}", "ulike-watchlater");
         }, void 0, 0);
         jsonpHook("x/web-interface/view?", void 0, (d) => {
@@ -25975,8 +28449,8 @@ const MODULES = `
     enLike() {
       if (user.userStatus.like) {
         poll(() => document.querySelector("#viewbox_report > div.number > span.u.coin"), (d) => {
-          var _a2;
-          (_a2 = d.parentElement) == null ? void 0 : _a2.insertBefore(this.like, d);
+          var _a3;
+          (_a3 = d.parentElement) == null ? void 0 : _a3.insertBefore(this.like, d);
           addCss(".video-info-m .number .ulike {margin-left: 15px;margin-right: 5px;}", "ulike-playlist");
         });
         jsonpHook("x/web-interface/view?", void 0, (d) => {
@@ -26115,8 +28589,8 @@ const MODULES = `
     }
     /** 获取专栏信息 */
     initState() {
-      var _a2;
-      this.readInfo = (_a2 = window.__INITIAL_STATE__) == null ? void 0 : _a2.readInfo;
+      var _a3;
+      this.readInfo = (_a3 = window.__INITIAL_STATE__) == null ? void 0 : _a3.readInfo;
       if (this.readInfo) {
         this.cvid = window.__INITIAL_STATE__.cvid;
         this.buildReadInfo();
@@ -26363,10 +28837,10 @@ const MODULES = `
         jsonpHook("x/web-interface/search/all/v2?", void 0, (res, url) => {
           const keyword = decodeURIComponent(urlObj(url).keyword);
           (keyword in record ? timeout(record[keyword]) : new ApiSearch(keyword).getData()).then((data) => {
-            var _a2, _b;
+            var _a3, _b2;
             record[keyword] = data;
-            const vue = (_a2 = document.querySelector("#all-list > div.flow-loader")) == null ? void 0 : _a2.__vue__;
-            if (vue && ((_b = data == null ? void 0 : data.result) == null ? void 0 : _b.media_bangumi.length)) {
+            const vue = (_a3 = document.querySelector("#all-list > div.flow-loader")) == null ? void 0 : _a3.__vue__;
+            if (vue && ((_b2 = data == null ? void 0 : data.result) == null ? void 0 : _b2.media_bangumi.length)) {
               vue.source.result.forEach((d) => {
                 switch (d.result_type) {
                   case "media_bangumi": {
@@ -26388,10 +28862,10 @@ const MODULES = `
           return res;
         }, false);
         jsonpHook(["x/web-interface/search/type?", "search_type=media_bangumi"], void 0, (res, url) => {
-          var _a2, _b, _c;
+          var _a3, _b2, _c;
           const keyword = decodeURIComponent(urlObj(url).keyword);
           const data = record[keyword];
-          if (((_a2 = data == null ? void 0 : data.result) == null ? void 0 : _a2.media_bangumi.length) && ((_c = (_b = res == null ? void 0 : res.data) == null ? void 0 : _b.result) == null ? void 0 : _c.length)) {
+          if (((_a3 = data == null ? void 0 : data.result) == null ? void 0 : _a3.media_bangumi.length) && ((_c = (_b2 = res == null ? void 0 : res.data) == null ? void 0 : _b2.result) == null ? void 0 : _c.length)) {
             const arr2 = [].concat(res.data.result);
             const names = arr2.map((d) => d.season_id);
             data.result.media_bangumi.forEach((d) => {
@@ -26446,8 +28920,8 @@ const MODULES = `
         });
         switchVideo(() => {
           poll(() => {
-            var _a2;
-            return (_a2 = document.querySelector("#bofqi")) == null ? void 0 : _a2.querySelector("video");
+            var _a3;
+            return (_a3 = document.querySelector("#bofqi")) == null ? void 0 : _a3.querySelector("video");
           }, (d) => {
             d.addEventListener("ratechange", (e) => {
               GM.setValue("videospeed", e.target.playbackRate || 1);
@@ -26587,11 +29061,13 @@ const MODULES = `
         const msg = toast.list("正在申请账户授权 >>>");
         new ApiLoginAppThird("https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png").getData().then(async (d) => {
           msg.push("> 成功获取到授权链接~");
-          return GM.fetch(d.confirm_uri, { credentials: "include" });
+          return GM.fetch(d.confirm_uri, { credentials: "include" }, true);
         }).then((d) => {
           const date = (/* @__PURE__ */ new Date()).getTime();
           const dateStr = timeFormat(date, true);
           const obj = urlObj(d.url);
+          if (!obj.access_key)
+            throw new Error("未能获取到鉴权参数~");
           user.userStatus.accessKey.token = obj.access_key;
           user.userStatus.accessKey.date = date;
           user.userStatus.accessKey.dateStr = dateStr;
@@ -26782,12 +29258,12 @@ const MODULES = `
      * @param svg 图标
      */
     init(id, title, sub, svg) {
-      var _a2;
+      var _a3;
       this.innerHTML = \`<div class="contain2\${id ? \` \${id}\` : ""}">\${svg ? \`<div class="icon">\${svg}</div>\` : ""}
     <div class="label">\${title}\${sub ? \`<div class="sub">\${sub}</div>\` : ""}</div>
 </div>\`;
       this._value.className = "value";
-      (_a2 = this.querySelector(".contain2")) == null ? void 0 : _a2.appendChild(this._value);
+      (_a3 = this.querySelector(".contain2")) == null ? void 0 : _a3.appendChild(this._value);
     }
     /** 添加值 */
     value(value) {
@@ -26836,8 +29312,8 @@ const MODULES = `
     constructor() {
       super();
       this.addEventListener("click", () => {
-        var _a2, _b;
-        (_b = (_a2 = this.parentElement) == null ? void 0 : _a2.querySelector(".selected")) == null ? void 0 : _b.classList.remove("selected");
+        var _a3, _b2;
+        (_b2 = (_a3 = this.parentElement) == null ? void 0 : _a3.querySelector(".selected")) == null ? void 0 : _b2.classList.remove("selected");
         this.classList.add("selected");
         this.show();
       });
@@ -27020,9 +29496,9 @@ const MODULES = `
         }
       });
       this.\$value.forEach((d) => {
-        var _a2;
+        var _a3;
         if (!labels.includes(d)) {
-          (_a2 = this.checkboxs[d]) == null ? void 0 : _a2.remove();
+          (_a3 = this.checkboxs[d]) == null ? void 0 : _a3.remove();
           const i = this.\$value.indexOf(d);
           i >= 0 && this.\$value.splice(i, 1);
         }
@@ -28143,8 +30619,8 @@ const MODULES = `
 
   // src/index.ts
   document.domain = "bilibili.com";
-  var _a;
-  BLOD.version = (_a = GM.info) == null ? void 0 : _a.script.version.slice(-40);
+  var _a2;
+  BLOD.version = (_a2 = GM.info) == null ? void 0 : _a2.script.version.slice(-40);
   user.addCallback((status) => {
     toast.update(status.toast);
     cdn.update(status.cdn, BLOD.version);

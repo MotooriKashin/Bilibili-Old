@@ -81,7 +81,7 @@ export abstract class BAPIMetadata {
         const response = await GM.fetch(`${this.hostAPP}/${this.package}.${this.service}/${method}`, {
             method: 'POST',
             headers,
-            body: uInt8
+            body: buffer
         });
         if (response.headers.has('grpc-status-details-bin')) {
             // 抛出grpc错误

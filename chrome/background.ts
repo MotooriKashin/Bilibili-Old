@@ -9,14 +9,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 const [rule, id] = swFetchHeader(message.data.input, message.data.init?.headers);
                 chrome.declarativeNetRequest.updateSessionRules({ addRules: [rule] })
                     .then(() => fetch(message.data.input, message.data.init))
-                    .then(async d => {
+                    .then(async ({ status, statusText, url, redirected, type, headers, arrayBuffer }) => {
                         return {
-                            status: d.status,
-                            statusText: d.statusText,
-                            url: d.url,
-                            redirected: d.redirected,
-                            type: d.type,
-                            data: Array.from(new Uint8Array(await d.arrayBuffer())) // JSON-serializable
+                            status,
+                            statusText,
+                            header: [...headers],
+                            url,
+                            redirected,
+                            type,
+                            data: Array.from(new Uint8Array(await arrayBuffer())) // JSON-serializable
                         };
                     })
                     .then(data => sendResponse({ data }))
