@@ -1,19 +1,19 @@
 import { Root } from "protobufjs/light";
-import playurl from '../../json/playurl.json';
-import { GrpcMetaData, Type } from "./bilibili-metadata-Metadata";
-import { fnval, fnver, qn } from "../fnval";
+import playurl from './playurl.json';
+import { BAPIMetadata, Type } from "../../BAPIMetadata/metadata";
+import { fnval, fnver, qn } from "../../../fnval";
 
-export class GrpcBilibiliAppPlayUrlV1 extends GrpcMetaData {
+export class BAPIAppPlayurlV1 extends BAPIMetadata {
     /** 命名空间 */
     protected static Root: Root;
     protected package = 'bilibili.app.playurl.v1';
     protected service = 'PlayURL';
     constructor(protected accessKey?: string) {
         super(accessKey);
-        GrpcBilibiliAppPlayUrlV1.Root || (GrpcBilibiliAppPlayUrlV1.Root = Root.fromJSON(playurl));
+        BAPIAppPlayurlV1.Root || (BAPIAppPlayurlV1.Root = Root.fromJSON(playurl));
     }
     protected lookupType<T extends object>(type: string) {
-        return <Type<T>>GrpcBilibiliAppPlayUrlV1.Root.lookupType(`${this.package}.${type}`)
+        return <Type<T>>BAPIAppPlayurlV1.Root.lookupType(`${this.package}.${type}`)
     }
     /** 获取播放地址 */
     PlayURL(req: PlayURLReq) {

@@ -4,8 +4,7 @@ import { ApiPlayurlIntl } from "../io/api-playurl-intl";
 import { ApiPlayurlTv } from "../io/api-playurl-tv";
 import { ApiPlayurlProj } from "../io/api-playurlproj";
 import { qn } from "../io/fnval";
-import { GrpcBilibiliAppPlayUrlV1 } from "../io/grpc/bilibili-app-playurl-v1-PlayURL";
-import { GrpcBilibiliPgcGatewayPlayerV1 } from "../io/grpc/bilibili-pgc-gateway-player-v1-PlayURL";
+import { BAPIAppPlayurlV1 } from "../io/grpc/BAPIAppPlayurl/v1/playurl";
 import { BLOD } from "./bilibili-old";
 import { Aria2 } from "./download/aria2";
 import { Ef2 } from "./download/ef2";
@@ -196,15 +195,10 @@ export class Download {
     private interface(cid: number, quality = qn) {
         return new ApiPlayurlInterface({ cid, quality }, BLOD.pgc).getData();
     }
-    private _grpcUgc?: GrpcBilibiliAppPlayUrlV1;
-    get grpcUgc() {
-        this._grpcUgc || (this._grpcUgc = new GrpcBilibiliAppPlayUrlV1(user.userStatus!.accessKey.token));
-        return this._grpcUgc
-    }
-    private _grpcPgc?: GrpcBilibiliPgcGatewayPlayerV1;
-    get grpcPgc() {
-        this._grpcPgc || (this._grpcPgc = new GrpcBilibiliPgcGatewayPlayerV1(user.userStatus!.accessKey.token));
-        return this._grpcPgc
+    private _BAPIAppPlayurlV1?: BAPIAppPlayurlV1;
+    get BAPIAppPlayurlV1() {
+        this._BAPIAppPlayurlV1 || (this._BAPIAppPlayurlV1 = new BAPIAppPlayurlV1(user.userStatus!.accessKey.token));
+        return this._BAPIAppPlayurlV1
     }
     image() {
         const src: string[] = [];

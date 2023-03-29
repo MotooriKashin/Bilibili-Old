@@ -1,9 +1,9 @@
 import { Constructor, Field, IConversionOptions, IToJSONOptions, IType, Message, NamespaceBase, OneOf, Reader, ReflectionObject, Root, Writer } from "protobufjs/light";
-import metadata from '../../json/metadata.json'
-import { base64 } from "../../utils/base64";
-import { debug } from "../../utils/debug";
+import metadata from './metadata.json'
+import { base64 } from "../../../utils/base64";
+import { gunzipSync, gzipSync } from 'fflate';
 
-export abstract class GrpcMetaData {
+export abstract class BAPIMetadata {
     /** 命名空间 */
     protected static Root: Root;
     /** Type<Metadata> */
@@ -40,10 +40,10 @@ export abstract class GrpcMetaData {
     };
     /** Base64化metadata */
     private get metadataBase64() {
-        return base64.encodeFromUint8Array(GrpcMetaData.metadata.encode(GrpcMetaData.metadata.fromObject(this.metadata)).finish());
+        return base64.encodeFromUint8Array(BAPIMetadata.metadata.encode(BAPIMetadata.metadata.fromObject(this.metadata)).finish());
     }
     constructor(protected accessKey?: string) {
-        GrpcMetaData.Root || GrpcMetaData.RootInit();
+        BAPIMetadata.Root || BAPIMetadata.RootInit();
         accessKey && (this.metadata.accessKey = accessKey);
     }
     /**
@@ -59,21 +59,26 @@ export abstract class GrpcMetaData {
     protected async request<T extends object, K extends object>(method: string, repType: string, replyType: string, req: T) {
         const typeReq = this.lookupType<T>(repType);
         const typeReply = this.lookupType<K>(replyType);
-        const body = typeReq.encode(typeReq.fromObject(req)).finish()
+        const body = gzipSync(typeReq.encode(typeReq.fromObject(req)).finish());
+        // const body = new Uint8Array([31, 139, 8, 0, 0, 0, 0, 0, 0, 0, 227, 104, 184, 195, 40, 161, 160, 113, 129, 217, 75, 162, 32, 61, 89, 15, 136, 117, 203, 50, 83, 82, 243, 117, 83, 82, 75, 18, 51, 115, 244, 12, 244, 12, 130, 164, 65, 50, 73, 137, 121, 233, 165, 185, 153, 186, 37, 137, 73, 122, 69, 169, 201, 249, 185, 185, 169, 121, 41, 122, 6, 9, 76, 21, 140, 77, 140, 12, 171, 24, 153, 56, 24, 1, 132, 153, 160, 102, 76, 0, 0, 0]);
         const buffer = new ArrayBuffer(body.length + 5);
         const dataview = new DataView(buffer);
-        dataview.setUint32(1, body.length); // 写入grpc压缩及字节标记
+        dataview.setUint32(1, body.length); // 写入字节标记
         const uInt8 = new Uint8Array(buffer);
+        uInt8[0] = 1; // 写入压缩标记
         uInt8.set(body, 5);
         const headers: HeadersInit = {
             'Content-Type': 'application/grpc',
             'x-bili-metadata-bin': this.metadataBase64,
             'user-agent': 'Bilibili Freedoooooom/MarkII',
-            'referer': ''
+            'referer': '',
+            'grpc-encoding': 'gzip',
+            'grpc-accept-encoding': 'identify,gzip',
+            'grpc-timeout': '17989265u' // 1680058967939
         };
         this.accessKey && (headers.authorization = `identify_v1 ${this.accessKey}`); // 登录鉴权
-        debug('grpc:', this.package, method, req);
-        const response = await GM.fetch(`${this.hostGrpc}/${this.package}.${this.service}/${method}`, {
+        // debug('grpc:', this.package, method, req);
+        const response = await GM.fetch(`${this.hostAPP}/${this.package}.${this.service}/${method}`, {
             method: 'POST',
             headers,
             body: uInt8
@@ -82,15 +87,21 @@ export abstract class GrpcMetaData {
             // 抛出grpc错误
             const bin = response.headers.get('grpc-status-details-bin')!;
             const uInt8 = base64.decodeToUint8Array(bin);
-            const details = GrpcMetaData.status.toObject(GrpcMetaData.status.decode(uInt8));
+            const details = BAPIMetadata.status.toObject(BAPIMetadata.status.decode(uInt8));
             if (details.details && details.details.length) {
                 throw details.details[0].value;
             }
             throw details;
+        } else if (response.headers.has('grpc-message')) {
+            throw response.headers.get('grpc-message')
         }
         const arraybuffer = await response.arrayBuffer();
         // 需要剔除5字节的grpc压缩及字节标记！
-        return typeReply.toObject(typeReply.decode(new Uint8Array(arraybuffer.slice(5))));
+        const uint8Array = new Uint8Array(arraybuffer.slice(5));
+        if (response.headers.get('grpc-encoding') === 'gzip') {
+            return typeReply.toObject(typeReply.decode(gunzipSync(uint8Array)));
+        }
+        return typeReply.toObject(typeReply.decode(uint8Array));
     }
 }
 interface Metadata {
