@@ -18,8 +18,9 @@ export const GM = new (class GM {
      * 跨域fetch。  
      * 【用户脚本】里使用`GM.xmlHttpRequest`模拟成了fetch，**禁止请求二进制数据**！请直接使用`GM.xmlHttpRequest`。
      * @param sw 【扩展限定】申请后台脚本发起请求，当且仅当跨域出错时的无奈之举。**暂时不支持发送body为非简单类型的POST请求！**
+     * @param responseHeaders 【扩展限定】要修改的返回值请求头。
      */
-    async fetch(input: RequestInfo | URL, init?: RequestInit, sw = false) {
+    async fetch(input: RequestInfo | URL, init?: RequestInit, sw = false, responseHeaders?: Record<string, any>) {
         if (sw) {
             return new Promise(async (resolve: (value: Response) => void, reject) => {
                 if (input instanceof Request) {
@@ -48,7 +49,7 @@ export const GM = new (class GM {
                         return reject('Something is not JSON-serializable!');
                     }
                 }
-                postMessage({ $type: 'fetch', input, init }, ({ data, status, statusText, url, redirected, type, header }: any) => {
+                postMessage({ $type: 'fetch', input, init, responseHeaders }, ({ data, status, statusText, url, redirected, type, header }: any) => {
                     const headers: Record<string, string> = {};
                     (<string[]>header)?.forEach(d => headers[d[0]] = d[1] || '');
                     const response = new Response(new Uint8Array(data), { status, statusText, headers });
@@ -61,7 +62,7 @@ export const GM = new (class GM {
                 }, reject);
             });
         }
-        const [rule, id] = escapeForbidHeader(input, init?.headers);
+        const [rule, id] = escapeForbidHeader(input, init?.headers, responseHeaders);
         try {
             await this.updateSessionRules([rule]);
             delete init?.headers;
@@ -127,9 +128,9 @@ export const GM = new (class GM {
         });
     }
     /** 【扩展限定】更新网络拦截规则 */
-    updateSessionRules(rules: chrome.declarativeNetRequest.Rule[]) {
+    updateSessionRules(rules: chrome.declarativeNetRequest.Rule[], tab = true) {
         return new Promise((resolve: (value: void) => void, reject) => {
-            postMessage({ $type: 'updateSessionRules', rules }, resolve, reject);
+            postMessage({ $type: 'updateSessionRules', rules, tab }, resolve, reject);
         });
     }
     /** 【扩展限定】移除网络规则集 */
@@ -140,12 +141,14 @@ export const GM = new (class GM {
     /**
      * 【扩展限定】修改ajax请求头
      * @param input url匹配规则
-     * @param headers 请求头，要删除某个请求头请传入非真值
+     * @param requestHeaders 请求头，要删除某个请求头请传入非真值
+     * @param responseHeaders 返回头，要删除某个请求头请传入非真值
+     * @param tab 是否绑定当前标签页tabid，默认`true`
      * @returns 用于取消本拦截规则的回调
      */
-    async modifyRequestheader(input: string, headers?: Record<string, any>) {
-        const [rule, id] = escapeForbidHeader(input, headers);
-        await this.updateSessionRules([rule]);
+    async modifyRequestheader(input: string, requestHeaders?: Record<string, any>, responseHeaders?: Record<string, any>, tab = true) {
+        const [rule, id] = escapeForbidHeader(input, requestHeaders, responseHeaders);
+        await this.updateSessionRules([rule], tab);
         return () => {
             this.removeSessionRules(id)
         }

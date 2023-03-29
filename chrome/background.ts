@@ -6,7 +6,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (sender.tab && typeof message === "object") {
         switch (message.$type) {
             case 'fetch': {
-                const [rule, id] = swFetchHeader(message.data.input, message.data.init?.headers);
+                const [rule, id] = swFetchHeader(message.data.input, message.data.init?.headers, message.data.responseHeaders);
                 if (Array.isArray(message.data.init?.body)) {
                     // 数组还原为二进制数据
                     message.data.init.body = new Uint8Array(message.data.init.body);
@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 break;
             }
             case "updateSessionRules": { // 更新会话规则 data不存在表示移除对应标签页的规则
-                updateSessionRules(sender.tab.id!, message.data)
+                updateSessionRules(sender.tab.id!, message.data, message.tab)
                     .then(data => sendResponse({ data }))
                     .catch(err => sendResponse({ err: err.toString() }));
                 break;

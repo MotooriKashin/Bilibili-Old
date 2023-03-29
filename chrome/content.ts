@@ -81,7 +81,8 @@ window.addEventListener(_MUTEX_, ev => {
             case 'updateSessionRules': {
                 chrome.runtime.sendMessage({
                     $type: "updateSessionRules",
-                    data: ev.detail.data.rules
+                    data: ev.detail.data.rules,
+                    tab: ev.detail.data.tab ?? true
                 })
                     .then(data => dispatchCustomEvent(ev.detail.mutex, { data }))
                     .catch(e => {

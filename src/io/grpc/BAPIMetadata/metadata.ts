@@ -82,6 +82,8 @@ export abstract class BAPIMetadata {
             method: 'POST',
             headers,
             body: buffer
+        }, undefined, {
+            'Access-Control-Expose-Headers': 'grpc-status,grpc-message,grpc-status-details-bin,grpc-encoding'
         });
         if (response.headers.has('grpc-status-details-bin')) {
             // 抛出grpc错误

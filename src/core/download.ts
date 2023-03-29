@@ -49,18 +49,20 @@ export class Download {
                 quality: Reflect.has(d, "order") ? `${d.quality}*${d.order}` : d.quality,
                 size: d.size,
                 color: d.color,
-                onClick: ev => this.pushDownload(d, ev)
+                onClick: ev => {
+                    ev.preventDefault();
+                    this.pushDownload(d, ev);
+                }
             })
         });
     }
     /** 分发数据 */
-    private pushDownload(data: IDownlodDataFilter, ev: MouseEvent) {
+    private async pushDownload(data: IDownlodDataFilter, ev: MouseEvent) {
         if (data.onClick) {
             data.onClick(ev)
         } else if (data.url) {
             switch (user.userStatus!.downloadMethod) {
-                case 'IDM':
-                    ev.preventDefault();
+                case 'IDM': {
                     new Ef2(user.userStatus!.userAgent, user.userStatus!.referer, user.userStatus!.filepath, user.userStatus!.ef2.delay, user.userStatus!.ef2.silence)
                         .file({
                             url: data.url[0],
@@ -68,8 +70,8 @@ export class Download {
                         });
                     toast.success('保存IDM导出文件后，打开IDM -> 任务 -> 导入 -> 从"IDM导出文件"导入即可下载');
                     break;
-                case 'ef2':
-                    ev.preventDefault();
+                }
+                case 'ef2': {
                     new Ef2(user.userStatus!.userAgent, user.userStatus!.referer, user.userStatus!.filepath, user.userStatus!.ef2.delay, user.userStatus!.ef2.silence)
                         .sendLinkToIDM({
                             url: data.url[0],
@@ -77,8 +79,8 @@ export class Download {
                         });
                     toast.warning('允许浏览器打开【IDM EF2辅助工具】即可开始下载', '如果浏览器和IDM都没有任何反应，那些请先安装ef2辅助工具。');
                     break;
-                case 'aria2':
-                    ev.preventDefault();
+                }
+                case 'aria2': {
                     const cmdLine = new Aria2(user.userStatus!.userAgent, user.userStatus!.referer, user.userStatus!.filepath, user.userStatus!.aria2.server, user.userStatus!.aria2.port, user.userStatus!.aria2.token, user.userStatus!.aria2.split, user.userStatus!.aria2.size)
                         .cmdlet({
                             urls: data.url,
@@ -90,8 +92,8 @@ export class Download {
                         cmdLine
                     );
                     break;
-                case 'aria2rpc':
-                    ev.preventDefault();
+                }
+                case 'aria2rpc': {
                     new Aria2(user.userStatus!.userAgent, user.userStatus!.referer, user.userStatus!.filepath, user.userStatus!.aria2.server, user.userStatus!.aria2.port, user.userStatus!.aria2.token, user.userStatus!.aria2.split, user.userStatus!.aria2.size)
                         .rpc({
                             urls: data.url,
@@ -104,11 +106,38 @@ export class Download {
                             toast.error('aria2[RPC]错误！', e);
                         });
                     break;
-                default:
-                    toast.warning('当前下载方式设定为浏览器（默认），受限于浏览器安全策略，可能并未触发下载而是打开了一个标签页，所以更良好的习惯是右键要下载的链接【另存为】。另外如果下载失败（403无权访问），请尝试在设置里修改下载方式及其他下载相关选项。');
+                }
+                default: {
+                    if (!_UserScript_) { // 用户脚本暂不支持一下操作
+                        if (!('$id' in data)) {
+                            (<any>data).$id = await GM.modifyRequestheader(data.url[0], {
+                                'user-agent': user.userStatus!.userAgent,
+                                'referer': user.userStatus!.referer
+                            }, {
+                                'Content-Disposition': `attachment${data.fileName ? `; filename="${data.fileName}"` : ''}`
+                            }, false);
+                        }
+                        setTimeout(() => {
+                            (<any>data).$id();
+                            delete (<any>data).$id;
+                        }, 1e5);
+                    }
+                    this.anchor(data);
                     break;
+                }
             }
         }
+    }
+    /**
+     * 直接访问要下载的链接
+     * @param d 下载数据
+     */
+    protected anchor(d: IDownlodDataFilter) {
+        const a = document.createElement('a');
+        d.url && (a.href = d.url[0]);
+        d.fileName && (a.download = d.fileName);
+        a.target = '_blank';
+        a.click()
     }
     /** 请求中 */
     protected downloading = 0;
