@@ -2,7 +2,6 @@
   "dependencies": {
     "@jsc/chrome": "file:chrome",
     "@jsc/tampermonkey": "file:tampermonkey",
-    "esbuild": "^0.17.14",
     "fflate": "^0.7.4",
     "md5": "^2.3.0",
     "protobufjs": "^7.2.3",
@@ -10,6 +9,7 @@
   },
   "devDependencies": {
     "@types/md5": "^2.3.2",
+    "esbuild": "^0.17.14",
     "fs-extra": "^11.1.1",
     "navigation-api-types": "^0.3.1",
     "typescript": "^5.0.2"
