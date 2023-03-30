@@ -33,7 +33,7 @@ const banner = Object.entries(manifest).reduce((s, d) => {
     return s;
 }, `// ==UserScript==\n`) + '// ==/UserScript==\n\nconst MODULES = `\n';
 // 生成文件页脚
-const footer = '\n`;\n\nnew Function("GM", MODULES)(GM);\n';
+const footer = '\n//@ sourceURL=bilibili-old.js`;\n\nnew Function("GM", MODULES)(GM);\n';
 /** 最终处理插件 */
 const userscriptPlugin = {
     name: 'example',

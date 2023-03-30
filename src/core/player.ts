@@ -422,7 +422,7 @@ class Player {
                         GM.setValue('bilibiliplayer', data[0]);
                         GM.setValue('bilibiliplayerstyle', data[1]);
                     }
-                    new Function(data[0])();
+                    (0, eval)(`${data[0]}\n//@ sourceURL=bilibiliplayer.js`);
                     addCss(data[1], `bilibiliplayer-${BLOD.version}`);
                     GM.setValue('version', BLOD.version);
 
