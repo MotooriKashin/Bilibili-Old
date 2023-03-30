@@ -39,6 +39,7 @@ user.addCallback(status => {
     toast.update(status.toast);
     cdn.update(status.cdn, BLOD.version);
     Comment.commentJumpUrlTitle = status.commentJumpUrlTitle;
+    Comment.resolvePictures = status.commentPicture;
     if (BLOD.path[2] == 'www.bilibili.com' && (!BLOD.path[3] || (BLOD.path[3].startsWith('\?') || BLOD.path[3].startsWith('\#') || BLOD.path[3].startsWith('index.')))) {
         if (document.referrer.includes('blackboard/bnj2019.html')) {
             // 拜年祭2019

@@ -13,7 +13,10 @@ let load = false;
 /** 用于暂存页面事件 */
 let events: Record<string, any> = {};
 export class Comment {
+    /** 还原超链接标题 */
     static commentJumpUrlTitle = false;
+    /** 显示评论图片 */
+    static resolvePictures = true;
     /** 评论页数 */
     protected count = 0;
     constructor() {
@@ -237,7 +240,7 @@ export class Comment {
                 this._identity(item.mid, item.assist, item.member.fans_detail),
                 this._createNameplate(item.member.nameplate) + this._createUserSailing(item) + '</div>',
                 this._createMsgContent(item),
-                this._resolvePictures(item.content),
+                Comment.resolvePictures && this._resolvePictures(item.content),
                 this._createPerfectReply(item),
                 '<div class="info">',
                 item.floor ? '<span class="floor">#' + item.floor + "</span>" : "",

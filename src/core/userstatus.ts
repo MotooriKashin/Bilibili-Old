@@ -175,5 +175,7 @@ export const userStatus = {
     /** 下载按钮 */
     downloadButton: false,
     /** 全区域搜索 */
-    searchAllArea: false
+    searchAllArea: false,
+    /** 评论图片 */
+    commentPicture: true
 }
