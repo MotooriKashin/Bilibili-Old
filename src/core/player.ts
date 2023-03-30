@@ -7,7 +7,9 @@ import { cdn } from "../utils/cdn";
 import { DanmakuBase } from "../utils/danmaku";
 import { debug } from "../utils/debug";
 import { addCss, loadScript, loadStyle } from "../utils/element";
+import { fileRead } from "../utils/file";
 import { cht2chs } from "../utils/format/cht2chs";
+import { sizeFormat } from "../utils/format/size";
 import { objUrl, urlObj } from "../utils/format/url";
 import { methodHook, propertyHook } from "../utils/hook/method";
 import { xhrHook } from "../utils/hook/xhr";
@@ -441,6 +443,25 @@ class Player {
             await loadScript(URLS.VIDEO);
             addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
         }
+    }
+    changeNaiveVideo() {
+        if (!(<any>window).player) return toast.warning('未找到播放器实例！请在播放页面使用。');
+        if (!(<any>window).player?.changeNaiveVideo) return toast.warning('未启用【重构播放器】，无法播放本地视频！');
+        const msg = toast.list('播放本地文件 >>>', '> 请选择一个mp4文件', '> 音视频编码必须被浏览器支持！');
+        fileRead('.mp4')
+            .then(d => {
+                msg.push(`> 文件：${d.name}`, `> 类型：${d.type}`, `> 大小：${sizeFormat(d.size)}`);
+                (<any>window).player?.changeNaiveVideo(d);
+                msg.push('> 视频加载成功！');
+                msg.type = 'success';
+            })
+            .catch(e => {
+                msg.push(e);
+                msg.type = 'error';
+            })
+            .finally(() => {
+                msg.delay = user.userStatus!.toast.delay;
+            })
     }
 }
 /** 播放器组件 */

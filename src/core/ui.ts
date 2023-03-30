@@ -216,6 +216,9 @@ export class UI {
             }, v => {
                 v && typeof v === 'string' && danmaku.onlineDm(v);
             }, '从其他视频加载弹幕', undefined, '从其他B站视频加载弹幕，可以输入关键url或者查询参数，如：<br/>av806828803<br/>av806828803?p=1<br/>aid=806828803&p=1<br/>ss3398<br/>ep84795<br/>注意：【重构播放器】此处加载的弹幕会替换【下载弹幕】的内容！'),
+            this.button(<'dmContact'>'localVideo', '本地视频', () => {
+                player.changeNaiveVideo();
+            }, '播放本地磁盘上的视频', '打开', undefined, '播放本地磁盘上的mp4文件。视频及音频编码格式必须是你的设备及浏览器能够支持，推荐视频编码：AVC(H.264)；音频编码：AAC。配合【本地弹幕】或者【在线弹幕】功能等于是一个本地B站播放器~'),
             this.button(<'dmContact'>'localDm', '本地弹幕', () => {
                 user.userStatus!.dmExtension === 'json' ? danmaku.localDmJson() : danmaku.localDmXml();
             }, '加载本地磁盘上的弹幕', '打开', undefined, '从本地磁盘上加载弹幕文件，来源可以是下载功能下载的弹幕，拓展名.xml或.json，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。'),
