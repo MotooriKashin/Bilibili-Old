@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.4.5-91f6f5f11c47f13fb7f79ab811124cda994f77f7
+// @version      10.4.6-8a756666da9dcf0f2bc47afc96b34fdaf3c4a1c7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -8677,7 +8677,7 @@ const MODULES = `
       }
     }
   };
-  customElements.get(\`toast-\${"91f6f5f"}\`) || customElements.define(\`toast-\${"91f6f5f"}\`, Toast, { extends: "div" });
+  customElements.get(\`toast-\${"8a75666"}\`) || customElements.define(\`toast-\${"8a75666"}\`, Toast, { extends: "div" });
   var ToastContainer = class extends HTMLElement {
     /** 实际根节点 */
     container;
@@ -8805,7 +8805,7 @@ const MODULES = `
       }
     }
   };
-  customElements.get(\`toast-container-\${"91f6f5f"}\`) || customElements.define(\`toast-container-\${"91f6f5f"}\`, ToastContainer);
+  customElements.get(\`toast-container-\${"8a75666"}\`) || customElements.define(\`toast-container-\${"8a75666"}\`, ToastContainer);
   var toast = new ToastContainer();
 
   // src/core/user.ts
@@ -8879,7 +8879,7 @@ const MODULES = `
       }
     }
   };
-  customElements.get("biliold-entry-91f6f5f") || customElements.define("bilibili-entry-91f6f5f", BilioldEntry);
+  customElements.get("biliold-entry-8a75666") || customElements.define("bilibili-entry-8a75666", BilioldEntry);
 
   // src/core/userstatus.ts
   var userStatus = {
@@ -9055,7 +9055,9 @@ const MODULES = `
     /** 下载按钮 */
     downloadButton: false,
     /** 全区域搜索 */
-    searchAllArea: false
+    searchAllArea: false,
+    /** 评论图片 */
+    commentPicture: true
   };
 
   // src/core/ui/alert.ts
@@ -9147,7 +9149,7 @@ const MODULES = `
       this._button.textContent = v;
     }
   };
-  customElements.get(\`button-\${"91f6f5f"}\`) || customElements.define(\`button-\${"91f6f5f"}\`, PushButton);
+  customElements.get(\`button-\${"8a75666"}\`) || customElements.define(\`button-\${"8a75666"}\`, PushButton);
 
   // src/core/ui/utils/popupbox.ts
   init_tampermonkey();
@@ -9239,7 +9241,7 @@ const MODULES = `
       }
     }
   };
-  customElements.get(\`popupbox-\${"91f6f5f"}\`) || customElements.define(\`popupbox-\${"91f6f5f"}\`, PopupBox);
+  customElements.get(\`popupbox-\${"8a75666"}\`) || customElements.define(\`popupbox-\${"8a75666"}\`, PopupBox);
 
   // src/core/ui/alert.ts
   function alert(msg, title, buttons, fork = false) {
@@ -13193,7 +13195,7 @@ const MODULES = `
       this._container.replaceChildren(this._noData);
     }
   };
-  customElements.get(\`download-\${"91f6f5f"}\`) || customElements.define(\`download-\${"91f6f5f"}\`, BilioldDownload);
+  customElements.get(\`download-\${"8a75666"}\`) || customElements.define(\`download-\${"8a75666"}\`, BilioldDownload);
 
   // src/core/ui/preview-image.ts
   init_tampermonkey();
@@ -13290,7 +13292,7 @@ const MODULES = `
       document.body.style.overflow = "hidden";
     }
   };
-  customElements.get(\`preview-image-\${"91f6f5f"}\`) || customElements.define(\`preview-image-\${"91f6f5f"}\`, PreviewImage);
+  customElements.get(\`preview-image-\${"8a75666"}\`) || customElements.define(\`preview-image-\${"8a75666"}\`, PreviewImage);
 
   // src/core/videolimit.ts
   init_tampermonkey();
@@ -19522,7 +19524,8 @@ const MODULES = `
               GM.setValue("bilibiliplayer", data[0]);
               GM.setValue("bilibiliplayerstyle", data[1]);
             }
-            new Function(data[0])();
+            (0, eval)(\`\${data[0]}
+//@ sourceURL=bilibiliplayer.js\`);
             addCss(data[1], \`bilibiliplayer-\${BLOD.version}\`);
             GM.setValue("version", BLOD.version);
           } else {
@@ -19540,6 +19543,26 @@ const MODULES = `
         await loadScript(URLS.VIDEO);
         addCss(".bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}", "detail-img");
       }
+    }
+    changeNaiveVideo() {
+      var _a3;
+      if (!window.player)
+        return toast.warning("未找到播放器实例！请在播放页面使用。");
+      if (!((_a3 = window.player) == null ? void 0 : _a3.changeNaiveVideo))
+        return toast.warning("未启用【重构播放器】，无法播放本地视频！");
+      const msg = toast.list("播放本地文件 >>>", "> 请选择一个mp4文件", "> 音视频编码必须被浏览器支持！");
+      fileRead(".mp4").then((d) => {
+        var _a4;
+        msg.push(\`> 文件：\${d.name}\`, \`> 类型：\${d.type}\`, \`> 大小：\${sizeFormat(d.size)}\`);
+        (_a4 = window.player) == null ? void 0 : _a4.changeNaiveVideo(d);
+        msg.push("> 视频加载成功！");
+        msg.type = "success";
+      }).catch((e) => {
+        msg.push(e);
+        msg.type = "error";
+      }).finally(() => {
+        msg.delay = user.userStatus.toast.delay;
+      });
     }
   };
   var player = new Player();
@@ -19769,7 +19792,7 @@ const MODULES = `
           this._identity(item.mid, item.assist, item.member.fans_detail),
           this._createNameplate(item.member.nameplate) + this._createUserSailing(item) + "</div>",
           this._createMsgContent(item),
-          this._resolvePictures(item.content),
+          _Comment.resolvePictures && this._resolvePictures(item.content),
           this._createPerfectReply(item),
           '<div class="info">',
           item.floor ? '<span class="floor">#' + item.floor + "</span>" : "",
@@ -20021,7 +20044,10 @@ const MODULES = `
     }
   };
   var Comment2 = _Comment;
+  /** 还原超链接标题 */
   __publicField(Comment2, "commentJumpUrlTitle", false);
+  /** 显示评论图片 */
+  __publicField(Comment2, "resolvePictures", true);
 
   // src/core/ui/like.ts
   init_tampermonkey();
@@ -20095,7 +20121,7 @@ const MODULES = `
           debug.error("获取点赞情况失败", e);
         });
       }
-      addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", \`ulike\${"91f6f5f"}\`);
+      addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", \`ulike\${"8a75666"}\`);
     }
     /** 更新点赞数 */
     get likes() {
@@ -20113,7 +20139,7 @@ const MODULES = `
       this.innerHTML = (this.liked ? like_default : dislike_default) + "点赞 " + unitFormat(this.number);
     }
   };
-  customElements.get(\`like-\${"91f6f5f"}\`) || customElements.define(\`like-\${"91f6f5f"}\`, Like, { extends: "span" });
+  customElements.get(\`like-\${"8a75666"}\`) || customElements.define(\`like-\${"8a75666"}\`, Like, { extends: "span" });
 
   // src/css/uplist.css
   var uplist_default = ".up-info-m .up-card-box {\\r\\n    white-space: nowrap;\\r\\n    overflow: auto;\\r\\n}\\r\\n\\r\\n.up-info-m .up-card {\\r\\n    display: inline-block;\\r\\n    margin-top: 10px;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar img {\\r\\n    cursor: pointer;\\r\\n    width: 40px;\\r\\n    height: 40px;\\r\\n    border-radius: 50%;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .info-tag {\\r\\n    position: absolute;\\r\\n    background: #fff;\\r\\n    border: 1px solid #fb7299;\\r\\n    border-radius: 2px;\\r\\n    display: inline-block;\\r\\n    font-size: 12px;\\r\\n    color: #fb7299;\\r\\n    padding: 0 3px;\\r\\n    top: -10px;\\r\\n    right: -10px;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    width: 60px;\\r\\n    height: 30px;\\r\\n    display: -ms-flexbox;\\r\\n    display: flex;\\r\\n    -ms-flex-pack: center;\\r\\n    justify-content: center;\\r\\n    -ms-flex-align: start;\\r\\n    align-items: flex-start;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text {\\r\\n    font-family: PingFangSC-Regular, sans-serif;\\r\\n    line-height: 30px;\\r\\n    color: #222;\\r\\n    word-break: break-all;\\r\\n    overflow: hidden;\\r\\n    text-overflow: ellipsis;\\r\\n    display: -webkit-box;\\r\\n    -webkit-line-clamp: 2;\\r\\n    -webkit-box-orient: vertical;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text.is-vip,\\r\\n.up-info-m .avatar .name-text:hover {\\r\\n    color: #fb7299;\\r\\n}\\r\\n\\r\\n.up-info-m .title {\\r\\n    display: block;\\r\\n    font-size: 14px;\\r\\n    margin-right: 80px;\\r\\n    color: #525659;\\r\\n    overflow: hidden;\\r\\n    height: 24px;\\r\\n    font-weight: 400;\\r\\n    padding: 8px 0;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar {\\r\\n    width: 7px;\\r\\n    height: 7px;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-track {\\r\\n    border-radius: 4px;\\r\\n    background-color: #EEE;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-thumb {\\r\\n    border-radius: 4px;\\r\\n    background-color: #999;\\r\\n}";
@@ -29223,7 +29249,7 @@ const MODULES = `
       }
     }
   };
-  customElements.get(\`desc-\${"91f6f5f"}\`) || customElements.define(\`desc-\${"91f6f5f"}\`, Desc);
+  customElements.get(\`desc-\${"8a75666"}\`) || customElements.define(\`desc-\${"8a75666"}\`, Desc);
 
   // src/core/ui/interface.ts
   init_tampermonkey();
@@ -29301,7 +29327,7 @@ const MODULES = `
       this._value.appendChild(value);
     }
   };
-  customElements.get(\`item-\${"91f6f5f"}\`) || customElements.define(\`item-\${"91f6f5f"}\`, SettingItem, { extends: "div" });
+  customElements.get(\`item-\${"8a75666"}\`) || customElements.define(\`item-\${"8a75666"}\`, SettingItem, { extends: "div" });
 
   // src/core/ui/menu.ts
   init_tampermonkey();
@@ -29335,7 +29361,7 @@ const MODULES = `
       this._card.append(...item);
     }
   };
-  customElements.get(\`item-container-\${"91f6f5f"}\`) || customElements.define(\`item-container-\${"91f6f5f"}\`, ItemContainer, { extends: "div" });
+  customElements.get(\`item-container-\${"8a75666"}\`) || customElements.define(\`item-container-\${"8a75666"}\`, ItemContainer, { extends: "div" });
 
   // src/core/ui/menu.ts
   var Menuitem = class extends HTMLDivElement {
@@ -29395,7 +29421,7 @@ const MODULES = `
       return this.container;
     }
   };
-  customElements.get(\`menuitem-\${"91f6f5f"}\`) || customElements.define(\`menuitem-\${"91f6f5f"}\`, Menuitem, { extends: "div" });
+  customElements.get(\`menuitem-\${"8a75666"}\`) || customElements.define(\`menuitem-\${"8a75666"}\`, Menuitem, { extends: "div" });
 
   // src/core/ui/utils/checkbox.ts
   init_tampermonkey();
@@ -29485,7 +29511,7 @@ const MODULES = `
       Object.entries(value).forEach((d) => this[d[0]] = d[1]);
     }
   };
-  customElements.get(\`checkbox-\${"91f6f5f"}\`) || customElements.define(\`checkbox-\${"91f6f5f"}\`, CheckBox);
+  customElements.get(\`checkbox-\${"8a75666"}\`) || customElements.define(\`checkbox-\${"8a75666"}\`, CheckBox);
   var CheckBoxs = class extends HTMLDivElement {
     \$value = [];
     checkboxs = {};
@@ -29536,7 +29562,7 @@ const MODULES = `
       });
     }
   };
-  customElements.get(\`checkboxs-\${"91f6f5f"}\`) || customElements.define(\`checkboxs-\${"91f6f5f"}\`, CheckBoxs, { extends: "div" });
+  customElements.get(\`checkboxs-\${"8a75666"}\`) || customElements.define(\`checkboxs-\${"8a75666"}\`, CheckBoxs, { extends: "div" });
 
   // src/core/ui/utils/input.ts
   init_tampermonkey();
@@ -29612,7 +29638,7 @@ const MODULES = `
       Object.entries(value).forEach((d) => this[d[0]] = d[1]);
     }
   };
-  customElements.get(\`input-\${"91f6f5f"}\`) || customElements.define(\`input-\${"91f6f5f"}\`, InputArea);
+  customElements.get(\`input-\${"8a75666"}\`) || customElements.define(\`input-\${"8a75666"}\`, InputArea);
 
   // src/core/ui/utils/select.ts
   init_tampermonkey();
@@ -29679,7 +29705,7 @@ const MODULES = `
       Object.entries(value).forEach((d) => this[d[0]] = d[1]);
     }
   };
-  customElements.get(\`select-\${"91f6f5f"}\`) || customElements.define(\`select-\${"91f6f5f"}\`, SelectMenu);
+  customElements.get(\`select-\${"8a75666"}\`) || customElements.define(\`select-\${"8a75666"}\`, SelectMenu);
 
   // src/core/ui/utils/slider.ts
   init_tampermonkey();
@@ -29855,7 +29881,7 @@ const MODULES = `
       Object.entries(value).forEach((d) => this[d[0]] = d[1]);
     }
   };
-  customElements.get(\`slider-\${"91f6f5f"}\`) || customElements.define(\`slider-\${"91f6f5f"}\`, SliderBlock);
+  customElements.get(\`slider-\${"8a75666"}\`) || customElements.define(\`slider-\${"8a75666"}\`, SliderBlock);
 
   // src/core/ui/utils/switch.ts
   init_tampermonkey();
@@ -29905,7 +29931,7 @@ const MODULES = `
       return this;
     }
   };
-  customElements.get(\`switch-\${"91f6f5f"}\`) || customElements.define(\`switch-\${"91f6f5f"}\`, SwitchButton);
+  customElements.get(\`switch-\${"8a75666"}\`) || customElements.define(\`switch-\${"8a75666"}\`, SwitchButton);
 
   // src/core/ui.ts
   var Menus = {
@@ -30088,6 +30114,9 @@ const MODULES = `
         }, (v) => {
           v && typeof v === "string" && danmaku.onlineDm(v);
         }, "从其他视频加载弹幕", void 0, "从其他B站视频加载弹幕，可以输入关键url或者查询参数，如：<br/>av806828803<br/>av806828803?p=1<br/>aid=806828803&p=1<br/>ss3398<br/>ep84795<br/>注意：【重构播放器】此处加载的弹幕会替换【下载弹幕】的内容！"),
+        this.button("localVideo", "本地视频", () => {
+          player.changeNaiveVideo();
+        }, "播放本地磁盘上的视频", "打开", void 0, "播放本地磁盘上的mp4文件。视频及音频编码格式必须是你的设备及浏览器能够支持，推荐视频编码：AVC(H.264)；音频编码：AAC。配合【本地弹幕】或者【在线弹幕】功能等于是一个本地B站播放器~"),
         this.button("localDm", "本地弹幕", () => {
           user.userStatus.dmExtension === "json" ? danmaku.localDmJson() : danmaku.localDmXml();
         }, "加载本地磁盘上的弹幕", "打开", void 0, "从本地磁盘上加载弹幕文件，来源可以是下载功能下载的弹幕，拓展名.xml或.json，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。"),
@@ -30108,7 +30137,8 @@ const MODULES = `
         this.switch("like", "添加点赞功能", "不支持一键三连"),
         this.switch("fullBannerCover", "修正banner分辨率", "顶栏banner完整显示不裁剪", void 0, void 0, "旧版顶栏banner接口已不再更新，脚本使用新版banner接口进行修复，但二者图片分辨率不一致。脚本默认不会去动页面样式以尽可能原汁原味还原旧版页面，导致顶栏banner被裁剪显示不全，启用本项将调整顶栏分辨率以完整显示图片。"),
         this.switch("episodeData", "分集数据", "bangumi", void 0, void 0, "显示bangumi分集播放和弹幕数，原始合计数据移动到鼠标浮动提示中。"),
-        this.switch("simpleChinese", "繁 -> 简", "将繁体字幕翻译为简体", void 0, void 0, "识别并替换CC字幕繁体并转化为简体，使用内置的简繁对照表机械翻译。")
+        this.switch("simpleChinese", "繁 -> 简", "将繁体字幕翻译为简体", void 0, void 0, "识别并替换CC字幕繁体并转化为简体，使用内置的简繁对照表机械翻译。"),
+        this.switch("commentPicture", "评论图片", "显示评论中的图片")
       ]);
     }
     /** 修复设置 */
@@ -30656,6 +30686,7 @@ const MODULES = `
     toast.update(status.toast);
     cdn.update(status.cdn, BLOD.version);
     Comment2.commentJumpUrlTitle = status.commentJumpUrlTitle;
+    Comment2.resolvePictures = status.commentPicture;
     if (BLOD.path[2] == "www.bilibili.com" && (!BLOD.path[3] || (BLOD.path[3].startsWith("?") || BLOD.path[3].startsWith("#") || BLOD.path[3].startsWith("index.")))) {
       if (document.referrer.includes("blackboard/bnj2019.html")) {
         new PageWild("/src/html/bnj2019.html", "https://www.bilibili.com/blackboard/bnj2019.html");
@@ -30744,6 +30775,6 @@ is-buffer/index.js:
    *)
 */
 
-`;
+//@ sourceURL=bilibili-old.js`;
 
 new Function("GM", MODULES)(GM);
