@@ -74,13 +74,18 @@ export class Comment {
     }
     protected initComment() {
         const that = this;
+        const commentHander: any = {};
         Reflect.defineProperty(window, "initComment", {
             configurable: true,
             set: v => true,
             get: () => {
                 if (load) {
                     function initComment(tar: string, init: Record<"oid" | "pageType" | "userStatus", any>) {
+                        commentHander.reset = function ({ oid }: any) {
+                            new Feedback(tar, oid, init.pageType, init.userStatus);
+                        }
                         new Feedback(tar, init.oid, init.pageType, init.userStatus);
+                        return commentHander;
                     }
                     Reflect.defineProperty(window, "initComment", { configurable: true, value: initComment });
                     // 出栈
@@ -94,6 +99,7 @@ export class Comment {
                     }
                     loading = true;
                     setTimeout(() => (<any>window).initComment(...arguments), 100);
+                    return commentHander;
                 }
             }
         });

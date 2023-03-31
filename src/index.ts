@@ -65,7 +65,7 @@ user.addCallback(status => {
         player.loadEmbedPlayer();
         new PageWatchlater();
     }
-    if ((status.playlist && /\/medialist\/play\//.test(location.href) && !/watchlater/.test(location.href)) || /\/list\/ml\d+/.test(location.href) || /\/playlist\/video\/pl/.test(location.href)) {
+    if ((status.playlist && (/\/medialist\/play\//.test(location.href) || /\/list\/ml\d+/.test(location.href)) && !/watchlater/.test(location.href)) || /\/playlist\/video\/pl/.test(location.href)) {
         player.loadEmbedPlayer();
         new PagePlaylist();
     }
