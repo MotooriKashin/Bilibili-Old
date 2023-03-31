@@ -54,7 +54,7 @@ user.addCallback(status => {
         player.loadEmbedPlayer();
         new PageAV();
     }
-    if (status.player && (/\/festival\//.test(location.href) || (/player\./.test(location.href) && !location.href.includes("ancient")))) {
+    if (status.player && (/\/festival\//.test(location.href) || (/player\./.test(location.href) || /webplayer\/embed/.test(location.href) && !location.href.includes("ancient")))) {
         player.loadConnectPlayer();
     }
     if (status.bangumi && /\/bangumi\/play\/(ss|ep)/.test(location.href)) {
