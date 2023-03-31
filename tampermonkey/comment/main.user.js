@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.1.3
+// @version      2.1.4
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -132,6 +132,7 @@ __publicField(URLS, "D_S1", "s1.hdslb.com");
 __publicField(URLS, "D_API_GLOBAL", "api.global.bilibili.com");
 __publicField(URLS, "D_ACCOUNT", "account.bilibili.com");
 __publicField(URLS, "D_INTL", "apiintl.biliapi.net");
+__publicField(URLS, "D_API_VC", "api.vc.bilibili.com");
 __publicField(URLS, "WEBSHOW_LOCS", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/res/locs");
 __publicField(URLS, "INDEX_TOP_RCMD", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/index/top/rcmd");
 __publicField(URLS, "PAGE_HEADER", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/page/header");
@@ -175,6 +176,9 @@ __publicField(URLS, "SPACE_ARC", _URLS.P_AUTO + _URLS.D_API + "/x/space/wbi/arc/
 __publicField(URLS, "NEWLIST", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/newlist");
 __publicField(URLS, "SEARCH", _URLS.P_AUTO + _URLS.D_API + "/search");
 __publicField(URLS, "REPLY", _URLS.P_AUTO + _URLS.D_API + "/x/v2/reply");
+__publicField(URLS, "ARTICLE_UPCOVER", _URLS.P_AUTO + _URLS.D_API + "/x/article/creative/article/upcover");
+__publicField(URLS, "DRAW_IMAGE_UPLOAD", _URLS.P_AUTO + _URLS.D_API_VC + "/api/v1/drawImage/upload");
+__publicField(URLS, "DYNAMIC_UPLOAD_BFS", _URLS.P_AUTO + _URLS.D_API + "/x/dynamic/feed/draw/upload_bfs");
 
 // src/io/api-reply.ts
 async function apiReply(oid, pn = 1, type = 1, sort = 0) {
@@ -608,7 +612,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"260ljfpemc3"}`) || customElements.define(`preview-image-${"260ljfpemc3"}`, PreviewImage);
+customElements.get(`preview-image-${"wia3nu9oond"}`) || customElements.define(`preview-image-${"wia3nu9oond"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -672,13 +676,18 @@ var _Comment = class {
   }
   initComment() {
     const that = this;
+    const commentHander = {};
     Reflect.defineProperty(window, "initComment", {
       configurable: true,
       set: (v) => true,
       get: () => {
         if (load) {
           let initComment2 = function(tar, init) {
+            commentHander.reset = function({ oid }) {
+              new Feedback(tar, oid, init.pageType, init.userStatus);
+            };
             new Feedback(tar, init.oid, init.pageType, init.userStatus);
+            return commentHander;
           };
           var initComment = initComment2;
           Reflect.defineProperty(window, "initComment", { configurable: true, value: initComment2 });
@@ -692,6 +701,7 @@ var _Comment = class {
           }
           loading = true;
           setTimeout(() => window.initComment(...arguments), 100);
+          return commentHander;
         };
       }
     });
@@ -821,7 +831,7 @@ var _Comment = class {
         this._identity(item.mid, item.assist, item.member.fans_detail),
         this._createNameplate(item.member.nameplate) + this._createUserSailing(item) + "</div>",
         this._createMsgContent(item),
-        this._resolvePictures(item.content),
+        _Comment.resolvePictures && this._resolvePictures(item.content),
         this._createPerfectReply(item),
         '<div class="info">',
         item.floor ? '<span class="floor">#' + item.floor + "</span>" : "",
@@ -1073,7 +1083,10 @@ var _Comment = class {
   }
 };
 var Comment = _Comment;
+/** 还原超链接标题 */
 __publicField(Comment, "commentJumpUrlTitle", false);
+/** 显示评论图片 */
+__publicField(Comment, "resolvePictures", true);
 
 // src/comment.ts
 new Comment();
