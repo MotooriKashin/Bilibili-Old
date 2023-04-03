@@ -12,7 +12,7 @@
     "esbuild": "^0.17.14",
     "fs-extra": "^11.1.1",
     "navigation-api-types": "^0.3.1",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.3"
   },
   "scripts": {
     "tsc": "tsc --noEmit -p ./src/tsconfig.json",
