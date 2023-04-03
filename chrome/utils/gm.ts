@@ -51,7 +51,7 @@ export const GM = new (class GM {
                 }
                 postMessage({ $type: 'fetch', input, init, responseHeaders }, ({ data, status, statusText, url, redirected, type, header }: any) => {
                     const headers: Record<string, string> = {};
-                    (<string[]>header)?.forEach(d => headers[d[0]] = d[1] || '');
+                    (<string[]>header)?.forEach(d => d[0] && (headers[d[0]] = d[1] || ''));
                     const response = new Response(new Uint8Array(data), { status, statusText, headers });
                     Object.defineProperties(response, {
                         url: { value: url },

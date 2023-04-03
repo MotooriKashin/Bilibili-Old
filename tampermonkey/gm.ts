@@ -20,7 +20,7 @@ GM.fetch = function (input: RequestInfo | URL, init?: RequestInit) {
             onload: ({ response, status, statusText, finalUrl, responseHeaders }) => {
                 const headers = responseHeaders.replace(/\r/g, '').split('\n').reduce((s, d) => {
                     const arr = d.split(':');
-                    s[arr[0]] = arr[1] || '';
+                    arr[0] && (s[arr[0]] = arr[1] || '');
                     return s;
                 }, <Record<string, string>>{});
                 if (!response) return reject(statusText);
