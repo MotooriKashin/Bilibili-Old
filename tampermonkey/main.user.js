@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.4.7-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.4.8-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -82,7 +82,7 @@ const MODULES = `
             onload: ({ response, status, statusText, finalUrl, responseHeaders }) => {
               const headers = responseHeaders.replace(/\\r/g, "").split("\\n").reduce((s, d) => {
                 const arr2 = d.split(":");
-                s[arr2[0]] = arr2[1] || "";
+                arr2[0] && (s[arr2[0]] = arr2[1] || "");
                 return s;
               }, {});
               if (!response)
