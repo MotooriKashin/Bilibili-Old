@@ -10,7 +10,7 @@ import { apiSeasonRankList } from "../io/api-season-rank-list";
 import { apiWebshowLocs, IApiWebshowLocsResponse } from "../io/api-webshow-locs";
 import { uid } from "../utils/conf/uid";
 import { debug } from "../utils/debug";
-import { addElement, getTotalTop } from "../utils/element";
+import { addElement, offset } from "../utils/element";
 import { integerFormat } from "../utils/format/integer";
 import { unitFormat } from "../utils/format/unit";
 import { urlObj } from "../utils/format/url";
@@ -186,7 +186,7 @@ export class PageIndex extends Page {
                             t.event = {
                                 "mouseover": (e) => {
                                     const target = <HTMLLIElement>e.target;
-                                    const nodes = `<div class="bangumi-info-module" style="left: ${target.getBoundingClientRect().left}px; top: ${getTotalTop(target) - 150}px;"><div class="v-preview clearfix"><div class="lazy-img cover"><img alt="${d[i].title}" src="${d[i].cover.replace("http:", "")}@72w_72h.webp" /></div><div><p class="title">${d[i].title}</p><p class="desc">${d[i].new_ep.index_show}</p></div></div><div class="v-data"><span class="play"><i class="icon"></i>${unitFormat(d[i].stat.view)}</span><span class="danmu"><i class="icon"></i>${unitFormat(d[i].stat.danmaku)}</span><span class="fav"><i class="icon"></i>${unitFormat(d[i].stat.follow)}</span></div></div>`;
+                                    const nodes = `<div class="bangumi-info-module" style="left: ${target.getBoundingClientRect().left}px; top: ${offset(target).top - 150}px;"><div class="v-preview clearfix"><div class="lazy-img cover"><img alt="${d[i].title}" src="${d[i].cover.replace("http:", "")}@72w_72h.webp" /></div><div><p class="title">${d[i].title}</p><p class="desc">${d[i].new_ep.index_show}</p></div></div><div class="v-data"><span class="play"><i class="icon"></i>${unitFormat(d[i].stat.view)}</span><span class="danmu"><i class="icon"></i>${unitFormat(d[i].stat.danmaku)}</span><span class="fav"><i class="icon"></i>${unitFormat(d[i].stat.follow)}</span></div></div>`;
                                     node = new VdomTool(nodes).toFragment().children[0];
                                     document.body.appendChild(node);
                                 },

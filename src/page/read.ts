@@ -127,8 +127,8 @@ export class PageRead extends Page {
         this.readInfoStr += `<div class="article-holder">${this.delta()}</div><p class="original">本文为我原创</p>`;
     }
     private delta() {
-        let str = this.readInfo.content.replace(/(\&lt;)|(\&quot;)|(\&gt;)|(\&#34;)|(\&#39;)|(\&amp;)/g, d => {
-            return { "&lt;": "<", "&quot;": '"', "&gt;": ">", "&#34;": "\"", "&#39;": "'", "&amp;": "&" }[d]!;
+        let str = this.readInfo.content.replace(/(\&quot;)|(\&#34;)|(\&#39;)|(\&amp;)/g, d => {
+            return { "&quot;": '"', "&#34;": "\"", "&#39;": "'", "&amp;": "&" }[d]!;
         });
         if (str?.startsWith('{"ops"')) { // 处理富文本
             try {

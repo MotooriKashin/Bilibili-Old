@@ -76,17 +76,21 @@ export function loadStyle(href: string) {
         (document.head || document.documentElement || document).appendChild(link);
     });
 }
-/**
- * 节点到页面顶部的距离
- * @param node 目标节点
- * @returns 距离：/px
- */
-export function getTotalTop(node: HTMLElement) {
-    var sum = 0;
-    do {
-        sum += node.offsetTop;
-        node = <HTMLElement>node.offsetParent;
+/** 节点相对于document的offset */
+export function offset(ele: HTMLElement) {
+    const box = ele.getBoundingClientRect();
+    const body = document.body;
+    const docElem = document.documentElement;
+    //获取页面的scrollTop,scrollLeft(兼容性写法)
+    const scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop;
+    const scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft;
+    const clientTop = docElem.clientTop || body.clientTop;
+    const clientLeft = docElem.clientLeft || body.clientLeft;
+    const top = box.top + scrollTop - clientTop;
+    const left = box.left + scrollLeft - clientLeft;
+    return {
+        //Math.round 兼容火狐浏览器bug
+        top: Math.round(top),
+        left: Math.round(left)
     }
-    while (node);
-    return sum;
 }

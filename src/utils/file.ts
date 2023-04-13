@@ -54,6 +54,10 @@ export async function saveAs(content: BufferSource | Blob | string, fileName: st
     a.addEventListener("load", () => URL.revokeObjectURL(a.href));
     // document.body.appendChild(a);
     a.click();
+	setTimeout(() => {
+        a.remove();
+        window.URL.revokeObjectURL(a.href);
+    }, 3000);
 }
 /**
  * 弹出文件读取窗口
