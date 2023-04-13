@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.4.8-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.4.9-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -436,19 +436,19 @@ const MODULES = `
       init_tampermonkey();
       module2.exports = asPromise;
       function asPromise(fn, ctx) {
-        var params = new Array(arguments.length - 1), offset2 = 0, index = 2, pending = true;
+        var params = new Array(arguments.length - 1), offset3 = 0, index = 2, pending = true;
         while (index < arguments.length)
-          params[offset2++] = arguments[index++];
+          params[offset3++] = arguments[index++];
         return new Promise(function executor(resolve, reject) {
-          params[offset2] = function callback(err2) {
+          params[offset3] = function callback(err2) {
             if (pending) {
               pending = false;
               if (err2)
                 reject(err2);
               else {
-                var params2 = new Array(arguments.length - 1), offset3 = 0;
-                while (offset3 < params2.length)
-                  params2[offset3++] = arguments[offset3];
+                var params2 = new Array(arguments.length - 1), offset4 = 0;
+                while (offset4 < params2.length)
+                  params2[offset4++] = arguments[offset4];
                 resolve.apply(null, params2);
               }
             }
@@ -527,8 +527,8 @@ const MODULES = `
         return String.fromCharCode.apply(String, chunk.slice(0, i2));
       };
       var invalidEncoding = "invalid encoding";
-      base642.decode = function decode(string, buffer, offset2) {
-        var start = offset2;
+      base642.decode = function decode(string, buffer, offset3) {
+        var start = offset3;
         var j = 0, t;
         for (var i2 = 0; i2 < string.length; ) {
           var c = string.charCodeAt(i2++);
@@ -542,24 +542,24 @@ const MODULES = `
               j = 1;
               break;
             case 1:
-              buffer[offset2++] = t << 2 | (c & 48) >> 4;
+              buffer[offset3++] = t << 2 | (c & 48) >> 4;
               t = c;
               j = 2;
               break;
             case 2:
-              buffer[offset2++] = (t & 15) << 4 | (c & 60) >> 2;
+              buffer[offset3++] = (t & 15) << 4 | (c & 60) >> 2;
               t = c;
               j = 3;
               break;
             case 3:
-              buffer[offset2++] = (t & 3) << 6 | c;
+              buffer[offset3++] = (t & 3) << 6 | c;
               j = 0;
               break;
           }
         }
         if (j === 1)
           throw Error(invalidEncoding);
-        return offset2 - start;
+        return offset3 - start;
       };
       base642.test = function test(string) {
         return /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?\$/.test(string);
@@ -882,29 +882,29 @@ const MODULES = `
         }
         return String.fromCharCode.apply(String, chunk.slice(0, i));
       };
-      utf8.write = function utf8_write(string, buffer, offset2) {
-        var start = offset2, c1, c2;
+      utf8.write = function utf8_write(string, buffer, offset3) {
+        var start = offset3, c1, c2;
         for (var i = 0; i < string.length; ++i) {
           c1 = string.charCodeAt(i);
           if (c1 < 128) {
-            buffer[offset2++] = c1;
+            buffer[offset3++] = c1;
           } else if (c1 < 2048) {
-            buffer[offset2++] = c1 >> 6 | 192;
-            buffer[offset2++] = c1 & 63 | 128;
+            buffer[offset3++] = c1 >> 6 | 192;
+            buffer[offset3++] = c1 & 63 | 128;
           } else if ((c1 & 64512) === 55296 && ((c2 = string.charCodeAt(i + 1)) & 64512) === 56320) {
             c1 = 65536 + ((c1 & 1023) << 10) + (c2 & 1023);
             ++i;
-            buffer[offset2++] = c1 >> 18 | 240;
-            buffer[offset2++] = c1 >> 12 & 63 | 128;
-            buffer[offset2++] = c1 >> 6 & 63 | 128;
-            buffer[offset2++] = c1 & 63 | 128;
+            buffer[offset3++] = c1 >> 18 | 240;
+            buffer[offset3++] = c1 >> 12 & 63 | 128;
+            buffer[offset3++] = c1 >> 6 & 63 | 128;
+            buffer[offset3++] = c1 & 63 | 128;
           } else {
-            buffer[offset2++] = c1 >> 12 | 224;
-            buffer[offset2++] = c1 >> 6 & 63 | 128;
-            buffer[offset2++] = c1 & 63 | 128;
+            buffer[offset3++] = c1 >> 12 | 224;
+            buffer[offset3++] = c1 >> 6 & 63 | 128;
+            buffer[offset3++] = c1 & 63 | 128;
           }
         }
-        return offset2 - start;
+        return offset3 - start;
       };
     }
   });
@@ -919,17 +919,17 @@ const MODULES = `
         var SIZE = size || 8192;
         var MAX = SIZE >>> 1;
         var slab = null;
-        var offset2 = SIZE;
+        var offset3 = SIZE;
         return function pool_alloc(size2) {
           if (size2 < 1 || size2 > MAX)
             return alloc(size2);
-          if (offset2 + size2 > SIZE) {
+          if (offset3 + size2 > SIZE) {
             slab = alloc(SIZE);
-            offset2 = 0;
+            offset3 = 0;
           }
-          var buf = slice.call(slab, offset2, offset2 += size2);
-          if (offset2 & 7)
-            offset2 = (offset2 | 7) + 1;
+          var buf = slice.call(slab, offset3, offset3 += size2);
+          if (offset3 & 7)
+            offset3 = (offset3 | 7) + 1;
           return buf;
         };
       }
@@ -2036,11 +2036,11 @@ const MODULES = `
         "bytes"
         // 14
       ];
-      function bake(values, offset2) {
+      function bake(values, offset3) {
         var i = 0, o = {};
-        offset2 |= 0;
+        offset3 |= 0;
         while (i < values.length)
-          o[s[i + offset2]] = values[i++];
+          o[s[i + offset3]] = values[i++];
         return o;
       }
       types.basic = bake([
@@ -4504,9 +4504,9 @@ const MODULES = `
         return result;
       }
       function arrayPush(array, values) {
-        var index = -1, length2 = values.length, offset2 = array.length;
+        var index = -1, length2 = values.length, offset3 = array.length;
         while (++index < length2) {
-          array[offset2 + index] = values[index];
+          array[offset3 + index] = values[index];
         }
         return array;
       }
@@ -7800,6 +7800,10 @@ const MODULES = `
     a.download = fileName;
     a.addEventListener("load", () => URL.revokeObjectURL(a.href));
     a.click();
+    setTimeout(() => {
+      a.remove();
+      window.URL.revokeObjectURL(a.href);
+    }, 3e3);
   }
   function fileRead(accept, multiple) {
     return new Promise((resolve, reject) => {
@@ -9117,13 +9121,21 @@ const MODULES = `
       (document.body || document.head || document.documentElement || document).appendChild(script);
     });
   }
-  function getTotalTop(node) {
-    var sum = 0;
-    do {
-      sum += node.offsetTop;
-      node = node.offsetParent;
-    } while (node);
-    return sum;
+  function offset(ele) {
+    const box = ele.getBoundingClientRect();
+    const body = document.body;
+    const docElem = document.documentElement;
+    const scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop;
+    const scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft;
+    const clientTop = docElem.clientTop || body.clientTop;
+    const clientLeft = docElem.clientLeft || body.clientLeft;
+    const top = box.top + scrollTop - clientTop;
+    const left = box.left + scrollLeft - clientLeft;
+    return {
+      //Math.round 兼容火狐浏览器bug
+      top: Math.round(top),
+      left: Math.round(left)
+    };
   }
 
   // src/core/ui/utils/button.ts
@@ -14569,9 +14581,9 @@ const MODULES = `
     /** 顶栏动态记录参数失效，另行找补 */
     static videoOffset() {
       if (uid) {
-        const offset2 = getCookies()[\`bp_video_offset_\${uid}\`];
-        if (offset2) {
-          setCookie(\`bp_t_offset_\${uid}\`, offset2);
+        const offset3 = getCookies()[\`bp_video_offset_\${uid}\`];
+        if (offset3) {
+          setCookie(\`bp_t_offset_\${uid}\`, offset3);
         }
       }
     }
@@ -15769,7 +15781,7 @@ const MODULES = `
               t.event = {
                 "mouseover": (e) => {
                   const target = e.target;
-                  const nodes = \`<div class="bangumi-info-module" style="left: \${target.getBoundingClientRect().left}px; top: \${getTotalTop(target) - 150}px;"><div class="v-preview clearfix"><div class="lazy-img cover"><img alt="\${d[i].title}" src="\${d[i].cover.replace("http:", "")}@72w_72h.webp" /></div><div><p class="title">\${d[i].title}</p><p class="desc">\${d[i].new_ep.index_show}</p></div></div><div class="v-data"><span class="play"><i class="icon"></i>\${unitFormat(d[i].stat.view)}</span><span class="danmu"><i class="icon"></i>\${unitFormat(d[i].stat.danmaku)}</span><span class="fav"><i class="icon"></i>\${unitFormat(d[i].stat.follow)}</span></div></div>\`;
+                  const nodes = \`<div class="bangumi-info-module" style="left: \${target.getBoundingClientRect().left}px; top: \${offset(target).top - 150}px;"><div class="v-preview clearfix"><div class="lazy-img cover"><img alt="\${d[i].title}" src="\${d[i].cover.replace("http:", "")}@72w_72h.webp" /></div><div><p class="title">\${d[i].title}</p><p class="desc">\${d[i].new_ep.index_show}</p></div></div><div class="v-data"><span class="play"><i class="icon"></i>\${unitFormat(d[i].stat.view)}</span><span class="danmu"><i class="icon"></i>\${unitFormat(d[i].stat.danmaku)}</span><span class="fav"><i class="icon"></i>\${unitFormat(d[i].stat.follow)}</span></div></div>\`;
                   node = new VdomTool(nodes).toFragment().children[0];
                   document.body.appendChild(node);
                 },
@@ -28705,8 +28717,8 @@ const MODULES = `
       this.readInfoStr += \`<div class="article-holder">\${this.delta()}</div><p class="original">本文为我原创</p>\`;
     }
     delta() {
-      let str = this.readInfo.content.replace(/(\\&lt;)|(\\&quot;)|(\\&gt;)|(\\&#34;)|(\\&#39;)|(\\&amp;)/g, (d) => {
-        return { "&lt;": "<", "&quot;": '"', "&gt;": ">", "&#34;": '"', "&#39;": "'", "&amp;": "&" }[d];
+      let str = this.readInfo.content.replace(/(\\&quot;)|(\\&#34;)|(\\&#39;)|(\\&amp;)/g, (d) => {
+        return { "&quot;": '"', "&#34;": '"', "&#39;": "'", "&amp;": "&" }[d];
       });
       if (str == null ? void 0 : str.startsWith('{"ops"')) {
         try {
@@ -29720,7 +29732,7 @@ const MODULES = `
   var slider_default = '<div class="block">\\r\\n    <div class="slider">\\r\\n        <div class="slider-tracker-wrp">\\r\\n            <div class="slider-tracker">\\r\\n                <div class="slider-handle">\\r\\n                    <div class="slider-hint"></div>\\r\\n                </div>\\r\\n                <div class="slider-progress"></div>\\r\\n            </div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .block {\\r\\n        vertical-align: top;\\r\\n        display: inline-block;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .slider {\\r\\n        width: 100%;\\r\\n        height: 13px;\\r\\n        clear: both;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .slider-tracker-wrp {\\r\\n        position: relative;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .slider-tracker {\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 6px;\\r\\n        left: 0;\\r\\n        border-radius: 4px;\\r\\n        top: 50%;\\r\\n        margin-top: -3px;\\r\\n        background-color: #e5e9ef;\\r\\n    }\\r\\n\\r\\n    .slider-handle {\\r\\n        position: absolute;\\r\\n        top: -4px;\\r\\n        height: 14px;\\r\\n        width: 14px;\\r\\n        border-radius: 7px;\\r\\n        cursor: pointer;\\r\\n        z-index: 1;\\r\\n        margin-left: -7px;\\r\\n        box-shadow: 0 0 3px #017cc3;\\r\\n        background-color: #fff;\\r\\n        transition: box-shadow .3s;\\r\\n    }\\r\\n\\r\\n    .slider-handle:hover {\\r\\n        box-shadow: 0 0 5px #017cc3;\\r\\n    }\\r\\n\\r\\n    .slider-hint {\\r\\n        display: none;\\r\\n        position: absolute;\\r\\n        top: -21px;\\r\\n        white-space: nowrap;\\r\\n        border-radius: 4px;\\r\\n        background-color: hsla(0, 0%, 100%, .8);\\r\\n        padding: 0 3px;\\r\\n        border: 1px solid #fafafa;\\r\\n        z-index: 1;\\r\\n        transform: translateX(-25%);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .slider-progress {\\r\\n        width: 0;\\r\\n        height: 100%;\\r\\n        border-radius: 4px;\\r\\n        background-color: #00a1d6;\\r\\n        position: relative;\\r\\n    }\\r\\n</style>';
 
   // src/core/ui/utils/slider.ts
-  function offset(node) {
+  function offset2(node) {
     const result = {
       top: 0,
       left: 0
@@ -29767,7 +29779,7 @@ const MODULES = `
       this._wrp = root.children[0].children[0].children[0];
       const mouseLinster = (e) => {
         const { pageX, pageY } = e;
-        const offsetX = this.\$vertical ? pageY - offset(this._wrp).top - 7 : pageX - offset(this._wrp).left - 7;
+        const offsetX = this.\$vertical ? pageY - offset2(this._wrp).top - 7 : pageX - offset2(this._wrp).left - 7;
         const allX = this._wrp.offsetWidth - 14;
         const pv = (0 > offsetX ? 0 : offsetX > allX ? allX : offsetX) / allX;
         this.value = (this.\$max - this.\$min) * Math.round(pv * this.\$precision) / this.\$precision + this.\$min;
