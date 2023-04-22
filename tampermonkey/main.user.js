@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.4.9-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.5.0-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -13249,6 +13249,13 @@ const MODULES = `
       right.parentElement.addEventListener("click", (e) => {
         this.togger(e);
         e.stopPropagation();
+      });
+      this._image.addEventListener("click", (e) => {
+        if (e.target === this._image) {
+          this.remove();
+          document.body.style.overflow = "";
+          e.stopPropagation();
+        }
       });
     }
     togger(e, right = true) {
