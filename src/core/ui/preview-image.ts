@@ -35,6 +35,14 @@ export class PreviewImage extends HTMLElement implements CustomElementsInterface
             this.togger(e);
             e.stopPropagation();
         });
+        // 点击空白区域退出
+        this._image.addEventListener('click', e => {
+            if (e.target === this._image) {
+                this.remove();
+                document.body.style.overflow = '';
+                e.stopPropagation();
+            }
+        })
     }
     private togger(e: MouseEvent, right = true) {
         const list = this._list.querySelectorAll('.preview-item-box');
