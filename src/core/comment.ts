@@ -498,6 +498,9 @@ export class Comment {
                         })
                     })
                 }
+                if (content.rich_text?.note?.click_url && !content.message.includes(content.rich_text.note.click_url)) {
+                    pictureList.push(`<a href="${content.rich_text.note.click_url}" target="_blank" style="font-size: 14px;">${content.rich_text.note.click_url}</a>`);
+                }
                 if (content.pictures && content.pictures.length) {
                     pictureList.push(`<div class="image-exhibition">`);
                     content.pictures.forEach((d: any) => {
