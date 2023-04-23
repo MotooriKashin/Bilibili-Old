@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.5.0-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.5.1-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -20035,7 +20035,7 @@ const MODULES = `
     /** 评论图片 */
     _resolvePictures() {
       Feedback.prototype._resolvePictures = function(content) {
-        var _a3, _b2;
+        var _a3, _b2, _c, _d;
         const pictureList = [];
         if (content) {
           if ((_b2 = (_a3 = content.rich_text) == null ? void 0 : _a3.note) == null ? void 0 : _b2.images) {
@@ -20046,6 +20046,9 @@ const MODULES = `
                 click_url: content.rich_text.note.click_url
               });
             });
+          }
+          if (((_d = (_c = content.rich_text) == null ? void 0 : _c.note) == null ? void 0 : _d.click_url) && !content.message.includes(content.rich_text.note.click_url)) {
+            pictureList.push(\`<a href="\${content.rich_text.note.click_url}" target="_blank" style="font-size: 14px;">\${content.rich_text.note.click_url}</a>\`);
           }
           if (content.pictures && content.pictures.length) {
             pictureList.push(\`<div class="image-exhibition">\`);

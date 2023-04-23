@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.1.5
+// @version      2.1.6
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -619,7 +619,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"zg8whjkaqm"}`) || customElements.define(`preview-image-${"zg8whjkaqm"}`, PreviewImage);
+customElements.get(`preview-image-${"jpa2wgos5ca"}`) || customElements.define(`preview-image-${"jpa2wgos5ca"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -1056,7 +1056,7 @@ var _Comment = class {
   /** 评论图片 */
   _resolvePictures() {
     Feedback.prototype._resolvePictures = function(content) {
-      var _a, _b;
+      var _a, _b, _c, _d;
       const pictureList = [];
       if (content) {
         if ((_b = (_a = content.rich_text) == null ? void 0 : _a.note) == null ? void 0 : _b.images) {
@@ -1067,6 +1067,9 @@ var _Comment = class {
               click_url: content.rich_text.note.click_url
             });
           });
+        }
+        if (((_d = (_c = content.rich_text) == null ? void 0 : _c.note) == null ? void 0 : _d.click_url) && !content.message.includes(content.rich_text.note.click_url)) {
+          pictureList.push(`<a href="${content.rich_text.note.click_url}" target="_blank" style="font-size: 14px;">${content.rich_text.note.click_url}</a>`);
         }
         if (content.pictures && content.pictures.length) {
           pictureList.push(`<div class="image-exhibition">`);
