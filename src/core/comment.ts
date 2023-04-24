@@ -1,6 +1,6 @@
 import { apiReply } from "../io/api-reply";
 import { BV2avAll } from "../utils/abv";
-import { addCss, loadScript } from "../utils/element";
+import { addCss, addElement, loadScript } from "../utils/element";
 import { jsonpHook } from "../utils/hook/node";
 import { PreviewImage } from "./ui/preview-image";
 
@@ -81,6 +81,13 @@ export class Comment {
             get: () => {
                 if (load) {
                     function initComment(tar: string, init: Record<"oid" | "pageType" | "userStatus", any>) {
+                        if (!document.querySelector('.common .b-head')) {
+                            // 补充评论总数节点
+                            const div = addElement('div', { class: `b-head` }, undefined, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
+                            const com = document.querySelector<HTMLElement>(tar);
+                            com?.insertAdjacentElement('beforebegin', div);
+                            com?.parentElement?.classList.add('common');
+                        }
                         commentHander.reset = function ({ oid }: any) {
                             new Feedback(tar, oid, init.pageType, init.userStatus);
                         }

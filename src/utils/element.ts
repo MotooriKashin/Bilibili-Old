@@ -4,18 +4,22 @@ import { poll } from "./poll";
  * 创建HTML节点
  * @param tag 节点名称
  * @param attribute 节点属性对象
- * @param parrent 添加到的父节点，默认为body
+ * @param parrent 添加到的父节点
  * @param innerHTML 节点的innerHTML
  * @param top 是否在父节点中置顶
  * @param replaced 替换节点而不是添加，被替换的节点，将忽略父节点相关参数
  */
-export function addElement<T extends keyof HTMLElementTagNameMap>(tag: T, attribute?: Record<string, string>, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElementTagNameMap[T] {
-    let element = document.createElement(tag);
+export function addElement<T extends keyof HTMLElementTagNameMap>(tag: T, attribute?: Record<string, string>, parrent?: HTMLElement, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElementTagNameMap[T] {
+    const element = document.createElement(tag);
     attribute && (Object.entries(attribute).forEach(d => element.setAttribute(d[0], d[1])));
-    parrent = parrent || document.body;
-    innerHTML && (element.innerHTML = innerHTML);
-    replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
-    return element;
+    innerHTML && element.insertAdjacentHTML('beforeend', innerHTML);
+    replaced
+        ? replaced.replaceWith(element)
+        : parrent && (top
+            ? parrent.insertAdjacentElement('afterbegin', element)
+            : parrent.insertAdjacentElement('beforeend', element)
+        )
+    return element
 }
 /**
  * 添加css样式

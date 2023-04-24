@@ -243,7 +243,7 @@ export class Header {
         Header.banner();
     }
     protected loadOldFooter(target?: HTMLElement) {
-        addElement('div', { class: "footer bili-footer report-wrap-module" }, undefined, undefined, undefined, target);
+        addElement('div', { class: "footer bili-footer report-wrap-module" }, document.body, undefined, undefined, target);
         ((<any>window).jQuery ? Promise.resolve() : loadScript("//static.hdslb.com/js/jquery.min.js"))
             .then(() => loadScript("//static.hdslb.com/common/js/footer.js"))
             .then(() => {
