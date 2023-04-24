@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.1.6
+// @version      2.1.7
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -248,11 +248,10 @@ function poll(check, callback, delay = 100, stop = 180) {
 
 // src/utils/element.ts
 function addElement(tag, attribute, parrent, innerHTML, top, replaced) {
-  let element = document.createElement(tag);
+  const element = document.createElement(tag);
   attribute && Object.entries(attribute).forEach((d) => element.setAttribute(d[0], d[1]));
-  parrent = parrent || document.body;
-  innerHTML && (element.innerHTML = innerHTML);
-  replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
+  innerHTML && element.insertAdjacentHTML("beforeend", innerHTML);
+  replaced ? replaced.replaceWith(element) : parrent && (top ? parrent.insertAdjacentElement("afterbegin", element) : parrent.insertAdjacentElement("beforeend", element));
   return element;
 }
 async function addCss(txt, id, parrent) {
@@ -619,7 +618,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"jpa2wgos5ca"}`) || customElements.define(`preview-image-${"jpa2wgos5ca"}`, PreviewImage);
+customElements.get(`preview-image-${"8y0b4wo50cd"}`) || customElements.define(`preview-image-${"8y0b4wo50cd"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -690,6 +689,13 @@ var _Comment = class {
       get: () => {
         if (load) {
           let initComment2 = function(tar, init) {
+            var _a;
+            if (!document.querySelector(".common .b-head")) {
+              const div = addElement("div", { class: `b-head` }, void 0, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
+              const com = document.querySelector(tar);
+              com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
+              (_a = com == null ? void 0 : com.parentElement) == null ? void 0 : _a.classList.add("common");
+            }
             commentHander.reset = function({ oid }) {
               new Feedback(tar, oid, init.pageType, init.userStatus);
             };
