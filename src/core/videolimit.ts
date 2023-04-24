@@ -36,7 +36,7 @@ enum AREA {
 }
 class VideoLimit {
     /** 数据备份 */
-    protected Backup: Record<number, any> = {};
+    protected Backup: Record<string, any> = {};
     /** 通知组件 */
     protected toast?: Toast;
     /** 监听中 */
@@ -93,13 +93,12 @@ class VideoLimit {
         this.toast.data = ['泰区限制视频 >>>'];
         const obj = urlObj(args[1]);
         this.toast.push(`> aid：${BLOD.aid}`, `> cid：${BLOD.cid}`);
-        const epid = <number>obj.ep_id || <number>obj.episodeId || BLOD.epid;
         obj.access_key = user.userStatus!.accessKey.token;
-        if (!this.Backup[epid]) {
+        if (!this.Backup[args[1]]) {
             try {
                 networkMock();
                 this.toast.push(`> 代理服务器：${user.userStatus!.videoLimit.th}`);
-                this.Backup[epid] = { code: 0, message: "success", result: await this.th(obj) };
+                this.Backup[args[1]] = { code: 0, message: "success", result: await this.th(obj) };
                 this.toast.push('> 获取代理数据成功！');
                 this.toast.type = 'success';
             } catch (e) {
@@ -112,7 +111,7 @@ class VideoLimit {
         }
         this.toast.delay = 4;
         delete this.toast;
-        return this.__playinfo__ = this.Backup[epid];
+        return this.__playinfo__ = this.Backup[args[1]];
     }
     /** 处理港澳台 */
     protected async _gat(args: XMLHttpRequestOpenParams) {
@@ -120,9 +119,8 @@ class VideoLimit {
         this.toast.data = ['港澳台限制视频 >>>'];
         const obj = urlObj(args[1]);
         this.toast.push(`> aid：${BLOD.aid}`, `> cid：${BLOD.cid}`);
-        const epid = <number>obj.ep_id || <number>obj.episodeId || BLOD.epid;
         obj.access_key = user.userStatus!.accessKey.token;
-        if (!this.Backup[epid]) {
+        if (!this.Backup[args[1]]) {
             try {
                 if (user.userStatus!.videoLimit.server === '内置') {
                     obj.module = 'bangumi';
@@ -132,14 +130,14 @@ class VideoLimit {
                     }
                     this.toast.push(`> 代理服务器：内置`, `> 类型：${obj.module}`);
                     const res = await apiBiliplusPlayurl(<any>obj);
-                    this.Backup[epid] = { code: 0, message: "success", result: res };
+                    this.Backup[args[1]] = { code: 0, message: "success", result: res };
                 } else {
                     // networkMock();
                     const res = await this.gat(obj);
-                    this.Backup[epid] = { code: 0, message: "success", result: res };
+                    this.Backup[args[1]] = { code: 0, message: "success", result: res };
                 }
                 if (user.userStatus!.uposReplace.gat !== "不替换") {
-                    this.Backup[epid] = JSON.parse(this.uposReplace(JSON.stringify(this.Backup[epid]), <'ks3（金山）'>user.userStatus!.uposReplace.gat));
+                    this.Backup[args[1]] = JSON.parse(this.uposReplace(JSON.stringify(this.Backup[args[1]]), <'ks3（金山）'>user.userStatus!.uposReplace.gat));
                     toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.gat}`, `UPOS：${UPOS[<'ks3（金山）'>user.userStatus!.uposReplace.gat]}`);
                 };
                 this.toast.push('> 获取代理数据成功！');
@@ -154,7 +152,7 @@ class VideoLimit {
         }
         this.toast.delay = 4;
         delete this.toast;
-        return this.__playinfo__ = this.Backup[epid];
+        return this.__playinfo__ = this.Backup[args[1]];
     }
     /** 停止监听 */
     disable() {
