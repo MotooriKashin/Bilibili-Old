@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.5.1-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.5.2-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -9085,11 +9085,10 @@ const MODULES = `
 
   // src/utils/element.ts
   function addElement(tag, attribute, parrent, innerHTML, top, replaced) {
-    let element = document.createElement(tag);
+    const element = document.createElement(tag);
     attribute && Object.entries(attribute).forEach((d) => element.setAttribute(d[0], d[1]));
-    parrent = parrent || document.body;
-    innerHTML && (element.innerHTML = innerHTML);
-    replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
+    innerHTML && element.insertAdjacentHTML("beforeend", innerHTML);
+    replaced ? replaced.replaceWith(element) : parrent && (top ? parrent.insertAdjacentElement("afterbegin", element) : parrent.insertAdjacentElement("beforeend", element));
     return element;
   }
   async function addCss(txt, id, parrent) {
@@ -14647,7 +14646,7 @@ const MODULES = `
       _Header.banner();
     }
     loadOldFooter(target) {
-      addElement("div", { class: "footer bili-footer report-wrap-module" }, void 0, void 0, void 0, target);
+      addElement("div", { class: "footer bili-footer report-wrap-module" }, document.body, void 0, void 0, target);
       (window.jQuery ? Promise.resolve() : loadScript("//static.hdslb.com/js/jquery.min.js")).then(() => loadScript("//static.hdslb.com/common/js/footer.js")).then(() => {
         var _a3;
         target && (target.style.display = "none");
@@ -19669,6 +19668,13 @@ const MODULES = `
         get: () => {
           if (load) {
             let initComment2 = function(tar, init) {
+              var _a3;
+              if (!document.querySelector(".common .b-head")) {
+                const div = addElement("div", { class: \`b-head\` }, void 0, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
+                const com = document.querySelector(tar);
+                com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
+                (_a3 = com == null ? void 0 : com.parentElement) == null ? void 0 : _a3.classList.add("common");
+              }
               commentHander.reset = function({ oid }) {
                 new Feedback(tar, oid, init.pageType, init.userStatus);
               };
