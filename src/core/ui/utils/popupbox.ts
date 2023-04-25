@@ -48,6 +48,16 @@ export class PopupBox extends HTMLElement implements CustomElementsInterface {
         this.clickOutRemove = new ClickOutRemove(this);
         document.body.appendChild(this);
     }
+    insertAdjacentElement(where: InsertPosition, element: Element) {
+        this._contain.insertAdjacentElement(where, element);
+        return element;
+    }
+    insertAdjacentHTML(position: InsertPosition, text: string) {
+        return this._contain.insertAdjacentHTML(position, text);
+    }
+    insertAdjacentText(where: InsertPosition, data: string) {
+        return this._contain.insertAdjacentText(where, data);
+    }
     append(...nodes: (string | Node)[]): void {
         this._contain.append(...nodes);
     }
