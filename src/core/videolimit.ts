@@ -56,7 +56,7 @@ class VideoLimit {
             return !(BLOD.limit || BLOD.th)
         }, res => {
             try {
-                const result = res.responseType === 'json' ? JSON.stringify(res) : res.responseText!;
+                const result = res.responseType === 'json' ? JSON.stringify(res.response) : res.responseText!;
                 if (user.userStatus!.uposReplace.nor !== '不替换') {
                     const nstr = this.uposReplace(result, <'ks3（金山）'>user.userStatus!.uposReplace.nor);
                     toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${user.userStatus!.uposReplace.nor}`, `UPOS：${UPOS[<'ks3（金山）'>user.userStatus!.uposReplace.nor]}`);

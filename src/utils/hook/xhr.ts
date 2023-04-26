@@ -43,8 +43,14 @@ export function xhrHook(url: string | string[], modifyOpen?: (args: XMLHttpReque
                         (this.responseType === "" || this.responseType === "document") && (response.responseXML = <Document>this.responseXML);
                         modifyResponse(response);
                         Reflect.defineProperty(this, "response", { configurable: true, value: response.response });
-                        response.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
-                        response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
+                        try {
+                            if (response.responseXML) {
+                                response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
+                            } else if (response.response) {
+                                response.responseText = typeof response.response === 'object' ? JSON.stringify(response.response) : response.response;
+                                Reflect.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
+                            }
+                        } catch { }
                     }
                 } catch (e) { debug.error("modifyResponse of xhrhook", one, e) }
             })
