@@ -87,6 +87,15 @@ export class Comment {
                             const com = document.querySelector<HTMLElement>(tar);
                             com?.insertAdjacentElement('beforebegin', div);
                             com?.parentElement?.classList.add('common');
+                            addCss('.b-head {\
+    font-size: 18px;\
+    line-height: 24px;\
+    color: #222;\
+    margin: 0 0 20px;\
+}\
+.b-head .results {\
+    margin-right: 10px;\
+}', 'b-head');
                         }
                         commentHander.reset = function ({ oid }: any) {
                             new Feedback(tar, oid, init.pageType, init.userStatus);

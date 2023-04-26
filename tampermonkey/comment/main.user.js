@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.1.7
+// @version      2.1.8
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -618,7 +618,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"8y0b4wo50cd"}`) || customElements.define(`preview-image-${"8y0b4wo50cd"}`, PreviewImage);
+customElements.get(`preview-image-${"rekxq6qct9q"}`) || customElements.define(`preview-image-${"rekxq6qct9q"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -695,6 +695,7 @@ var _Comment = class {
               const com = document.querySelector(tar);
               com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
               (_a = com == null ? void 0 : com.parentElement) == null ? void 0 : _a.classList.add("common");
+              addCss(".b-head {    font-size: 18px;    line-height: 24px;    color: #222;    margin: 0 0 20px;}.b-head .results {    margin-right: 10px;}", "b-head");
             }
             commentHander.reset = function({ oid }) {
               new Feedback(tar, oid, init.pageType, init.userStatus);
