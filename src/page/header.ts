@@ -183,6 +183,10 @@ export class Header {
     }
     /** 是否mini顶栏 */
     protected static isMiniHead(d?: HTMLElement) {
+        // 各种分区主页一律使用mini顶栏
+        if (/\/v\/(douga|music|dance|game|knowledge|tech|life|kichiku|fashion|information|ent|cinephile|car|sports|animal)\//.test(location.href)) return true;
+        // 公开课使用mini顶栏
+        if (/\/mooc\//.test(location.href)) return true;
         return (
             location.href.includes("blackboard/topic_list")
             || location.href.includes("blackboard/x/act_list")

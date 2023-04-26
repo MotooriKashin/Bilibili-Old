@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.5.3-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.5.4-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -14607,6 +14607,10 @@ const MODULES = `
     }
     /** 是否mini顶栏 */
     static isMiniHead(d) {
+      if (/\\/v\\/(douga|music|dance|game|knowledge|tech|life|kichiku|fashion|information|ent|cinephile|car|sports|animal)\\//.test(location.href))
+        return true;
+      if (/\\/mooc\\//.test(location.href))
+        return true;
       return location.href.includes("blackboard/topic_list") || location.href.includes("blackboard/x/act_list") || document.querySelector(".large-header") || document.querySelector(".bili-banner") || (d == null ? void 0 : d.getAttribute("type")) == "all" ? false : true;
     }
     constructor() {
@@ -19682,6 +19686,7 @@ const MODULES = `
                 const com = document.querySelector(tar);
                 com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
                 (_a3 = com == null ? void 0 : com.parentElement) == null ? void 0 : _a3.classList.add("common");
+                addCss(".b-head {    font-size: 18px;    line-height: 24px;    color: #222;    margin: 0 0 20px;}.b-head .results {    margin-right: 10px;}", "b-head");
               }
               commentHander.reset = function({ oid }) {
                 new Feedback(tar, oid, init.pageType, init.userStatus);
