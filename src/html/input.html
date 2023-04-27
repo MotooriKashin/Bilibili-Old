@@ -85,7 +85,21 @@
     }
 </style>
 <style type="text/css">
-    ::-webkit-scrollbar {
+    .input-list {
+        scrollbar-width: none;
+        scrollbar-color: #999 #EEE;
+    }
+
+    .input-list:hover {
+        scrollbar-width: thin;
+    }
+
+    .input-list::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+
+    .input-list:hover:-webkit-scrollbar {
         width: 7px;
         height: 7px;
     }
