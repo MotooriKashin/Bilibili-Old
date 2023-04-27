@@ -1,5 +1,6 @@
 import { CustomElementsInterface } from "../../../utils/customelement";
 import html from '../../../html/select.html';
+import { Scrollbar } from "../../../utils/scrollbar";
 
 interface Value {
     /** 当前值 */
@@ -21,6 +22,8 @@ export class SelectMenu extends HTMLElement implements CustomElementsInterface {
         root.innerHTML = html;
         this._text = <HTMLSpanElement>root.children[0].children[0].children[0];
         this._list = <HTMLUListElement>root.children[0].children[2];
+
+        new Scrollbar(this._list, false, true, true);
     }
     /** 当前值 */
     get value() {

@@ -72,32 +72,3 @@
     font-weight: 400;
     padding: 8px 0;
 }
-
-.up-card-box {
-    scrollbar-width: none;
-    scrollbar-color: #999 #EEE;
-}
-
-.up-card-box:hover {
-    scrollbar-width: thin;
-}
-
-.up-card-box::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-}
-
-.up-card-box:hover:-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
-}
-
-.up-card-box::-webkit-scrollbar-track {
-    border-radius: 4px;
-    background-color: #EEE;
-}
-
-.up-card-box::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: #999;
-}

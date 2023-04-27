@@ -5,6 +5,7 @@ import { addElement } from "../../utils/element";
 import svgFork from "../../svg/fork.svg";
 import svgLeft from "../../svg/left.svg";
 import svgRight from "../../svg/right.svg";
+import { Scrollbar } from "../../utils/scrollbar";
 
 export class PreviewImage extends HTMLElement implements CustomElementsInterface {
     private _image: HTMLElement;
@@ -21,6 +22,8 @@ export class PreviewImage extends HTMLElement implements CustomElementsInterface
         right.innerHTML = svgRight;
         this._image = root.querySelector<HTMLElement>('.show-image-wrap')!;
         this._list = root.querySelector<HTMLElement>('.preview-list')!;
+
+        new Scrollbar(this._image, true, true, true);
 
         close.parentElement!.addEventListener('click', e => {
             this.remove();

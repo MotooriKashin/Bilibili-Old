@@ -1,5 +1,6 @@
 import { CustomElementsInterface } from "../../../utils/customelement";
 import html from '../../../html/input.html';
+import { Scrollbar } from "../../../utils/scrollbar";
 
 /** input标签属性 */
 export interface HTMLInputAttribudeMap {
@@ -80,6 +81,7 @@ export class InputArea extends HTMLElement implements CustomElementsInterface {
         root.innerHTML = html;
         this._input = <HTMLInputElement>root.children[0].children[0];
         this._ul = <HTMLUListElement>root.children[0].children[1];
+        new Scrollbar(this._ul, false, true, true);
         this._input.addEventListener('change', () => {
             this.$value = this.$prop.type === 'file' ? this._input.files! : this._input.value;
             this.dispatchEvent(new Event('change'));

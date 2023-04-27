@@ -20,6 +20,7 @@ import { propertyHook } from "../utils/hook/method";
 import { jsonpHook } from "../utils/hook/node";
 import { webpackHook } from "../utils/hook/webpack";
 import { poll } from "../utils/poll";
+import { Scrollbar } from "../utils/scrollbar";
 import { PageBangumi } from "./bangumi";
 import { Header } from "./header";
 import { Page } from "./page";
@@ -202,6 +203,8 @@ export class PageAV extends Page {
             }, fl) + `</div>`;
             node.innerHTML = fl;
             addCss(cssUplist, "up-list");
+            const box = node.querySelector<HTMLElement>('.up-card-box');
+            box && new Scrollbar(box, true, false);
         });
     }
     /** 合集（使用播单模拟） */
