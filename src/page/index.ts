@@ -214,7 +214,7 @@ export class PageIndex extends Page {
                             const arr = d.redirect_url.split('/');
                             const ep = arr.at(-1);
                             if (ep) {
-                                ep.replace('\d+', e => (<any>d).episode_id = e);
+                                ep.replace(/\d+/, e => (<any>d).episode_id = e);
                                 s[ep] = d;
                             }
                         }
@@ -223,7 +223,7 @@ export class PageIndex extends Page {
                     const cards = await apiArticleCards(Object.keys(eps));
                     Object.entries(cards).forEach(d => {
                         if (eps[d[0]]) {
-                            Object.assign(eps[d[0]], d[1]);
+                            eps[d[0]] = Object.assign(eps[d[0]], d[1]);
                         }
                     });
                     const timingData: any[] = vue.timingData;
