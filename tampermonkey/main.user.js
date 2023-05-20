@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.5.5-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.5.6-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -15961,7 +15961,7 @@ const MODULES = `
               const arr2 = d2.redirect_url.split("/");
               const ep = arr2.at(-1);
               if (ep) {
-                ep.replace("d+", (e) => d2.episode_id = e);
+                ep.replace(/\\d+/, (e) => d2.episode_id = e);
                 s[ep] = d2;
               }
             }
@@ -15970,7 +15970,7 @@ const MODULES = `
           const cards = await apiArticleCards(Object.keys(eps));
           Object.entries(cards).forEach((d2) => {
             if (eps[d2[0]]) {
-              Object.assign(eps[d2[0]], d2[1]);
+              eps[d2[0]] = Object.assign(eps[d2[0]], d2[1]);
             }
           });
           const timingData = vue.timingData;
@@ -30870,52 +30870,54 @@ const MODULES = `
     cdn.update(status.cdn, BLOD.version);
     Comment2.commentJumpUrlTitle = status.commentJumpUrlTitle;
     Comment2.resolvePictures = status.commentPicture;
-    if (BLOD.path[2] == "www.bilibili.com" && (!BLOD.path[3] || (BLOD.path[3].startsWith("?") || BLOD.path[3].startsWith("#") || BLOD.path[3].startsWith("index.")))) {
-      if (document.referrer.includes("blackboard/bnj2019.html")) {
-        new PageWild("/src/html/bnj2019.html", "https://www.bilibili.com/blackboard/bnj2019.html");
-      } else {
-        status.index && new PageIndex();
+    if (BLOD.path[2] !== "m.bilibili.com") {
+      if (BLOD.path[2] == "www.bilibili.com" && (!BLOD.path[3] || (BLOD.path[3].startsWith("?") || BLOD.path[3].startsWith("#") || BLOD.path[3].startsWith("index.")))) {
+        if (document.referrer.includes("blackboard/bnj2019.html")) {
+          new PageWild("/src/html/bnj2019.html", "https://www.bilibili.com/blackboard/bnj2019.html");
+        } else {
+          status.index && new PageIndex();
+        }
       }
-    }
-    if (status.av && /(\\/s)?\\/video\\/[AaBb][Vv]/.test(location.href)) {
-      BLOD.path[3] === "s" && urlCleaner.updateLocation(location.href.replace("s/video", "video"));
-      player.loadEmbedPlayer();
-      new PageAV();
-    }
-    if (status.player && (/\\/festival\\//.test(location.href) || (/player\\./.test(location.href) || /webplayer\\/embed/.test(location.href) && !location.href.includes("ancient")))) {
-      player.loadConnectPlayer();
-    }
-    if (status.bangumi && /\\/bangumi\\/play\\/(ss|ep)/.test(location.href)) {
-      player.loadEmbedPlayer();
-      new PageBangumi();
-    }
-    if (status.watchlater && /\\/watchlater/.test(location.href)) {
-      player.loadEmbedPlayer();
-      new PageWatchlater();
-    }
-    if (status.playlist && (/\\/medialist\\/play\\//.test(location.href) || /\\/list\\/ml\\d+/.test(location.href)) && !/watchlater/.test(location.href) || /\\/playlist\\/video\\/pl/.test(location.href)) {
-      player.loadEmbedPlayer();
-      new PagePlaylist();
-    }
-    if (/\\/playlist\\/detail\\/pl/.test(location.href)) {
-      new PagePlaylistDetail();
-    }
-    if (status.ranking && /\\/v\\/popular\\//.test(location.href)) {
-      new PageRanking();
-    }
-    if (status.read && /\\/read\\/[Cc][Vv]/.test(location.href)) {
-      new PageRead();
-    }
-    if (status.search && BLOD.path[2] == "search.bilibili.com") {
-      new PageSearch();
-    }
-    if (/\\/moe\\/2018\\/jp\\/home/.test(location.href)) {
-      Reflect.set(window, "getPlayList", () => {
-        return { code: 0, data: toview_default };
-      });
-    }
-    if (/\\/html\\/danmubisai.html/.test(location.href) || /\\/html\\/cele.html/.test(location.href)) {
-      new PageHttps();
+      if (status.av && /(\\/s)?\\/video\\/[AaBb][Vv]/.test(location.href)) {
+        BLOD.path[3] === "s" && urlCleaner.updateLocation(location.href.replace("s/video", "video"));
+        player.loadEmbedPlayer();
+        new PageAV();
+      }
+      if (status.player && (/\\/festival\\//.test(location.href) || (/player\\./.test(location.href) || /webplayer\\/embed/.test(location.href) && !location.href.includes("ancient")))) {
+        player.loadConnectPlayer();
+      }
+      if (status.bangumi && /\\/bangumi\\/play\\/(ss|ep)/.test(location.href)) {
+        player.loadEmbedPlayer();
+        new PageBangumi();
+      }
+      if (status.watchlater && /\\/watchlater/.test(location.href)) {
+        player.loadEmbedPlayer();
+        new PageWatchlater();
+      }
+      if (status.playlist && (/\\/medialist\\/play\\//.test(location.href) || /\\/list\\/ml\\d+/.test(location.href)) && !/watchlater/.test(location.href) || /\\/playlist\\/video\\/pl/.test(location.href)) {
+        player.loadEmbedPlayer();
+        new PagePlaylist();
+      }
+      if (/\\/playlist\\/detail\\/pl/.test(location.href)) {
+        new PagePlaylistDetail();
+      }
+      if (status.ranking && /\\/v\\/popular\\//.test(location.href)) {
+        new PageRanking();
+      }
+      if (status.read && /\\/read\\/[Cc][Vv]/.test(location.href)) {
+        new PageRead();
+      }
+      if (status.search && BLOD.path[2] == "search.bilibili.com") {
+        new PageSearch();
+      }
+      if (/\\/moe\\/2018\\/jp\\/home/.test(location.href)) {
+        Reflect.set(window, "getPlayList", () => {
+          return { code: 0, data: toview_default };
+        });
+      }
+      if (/\\/html\\/danmubisai.html/.test(location.href) || /\\/html\\/cele.html/.test(location.href)) {
+        new PageHttps();
+      }
     }
     player.nanoPermit();
     new Automate();
