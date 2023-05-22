@@ -29,6 +29,7 @@ import { WebTRC } from './core/webrtc';
 import { UI } from './core/ui';
 import toview from './json/toview.json';
 import { PageHttps, PageWild } from './page/wild';
+import { PageAnime } from './page/home/anime';
 
 document.domain = 'bilibili.com';
 
@@ -90,6 +91,9 @@ user.addCallback(status => {
             || /\/html\/cele.html/.test(location.href)
         ) {
             new PageHttps();
+        }
+        if (/\/anime\/?$/.test(location.pathname)) {
+            new PageAnime();
         }
     }
     player.nanoPermit();
