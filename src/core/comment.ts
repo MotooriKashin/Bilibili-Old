@@ -1,6 +1,7 @@
 import { apiReply } from "../io/api-reply";
 import { BV2avAll } from "../utils/abv";
 import { addCss, addElement, loadScript } from "../utils/element";
+import { urlObj } from "../utils/format/url";
 import { jsonpHook } from "../utils/hook/node";
 import { PreviewImage } from "./ui/preview-image";
 
@@ -27,6 +28,7 @@ export class Comment {
         this.bbComment();
         this.initComment();
         this.pageCount();
+        this.jump();
     }
     /** 捕获评论组件 */
     protected bbComment() {
@@ -73,7 +75,6 @@ export class Comment {
         });
     }
     protected initComment() {
-        const that = this;
         const commentHander: any = {};
         Reflect.defineProperty(window, "initComment", {
             configurable: true,
@@ -81,22 +82,6 @@ export class Comment {
             get: () => {
                 if (load) {
                     function initComment(tar: string, init: Record<"oid" | "pageType" | "userStatus", any>) {
-                        if (!document.querySelector('.common .b-head')) {
-                            // 补充评论总数节点
-                            const div = addElement('div', { class: `b-head` }, undefined, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
-                            const com = document.querySelector<HTMLElement>(tar);
-                            com?.insertAdjacentElement('beforebegin', div);
-                            com?.parentElement?.classList.add('common');
-                            addCss('.b-head {\
-    font-size: 18px;\
-    line-height: 24px;\
-    color: #222;\
-    margin: 0 0 20px;\
-}\
-.b-head .results {\
-    margin-right: 10px;\
-}', 'b-head');
-                        }
                         commentHander.reset = function ({ oid }: any) {
                             new Feedback(tar, oid, init.pageType, init.userStatus);
                         }
@@ -144,6 +129,30 @@ export class Comment {
             res.page?.count && (this.count = res.page.count);
         }
     }
+    /** 修复评论跳转 */
+    private jump() {
+        jsonpHook.async('x/v2/reply/jump?', undefined, async url => {
+            const obj = urlObj(url);
+            const data = await fetch(`https://api.bilibili.com/x/v2/reply/main?csrf=6c09e4c6405d1369c9e94e0d0a4f6790&mode=3&oid=${obj.oid}&pagination_str=%7B%22offset%22:%22%22%7D&plat=1&seek_rpid=${obj.rpid}&type=1`, { credentials: 'include' });
+            const json = await data.json();
+            const { config, control, cursor, seek_root_reply, replies, top, upper } = json.data;
+            return {
+                code: 0,
+                data: {
+                    config,
+                    control,
+                    mode: cursor.mode ?? 3,
+                    page: { acount: cursor.all_count, count: this.count ?? cursor.all_count, num: 1, rt_num: 1, size: 20 },
+                    replies: [seek_root_reply].concat(replies),
+                    support_mode: cursor.support_mode,
+                    top,
+                    upper
+                },
+                message: '0',
+                ttl: 1
+            }
+        })
+    }
     /** 修补评论组件 */
     protected bbCommentModify() {
         this.styleFix();
@@ -186,6 +195,22 @@ export class Comment {
             // 优先获取评论总数
             that.getPageCount(this).finally(() => {
                 this.init();
+                if (!document.querySelector('.common .b-head')) {
+                    // 补充评论总数节点
+                    const div = addElement('div', { class: `b-head` }, undefined, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
+                    const com = document.querySelector<HTMLElement>('.bb-comment');
+                    com?.insertAdjacentElement('beforebegin', div);
+                    com?.parentElement?.classList.add('common');
+                    addCss('.b-head {\
+    font-size: 18px;\
+    line-height: 24px;\
+    color: #222;\
+    margin: 0 0 20px;\
+}\
+.b-head .results {\
+    margin-right: 10px;\
+}', 'b-head');
+                }
             });
 
             this._registerEvent();

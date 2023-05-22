@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.1.8
+// @version      2.1.9
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -517,7 +517,7 @@ function removeJsonphook(id) {
 }
 
 // src/html/preview-image.html
-var preview_image_default = '<div class="reply-view-image">\r\n    <!-- 操作区 -->\r\n    <div class="operation-btn">\r\n        <div class="operation-btn-icon close-container">\r\n            <i class="svg-icon close use-color" style="width: 14px; height: 14px;"></i>\r\n        </div>\r\n        <div class="operation-btn-icon last-image">\r\n            <i class="svg-icon left-arrow use-color" style="width: 22px; height: 22px;"></i>\r\n        </div>\r\n        <div class="operation-btn-icon next-image">\r\n            <i class="svg-icon right-arrow use-color" style="width: 22px; height: 22px;"></i>\r\n        </div>\r\n    </div>\r\n    <!-- 图片内容 -->\r\n    <div class="show-image-wrap"></div>\r\n    <!-- 小图预览栏 -->\r\n    <div class="preview-list"></div>\r\n</div>\r\n<style>\r\n    .reply-view-image {\r\n        position: fixed;\r\n        z-index: 999999;\r\n        top: 0;\r\n        right: 0;\r\n        bottom: 0;\r\n        left: 0;\r\n        width: 100%;\r\n        height: 100%;\r\n        background: rgba(24, 25, 28, 0.85);\r\n        transform: scale(1);\r\n        user-select: none;\r\n    }\r\n\r\n    .reply-view-image,\r\n    .reply-view-image * {\r\n        box-sizing: border-box;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon {\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: center;\r\n        position: absolute;\r\n        z-index: 2;\r\n        width: 42px;\r\n        height: 42px;\r\n        border-radius: 50%;\r\n        color: white;\r\n        background: rgba(0, 0, 0, 0.58);\r\n        transition: 0.2s;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon:hover {\r\n        color: #FF6699;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon.close-container {\r\n        top: 16px;\r\n        right: 16px;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon.last-image {\r\n        top: 50%;\r\n        left: 16px;\r\n        transform: translateY(-50%);\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon.next-image {\r\n        top: 50%;\r\n        right: 16px;\r\n        transform: translateY(-50%);\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap {\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: center;\r\n        position: absolute;\r\n        width: 100%;\r\n        height: 100%;\r\n        max-height: 100%;\r\n        padding: 0 100px;\r\n        overflow: auto;\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap .loading-svga {\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 50%;\r\n        transform: translate(-50%, -50%);\r\n        width: 42px;\r\n        height: 42px;\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap.vertical {\r\n        flex-direction: column;\r\n        justify-content: start;\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap .image-content {\r\n        max-width: 100%;\r\n        margin: auto;\r\n    }\r\n\r\n    .reply-view-image .preview-list {\r\n        display: flex;\r\n        align-items: center;\r\n        position: absolute;\r\n        left: 50%;\r\n        bottom: 30px;\r\n        z-index: 2;\r\n        padding: 6px 10px;\r\n        border-radius: 8px;\r\n        background: rgba(24, 25, 28, 0.8);\r\n        backdrop-filter: blur(20px);\r\n        transform: translateX(-50%);\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box {\r\n        padding: 1px;\r\n        border: 2px solid transparent;\r\n        border-radius: 8px;\r\n        transition: 0.3s;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box.active {\r\n        border-color: #FF6699;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap {\r\n        display: flex;\r\n        justify-content: center;\r\n        overflow: hidden;\r\n        width: 100%;\r\n        height: 100%;\r\n        border-radius: 6px;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.vertical {\r\n        flex-direction: column;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.extra-long {\r\n        justify-content: start;\r\n    }\r\n\r\n    .svg-icon {\r\n        display: inline-flex;\r\n        justify-content: center;\r\n        align-items: center;\r\n    }\r\n\r\n    .svg-icon svg {\r\n        width: 100%;\r\n        height: 100%;\r\n    }\r\n\r\n    .svg-icon.use-color svg path {\r\n        fill: currentColor;\r\n        color: inherit;\r\n    }\r\n</style>\r\n<style type="text/css">\r\n    ::-webkit-scrollbar {\r\n        width: 7px;\r\n        height: 7px;\r\n    }\r\n\r\n    ::-webkit-scrollbar-track {\r\n        border-radius: 4px;\r\n        background-color: #EEE;\r\n    }\r\n\r\n    ::-webkit-scrollbar-thumb {\r\n        border-radius: 4px;\r\n        background-color: #999;\r\n    }\r\n</style>';
+var preview_image_default = '<div class="reply-view-image">\r\n    <!-- 操作区 -->\r\n    <div class="operation-btn">\r\n        <div class="operation-btn-icon close-container">\r\n            <i class="svg-icon close use-color" style="width: 14px; height: 14px;"></i>\r\n        </div>\r\n        <div class="operation-btn-icon last-image">\r\n            <i class="svg-icon left-arrow use-color" style="width: 22px; height: 22px;"></i>\r\n        </div>\r\n        <div class="operation-btn-icon next-image">\r\n            <i class="svg-icon right-arrow use-color" style="width: 22px; height: 22px;"></i>\r\n        </div>\r\n    </div>\r\n    <!-- 图片内容 -->\r\n    <div class="show-image-wrap"></div>\r\n    <!-- 小图预览栏 -->\r\n    <div class="preview-list"></div>\r\n</div>\r\n<style>\r\n    .reply-view-image {\r\n        position: fixed;\r\n        z-index: 999999;\r\n        top: 0;\r\n        right: 0;\r\n        bottom: 0;\r\n        left: 0;\r\n        width: 100%;\r\n        height: 100%;\r\n        background: rgba(24, 25, 28, 0.85);\r\n        transform: scale(1);\r\n        user-select: none;\r\n    }\r\n\r\n    .reply-view-image,\r\n    .reply-view-image * {\r\n        box-sizing: border-box;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon {\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: center;\r\n        position: absolute;\r\n        z-index: 2;\r\n        width: 42px;\r\n        height: 42px;\r\n        border-radius: 50%;\r\n        color: white;\r\n        background: rgba(0, 0, 0, 0.58);\r\n        transition: 0.2s;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon:hover {\r\n        color: #FF6699;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon.close-container {\r\n        top: 16px;\r\n        right: 16px;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon.last-image {\r\n        top: 50%;\r\n        left: 16px;\r\n        transform: translateY(-50%);\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon.next-image {\r\n        top: 50%;\r\n        right: 16px;\r\n        transform: translateY(-50%);\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap {\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: center;\r\n        position: absolute;\r\n        width: 100%;\r\n        height: 100%;\r\n        max-height: 100%;\r\n        padding: 0 100px;\r\n        overflow: auto;\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap .loading-svga {\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 50%;\r\n        transform: translate(-50%, -50%);\r\n        width: 42px;\r\n        height: 42px;\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap.vertical {\r\n        flex-direction: column;\r\n        justify-content: start;\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap .image-content {\r\n        max-width: 100%;\r\n        margin: auto;\r\n    }\r\n\r\n    .reply-view-image .preview-list {\r\n        display: flex;\r\n        align-items: center;\r\n        position: absolute;\r\n        left: 50%;\r\n        bottom: 30px;\r\n        z-index: 2;\r\n        padding: 6px 10px;\r\n        border-radius: 8px;\r\n        background: rgba(24, 25, 28, 0.8);\r\n        backdrop-filter: blur(20px);\r\n        transform: translateX(-50%);\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box {\r\n        padding: 1px;\r\n        border: 2px solid transparent;\r\n        border-radius: 8px;\r\n        transition: 0.3s;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box.active {\r\n        border-color: #FF6699;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap {\r\n        display: flex;\r\n        justify-content: center;\r\n        overflow: hidden;\r\n        width: 100%;\r\n        height: 100%;\r\n        border-radius: 6px;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.vertical {\r\n        flex-direction: column;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.extra-long {\r\n        justify-content: start;\r\n    }\r\n\r\n    .svg-icon {\r\n        display: inline-flex;\r\n        justify-content: center;\r\n        align-items: center;\r\n    }\r\n\r\n    .svg-icon svg {\r\n        width: 100%;\r\n        height: 100%;\r\n    }\r\n\r\n    .svg-icon.use-color svg path {\r\n        fill: currentColor;\r\n        color: inherit;\r\n    }\r\n</style>';
 
 // src/svg/fork.svg
 var fork_default = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0.284996 0.286944C0.480258 0.091682 0.796841 0.0916819 0.992103 0.286944L4.99893 4.29377L9.00684 0.285851C9.20211 0.0905889 9.51869 0.0905886 9.71395 0.285851C9.90921 0.481113 9.90921 0.797696 9.71395 0.992958L5.70603 5.00088L9.71309 9.00793C9.90835 9.20319 9.90835 9.51978 9.71309 9.71504C9.51783 9.9103 9.20124 9.9103 9.00598 9.71504L4.99893 5.70798L0.992966 9.71394C0.797704 9.90921 0.481122 9.90921 0.28586 9.71394C0.0905973 9.51868 0.0905975 9.2021 0.28586 9.00684L4.29182 5.00088L0.284996 0.994051C0.0897343 0.798789 0.0897342 0.482206 0.284996 0.286944Z" fill="#E19C2C"></path></svg>';
@@ -527,6 +527,134 @@ var left_default = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" 
 
 // src/svg/right.svg
 var right_default = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.82576 2.07564C5.59145 2.30995 5.59145 2.68985 5.82576 2.92417L10.9015 7.9999L5.82576 13.0756C5.59145 13.31 5.59145 13.6899 5.82576 13.9242C6.06008 14.1585 6.43997 14.1585 6.67429 13.9242L11.9386 8.65987C12.3031 8.29538 12.3031 7.70443 11.9386 7.33994L6.67429 2.07564C6.43997 1.84132 6.06008 1.84132 5.82576 2.07564Z" fill="#E19C2C"></path></svg>';
+
+// src/utils/mutex.ts
+function getMetux() {
+  return Math.random().toString(36).substring(2);
+}
+
+// src/utils/scrollbar.ts
+var _Scrollbar = class {
+  /**
+   * 设置滚动条
+   * @param ele 目标节点
+   * @param x 是否显示横滚动条
+   * @param y 是否显示纵滚动条
+   * @param side 复制样式到目标节点旁边，用于默认样式不生效的情况，比如ShadowRoot环境
+   */
+  constructor(ele, x = true, y = true, side = false) {
+    this.ele = ele;
+    this.x = x;
+    this.y = y;
+    this.side = side;
+    _Scrollbar.style || _Scrollbar.init();
+    this.overflow = this.ele.style.overflow;
+    side && ele.insertAdjacentElement("afterend", _Scrollbar.style.cloneNode(true));
+    this.flesh();
+  }
+  static init() {
+    this.style || (this.style = addElement("style", void 0), document.head);
+    this.style.textContent = `.${this.prefix}[data-${this.mutex}="${this.mutex}"]{
+    scrollbar-width: none;
+    scrollbar-color: ${this.thumb} ${this.track};
+}
+.${this.prefix}[data-${this.mutex}="${this.mutex}"]:hover {
+    scrollbar-width: thin;
+}
+.${this.prefix}[data-${this.mutex}="${this.mutex}"]::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+.${this.prefix}[data-${this.mutex}="${this.mutex}"]::-webkit-scrollbar-track {
+    border-radius: 4px;
+    background-color: ${this.track};
+}
+.${this.prefix}[data-${this.mutex}="${this.mutex}"]::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: ${this.thumb};
+}
+.${this.prefix}[data-${this.mutex}="${this.mutex}"]:hover::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+.${this.prefix}[data-${this.mutex}="${this.mutex}"]::-webkit-scrollbar:hover {
+    width: 7px;
+    height: 7px;
+}`;
+  }
+  /** 备份原始overflow */
+  overflow;
+  /** 滑块颜色 */
+  get thumb() {
+    return _Scrollbar.thumb;
+  }
+  set thumb(v) {
+    _Scrollbar.thumb = v;
+    _Scrollbar.init();
+  }
+  /** 轨道颜色 */
+  get track() {
+    return _Scrollbar.track;
+  }
+  set track(v) {
+    _Scrollbar.track = v;
+    _Scrollbar.init();
+  }
+  flesh() {
+    document.contains(_Scrollbar.style) || document.head.append(_Scrollbar.style);
+    this.ele.classList.add(_Scrollbar.prefix);
+    this.ele.setAttribute(`data-${_Scrollbar.mutex}`, _Scrollbar.mutex);
+    switch (this.suffix()) {
+      case "-all": {
+        this.ele.style.overflow = "auto auto";
+        break;
+      }
+      case "-x": {
+        this.ele.style.overflow = "auto hidden";
+        break;
+      }
+      case "-y": {
+        this.ele.style.overflow = "hidden auto";
+        break;
+      }
+      case "-none":
+      default: {
+        this.ele.style.overflow = this.overflow;
+        this.remove();
+        break;
+      }
+    }
+  }
+  suffix() {
+    if (this.x) {
+      return this.y ? "-all" : "-x";
+    } else {
+      return this.y ? "-y" : "-none";
+    }
+  }
+  remove() {
+    this.ele.classList.remove(_Scrollbar.prefix);
+    this.ele.removeAttribute(`data-${_Scrollbar.mutex}`);
+  }
+  /**
+   * 更新滚动条
+   * @param x 是否显示横滚动条
+   * @param y 是否显示纵滚动条
+   * @param thumb 滑块颜色
+   * @param track 轨道颜色
+   */
+  update(x = true, y = true) {
+    this.x = x;
+    this.y = y;
+    this.flesh();
+  }
+};
+var Scrollbar = _Scrollbar;
+__publicField(Scrollbar, "mutex", getMetux());
+__publicField(Scrollbar, "prefix", "scrollbar-" + _Scrollbar.mutex);
+__publicField(Scrollbar, "style");
+__publicField(Scrollbar, "thumb", "#999");
+__publicField(Scrollbar, "track", "#EEE");
 
 // src/core/ui/preview-image.ts
 var PreviewImage = class extends HTMLElement {
@@ -544,6 +672,7 @@ var PreviewImage = class extends HTMLElement {
     right.innerHTML = right_default;
     this._image = root.querySelector(".show-image-wrap");
     this._list = root.querySelector(".preview-list");
+    new Scrollbar(this._image, true, true, true);
     close.parentElement.addEventListener("click", (e) => {
       this.remove();
       document.body.style.overflow = "";
@@ -618,7 +747,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"rekxq6qct9q"}`) || customElements.define(`preview-image-${"rekxq6qct9q"}`, PreviewImage);
+customElements.get(`preview-image-${"hdnsfypx14i"}`) || customElements.define(`preview-image-${"hdnsfypx14i"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -636,6 +765,7 @@ var _Comment = class {
     this.bbComment();
     this.initComment();
     this.pageCount();
+    this.jump();
   }
   /** 捕获评论组件 */
   bbComment() {
@@ -681,7 +811,6 @@ var _Comment = class {
     });
   }
   initComment() {
-    const that = this;
     const commentHander = {};
     Reflect.defineProperty(window, "initComment", {
       configurable: true,
@@ -689,14 +818,6 @@ var _Comment = class {
       get: () => {
         if (load) {
           let initComment2 = function(tar, init) {
-            var _a;
-            if (!document.querySelector(".common .b-head")) {
-              const div = addElement("div", { class: `b-head` }, void 0, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
-              const com = document.querySelector(tar);
-              com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
-              (_a = com == null ? void 0 : com.parentElement) == null ? void 0 : _a.classList.add("common");
-              addCss(".b-head {    font-size: 18px;    line-height: 24px;    color: #222;    margin: 0 0 20px;}.b-head .results {    margin-right: 10px;}", "b-head");
-            }
             commentHander.reset = function({ oid }) {
               new Feedback(tar, oid, init.pageType, init.userStatus);
             };
@@ -742,6 +863,31 @@ var _Comment = class {
       ((_a = res.page) == null ? void 0 : _a.count) && (this.count = res.page.count);
     }
   }
+  /** 修复评论跳转 */
+  jump() {
+    jsonpHook.async("x/v2/reply/jump?", void 0, async (url) => {
+      var _a, _b;
+      const obj = urlObj(url);
+      const data = await fetch(`https://api.bilibili.com/x/v2/reply/main?csrf=6c09e4c6405d1369c9e94e0d0a4f6790&mode=3&oid=${obj.oid}&pagination_str=%7B%22offset%22:%22%22%7D&plat=1&seek_rpid=${obj.rpid}&type=1`, { credentials: "include" });
+      const json = await data.json();
+      const { config, control, cursor, seek_root_reply, replies, top, upper } = json.data;
+      return {
+        code: 0,
+        data: {
+          config,
+          control,
+          mode: (_a = cursor.mode) != null ? _a : 3,
+          page: { acount: cursor.all_count, count: (_b = this.count) != null ? _b : cursor.all_count, num: 1, rt_num: 1, size: 20 },
+          replies: [seek_root_reply].concat(replies),
+          support_mode: cursor.support_mode,
+          top,
+          upper
+        },
+        message: "0",
+        ttl: 1
+      };
+    });
+  }
   /** 修补评论组件 */
   bbCommentModify() {
     this.styleFix();
@@ -774,7 +920,15 @@ var _Comment = class {
         this.abtest.optimize = false;
       }
       that.getPageCount(this).finally(() => {
+        var _a;
         this.init();
+        if (!document.querySelector(".common .b-head")) {
+          const div = addElement("div", { class: `b-head` }, void 0, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
+          const com = document.querySelector(".bb-comment");
+          com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
+          (_a = com == null ? void 0 : com.parentElement) == null ? void 0 : _a.classList.add("common");
+          addCss(".b-head {    font-size: 18px;    line-height: 24px;    color: #222;    margin: 0 0 20px;}.b-head .results {    margin-right: 10px;}", "b-head");
+        }
       });
       this._registerEvent();
     };

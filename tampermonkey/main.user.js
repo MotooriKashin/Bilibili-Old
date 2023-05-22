@@ -19767,6 +19767,7 @@ const MODULES = `
       this.bbComment();
       this.initComment();
       this.pageCount();
+      this.jump();
     }
     /** 捕获评论组件 */
     bbComment() {
@@ -19812,7 +19813,6 @@ const MODULES = `
       });
     }
     initComment() {
-      const that = this;
       const commentHander = {};
       Reflect.defineProperty(window, "initComment", {
         configurable: true,
@@ -19820,14 +19820,6 @@ const MODULES = `
         get: () => {
           if (load) {
             let initComment2 = function(tar, init) {
-              var _a3;
-              if (!document.querySelector(".common .b-head")) {
-                const div = addElement("div", { class: \`b-head\` }, void 0, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
-                const com = document.querySelector(tar);
-                com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
-                (_a3 = com == null ? void 0 : com.parentElement) == null ? void 0 : _a3.classList.add("common");
-                addCss(".b-head {    font-size: 18px;    line-height: 24px;    color: #222;    margin: 0 0 20px;}.b-head .results {    margin-right: 10px;}", "b-head");
-              }
               commentHander.reset = function({ oid }) {
                 new Feedback(tar, oid, init.pageType, init.userStatus);
               };
@@ -19873,6 +19865,31 @@ const MODULES = `
         ((_a3 = res.page) == null ? void 0 : _a3.count) && (this.count = res.page.count);
       }
     }
+    /** 修复评论跳转 */
+    jump() {
+      jsonpHook.async("x/v2/reply/jump?", void 0, async (url) => {
+        var _a3, _b2;
+        const obj = urlObj(url);
+        const data = await fetch(\`https://api.bilibili.com/x/v2/reply/main?csrf=6c09e4c6405d1369c9e94e0d0a4f6790&mode=3&oid=\${obj.oid}&pagination_str=%7B%22offset%22:%22%22%7D&plat=1&seek_rpid=\${obj.rpid}&type=1\`, { credentials: "include" });
+        const json = await data.json();
+        const { config, control, cursor, seek_root_reply, replies, top, upper } = json.data;
+        return {
+          code: 0,
+          data: {
+            config,
+            control,
+            mode: (_a3 = cursor.mode) != null ? _a3 : 3,
+            page: { acount: cursor.all_count, count: (_b2 = this.count) != null ? _b2 : cursor.all_count, num: 1, rt_num: 1, size: 20 },
+            replies: [seek_root_reply].concat(replies),
+            support_mode: cursor.support_mode,
+            top,
+            upper
+          },
+          message: "0",
+          ttl: 1
+        };
+      });
+    }
     /** 修补评论组件 */
     bbCommentModify() {
       this.styleFix();
@@ -19905,7 +19922,15 @@ const MODULES = `
           this.abtest.optimize = false;
         }
         that.getPageCount(this).finally(() => {
+          var _a3;
           this.init();
+          if (!document.querySelector(".common .b-head")) {
+            const div = addElement("div", { class: \`b-head\` }, void 0, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
+            const com = document.querySelector(".bb-comment");
+            com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
+            (_a3 = com == null ? void 0 : com.parentElement) == null ? void 0 : _a3.classList.add("common");
+            addCss(".b-head {    font-size: 18px;    line-height: 24px;    color: #222;    margin: 0 0 20px;}.b-head .results {    margin-right: 10px;}", "b-head");
+          }
         });
         this._registerEvent();
       };
