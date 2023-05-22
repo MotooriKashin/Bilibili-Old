@@ -92,7 +92,7 @@ user.addCallback(status => {
         ) {
             new PageHttps();
         }
-        if (/\/anime\/?$/.test(location.pathname)) {
+        if (/\/(anime|guochuang)\/?$/.test(location.pathname)) {
             new PageAnime();
         }
     }
