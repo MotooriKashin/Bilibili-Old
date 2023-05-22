@@ -94,14 +94,16 @@ user.addCallback(status => {
         ) {
             new PageHttps();
         }
-        if (/\/(anime|guochuang)\/?$/.test(location.pathname)) {
-            new PageAnime();
-        }
-        if (/\/movie\/?$/.test(location.pathname)) {
-            new PageMovie();
-        }
-        if (/\/tv\/?$/.test(location.pathname)) {
-            new PageTv();
+        if (status.home) {
+            if (/\/(anime|guochuang)\/?$/.test(location.pathname)) {
+                new PageAnime();
+            }
+            if (/\/movie\/?$/.test(location.pathname)) {
+                new PageMovie();
+            }
+            if (/\/tv\/?$/.test(location.pathname)) {
+                new PageTv();
+            }
         }
     }
     player.nanoPermit();

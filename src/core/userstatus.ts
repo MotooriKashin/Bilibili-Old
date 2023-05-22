@@ -177,5 +177,7 @@ export const userStatus = {
     /** 全区域搜索 */
     searchAllArea: false,
     /** 评论图片 */
-    commentPicture: true
+    commentPicture: true,
+    /** 分区主页 */
+    home: true,
 }
