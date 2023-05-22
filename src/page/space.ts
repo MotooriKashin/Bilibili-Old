@@ -28,6 +28,11 @@ export class PageSpace {
             status.jointime && this.jointime();
             status.lostVideo && this.lostVideo();
         });
+        xhrHook('/fav/resource/list', undefined, res => {
+            const obj = res.responseType === 'json' ? res.response : JSON.parse(res.response);
+            delete obj.data?.ttl;
+            res.response = res.responseType === 'json' ? obj : JSON.stringify(obj);
+        }, false);
     }
     /** 修复限制访问up空间 */
     protected midInfo() {
