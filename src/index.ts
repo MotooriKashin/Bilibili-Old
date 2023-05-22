@@ -31,6 +31,7 @@ import toview from './json/toview.json';
 import { PageHttps, PageWild } from './page/wild';
 import { PageAnime } from './page/home/anime';
 import { PageMovie } from './page/home/movie';
+import { PageTv } from './page/home/tv';
 
 document.domain = 'bilibili.com';
 
@@ -98,6 +99,9 @@ user.addCallback(status => {
         }
         if (/\/movie\/?$/.test(location.pathname)) {
             new PageMovie();
+        }
+        if (/\/tv\/?$/.test(location.pathname)) {
+            new PageTv();
         }
     }
     player.nanoPermit();
