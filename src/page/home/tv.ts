@@ -6,7 +6,7 @@ import { Page } from "../page";
 export class PageTv extends Page {
     constructor() {
         super(htmlTv);
-        Header.prid = 1634;
+        Header.prid = 1616;
         Header.primaryMenu();
         Header.banner();
         this.updateDom();

@@ -32,6 +32,7 @@ import { PageHttps, PageWild } from './page/wild';
 import { PageAnime } from './page/home/anime';
 import { PageMovie } from './page/home/movie';
 import { PageTv } from './page/home/tv';
+import { PageDocumentary } from './page/home/documentary';
 
 document.domain = 'bilibili.com';
 
@@ -103,6 +104,9 @@ user.addCallback(status => {
             }
             if (/\/tv\/?$/.test(location.pathname)) {
                 new PageTv();
+            }
+            if (/\/documentary\/?$/.test(location.pathname)) {
+                new PageDocumentary();
             }
         }
     }
