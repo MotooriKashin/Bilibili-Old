@@ -179,5 +179,5 @@ export const userStatus = {
     /** 评论图片 */
     commentPicture: true,
     /** 分区主页 */
-    home: true,
+    channel: true,
 }

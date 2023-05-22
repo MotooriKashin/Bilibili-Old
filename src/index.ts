@@ -29,10 +29,10 @@ import { WebTRC } from './core/webrtc';
 import { UI } from './core/ui';
 import toview from './json/toview.json';
 import { PageHttps, PageWild } from './page/wild';
-import { PageAnime } from './page/home/anime';
-import { PageMovie } from './page/home/movie';
-import { PageTv } from './page/home/tv';
-import { PageDocumentary } from './page/home/documentary';
+import { PageAnime } from './page/channel/anime';
+import { PageMovie } from './page/channel/movie';
+import { PageTv } from './page/channel/tv';
+import { PageDocumentary } from './page/channel/documentary';
 
 document.domain = 'bilibili.com';
 
@@ -95,7 +95,7 @@ user.addCallback(status => {
         ) {
             new PageHttps();
         }
-        if (status.home) {
+        if (status.channel) {
             if (/\/(anime|guochuang)\/?$/.test(location.pathname)) {
                 new PageAnime();
             }
@@ -108,6 +108,10 @@ user.addCallback(status => {
             if (/\/documentary\/?$/.test(location.pathname)) {
                 new PageDocumentary();
             }
+            // 二级分区实在太多，难以一一适配
+            // if (/\/v\/(douga|music|dance|game|knowledge|tech|life|kichiku|fashion|information|ent|cinephile)\/?$/.test(location.pathname)) {
+            //     new PageChannel();
+            // }
         }
     }
     player.nanoPermit();

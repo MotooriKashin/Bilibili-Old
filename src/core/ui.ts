@@ -200,7 +200,7 @@ export class UI {
             this.switch('ranking', '排行榜', '恢复旧版全站排行榜页'),
             this.switch('search', '搜索', '恢复旧版搜索页'),
             this.switch('album', '相簿', '恢复相簿页'),
-            this.switch('home', '分区主页', '恢复各分区主页')
+            this.switch('channel', '分区主页', '恢复各分区主页')
         ]);
     }
     /** 弹幕设置 */
