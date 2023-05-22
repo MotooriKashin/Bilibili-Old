@@ -30,6 +30,7 @@ import { UI } from './core/ui';
 import toview from './json/toview.json';
 import { PageHttps, PageWild } from './page/wild';
 import { PageAnime } from './page/home/anime';
+import { PageMovie } from './page/home/movie';
 
 document.domain = 'bilibili.com';
 
@@ -94,6 +95,9 @@ user.addCallback(status => {
         }
         if (/\/(anime|guochuang)\/?$/.test(location.pathname)) {
             new PageAnime();
+        }
+        if (/\/movie\/?$/.test(location.pathname)) {
+            new PageMovie();
         }
     }
     player.nanoPermit();
