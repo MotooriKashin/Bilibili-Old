@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.1.9
+// @version      2.2.0
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -747,7 +747,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"hdnsfypx14i"}`) || customElements.define(`preview-image-${"hdnsfypx14i"}`, PreviewImage);
+customElements.get(`preview-image-${"cbgpczia0es"}`) || customElements.define(`preview-image-${"cbgpczia0es"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -922,7 +922,7 @@ var _Comment = class {
       that.getPageCount(this).finally(() => {
         var _a;
         this.init();
-        if (!document.querySelector(".common .b-head")) {
+        if (!document.querySelector(".b-head")) {
           const div = addElement("div", { class: `b-head` }, void 0, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
           const com = document.querySelector(".bb-comment");
           com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);

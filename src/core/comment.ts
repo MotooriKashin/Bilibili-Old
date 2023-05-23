@@ -195,7 +195,7 @@ export class Comment {
             // 优先获取评论总数
             that.getPageCount(this).finally(() => {
                 this.init();
-                if (!document.querySelector('.common .b-head')) {
+                if (!document.querySelector('.b-head')) {
                     // 补充评论总数节点
                     const div = addElement('div', { class: `b-head` }, undefined, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
                     const com = document.querySelector<HTMLElement>('.bb-comment');

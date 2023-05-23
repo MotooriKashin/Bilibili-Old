@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.5.7-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.5.8-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -11764,7 +11764,7 @@ const MODULES = `
   init_tampermonkey();
   var u8 = Uint8Array;
   var u16 = Uint16Array;
-  var u32 = Uint32Array;
+  var i32 = Int32Array;
   var fleb = new u8([
     0,
     0,
@@ -11842,27 +11842,27 @@ const MODULES = `
     for (var i = 0; i < 31; ++i) {
       b[i] = start += 1 << eb[i - 1];
     }
-    var r = new u32(b[30]);
+    var r = new i32(b[30]);
     for (var i = 1; i < 30; ++i) {
       for (var j = b[i]; j < b[i + 1]; ++j) {
         r[j] = j - b[i] << 5 | i;
       }
     }
-    return [b, r];
+    return { b, r };
   };
   var _a = freb(fleb, 2);
-  var fl = _a[0];
-  var revfl = _a[1];
+  var fl = _a.b;
+  var revfl = _a.r;
   fl[28] = 258, revfl[258] = 28;
   var _b = freb(fdeb, 0);
-  var fd = _b[0];
-  var revfd = _b[1];
+  var fd = _b.b;
+  var revfd = _b.r;
   var rev = new u16(32768);
   for (i = 0; i < 32768; ++i) {
-    x = (i & 43690) >>> 1 | (i & 21845) << 1;
-    x = (x & 52428) >>> 2 | (x & 13107) << 2;
-    x = (x & 61680) >>> 4 | (x & 3855) << 4;
-    rev[i] = ((x & 65280) >>> 8 | (x & 255) << 8) >>> 1;
+    x = (i & 43690) >> 1 | (i & 21845) << 1;
+    x = (x & 52428) >> 2 | (x & 13107) << 2;
+    x = (x & 61680) >> 4 | (x & 3855) << 4;
+    rev[i] = ((x & 65280) >> 8 | (x & 255) << 8) >> 1;
   }
   var x;
   var i;
@@ -11875,7 +11875,7 @@ const MODULES = `
         ++l[cd[i] - 1];
     }
     var le = new u16(mb);
-    for (i = 0; i < mb; ++i) {
+    for (i = 1; i < mb; ++i) {
       le[i] = le[i - 1] + l[i - 1] << 1;
     }
     var co;
@@ -11888,7 +11888,7 @@ const MODULES = `
           var r_1 = mb - cd[i];
           var v = le[cd[i] - 1]++ << r_1;
           for (var m = v | (1 << r_1) - 1; v <= m; ++v) {
-            co[rev[v] >>> rvb] = sv;
+            co[rev[v] >> rvb] = sv;
           }
         }
       }
@@ -11896,7 +11896,7 @@ const MODULES = `
       co = new u16(s);
       for (i = 0; i < s; ++i) {
         if (cd[i]) {
-          co[i] = rev[le[cd[i] - 1]++] >>> 15 - cd[i];
+          co[i] = rev[le[cd[i] - 1]++] >> 15 - cd[i];
         }
       }
     }
@@ -11947,7 +11947,7 @@ const MODULES = `
       s = 0;
     if (e == null || e > v.length)
       e = v.length;
-    var n = new (v.BYTES_PER_ELEMENT == 2 ? u16 : v.BYTES_PER_ELEMENT == 4 ? u32 : u8)(e - s);
+    var n = new u8(e - s);
     n.set(v.subarray(s, e));
     return n;
   };
@@ -11977,14 +11977,12 @@ const MODULES = `
       throw e;
     return e;
   };
-  var inflt = function(dat, buf, st) {
-    var sl = dat.length;
-    if (!sl || st && st.f && !st.l)
+  var inflt = function(dat, st, buf, dict) {
+    var sl = dat.length, dl = dict ? dict.length : 0;
+    if (!sl || st.f && !st.l)
       return buf || new u8(0);
-    var noBuf = !buf || st;
-    var noSt = !st || st.i;
-    if (!st)
-      st = {};
+    var noBuf = !buf || st.i != 2;
+    var noSt = st.i;
     if (!buf)
       buf = new u8(sl * 3);
     var cbuf = function(l2) {
@@ -12031,7 +12029,7 @@ const MODULES = `
           for (var i = 0; i < tl; ) {
             var r = clm[bits(dat, pos, clbmsk)];
             pos += r & 15;
-            var s = r >>> 4;
+            var s = r >> 4;
             if (s < 16) {
               ldt[i++] = s;
             } else {
@@ -12064,7 +12062,7 @@ const MODULES = `
       var lms = (1 << lbt) - 1, dms = (1 << dbt) - 1;
       var lpos = pos;
       for (; ; lpos = pos) {
-        var c = lm[bits16(dat, pos) & lms], sym = c >>> 4;
+        var c = lm[bits16(dat, pos) & lms], sym = c >> 4;
         pos += c & 15;
         if (pos > tbts) {
           if (noSt)
@@ -12085,7 +12083,7 @@ const MODULES = `
             add = bits(dat, pos, (1 << b) - 1) + fl[i];
             pos += b;
           }
-          var d = dm[bits16(dat, pos) & dms], dsym = d >>> 4;
+          var d = dm[bits16(dat, pos) & dms], dsym = d >> 4;
           if (!d)
             err(3);
           pos += d & 15;
@@ -12102,6 +12100,13 @@ const MODULES = `
           if (noBuf)
             cbuf(bt + 131072);
           var end = bt + add;
+          if (bt < dt) {
+            var shift = dl - dt, dend = Math.min(dt, end);
+            if (shift + bt < 0)
+              err(3);
+            for (; bt < dend; ++bt)
+              buf[bt] = dict[shift + bt];
+          }
           for (; bt < end; bt += 4) {
             buf[bt] = buf[bt - dt];
             buf[bt + 1] = buf[bt + 1 - dt];
@@ -12121,14 +12126,14 @@ const MODULES = `
     v <<= p & 7;
     var o = p / 8 | 0;
     d[o] |= v;
-    d[o + 1] |= v >>> 8;
+    d[o + 1] |= v >> 8;
   };
   var wbits16 = function(d, p, v) {
     v <<= p & 7;
     var o = p / 8 | 0;
     d[o] |= v;
-    d[o + 1] |= v >>> 8;
-    d[o + 2] |= v >>> 16;
+    d[o + 1] |= v >> 8;
+    d[o + 2] |= v >> 16;
   };
   var hTree = function(d, mb) {
     var t = [];
@@ -12139,11 +12144,11 @@ const MODULES = `
     var s = t.length;
     var t2 = t.slice();
     if (!s)
-      return [et, 0];
+      return { t: et, l: 0 };
     if (s == 1) {
       var v = new u8(t[0].s + 1);
       v[t[0].s] = 1;
-      return [v, 1];
+      return { t: v, l: 1 };
     }
     t.sort(function(a, b) {
       return a.f - b.f;
@@ -12177,7 +12182,7 @@ const MODULES = `
         } else
           break;
       }
-      dt >>>= lft;
+      dt >>= lft;
       while (dt > 0) {
         var i2_2 = t2[i].s;
         if (tr[i2_2] < mb)
@@ -12194,7 +12199,7 @@ const MODULES = `
       }
       mbt = mb;
     }
-    return [new u8(tr), mbt];
+    return { t: new u8(tr), l: mbt };
   };
   var ln = function(n, l, d) {
     return n.s == -1 ? Math.max(ln(n.l, l, d + 1), ln(n.r, l, d + 1)) : l[n.s] = d;
@@ -12232,7 +12237,7 @@ const MODULES = `
         cln = c[i];
       }
     }
-    return [cl.subarray(0, cli), s];
+    return { c: cl.subarray(0, cli), n: s };
   };
   var clen = function(cf, cl) {
     var l = 0;
@@ -12244,7 +12249,7 @@ const MODULES = `
     var s = dat.length;
     var o = shft(pos + 2);
     out[o] = s & 255;
-    out[o + 1] = s >>> 8;
+    out[o + 1] = s >> 8;
     out[o + 2] = out[o] ^ 255;
     out[o + 3] = out[o + 1] ^ 255;
     for (var i = 0; i < s; ++i)
@@ -12254,23 +12259,23 @@ const MODULES = `
   var wblk = function(dat, out, final, syms, lf, df, eb, li, bs, bl, p) {
     wbits(out, p++, final);
     ++lf[256];
-    var _a3 = hTree(lf, 15), dlt = _a3[0], mlb = _a3[1];
-    var _b2 = hTree(df, 15), ddt = _b2[0], mdb = _b2[1];
-    var _c = lc(dlt), lclt = _c[0], nlc = _c[1];
-    var _d = lc(ddt), lcdt = _d[0], ndc = _d[1];
+    var _a3 = hTree(lf, 15), dlt = _a3.t, mlb = _a3.l;
+    var _b2 = hTree(df, 15), ddt = _b2.t, mdb = _b2.l;
+    var _c = lc(dlt), lclt = _c.c, nlc = _c.n;
+    var _d = lc(ddt), lcdt = _d.c, ndc = _d.n;
     var lcfreq = new u16(19);
     for (var i = 0; i < lclt.length; ++i)
-      lcfreq[lclt[i] & 31]++;
+      ++lcfreq[lclt[i] & 31];
     for (var i = 0; i < lcdt.length; ++i)
-      lcfreq[lcdt[i] & 31]++;
-    var _e = hTree(lcfreq, 7), lct = _e[0], mlcb = _e[1];
+      ++lcfreq[lcdt[i] & 31];
+    var _e = hTree(lcfreq, 7), lct = _e.t, mlcb = _e.l;
     var nlcc = 19;
     for (; nlcc > 4 && !lct[clim[nlcc - 1]]; --nlcc)
       ;
     var flen = bl + 5 << 3;
     var ftlen = clen(lf, flt) + clen(df, fdt) + eb;
-    var dtlen = clen(lf, dlt) + clen(df, ddt) + eb + 14 + 3 * nlcc + clen(lcfreq, lct) + (2 * lcfreq[16] + 3 * lcfreq[17] + 7 * lcfreq[18]);
-    if (flen <= ftlen && flen <= dtlen)
+    var dtlen = clen(lf, dlt) + clen(df, ddt) + eb + 14 + 3 * nlcc + clen(lcfreq, lct) + 2 * lcfreq[16] + 3 * lcfreq[17] + 7 * lcfreq[18];
+    if (bs >= 0 && flen <= ftlen && flen <= dtlen)
       return wfblk(out, p, dat.subarray(bs, bs + bl));
     var lm, ll, dm, dl;
     wbits(out, p, 1 + (dtlen < ftlen)), p += 2;
@@ -12291,64 +12296,60 @@ const MODULES = `
           var len = clct[i] & 31;
           wbits(out, p, llm[len]), p += lct[len];
           if (len > 15)
-            wbits(out, p, clct[i] >>> 5 & 127), p += clct[i] >>> 12;
+            wbits(out, p, clct[i] >> 5 & 127), p += clct[i] >> 12;
         }
       }
     } else {
       lm = flm, ll = flt, dm = fdm, dl = fdt;
     }
     for (var i = 0; i < li; ++i) {
-      if (syms[i] > 255) {
-        var len = syms[i] >>> 18 & 31;
+      var sym = syms[i];
+      if (sym > 255) {
+        var len = sym >> 18 & 31;
         wbits16(out, p, lm[len + 257]), p += ll[len + 257];
         if (len > 7)
-          wbits(out, p, syms[i] >>> 23 & 31), p += fleb[len];
-        var dst = syms[i] & 31;
+          wbits(out, p, sym >> 23 & 31), p += fleb[len];
+        var dst = sym & 31;
         wbits16(out, p, dm[dst]), p += dl[dst];
         if (dst > 3)
-          wbits16(out, p, syms[i] >>> 5 & 8191), p += fdeb[dst];
+          wbits16(out, p, sym >> 5 & 8191), p += fdeb[dst];
       } else {
-        wbits16(out, p, lm[syms[i]]), p += ll[syms[i]];
+        wbits16(out, p, lm[sym]), p += ll[sym];
       }
     }
     wbits16(out, p, lm[256]);
     return p + ll[256];
   };
-  var deo = /* @__PURE__ */ new u32([65540, 131080, 131088, 131104, 262176, 1048704, 1048832, 2114560, 2117632]);
+  var deo = /* @__PURE__ */ new i32([65540, 131080, 131088, 131104, 262176, 1048704, 1048832, 2114560, 2117632]);
   var et = /* @__PURE__ */ new u8(0);
-  var dflt = function(dat, lvl, plvl, pre, post, lst) {
-    var s = dat.length;
+  var dflt = function(dat, lvl, plvl, pre, post, st) {
+    var s = st.z || dat.length;
     var o = new u8(pre + s + 5 * (1 + Math.ceil(s / 7e3)) + post);
     var w = o.subarray(pre, o.length - post);
-    var pos = 0;
-    if (!lvl || s < 8) {
-      for (var i = 0; i <= s; i += 65535) {
-        var e = i + 65535;
-        if (e >= s) {
-          w[pos >> 3] = lst;
-        }
-        pos = wfblk(w, pos + 1, dat.subarray(i, e));
-      }
-    } else {
+    var lst = st.l;
+    var pos = (st.r || 0) & 7;
+    if (lvl) {
+      if (pos)
+        w[0] = st.r >> 3;
       var opt = deo[lvl - 1];
-      var n = opt >>> 13, c = opt & 8191;
+      var n = opt >> 13, c = opt & 8191;
       var msk_1 = (1 << plvl) - 1;
-      var prev = new u16(32768), head = new u16(msk_1 + 1);
+      var prev = st.p || new u16(32768), head = st.h || new u16(msk_1 + 1);
       var bs1_1 = Math.ceil(plvl / 3), bs2_1 = 2 * bs1_1;
       var hsh = function(i2) {
         return (dat[i2] ^ dat[i2 + 1] << bs1_1 ^ dat[i2 + 2] << bs2_1) & msk_1;
       };
-      var syms = new u32(25e3);
+      var syms = new i32(25e3);
       var lf = new u16(288), df = new u16(32);
-      var lc_1 = 0, eb = 0, i = 0, li = 0, wi = 0, bs = 0;
-      for (; i < s; ++i) {
+      var lc_1 = 0, eb = 0, i = st.i || 0, li = 0, wi = st.w || 0, bs = 0;
+      for (; i + 2 < s; ++i) {
         var hv = hsh(i);
         var imod = i & 32767, pimod = head[hv];
         prev[imod] = pimod;
         head[hv] = imod;
         if (wi <= i) {
           var rem = s - i;
-          if ((lc_1 > 7e3 || li > 24576) && rem > 423) {
+          if ((lc_1 > 7e3 || li > 24576) && (rem > 423 || !lst)) {
             pos = wblk(dat, w, 0, syms, lf, df, eb, li, bs, i - bs, pos);
             li = lc_1 = eb = 0, bs = i;
             for (var j = 0; j < 286; ++j)
@@ -12373,16 +12374,16 @@ const MODULES = `
                   var mmd = Math.min(dif, nl - 2);
                   var md = 0;
                   for (var j = 0; j < mmd; ++j) {
-                    var ti = i - dif + j + 32768 & 32767;
+                    var ti = i - dif + j & 32767;
                     var pti = prev[ti];
-                    var cd = ti - pti + 32768 & 32767;
+                    var cd = ti - pti & 32767;
                     if (cd > md)
                       md = cd, pimod = ti;
                   }
                 }
               }
               imod = pimod, pimod = prev[imod];
-              dif += imod - pimod + 32768 & 32767;
+              dif += imod - pimod & 32767;
             }
           }
           if (d) {
@@ -12399,9 +12400,26 @@ const MODULES = `
           }
         }
       }
+      for (i = Math.max(i, wi); i < s; ++i) {
+        syms[li++] = dat[i];
+        ++lf[dat[i]];
+      }
       pos = wblk(dat, w, lst, syms, lf, df, eb, li, bs, i - bs, pos);
-      if (!lst && pos & 7)
-        pos = wfblk(w, pos + 1, et);
+      if (!lst) {
+        st.r = pos & 7 | w[pos / 8 | 0] << 3;
+        pos -= 7;
+        st.h = head, st.p = prev, st.i = i, st.w = wi;
+      }
+    } else {
+      for (var i = st.w || 0; i < s + lst; i += 65535) {
+        var e = i + 65535;
+        if (e >= s) {
+          w[pos / 8 | 0] = lst;
+          e = s;
+        }
+        pos = wfblk(w, pos + 1, dat.subarray(i, e));
+      }
+      st.i = s;
     }
     return slc(o, 0, pre + shft(pos) + post);
   };
@@ -12430,7 +12448,18 @@ const MODULES = `
     };
   };
   var dopt = function(dat, opt, pre, post, st) {
-    return dflt(dat, opt.level == null ? 6 : opt.level, opt.mem == null ? Math.ceil(Math.max(8, Math.min(13, Math.log(dat.length))) * 1.5) : 12 + opt.mem, pre, post, !st);
+    if (!st) {
+      st = { l: 1 };
+      if (opt.dictionary) {
+        var dict = opt.dictionary.subarray(-32768);
+        var newDat = new u8(dict.length + dat.length);
+        newDat.set(dict);
+        newDat.set(dat, dict.length);
+        dat = newDat;
+        st.w = dict.length;
+      }
+    }
+    return dflt(dat, opt.level == null ? 6 : opt.level, opt.mem == null ? Math.ceil(Math.max(8, Math.min(13, Math.log(dat.length))) * 1.5) : 12 + opt.mem, pre, post, st);
   };
   var wbytes = function(d, b, v) {
     for (; v; ++b)
@@ -12453,7 +12482,7 @@ const MODULES = `
     var flg = d[3];
     var st = 10;
     if (flg & 4)
-      st += d[10] | (d[11] << 8) + 2;
+      st += (d[10] | d[11] << 8) + 2;
     for (var zs = (flg >> 3 & 1) + (flg >> 4 & 1); zs > 0; zs -= !d[st++])
       ;
     return st + (flg & 2);
@@ -12463,7 +12492,7 @@ const MODULES = `
     return (d[l - 4] | d[l - 3] << 8 | d[l - 2] << 16 | d[l - 1] << 24) >>> 0;
   };
   var gzhl = function(o) {
-    return 10 + (o.filename && o.filename.length + 1 || 0);
+    return 10 + (o.filename ? o.filename.length + 1 : 0);
   };
   function gzipSync(data, opts) {
     if (!opts)
@@ -12473,8 +12502,11 @@ const MODULES = `
     var d = dopt(data, opts, gzhl(opts), 8), s = d.length;
     return gzh(d, opts), wbytes(d, s - 8, c.d()), wbytes(d, s - 4, l), d;
   }
-  function gunzipSync(data, out) {
-    return inflt(data.subarray(gzs(data), -8), out || new u8(gzl(data)));
+  function gunzipSync(data, opts) {
+    var st = gzs(data);
+    if (st + 8 > data.length)
+      err(6, "invalid gzip data");
+    return inflt(data.subarray(st, -8), { i: 2 }, opts && opts.out || new u8(gzl(data)), opts && opts.dictionary);
   }
   var td = typeof TextDecoder != "undefined" && /* @__PURE__ */ new TextDecoder();
   var tds = 0;
@@ -19924,7 +19956,7 @@ const MODULES = `
         that.getPageCount(this).finally(() => {
           var _a3;
           this.init();
-          if (!document.querySelector(".common .b-head")) {
+          if (!document.querySelector(".b-head")) {
             const div = addElement("div", { class: \`b-head\` }, void 0, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
             const com = document.querySelector(".bb-comment");
             com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
