@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.2.0
+// @version      2.2.1
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -516,6 +516,11 @@ function removeJsonphook(id) {
   id >= 0 && delete jsonp[id - 1];
 }
 
+// src/core/quickLogin.ts
+function biliQuickLogin() {
+  window.biliQuickLogin ? window.biliQuickLogin() : loadScript("//static.hdslb.com/account/bili_quick_login.js", () => biliQuickLogin());
+}
+
 // src/html/preview-image.html
 var preview_image_default = '<div class="reply-view-image">\r\n    <!-- 操作区 -->\r\n    <div class="operation-btn">\r\n        <div class="operation-btn-icon close-container">\r\n            <i class="svg-icon close use-color" style="width: 14px; height: 14px;"></i>\r\n        </div>\r\n        <div class="operation-btn-icon last-image">\r\n            <i class="svg-icon left-arrow use-color" style="width: 22px; height: 22px;"></i>\r\n        </div>\r\n        <div class="operation-btn-icon next-image">\r\n            <i class="svg-icon right-arrow use-color" style="width: 22px; height: 22px;"></i>\r\n        </div>\r\n    </div>\r\n    <!-- 图片内容 -->\r\n    <div class="show-image-wrap"></div>\r\n    <!-- 小图预览栏 -->\r\n    <div class="preview-list"></div>\r\n</div>\r\n<style>\r\n    .reply-view-image {\r\n        position: fixed;\r\n        z-index: 999999;\r\n        top: 0;\r\n        right: 0;\r\n        bottom: 0;\r\n        left: 0;\r\n        width: 100%;\r\n        height: 100%;\r\n        background: rgba(24, 25, 28, 0.85);\r\n        transform: scale(1);\r\n        user-select: none;\r\n    }\r\n\r\n    .reply-view-image,\r\n    .reply-view-image * {\r\n        box-sizing: border-box;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon {\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: center;\r\n        position: absolute;\r\n        z-index: 2;\r\n        width: 42px;\r\n        height: 42px;\r\n        border-radius: 50%;\r\n        color: white;\r\n        background: rgba(0, 0, 0, 0.58);\r\n        transition: 0.2s;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon:hover {\r\n        color: #FF6699;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon.close-container {\r\n        top: 16px;\r\n        right: 16px;\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon.last-image {\r\n        top: 50%;\r\n        left: 16px;\r\n        transform: translateY(-50%);\r\n    }\r\n\r\n    .reply-view-image .operation-btn .operation-btn-icon.next-image {\r\n        top: 50%;\r\n        right: 16px;\r\n        transform: translateY(-50%);\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap {\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: center;\r\n        position: absolute;\r\n        width: 100%;\r\n        height: 100%;\r\n        max-height: 100%;\r\n        padding: 0 100px;\r\n        overflow: auto;\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap .loading-svga {\r\n        position: absolute;\r\n        top: 50%;\r\n        left: 50%;\r\n        transform: translate(-50%, -50%);\r\n        width: 42px;\r\n        height: 42px;\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap.vertical {\r\n        flex-direction: column;\r\n        justify-content: start;\r\n    }\r\n\r\n    .reply-view-image .show-image-wrap .image-content {\r\n        max-width: 100%;\r\n        margin: auto;\r\n    }\r\n\r\n    .reply-view-image .preview-list {\r\n        display: flex;\r\n        align-items: center;\r\n        position: absolute;\r\n        left: 50%;\r\n        bottom: 30px;\r\n        z-index: 2;\r\n        padding: 6px 10px;\r\n        border-radius: 8px;\r\n        background: rgba(24, 25, 28, 0.8);\r\n        backdrop-filter: blur(20px);\r\n        transform: translateX(-50%);\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box {\r\n        padding: 1px;\r\n        border: 2px solid transparent;\r\n        border-radius: 8px;\r\n        transition: 0.3s;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box.active {\r\n        border-color: #FF6699;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap {\r\n        display: flex;\r\n        justify-content: center;\r\n        overflow: hidden;\r\n        width: 100%;\r\n        height: 100%;\r\n        border-radius: 6px;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.vertical {\r\n        flex-direction: column;\r\n    }\r\n\r\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.extra-long {\r\n        justify-content: start;\r\n    }\r\n\r\n    .svg-icon {\r\n        display: inline-flex;\r\n        justify-content: center;\r\n        align-items: center;\r\n    }\r\n\r\n    .svg-icon svg {\r\n        width: 100%;\r\n        height: 100%;\r\n    }\r\n\r\n    .svg-icon.use-color svg path {\r\n        fill: currentColor;\r\n        color: inherit;\r\n    }\r\n</style>';
 
@@ -747,7 +752,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"cbgpczia0es"}`) || customElements.define(`preview-image-${"cbgpczia0es"}`, PreviewImage);
+customElements.get(`preview-image-${"rm6ai6l40u"}`) || customElements.define(`preview-image-${"rm6ai6l40u"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -898,6 +903,7 @@ var _Comment = class {
     this._registerEvent();
     this._resolvePictures();
     _Comment.commentJumpUrlTitle && this._resolveJump();
+    this.quickLogin();
   }
   /** 样式修补 */
   styleFix() {
@@ -1250,6 +1256,12 @@ var _Comment = class {
         }
       }
       return pictureList.join("");
+    };
+  }
+  /** 快速登录 */
+  quickLogin() {
+    Feedback.prototype.quickLogin = function() {
+      biliQuickLogin();
     };
   }
 };

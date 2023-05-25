@@ -3,6 +3,7 @@ import { BV2avAll } from "../utils/abv";
 import { addCss, addElement, loadScript } from "../utils/element";
 import { urlObj } from "../utils/format/url";
 import { jsonpHook } from "../utils/hook/node";
+import { biliQuickLogin } from "./quickLogin";
 import { PreviewImage } from "./ui/preview-image";
 
 /** 评论组件暂存 */
@@ -163,6 +164,7 @@ export class Comment {
         this._registerEvent();
         this._resolvePictures();
         Comment.commentJumpUrlTitle && this._resolveJump();
+        this.quickLogin();
     }
     /** 样式修补 */
     protected styleFix() {
@@ -560,6 +562,12 @@ export class Comment {
                 }
             }
             return pictureList.join('');
+        }
+    }
+    /** 快速登录 */
+    protected quickLogin() {
+        Feedback.prototype.quickLogin = function () {
+            biliQuickLogin();
         }
     }
 }
