@@ -54,6 +54,8 @@ export class PageAV extends Page {
         this.hyperLink();
         this.embedPlayer();
         this.elecShow();
+        this.biliUIcomponents();
+        this.crumbFirstLink();
         Header.primaryMenu();
         Header.banner();
         this.updateDom();
@@ -65,9 +67,18 @@ export class PageAV extends Page {
      * .onFollow()         变为已关注状态
      * .favSubmit(bool)    设置收藏状态，参数bool: true -> “已收藏”状态 false -> 未收藏状态
      */
-    // protected biliUIcomponents() {
-    //     webpackHook(717, 274, (code: string) => code.replace("init:function(){", "init:function(){window.biliUIcomponents=this;").replace("this.getAdData()", "this.getAdData"));
-    // }
+    protected biliUIcomponents() {
+        webpackHook(717, 274, (code: string) => code
+            .replace("this.getAdData()", "this.getAdData")
+            .replace('ut.MenuConfig[e].name', 'ut.MenuConfig[e].name,url:ut.MenuConfig[e].url,subUrl: ut.MenuConfig[e].sub[a].url')
+        );
+    }
+    protected crumbFirstLink() {
+        webpackHook(717, 271, (code: string) => code
+            .replace(/breadCrumbFirstLink:[\S\s]+?breadCrumbSecondName:/, 'breadCrumbFirstLink:function() {return this.breadcrumb.url},breadCrumbSecondName:')
+            .replace(/breadCrumbSecondLink:[\S\s]+?coined:/, 'breadCrumbSecondLink:function() {return this.breadcrumb.subUrl},coined:')
+        );
+    }
     /**
      * 修复：收藏视频时，在“添加到收藏夹”弹窗中，如果将视频从收藏夹A删除，并同时添加到收藏夹B，点击确定后窗口不消失的问题
      * @example
