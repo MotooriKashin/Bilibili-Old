@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.5.9-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.6.0-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -12749,6 +12749,26 @@ const MODULES = `
     }
   };
 
+  // src/core/download/curl.ts
+  init_tampermonkey();
+  var Curl = class {
+    constructor(userAgent, referer, dir) {
+      this.userAgent = userAgent;
+      this.referer = referer;
+      this.dir = dir;
+    }
+    /** 命令行 */
+    cmdlet(data) {
+      const arr2 = ["curl", "-C", "-", \`"\${data.url}"\`];
+      data.out && arr2.push("-o", \`"\${data.out}"\`);
+      (data.userAgent || this.userAgent) && arr2.push("--user-agent", \`"\${data.userAgent || this.userAgent}"\`);
+      (data.referer || this.referer) && arr2.push("--referer", \`"\${data.referer || this.referer}"\`);
+      (data.dir || this.dir) && arr2.push("--output-dir", \`"\${data.dir || this.dir}"\`);
+      data.header && Object.entries(data.header).forEach((d) => arr2.push("-H", \`"\${d[0]}: \${d[1]}"\`));
+      return navigator.clipboard.writeText(arr2.join(" "));
+    }
+  };
+
   // src/core/download/ef2.ts
   init_tampermonkey();
   var Ef2 = class {
@@ -14165,6 +14185,18 @@ const MODULES = `
             }).catch((e) => {
               toast.error("aria2[RPC]错误！", e);
             });
+            break;
+          }
+          case "curl": {
+            const cmdLine = new Curl(user.userStatus.userAgent, user.userStatus.referer, user.userStatus.filepath).cmdlet({
+              url: data.url[0],
+              out: data.fileName
+            });
+            toast.success(
+              "已复制下载命令到剪切板，粘贴到终端里回车即可开始下载。",
+              "--------------",
+              cmdLine
+            );
             break;
           }
           default: {
@@ -30540,7 +30572,7 @@ const MODULES = `
           candidate: ["0", "15", "16", "32", "48", "64", "74", "80", "112", "116", "120", "125", "126", "127"]
         }, "flv限定", void 0, () => download.destory(), "画质参数，只针对flv封装。mp4封装没得选，dash则由于特性会一次性提供所有画质选项。"),
         this.select("downloadMethod", "下载方式", {
-          candidate: ["浏览器", "IDM", "ef2", "aria2", "aria2rpc"]
+          candidate: ["浏览器", "IDM", "ef2", "aria2", "aria2rpc", "curl"]
         }, "浏览器或第三方工具", void 0, (e) => {
           switch (e) {
             case "浏览器":
@@ -30565,6 +30597,9 @@ const MODULES = `
                   text: "不必了"
                 }
               ]);
+              break;
+            case "curl":
+              alert('<a href="https://curl.se/" target="_blank">curl</a>是著名的开源命令行下载工具，本方式将下载命令复制到剪切板。命令行不是一般人能使用的工具，没有相应知识储备和使用习惯不推荐选择。', "curl");
               break;
             default:
               break;
@@ -30591,7 +30626,7 @@ const MODULES = `
             }
           ]);
         }, "下载时发送给服务器的标志之一，鉴权关键参数之一，无效的User-Agent将导致403无权访问。此项在网页端必须存在，而且一般为主站域名，但是<strong>TV、APP等源此项必须为空！</strong>"),
-        this.input("filepath", "下载目录", {}, "保存下载文件的本地磁盘目录", void 0, void 0, "ef2、aria2和aria2rpc方式限定。Windows平台请注意使用反斜杠哦。")
+        this.input("filepath", "下载目录", {}, "保存下载文件的本地磁盘目录", void 0, void 0, "ef2、aria2、aria2rpc和curl方式限定。Windows平台请注意使用反斜杠哦。")
       ]);
       this.menuitem.download.addCard("aria2 相关");
       this.menuitem.download.addSetting([
