@@ -7,6 +7,7 @@ import { qn } from "../io/fnval";
 import { BAPIAppPlayurlV1 } from "../io/grpc/BAPIAppPlayurl/v1/playurl";
 import { BLOD } from "./bilibili-old";
 import { Aria2 } from "./download/aria2";
+import { Curl } from "./download/curl";
 import { Ef2 } from "./download/ef2";
 import { IDownlodDataFilter, PlayinfoFilter } from "./download/playinfo";
 import { switchVideo } from "./observer";
@@ -105,6 +106,19 @@ export class Download {
                         .catch(e => {
                             toast.error('aria2[RPC]错误！', e);
                         });
+                    break;
+                }
+                case 'curl': {
+                    const cmdLine = new Curl(user.userStatus!.userAgent, user.userStatus!.referer, user.userStatus!.filepath)
+                        .cmdlet({
+                            url: data.url[0],
+                            out: data.fileName
+                        });
+                    toast.success(
+                        '已复制下载命令到剪切板，粘贴到终端里回车即可开始下载。',
+                        '--------------',
+                        cmdLine
+                    );
                     break;
                 }
                 default: {
