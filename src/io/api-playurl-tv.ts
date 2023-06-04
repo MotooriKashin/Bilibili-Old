@@ -16,7 +16,7 @@ interface IApiPlayurlTv {
 }
 export class ApiPlayurlTv extends ApiSign {
     constructor(protected data: IApiPlayurlTv, dash = true, pgc = false) {
-        super(pgc ? URLS.PGC_PLAYURL_TV : URLS.UGC_PLAYURL_TV, '4409e2ce8ffd12b8');
+        super(pgc ? URLS.PGC_PLAYURL_TV : URLS.UGC_PLAYURL_TV, '27eb53fc9058f8c3');
         this.data = Object.assign({
             qn,
             fourk: 1,
