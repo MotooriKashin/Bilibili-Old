@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.6.0-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.6.1-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -10139,7 +10139,7 @@ const MODULES = `
   init_tampermonkey();
   var ApiPlayurlTv = class extends ApiSign {
     constructor(data, dash = true, pgc = false) {
-      super(pgc ? URLS.PGC_PLAYURL_TV : URLS.UGC_PLAYURL_TV, "4409e2ce8ffd12b8");
+      super(pgc ? URLS.PGC_PLAYURL_TV : URLS.UGC_PLAYURL_TV, "27eb53fc9058f8c3");
       this.data = data;
       this.data = Object.assign({
         qn,
