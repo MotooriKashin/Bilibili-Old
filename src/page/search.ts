@@ -17,6 +17,7 @@ export class PageSearch extends Page {
         this.initState();
         this.style();
         this.gat();
+        this.rqt();
         this.updateDom();
     }
     /** 修正URL */
@@ -89,5 +90,13 @@ export class PageSearch extends Page {
                 return res;
             }, false);
         }
+    }
+    /** 修复搜索数据 */
+    protected rqt() {
+        jsonpHook('/search/all', undefined, res => {
+            res.data?.result?.forEach((d: any) => {
+                d.data || (d.data = []); // 各分类就算无结果也必须是数组
+            });
+        }, false);
     }
 }

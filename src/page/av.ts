@@ -73,6 +73,7 @@ export class PageAV extends Page {
             .replace('ut.MenuConfig[e].name', 'ut.MenuConfig[e].name,url:ut.MenuConfig[e].url,subUrl: ut.MenuConfig[e].sub[a].url')
         );
     }
+    /** 修复分区列表 */
     protected crumbFirstLink() {
         webpackHook(717, 271, (code: string) => code
             .replace(/breadCrumbFirstLink:[\S\s]+?breadCrumbSecondName:/, 'breadCrumbFirstLink:function() {return this.breadcrumb.url},breadCrumbSecondName:')
