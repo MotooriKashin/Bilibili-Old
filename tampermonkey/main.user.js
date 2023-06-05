@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.6.1-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.6.2-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -28387,6 +28387,7 @@ const MODULES = `
         (code) => code.replace("this.getAdData()", "this.getAdData").replace("ut.MenuConfig[e].name", "ut.MenuConfig[e].name,url:ut.MenuConfig[e].url,subUrl: ut.MenuConfig[e].sub[a].url")
       );
     }
+    /** 修复分区列表 */
     crumbFirstLink() {
       webpackHook(
         717,
@@ -29162,6 +29163,7 @@ const MODULES = `
       this.initState();
       this.style();
       this.gat();
+      this.rqt();
       this.updateDom();
     }
     /** 修正URL */
@@ -29232,6 +29234,15 @@ const MODULES = `
           return res;
         }, false);
       }
+    }
+    /** 修复搜索数据 */
+    rqt() {
+      jsonpHook("/search/all", void 0, (res) => {
+        var _a3, _b2;
+        (_b2 = (_a3 = res.data) == null ? void 0 : _a3.result) == null ? void 0 : _b2.forEach((d) => {
+          d.data || (d.data = []);
+        });
+      }, false);
     }
   };
 
