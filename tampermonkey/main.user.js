@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.6.2-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.6.3-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -28335,6 +28335,30 @@ const MODULES = `
           }
         });
       }
+    }
+    /** 页面死循环检查 */
+    reloadCheck() {
+      function reload() {
+        if (document.title === "Application error: a client-side exception has occurred") {
+          alert("新版页面出现死循环，CPU占用飙升，尝试刷新页面解决？", "死循环", [
+            {
+              text: "刷新",
+              callback: () => {
+                location.reload();
+              }
+            }
+          ]);
+        }
+      }
+      if (document.readyState === "complete") {
+        reload();
+      } else {
+        window.addEventListener("load", reload, { once: true });
+      }
+    }
+    loadedCallback() {
+      super.loadedCallback();
+      this.reloadCheck();
     }
   };
 

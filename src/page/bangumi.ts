@@ -3,6 +3,7 @@ import { Comment } from "../core/comment";
 import { networkMock } from "../core/network-mock";
 import { switchVideo } from "../core/observer";
 import { toast } from "../core/toast";
+import { alert } from "../core/ui/alert";
 import { Like } from "../core/ui/like";
 import { user } from "../core/user";
 import { videoInfo } from "../core/video-info";
@@ -25,438 +26,6 @@ import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
 import { Header } from "./header";
 import { Page } from "./page";
-
-interface EPINFO {
-    aid: number;
-    cid: number;
-    cover: string;
-    duration: number;
-    ep_id: number;
-    episode_status: number;
-    from: string;
-    index: string;
-    index_title: string;
-    mid: number;
-    page: number;
-    pub_real_time: string;
-    section_id: number;
-    section_type: number;
-    vid: string;
-}
-interface MEDIAINFO {
-    actors: string;
-    alias: string;
-    areas: MEDIAINFO_CORE['areas'];
-    bkg_cover?: string;
-    cover: string;
-    evaluate: string;
-    is_paster_ads: number;
-    jp_title: string;
-    link: string;
-    media_id: number
-    mode: number
-    paster_text: string;
-    season_id: number
-    season_status: number
-    season_title: string;
-    season_type: number
-    series_title: string;
-    square_cover: string;
-    staff: string;
-    stat: EPINFO_CORE['stat']
-    style: string[];
-    title: string;
-    total_ep: number
-}
-interface INITIAL_STATE {
-    activity: {}
-    app: boolean;
-    area: number;
-    canReview: boolean;
-    epId: number;
-    epInfo: EPINFO;
-    epList: EPINFO[];
-    isPlayerTrigger: boolean;
-    loginInfo: { isLogin: boolean; };
-    mdId: number;
-    mediaInfo: MEDIAINFO;
-    mediaRating: { count: number; score: number; };
-    miniOn: boolean;
-    newestEp: { desc: string; id: number; index: string; is_new: number; pub_real_time?: string; };
-    paster: {};
-    payMent: {};
-    payPack: {};
-    playerRecomList: [];
-    pubInfo: { is_finish: number; is_started: number; pub_time: string; pub_time_show: string; weekday: number; };
-    recomList: [];
-    rightsInfo: {
-        allow_bp: number;
-        allow_download: number;
-        allow_review: number;
-        copyright: string;
-        is_preview: number;
-        watch_platform: number;
-    };
-    seasonFollowed: boolean;
-    seasonList: (INITIAL_STATE_CORE['ssList'][0] & { season_title: string; title: string })[];
-    seasonStat: { views: number; danmakus: number; coins: number; favorites: number; };
-    special: boolean;
-    spending: number;
-    sponsorTotal: {
-        code: number;
-        result: {
-            ep_bp: number;
-            list: [];
-            mine: {};
-            users: number;
-        }
-    };
-    sponsorTotalCount: number;
-    sponsorWeek: INITIAL_STATE['sponsorTotal'];
-    ssId: number;
-    upInfo: MEDIAINFO_CORE['up_info'];
-    userCoined: boolean;
-    userLongReview: {};
-    userScore: number;
-    userShortReview: {};
-    userStat: {
-        error: boolean;
-        follow: number;
-        loaded: boolean;
-        pay: number;
-        payPackPaid: number;
-        sponsor: number;
-        vipInfo: { due_date: number; status: number; type: number; };
-        watchProgress: { lastEpId: string; lastEpIndex: string; lastTime: number; };
-    };
-    ver: {};
-}
-
-interface EPINFO_CORE {
-    aid: number;
-    badge: string;
-    badgeColor: string;
-    badgeType: number;
-    badge_info: { bg_color: string; bg_color_night: string; text: string; };
-    badge_type: number;
-    bvid: string;
-    cid: number;
-    cover: string;
-    dimension: { height: number; rotate: number; width: number; };
-    duration: number;
-    epStatus: number;
-    from: string;
-    hasNext: boolean;
-    hasSkip: boolean;
-    i: number;
-    id: number;
-    is_view_hide: boolean;
-    link: string;
-    loaded: boolean;
-    longTitle: string;
-    long_title: string;
-    orderSectionIds: [];
-    pub_time: number;
-    pv: number;
-    releaseDate: string;
-    release_date: string;
-    rights: { allow_demand: number; allow_dm: number; allow_download: number; area_limit: number; };
-    sectionType: number;
-    share_copy: string;
-    share_url: string;
-    short_link: string;
-    skip: Record<'op' | 'ed', { end: number, start: number }>;
-    stat: {};
-    status: number;
-    subtitle: string;
-    title: string;
-    titleFormat: string;
-    vid: string;
-}
-interface MEDIAINFO_CORE {
-    activity: { id: number; title: string; pendantOpsImg: string; pendantOpsLink: string; };
-    alias: string;
-    areas: { id: number; name: string }[];
-    bkg_cover: string;
-    count: { coins: number; danmus: number; follows: number; views: number; likes: number; };
-    cover: string;
-    epSpMode: boolean;
-    episodes: EPINFO_CORE[];
-    evaluate: string;
-    forceWide: boolean;
-    freya: { bubble_desc: string; bubble_show_cnt: number; icon_show: number; };
-    id: number;
-    jpTitle: string;
-    jp_title: string;
-    link: string;
-    mainSecTitle: string;
-    media_id: number;
-    mode: number;
-    multiMode: boolean;
-    newEpSpMode: boolean;
-    new_ep: { desc: string; id: number; is_new: number; title: string; };
-    newestEp: { id: string; desc: string; isNew: boolean; };
-    payMent: {
-        discount: number;
-        price: string;
-        promotion: string;
-        sixType: { allowTicket: boolean; allowTimeLimit: boolean; allowDiscount: boolean; allowVipDiscount: boolean; };
-        tip: string;
-        vipDiscount: number;
-        vipFirstProm: string;
-        vipProm: string;
-    };
-    payPack: { title: string; appNoPayText: string; appPayText: string; url: string; };
-    payment: {
-        discount: number;
-        pay_type: {
-            allow_discount: number;
-            allow_pack: number;
-            allow_ticket: number;
-            allow_time_limit: number;
-            allow_vip_discount: number;
-            forbid_bb: number;
-        };
-        price: string;
-        promotion: string;
-        tip: string;
-        view_start_time: number;
-        vip_discount: number;
-        vip_first_promotion: string;
-        vip_promotion: string;
-    };
-    pgcType: string;
-    playerRecord: string;
-    positive: { id: number; title: string; };
-    premiereInfo: {};
-    pub: { time: string; timeShow: string; isStart: true, isFinish: boolean; unknow: boolean; };
-    publish: {
-        is_finish: number;
-        is_started: number;
-        pub_time: string;
-        pub_time_show: string;
-        unknow_pub_date: number;
-        weekday: number;
-    };
-    rating: { score: number; count: number; };
-    record: string;
-    rights: {
-        allowBp: boolean;
-        allowBpRank: boolean;
-        allowReview: boolean;
-        appOnly: boolean;
-        area_limit: number;
-        canWatch: boolean;
-        copyright: string;
-        isCoverShow: boolean;
-        isPreview: boolean;
-        limitNotFound: boolean;
-    };
-    season_id: number;
-    season_title: string;
-    seasons: {
-        badge: string;
-        badge_info: { bg_color: string; bg_color_night: string; text: string; };
-        badge_type: number;
-        cover: string;
-        horizontal_cover_169: string;
-        horizontal_cover_1610: string;
-        media_id: number;
-        new_ep: { cover: string; id: number; index_show: string; };
-        season_id: number;
-        season_title: string;
-        season_type: number;
-        stat: { favorites: number; series_follow: number; views: number; };
-    }[];
-    section: {
-        attr: number;
-        episode_id: number;
-        episode_ids: number[]
-        episodes: EPINFO_CORE[];
-        id: number;
-        title: string;
-        type: number;
-    }[];
-    sectionBottomDesc: string;
-    series: string;
-    share_copy: string;
-    share_sub_title: string;
-    share_url: string;
-    show: { wide_screen: number; };
-    show_season_type: number;
-    specialCover: string;
-    squareCover: string;
-    square_cover: string;
-    ssId: number;
-    ssType: number;
-    ssTypeFormat: { name: number; homeLink: number; };
-    stat: {
-        coins: number;
-        danmakus: number;
-        favorite: number;
-        favorites: number;
-        likes: number;
-        reply: number;
-        share: number;
-        views: number;
-    };
-    status: number;
-    subtitle: string;
-    title: string;
-    total: number;
-    type: number;
-    upInfo: {
-        avatar: string;
-        isAnnualVip: boolean;
-        mid: number;
-        name: string;
-        nickname_color: string;
-        pendantId: number;
-        pendantImage: string;
-        pendantName: string;
-        vip_status: number;
-        vip_type: number;
-    };
-    up_info: {
-        avatar: string;
-        avatar_subscript_url: string;
-        follower: number;
-        is_follow: number;
-        mid: number;
-        nickname_color: string;
-        pendant: { image: string; name: string; pid: number; };
-        theme_type: number;
-        uname: string;
-        verify_type: number;
-        vip_label: { bg_color: string; bg_style: number; border_color: string; text: string; text_color: string; };
-        vip_status: number;
-        vip_type: number;
-    };
-    user_status: {
-        area_limit: number;
-        ban_area_show: number;
-        follow: number;
-        follow_status: number;
-        login: number;
-        pay: number;
-        pay_pack_paid: number;
-        sponsor: number;
-        vip_info: { due_date: number; status: number; type: number; };
-    };
-}
-interface INITIAL_STATE_CORE {
-    angleAnimationShow: boolean;
-    couponSelected: unknown;
-    epCoupon: unknown;
-    epInfo: EPINFO_CORE;
-    epList: EPINFO_CORE[];
-    epMap: Record<EPINFO_CORE['id'], EPINFO_CORE>;
-    epPayMent: unknown;
-    fromSpmId: string;
-    h1Title: string;
-    hasPlayableEp: boolean;
-    initEpList: EPINFO_CORE[];
-    insertScripts: string[];
-    interact: { shown: false, btnText: '', callback: null };
-    isLogin: boolean;
-    isOriginal: boolean;
-    lastVideoTime: number;
-    likeMap: unknown;
-    loaded: boolean;
-    loginInfo: unknown;
-    mediaInfo: MEDIAINFO_CORE;
-    nextEp: unknown;
-    orderSectionIds: number[];
-    payGlobal: unknown;
-    player: { loaded: boolean; miniOn: boolean; limitType: number; };
-    playerEpList: {
-        code: number;
-        message: string;
-        result: {
-            main_section: {
-                episodes: EPINFO_CORE
-            }
-        }
-    };
-    premiereCountDown: string;
-    premiereEp: unknown;
-    premiereStatus: unknown;
-    sections: {
-        epList: EPINFO_CORE[];
-        episodeIds: number[];
-        id: number;
-        title: string;
-        type: number;
-    }[];
-    sectionsMap: Record<number, INITIAL_STATE_CORE['sections'][0]>;
-    showBv: boolean;
-    sponsor: {
-        allCount: number;
-        allMine: unknown;
-        allRank: [];
-        allReady: boolean;
-        allState: number;
-        weekCount: number;
-        weekMine: unknown;
-        weekRank: [];
-        weekReady: boolean;
-        weekState: number;
-    };
-    ssList: {
-        badge: string;
-        badgeColor: string;
-        badgeType: number;
-        cover: string;
-        desc: string;
-        epCover: string;
-        follows: number;
-        id: number;
-        pgcType: string;
-        title: string;
-        type: number;
-        views: number;
-    }[];
-    ssPayMent: unknown;
-    ssRecom: { status: string; data: [] };
-    ssr: unknown;
-    updateSectionList: boolean;
-    uperMap: unknown;
-    userState: {
-        loaded: boolean;
-        vipInfo: {};
-        history: {};
-    };
-    ver: unknown;
-    videoStatus: string;
-    viewAngle: string;
-    webPlayer: unknown;
-}
-interface PGC_USERSTATE {
-    area_limit: number;
-    ban_area_show: number;
-    dialog: { btn_right: { title: string; type: string; }; desc: string; title: string; };
-    follow: number;
-    follow_status: number;
-    login: number;
-    paster: {
-        aid: number;
-        allow_jump: number;
-        cid: number;
-        duration: number;
-        type: number;
-        url: string;
-    };
-    pay: number;
-    pay_pack_paid: number;
-    progress?: {
-        last_ep_id: number;
-        last_ep_index: string;
-        last_time: number;
-    }
-    real_price: string;
-    sponsor: number;
-    vip_info: { due_date: number; status: number; type: number; };
-}
 
 export class PageBangumi extends Page {
     protected like: Like;
@@ -944,4 +513,460 @@ export class PageBangumi extends Page {
             });
         }
     }
+    /** 页面死循环检查 */
+    protected reloadCheck() {
+        function reload() {
+            if (document.title === 'Application error: a client-side exception has occurred') {
+                alert('新版页面出现死循环，CPU占用飙升，尝试刷新页面解决？', '死循环', [
+                    {
+                        text: '刷新',
+                        callback: () => {
+                            location.reload();
+                        }
+                    }
+                ])
+            }
+        }
+        if (document.readyState === 'complete') {
+            reload();
+        } else {
+            window.addEventListener('load', reload, { once: true });
+        }
+    }
+    protected loadedCallback() {
+        super.loadedCallback();
+        this.reloadCheck();
+    }
+}
+
+interface EPINFO {
+    aid: number;
+    cid: number;
+    cover: string;
+    duration: number;
+    ep_id: number;
+    episode_status: number;
+    from: string;
+    index: string;
+    index_title: string;
+    mid: number;
+    page: number;
+    pub_real_time: string;
+    section_id: number;
+    section_type: number;
+    vid: string;
+}
+interface MEDIAINFO {
+    actors: string;
+    alias: string;
+    areas: MEDIAINFO_CORE['areas'];
+    bkg_cover?: string;
+    cover: string;
+    evaluate: string;
+    is_paster_ads: number;
+    jp_title: string;
+    link: string;
+    media_id: number
+    mode: number
+    paster_text: string;
+    season_id: number
+    season_status: number
+    season_title: string;
+    season_type: number
+    series_title: string;
+    square_cover: string;
+    staff: string;
+    stat: EPINFO_CORE['stat']
+    style: string[];
+    title: string;
+    total_ep: number
+}
+interface INITIAL_STATE {
+    activity: {}
+    app: boolean;
+    area: number;
+    canReview: boolean;
+    epId: number;
+    epInfo: EPINFO;
+    epList: EPINFO[];
+    isPlayerTrigger: boolean;
+    loginInfo: { isLogin: boolean; };
+    mdId: number;
+    mediaInfo: MEDIAINFO;
+    mediaRating: { count: number; score: number; };
+    miniOn: boolean;
+    newestEp: { desc: string; id: number; index: string; is_new: number; pub_real_time?: string; };
+    paster: {};
+    payMent: {};
+    payPack: {};
+    playerRecomList: [];
+    pubInfo: { is_finish: number; is_started: number; pub_time: string; pub_time_show: string; weekday: number; };
+    recomList: [];
+    rightsInfo: {
+        allow_bp: number;
+        allow_download: number;
+        allow_review: number;
+        copyright: string;
+        is_preview: number;
+        watch_platform: number;
+    };
+    seasonFollowed: boolean;
+    seasonList: (INITIAL_STATE_CORE['ssList'][0] & { season_title: string; title: string })[];
+    seasonStat: { views: number; danmakus: number; coins: number; favorites: number; };
+    special: boolean;
+    spending: number;
+    sponsorTotal: {
+        code: number;
+        result: {
+            ep_bp: number;
+            list: [];
+            mine: {};
+            users: number;
+        }
+    };
+    sponsorTotalCount: number;
+    sponsorWeek: INITIAL_STATE['sponsorTotal'];
+    ssId: number;
+    upInfo: MEDIAINFO_CORE['up_info'];
+    userCoined: boolean;
+    userLongReview: {};
+    userScore: number;
+    userShortReview: {};
+    userStat: {
+        error: boolean;
+        follow: number;
+        loaded: boolean;
+        pay: number;
+        payPackPaid: number;
+        sponsor: number;
+        vipInfo: { due_date: number; status: number; type: number; };
+        watchProgress: { lastEpId: string; lastEpIndex: string; lastTime: number; };
+    };
+    ver: {};
+}
+
+interface EPINFO_CORE {
+    aid: number;
+    badge: string;
+    badgeColor: string;
+    badgeType: number;
+    badge_info: { bg_color: string; bg_color_night: string; text: string; };
+    badge_type: number;
+    bvid: string;
+    cid: number;
+    cover: string;
+    dimension: { height: number; rotate: number; width: number; };
+    duration: number;
+    epStatus: number;
+    from: string;
+    hasNext: boolean;
+    hasSkip: boolean;
+    i: number;
+    id: number;
+    is_view_hide: boolean;
+    link: string;
+    loaded: boolean;
+    longTitle: string;
+    long_title: string;
+    orderSectionIds: [];
+    pub_time: number;
+    pv: number;
+    releaseDate: string;
+    release_date: string;
+    rights: { allow_demand: number; allow_dm: number; allow_download: number; area_limit: number; };
+    sectionType: number;
+    share_copy: string;
+    share_url: string;
+    short_link: string;
+    skip: Record<'op' | 'ed', { end: number, start: number }>;
+    stat: {};
+    status: number;
+    subtitle: string;
+    title: string;
+    titleFormat: string;
+    vid: string;
+}
+interface MEDIAINFO_CORE {
+    activity: { id: number; title: string; pendantOpsImg: string; pendantOpsLink: string; };
+    alias: string;
+    areas: { id: number; name: string }[];
+    bkg_cover: string;
+    count: { coins: number; danmus: number; follows: number; views: number; likes: number; };
+    cover: string;
+    epSpMode: boolean;
+    episodes: EPINFO_CORE[];
+    evaluate: string;
+    forceWide: boolean;
+    freya: { bubble_desc: string; bubble_show_cnt: number; icon_show: number; };
+    id: number;
+    jpTitle: string;
+    jp_title: string;
+    link: string;
+    mainSecTitle: string;
+    media_id: number;
+    mode: number;
+    multiMode: boolean;
+    newEpSpMode: boolean;
+    new_ep: { desc: string; id: number; is_new: number; title: string; };
+    newestEp: { id: string; desc: string; isNew: boolean; };
+    payMent: {
+        discount: number;
+        price: string;
+        promotion: string;
+        sixType: { allowTicket: boolean; allowTimeLimit: boolean; allowDiscount: boolean; allowVipDiscount: boolean; };
+        tip: string;
+        vipDiscount: number;
+        vipFirstProm: string;
+        vipProm: string;
+    };
+    payPack: { title: string; appNoPayText: string; appPayText: string; url: string; };
+    payment: {
+        discount: number;
+        pay_type: {
+            allow_discount: number;
+            allow_pack: number;
+            allow_ticket: number;
+            allow_time_limit: number;
+            allow_vip_discount: number;
+            forbid_bb: number;
+        };
+        price: string;
+        promotion: string;
+        tip: string;
+        view_start_time: number;
+        vip_discount: number;
+        vip_first_promotion: string;
+        vip_promotion: string;
+    };
+    pgcType: string;
+    playerRecord: string;
+    positive: { id: number; title: string; };
+    premiereInfo: {};
+    pub: { time: string; timeShow: string; isStart: true, isFinish: boolean; unknow: boolean; };
+    publish: {
+        is_finish: number;
+        is_started: number;
+        pub_time: string;
+        pub_time_show: string;
+        unknow_pub_date: number;
+        weekday: number;
+    };
+    rating: { score: number; count: number; };
+    record: string;
+    rights: {
+        allowBp: boolean;
+        allowBpRank: boolean;
+        allowReview: boolean;
+        appOnly: boolean;
+        area_limit: number;
+        canWatch: boolean;
+        copyright: string;
+        isCoverShow: boolean;
+        isPreview: boolean;
+        limitNotFound: boolean;
+    };
+    season_id: number;
+    season_title: string;
+    seasons: {
+        badge: string;
+        badge_info: { bg_color: string; bg_color_night: string; text: string; };
+        badge_type: number;
+        cover: string;
+        horizontal_cover_169: string;
+        horizontal_cover_1610: string;
+        media_id: number;
+        new_ep: { cover: string; id: number; index_show: string; };
+        season_id: number;
+        season_title: string;
+        season_type: number;
+        stat: { favorites: number; series_follow: number; views: number; };
+    }[];
+    section: {
+        attr: number;
+        episode_id: number;
+        episode_ids: number[]
+        episodes: EPINFO_CORE[];
+        id: number;
+        title: string;
+        type: number;
+    }[];
+    sectionBottomDesc: string;
+    series: string;
+    share_copy: string;
+    share_sub_title: string;
+    share_url: string;
+    show: { wide_screen: number; };
+    show_season_type: number;
+    specialCover: string;
+    squareCover: string;
+    square_cover: string;
+    ssId: number;
+    ssType: number;
+    ssTypeFormat: { name: number; homeLink: number; };
+    stat: {
+        coins: number;
+        danmakus: number;
+        favorite: number;
+        favorites: number;
+        likes: number;
+        reply: number;
+        share: number;
+        views: number;
+    };
+    status: number;
+    subtitle: string;
+    title: string;
+    total: number;
+    type: number;
+    upInfo: {
+        avatar: string;
+        isAnnualVip: boolean;
+        mid: number;
+        name: string;
+        nickname_color: string;
+        pendantId: number;
+        pendantImage: string;
+        pendantName: string;
+        vip_status: number;
+        vip_type: number;
+    };
+    up_info: {
+        avatar: string;
+        avatar_subscript_url: string;
+        follower: number;
+        is_follow: number;
+        mid: number;
+        nickname_color: string;
+        pendant: { image: string; name: string; pid: number; };
+        theme_type: number;
+        uname: string;
+        verify_type: number;
+        vip_label: { bg_color: string; bg_style: number; border_color: string; text: string; text_color: string; };
+        vip_status: number;
+        vip_type: number;
+    };
+    user_status: {
+        area_limit: number;
+        ban_area_show: number;
+        follow: number;
+        follow_status: number;
+        login: number;
+        pay: number;
+        pay_pack_paid: number;
+        sponsor: number;
+        vip_info: { due_date: number; status: number; type: number; };
+    };
+}
+interface INITIAL_STATE_CORE {
+    angleAnimationShow: boolean;
+    couponSelected: unknown;
+    epCoupon: unknown;
+    epInfo: EPINFO_CORE;
+    epList: EPINFO_CORE[];
+    epMap: Record<EPINFO_CORE['id'], EPINFO_CORE>;
+    epPayMent: unknown;
+    fromSpmId: string;
+    h1Title: string;
+    hasPlayableEp: boolean;
+    initEpList: EPINFO_CORE[];
+    insertScripts: string[];
+    interact: { shown: false, btnText: '', callback: null };
+    isLogin: boolean;
+    isOriginal: boolean;
+    lastVideoTime: number;
+    likeMap: unknown;
+    loaded: boolean;
+    loginInfo: unknown;
+    mediaInfo: MEDIAINFO_CORE;
+    nextEp: unknown;
+    orderSectionIds: number[];
+    payGlobal: unknown;
+    player: { loaded: boolean; miniOn: boolean; limitType: number; };
+    playerEpList: {
+        code: number;
+        message: string;
+        result: {
+            main_section: {
+                episodes: EPINFO_CORE
+            }
+        }
+    };
+    premiereCountDown: string;
+    premiereEp: unknown;
+    premiereStatus: unknown;
+    sections: {
+        epList: EPINFO_CORE[];
+        episodeIds: number[];
+        id: number;
+        title: string;
+        type: number;
+    }[];
+    sectionsMap: Record<number, INITIAL_STATE_CORE['sections'][0]>;
+    showBv: boolean;
+    sponsor: {
+        allCount: number;
+        allMine: unknown;
+        allRank: [];
+        allReady: boolean;
+        allState: number;
+        weekCount: number;
+        weekMine: unknown;
+        weekRank: [];
+        weekReady: boolean;
+        weekState: number;
+    };
+    ssList: {
+        badge: string;
+        badgeColor: string;
+        badgeType: number;
+        cover: string;
+        desc: string;
+        epCover: string;
+        follows: number;
+        id: number;
+        pgcType: string;
+        title: string;
+        type: number;
+        views: number;
+    }[];
+    ssPayMent: unknown;
+    ssRecom: { status: string; data: [] };
+    ssr: unknown;
+    updateSectionList: boolean;
+    uperMap: unknown;
+    userState: {
+        loaded: boolean;
+        vipInfo: {};
+        history: {};
+    };
+    ver: unknown;
+    videoStatus: string;
+    viewAngle: string;
+    webPlayer: unknown;
+}
+interface PGC_USERSTATE {
+    area_limit: number;
+    ban_area_show: number;
+    dialog: { btn_right: { title: string; type: string; }; desc: string; title: string; };
+    follow: number;
+    follow_status: number;
+    login: number;
+    paster: {
+        aid: number;
+        allow_jump: number;
+        cid: number;
+        duration: number;
+        type: number;
+        url: string;
+    };
+    pay: number;
+    pay_pack_paid: number;
+    progress?: {
+        last_ep_id: number;
+        last_ep_index: string;
+        last_time: number;
+    }
+    real_price: string;
+    sponsor: number;
+    vip_info: { due_date: number; status: number; type: number; };
 }
