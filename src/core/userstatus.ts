@@ -180,4 +180,6 @@ export const userStatus = {
     commentPicture: true,
     /** 分区主页 */
     channel: true,
+    /** 拦截视频心跳 */
+    heartbeatBlock: false,
 }

@@ -85,7 +85,11 @@ class Player {
             const obj = urlObj(`?${args[2]}`);
             obj.as_wide = 1;
             args[2] = objUrl('', obj);
-        })
+        });
+
+        user.addCallback(status => {
+            status.heartbeatBlock && this.heartbeatBlock();
+        });
     }
     /** 修改播放器启动参数 */
     protected modifyArgument(args: IArguments) {
@@ -462,6 +466,17 @@ class Player {
             .finally(() => {
                 msg.delay = user.userStatus!.toast.delay;
             })
+    }
+
+    /** 拦截视频心跳 */
+    heartbeatBlock() {
+        xhrHook.async('/heartbeat', undefined, async res => {
+            const response = '{"code":0,"message":"0","ttl":1}';
+            return {
+                response,
+                responseText: response
+            }
+        }, false)
     }
 }
 /** 播放器组件 */
