@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.6.3-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.6.4-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -28,7 +28,6 @@ const MODULES = `
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
   var __esm = (fn, res) => function __init() {
     return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
   };
@@ -51,10 +50,6 @@ const MODULES = `
     isNodeMode || !mod2 || !mod2.__esModule ? __defProp(target, "default", { value: mod2, enumerable: true }) : target,
     mod2
   ));
-  var __publicField = (obj, key, value) => {
-    __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-    return value;
-  };
 
   // tampermonkey/gm.ts
   var init_gm = __esm({
@@ -3986,7 +3981,7 @@ const MODULES = `
       util.setProperty = function setProperty(dst, path, value) {
         function setProp(dst2, path2, value2) {
           var part = path2.shift();
-          if (part === "__proto__") {
+          if (part === "__proto__" || part === "prototype") {
             return dst2;
           }
           if (path2.length > 0) {
@@ -7610,91 +7605,93 @@ const MODULES = `
 
   // src/io/urls.ts
   init_tampermonkey();
-  var _URLS = class {
+  var URLS = class _URLS {
+    // protocol + //
+    static P_AUTO = "//";
+    static P_HTTP = "http://";
+    static P_HTTPS = "https://";
+    static P_WS = "ws://";
+    static P_WSS = "wss://";
+    // domain
+    static D_WWW = "www.bilibili.com";
+    static D_API = "api.bilibili.com";
+    static D_APP = "app.bilibili.com";
+    static D_MANAGER = "manager.bilibili.co";
+    static D_INTERFACE = "interface.bilibili.com";
+    static D_PASSPORT = "passport.bilibili.com";
+    static D_BANGUMI = "bangumi.bilibili.com";
+    static D_SPACE = "space.bilibili.com";
+    static D_STATIC_S = "static.hdslb.com";
+    static D_CHAT = "chat.bilibili.com";
+    static D_DATA = "data.bilibili.com";
+    static D_COMMENT = "comment.bilibili.com";
+    static D_BROADCAST = "broadcast.bilibili.com";
+    static D_MISAKA_SW = "misaka-sw.bilibili.com";
+    static D_MEMBER = "member.bilibili.com";
+    static D_BVC = "bvc.bilivideo.com";
+    static D_S1 = "s1.hdslb.com";
+    static D_API_GLOBAL = "api.global.bilibili.com";
+    static D_ACCOUNT = "account.bilibili.com";
+    static D_INTL = "apiintl.biliapi.net";
+    static D_API_VC = "api.vc.bilibili.com";
+    static WEBSHOW_LOCS = _URLS.P_AUTO + _URLS.D_API + "/x/web-show/res/locs";
+    static INDEX_TOP_RCMD = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/index/top/rcmd";
+    static PAGE_HEADER = _URLS.P_AUTO + _URLS.D_API + "/x/web-show/page/header";
+    static SEASON_RANK_LIST = _URLS.P_AUTO + _URLS.D_API + "/pgc/season/rank/web/list";
+    static VIDEO = _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/video.min.js";
+    static JQUERY = _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/jquery.min.js";
+    static ARTICLE_CARDS = _URLS.P_AUTO + _URLS.D_API + "/x/article/cards";
+    static VIEW_DETAIL = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view/detail";
+    static VIEW = _URLS.P_AUTO + _URLS.D_API + "/view";
+    static X_VIEW = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view";
+    static PAGE_LIST = _URLS.P_AUTO + _URLS.D_API + "/x/player/pagelist";
+    static TAG_INFO = _URLS.P_AUTO + _URLS.D_API + "/x/tag/info";
+    static TAG_TOP = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/tag/top";
+    static BANGUMI_SEASON = _URLS.P_AUTO + _URLS.D_BANGUMI + "/view/web_api/season";
+    static SEASON_STATUS = _URLS.P_AUTO + _URLS.D_API + "/pgc/view/web/season/user/status";
+    static SEASON_SECTION = _URLS.P_AUTO + _URLS.D_API + "/pgc/web/season/section";
+    static GLOBAL_OGV_VIEW = _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/view/app/season";
+    static GLOBAL_OGV_PLAYURL = _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/playurl";
+    static APP_PGC_PLAYURL = _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurl";
+    static ACCOUNT_GETCARDBYMID = _URLS.P_AUTO + _URLS.D_ACCOUNT + "/api/member/getCardByMid";
+    static LOGIN_APP_THIRD = _URLS.P_AUTO + _URLS.D_PASSPORT + "/login/app/third";
+    static PLAYER = _URLS.P_AUTO + _URLS.D_API + "/x/player/v2";
+    static PLAYURL_PROJ = _URLS.P_AUTO + _URLS.D_APP + "/v2/playurlproj";
+    static PGC_PLAYURL_PROJ = _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurlproj";
+    static PGC_PLAYURL_TV = _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurltv";
+    static UGC_PLAYURL_TV = _URLS.P_AUTO + _URLS.D_API + "/x/tv/ugc/playurl";
+    static PGC_PLAYURL = _URLS.P_AUTO + _URLS.D_API + "/pgc/player/web/playurl";
+    static PLAYURL = _URLS.P_AUTO + _URLS.D_API + "/x/player/playurl";
+    static INTL_PLAYURL = _URLS.P_AUTO + _URLS.D_APP + "/x/intl/playurl";
+    static INTL_OGV_PLAYURL = _URLS.P_AUTO + _URLS.D_INTL + "/intl/gateway/ogv/player/api/playurl";
+    static PLAYURL_INTERFACE = _URLS.P_AUTO + _URLS.D_INTERFACE + "/v2/playurl";
+    static PLAYURL_BANGUMI = _URLS.P_AUTO + _URLS.D_BANGUMI + "/player/web_api/v2/playurl";
+    static LIKE = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/like";
+    static HAS_LIKE = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/has/like";
+    static DM_WEB_VIEW = _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/view";
+    static DM_WEB_SEG_SO = _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/seg.so";
+    static STAT = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/stat";
+    static SLIDE_SHOW = _URLS.P_AUTO + _URLS.D_API + "/pgc/operation/api/slideshow";
+    static SEARCH_SQUARE = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/search/square";
+    static SPACE_ARC = _URLS.P_AUTO + _URLS.D_API + "/x/space/wbi/arc/search";
+    static NEWLIST = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/newlist";
+    static SEARCH = _URLS.P_AUTO + _URLS.D_API + "/search";
+    static REPLY = _URLS.P_AUTO + _URLS.D_API + "/x/v2/reply";
+    static ARTICLE_UPCOVER = _URLS.P_AUTO + _URLS.D_API + "/x/article/creative/article/upcover";
+    static DRAW_IMAGE_UPLOAD = _URLS.P_AUTO + _URLS.D_API_VC + "/api/v1/drawImage/upload";
+    static DYNAMIC_UPLOAD_BFS = _URLS.P_AUTO + _URLS.D_API + "/x/dynamic/feed/draw/upload_bfs";
   };
-  var URLS = _URLS;
-  // protocol + //
-  __publicField(URLS, "P_AUTO", "//");
-  __publicField(URLS, "P_HTTP", "http://");
-  __publicField(URLS, "P_HTTPS", "https://");
-  __publicField(URLS, "P_WS", "ws://");
-  __publicField(URLS, "P_WSS", "wss://");
-  // domain
-  __publicField(URLS, "D_WWW", "www.bilibili.com");
-  __publicField(URLS, "D_API", "api.bilibili.com");
-  __publicField(URLS, "D_APP", "app.bilibili.com");
-  __publicField(URLS, "D_MANAGER", "manager.bilibili.co");
-  __publicField(URLS, "D_INTERFACE", "interface.bilibili.com");
-  __publicField(URLS, "D_PASSPORT", "passport.bilibili.com");
-  __publicField(URLS, "D_BANGUMI", "bangumi.bilibili.com");
-  __publicField(URLS, "D_SPACE", "space.bilibili.com");
-  __publicField(URLS, "D_STATIC_S", "static.hdslb.com");
-  __publicField(URLS, "D_CHAT", "chat.bilibili.com");
-  __publicField(URLS, "D_DATA", "data.bilibili.com");
-  __publicField(URLS, "D_COMMENT", "comment.bilibili.com");
-  __publicField(URLS, "D_BROADCAST", "broadcast.bilibili.com");
-  __publicField(URLS, "D_MISAKA_SW", "misaka-sw.bilibili.com");
-  __publicField(URLS, "D_MEMBER", "member.bilibili.com");
-  __publicField(URLS, "D_BVC", "bvc.bilivideo.com");
-  __publicField(URLS, "D_S1", "s1.hdslb.com");
-  __publicField(URLS, "D_API_GLOBAL", "api.global.bilibili.com");
-  __publicField(URLS, "D_ACCOUNT", "account.bilibili.com");
-  __publicField(URLS, "D_INTL", "apiintl.biliapi.net");
-  __publicField(URLS, "D_API_VC", "api.vc.bilibili.com");
-  __publicField(URLS, "WEBSHOW_LOCS", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/res/locs");
-  __publicField(URLS, "INDEX_TOP_RCMD", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/index/top/rcmd");
-  __publicField(URLS, "PAGE_HEADER", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/page/header");
-  __publicField(URLS, "SEASON_RANK_LIST", _URLS.P_AUTO + _URLS.D_API + "/pgc/season/rank/web/list");
-  __publicField(URLS, "VIDEO", _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/video.min.js");
-  __publicField(URLS, "JQUERY", _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/jquery.min.js");
-  __publicField(URLS, "ARTICLE_CARDS", _URLS.P_AUTO + _URLS.D_API + "/x/article/cards");
-  __publicField(URLS, "VIEW_DETAIL", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view/detail");
-  __publicField(URLS, "VIEW", _URLS.P_AUTO + _URLS.D_API + "/view");
-  __publicField(URLS, "X_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view");
-  __publicField(URLS, "PAGE_LIST", _URLS.P_AUTO + _URLS.D_API + "/x/player/pagelist");
-  __publicField(URLS, "TAG_INFO", _URLS.P_AUTO + _URLS.D_API + "/x/tag/info");
-  __publicField(URLS, "TAG_TOP", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/tag/top");
-  __publicField(URLS, "BANGUMI_SEASON", _URLS.P_AUTO + _URLS.D_BANGUMI + "/view/web_api/season");
-  __publicField(URLS, "SEASON_STATUS", _URLS.P_AUTO + _URLS.D_API + "/pgc/view/web/season/user/status");
-  __publicField(URLS, "SEASON_SECTION", _URLS.P_AUTO + _URLS.D_API + "/pgc/web/season/section");
-  __publicField(URLS, "GLOBAL_OGV_VIEW", _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/view/app/season");
-  __publicField(URLS, "GLOBAL_OGV_PLAYURL", _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/playurl");
-  __publicField(URLS, "APP_PGC_PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurl");
-  __publicField(URLS, "ACCOUNT_GETCARDBYMID", _URLS.P_AUTO + _URLS.D_ACCOUNT + "/api/member/getCardByMid");
-  __publicField(URLS, "LOGIN_APP_THIRD", _URLS.P_AUTO + _URLS.D_PASSPORT + "/login/app/third");
-  __publicField(URLS, "PLAYER", _URLS.P_AUTO + _URLS.D_API + "/x/player/v2");
-  __publicField(URLS, "PLAYURL_PROJ", _URLS.P_AUTO + _URLS.D_APP + "/v2/playurlproj");
-  __publicField(URLS, "PGC_PLAYURL_PROJ", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurlproj");
-  __publicField(URLS, "PGC_PLAYURL_TV", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurltv");
-  __publicField(URLS, "UGC_PLAYURL_TV", _URLS.P_AUTO + _URLS.D_API + "/x/tv/ugc/playurl");
-  __publicField(URLS, "PGC_PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/web/playurl");
-  __publicField(URLS, "PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/x/player/playurl");
-  __publicField(URLS, "INTL_PLAYURL", _URLS.P_AUTO + _URLS.D_APP + "/x/intl/playurl");
-  __publicField(URLS, "INTL_OGV_PLAYURL", _URLS.P_AUTO + _URLS.D_INTL + "/intl/gateway/ogv/player/api/playurl");
-  __publicField(URLS, "PLAYURL_INTERFACE", _URLS.P_AUTO + _URLS.D_INTERFACE + "/v2/playurl");
-  __publicField(URLS, "PLAYURL_BANGUMI", _URLS.P_AUTO + _URLS.D_BANGUMI + "/player/web_api/v2/playurl");
-  __publicField(URLS, "LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/like");
-  __publicField(URLS, "HAS_LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/has/like");
-  __publicField(URLS, "DM_WEB_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/view");
-  __publicField(URLS, "DM_WEB_SEG_SO", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/seg.so");
-  __publicField(URLS, "STAT", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/stat");
-  __publicField(URLS, "SLIDE_SHOW", _URLS.P_AUTO + _URLS.D_API + "/pgc/operation/api/slideshow");
-  __publicField(URLS, "SEARCH_SQUARE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/search/square");
-  __publicField(URLS, "SPACE_ARC", _URLS.P_AUTO + _URLS.D_API + "/x/space/wbi/arc/search");
-  __publicField(URLS, "NEWLIST", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/newlist");
-  __publicField(URLS, "SEARCH", _URLS.P_AUTO + _URLS.D_API + "/search");
-  __publicField(URLS, "REPLY", _URLS.P_AUTO + _URLS.D_API + "/x/v2/reply");
-  __publicField(URLS, "ARTICLE_UPCOVER", _URLS.P_AUTO + _URLS.D_API + "/x/article/creative/article/upcover");
-  __publicField(URLS, "DRAW_IMAGE_UPLOAD", _URLS.P_AUTO + _URLS.D_API_VC + "/api/v1/drawImage/upload");
-  __publicField(URLS, "DYNAMIC_UPLOAD_BFS", _URLS.P_AUTO + _URLS.D_API + "/x/dynamic/feed/draw/upload_bfs");
 
   // src/io/grpc/api-dm-web.ts
-  var _ApiDmWeb = class {
+  var ApiDmWeb = class _ApiDmWeb {
     constructor(aid, cid) {
       this.aid = aid;
       this.cid = cid;
       _ApiDmWeb.Root || _ApiDmWeb.RootInit();
     }
+    static Root;
+    static DmWebViewReply;
+    static DmSegMobileReply;
     static RootInit() {
       this.Root = import_light.Root.fromJSON(dm_web_default);
       this.DmWebViewReply = this.Root.lookupType("DmWebViewReply");
@@ -7768,10 +7765,6 @@ const MODULES = `
       return _ApiDmWeb.DmSegMobileReply.toObject(msg);
     }
   };
-  var ApiDmWeb = _ApiDmWeb;
-  __publicField(ApiDmWeb, "Root");
-  __publicField(ApiDmWeb, "DmWebViewReply");
-  __publicField(ApiDmWeb, "DmSegMobileReply");
 
   // src/utils/file.ts
   init_tampermonkey();
@@ -7976,7 +7969,10 @@ const MODULES = `
 
   // src/utils/hook/worker.ts
   init_tampermonkey();
-  var _WorkerHook = class {
+  var WorkerHook = class _WorkerHook {
+    /** Worker.prototype.postMessage backup. */
+    static postMessage;
+    static postMessageCallback = [];
     /** Worker.prototype.postMessage hook init. */
     static postMessageHook() {
       this.postMessage = Worker.prototype.postMessage;
@@ -8003,10 +7999,6 @@ const MODULES = `
       };
     }
   };
-  var WorkerHook = _WorkerHook;
-  /** Worker.prototype.postMessage backup. */
-  __publicField(WorkerHook, "postMessage");
-  __publicField(WorkerHook, "postMessageCallback", []);
 
   // src/utils/utils.ts
   init_tampermonkey();
@@ -9070,7 +9062,9 @@ const MODULES = `
     /** 评论图片 */
     commentPicture: true,
     /** 分区主页 */
-    channel: true
+    channel: true,
+    /** 拦截视频心跳 */
+    heartbeatBlock: false
   };
 
   // src/core/ui/alert.ts
@@ -12517,12 +12511,18 @@ const MODULES = `
   }
 
   // src/io/grpc/BAPIMetadata/metadata.ts
-  var _BAPIMetadata = class {
+  var BAPIMetadata = class _BAPIMetadata {
     constructor(accessKey) {
       this.accessKey = accessKey;
       _BAPIMetadata.Root || _BAPIMetadata.RootInit();
       accessKey && (this.metadata.accessKey = accessKey);
     }
+    /** 命名空间 */
+    static Root;
+    /** Type<Metadata> */
+    static metadata;
+    /** Type<Status> */
+    static status;
     /** 初始化命名空间及Type */
     static RootInit() {
       this.Root = import_light2.Root.fromJSON(metadata_default);
@@ -12603,21 +12603,16 @@ const MODULES = `
       return typeReply.toObject(typeReply.decode(uint8Array));
     }
   };
-  var BAPIMetadata = _BAPIMetadata;
-  /** 命名空间 */
-  __publicField(BAPIMetadata, "Root");
-  /** Type<Metadata> */
-  __publicField(BAPIMetadata, "metadata");
-  /** Type<Status> */
-  __publicField(BAPIMetadata, "status");
 
   // src/io/grpc/BAPIAppPlayurl/v1/playurl.ts
-  var _BAPIAppPlayurlV1 = class extends BAPIMetadata {
+  var BAPIAppPlayurlV1 = class _BAPIAppPlayurlV1 extends BAPIMetadata {
     constructor(accessKey) {
       super(accessKey);
       this.accessKey = accessKey;
       _BAPIAppPlayurlV1.Root || (_BAPIAppPlayurlV1.Root = import_light3.Root.fromJSON(playurl_default));
     }
+    /** 命名空间 */
+    static Root;
     package = "bilibili.app.playurl.v1";
     service = "PlayURL";
     lookupType(type) {
@@ -12668,9 +12663,6 @@ const MODULES = `
       );
     }
   };
-  var BAPIAppPlayurlV1 = _BAPIAppPlayurlV1;
-  /** 命名空间 */
-  __publicField(BAPIAppPlayurlV1, "Root");
 
   // src/core/download/aria2.ts
   init_tampermonkey();
@@ -12771,7 +12763,7 @@ const MODULES = `
 
   // src/core/download/ef2.ts
   init_tampermonkey();
-  var Ef2 = class {
+  var Ef2 = class _Ef2 {
     constructor(userAgent, referer, dir, delay = false, silence = false) {
       this.userAgent = userAgent;
       this.referer = referer;
@@ -12782,7 +12774,7 @@ const MODULES = `
     /** 拉起IDM */
     sendLinkToIDM(data) {
       this.rebuildData(data);
-      const ef2str = Ef2.encode(data);
+      const ef2str = _Ef2.encode(data);
       const a = document.createElement("a");
       a.href = ef2str;
       a.click();
@@ -12791,7 +12783,7 @@ const MODULES = `
     /** 生成ef2文件 */
     file(data, fileName) {
       this.rebuildData(data);
-      return Ef2.file([data], fileName);
+      return _Ef2.file([data], fileName);
     }
     /** 补全数据 */
     rebuildData(data) {
@@ -13293,7 +13285,7 @@ const MODULES = `
 
   // src/utils/scrollbar.ts
   init_tampermonkey();
-  var _Scrollbar = class {
+  var Scrollbar = class _Scrollbar {
     /**
      * 设置滚动条
      * @param ele 目标节点
@@ -13311,6 +13303,11 @@ const MODULES = `
       side && ele.insertAdjacentElement("afterend", _Scrollbar.style.cloneNode(true));
       this.flesh();
     }
+    static mutex = getMetux();
+    static prefix = "scrollbar-" + _Scrollbar.mutex;
+    static style;
+    static thumb = "#999";
+    static track = "#EEE";
     static init() {
       this.style || (this.style = addElement("style", void 0), document.head);
       this.style.textContent = \`.\${this.prefix}[data-\${this.mutex}="\${this.mutex}"]{
@@ -13408,12 +13405,6 @@ const MODULES = `
       this.flesh();
     }
   };
-  var Scrollbar = _Scrollbar;
-  __publicField(Scrollbar, "mutex", getMetux());
-  __publicField(Scrollbar, "prefix", "scrollbar-" + _Scrollbar.mutex);
-  __publicField(Scrollbar, "style");
-  __publicField(Scrollbar, "thumb", "#999");
-  __publicField(Scrollbar, "track", "#EEE");
 
   // src/core/ui/preview-image.ts
   var PreviewImage = class extends HTMLElement {
@@ -14649,11 +14640,38 @@ const MODULES = `
   var message_default = "/* 修复消息页样式 */\\r\\n.container[data-v-6969394c] {\\r\\n    height: calc(100vh - 42px) !important;\\r\\n}\\r\\n\\r\\n.container[data-v-1c9150a9] {\\r\\n    height: calc(100vh - 42px) !important;\\r\\n}\\r\\n\\r\\n.im-root,\\r\\n.im-root .im-list-box * {\\r\\n    font-size: 12px;\\r\\n    line-height: 42px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box {\\r\\n    width: 100%;\\r\\n    overflow: visible;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-list {\\r\\n    line-height: 42px;\\r\\n    height: 42px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-number {\\r\\n    height: 14px;\\r\\n    line-height: 13px;\\r\\n    border-radius: 10px;\\r\\n    padding: 1px 3px;\\r\\n    font-size: 12px;\\r\\n    min-width: 20px;\\r\\n    text-align: center;\\r\\n    color: #fff;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-number.im-center {\\r\\n    top: 14px;\\r\\n    left: 80px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-dot {\\r\\n    top: 11px;\\r\\n    right: -10px;\\r\\n    width: 8px;\\r\\n    height: 8px;\\r\\n    border-radius: 100%;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-dot.im-center {\\r\\n    top: 16px;\\r\\n    right: 20px;\\r\\n}";
 
   // src/page/header.ts
-  var _Header = class {
+  var Header = class _Header {
+    /** locs列表 */
+    static locs = [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142];
+    /** 缓存已请求内容 */
+    static record = {};
     /** 资源id */
     static get rid() {
       return this.resourceId();
     }
+    /** 页面固定的资源id */
+    static prid = 0;
+    /** tid对照表 */
+    static tid = {
+      1: 1576,
+      13: 1612,
+      167: 1920,
+      3: 1580,
+      129: 1584,
+      4: 1588,
+      36: 1592,
+      160: 1600,
+      119: 1608,
+      155: 1604,
+      165: 1620,
+      166: 1620,
+      5: 1596,
+      23: 1634,
+      11: 1616,
+      181: 2210,
+      177: 2260,
+      188: 3129
+    };
     /**
      * 根据页面返回resourceId
      * @returns resourceId
@@ -14865,6 +14883,7 @@ const MODULES = `
         (_a3 = document.getElementsByClassName("bili-header-m")[1]) == null ? void 0 : _a3.remove();
       });
     }
+    static fullBannerCover = false;
     /** 顶栏样式修复 */
     static styleFix() {
       addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}", "lt-row-fix");
@@ -14888,35 +14907,6 @@ const MODULES = `
       }, false);
     }
   };
-  var Header = _Header;
-  /** locs列表 */
-  __publicField(Header, "locs", [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142]);
-  /** 缓存已请求内容 */
-  __publicField(Header, "record", {});
-  /** 页面固定的资源id */
-  __publicField(Header, "prid", 0);
-  /** tid对照表 */
-  __publicField(Header, "tid", {
-    1: 1576,
-    13: 1612,
-    167: 1920,
-    3: 1580,
-    129: 1584,
-    4: 1588,
-    36: 1592,
-    160: 1600,
-    119: 1608,
-    155: 1604,
-    165: 1620,
-    166: 1620,
-    5: 1596,
-    23: 1634,
-    11: 1616,
-    181: 2210,
-    177: 2260,
-    188: 3129
-  });
-  __publicField(Header, "fullBannerCover", false);
 
   // src/page/space.ts
   init_tampermonkey();
@@ -19381,6 +19371,9 @@ const MODULES = `
         obj.as_wide = 1;
         args[2] = objUrl("", obj);
       });
+      user.addCallback((status) => {
+        status.heartbeatBlock && this.heartbeatBlock();
+      });
     }
     /** 修改播放器启动参数 */
     modifyArgument(args) {
@@ -19798,6 +19791,16 @@ const MODULES = `
         msg.delay = user.userStatus.toast.delay;
       });
     }
+    /** 拦截视频心跳 */
+    heartbeatBlock() {
+      xhrHook.async("/heartbeat", void 0, async (res) => {
+        const response = '{"code":0,"message":"0","ttl":1}';
+        return {
+          response,
+          responseText: response
+        };
+      }, false);
+    }
   };
   var player = new Player();
 
@@ -19826,7 +19829,11 @@ const MODULES = `
   var loading = false;
   var load = false;
   var events = {};
-  var _Comment = class {
+  var Comment2 = class _Comment {
+    /** 还原超链接标题 */
+    static commentJumpUrlTitle = false;
+    /** 显示评论图片 */
+    static resolvePictures = true;
     /** 评论页数 */
     count = 0;
     constructor() {
@@ -20332,11 +20339,6 @@ const MODULES = `
       };
     }
   };
-  var Comment2 = _Comment;
-  /** 还原超链接标题 */
-  __publicField(Comment2, "commentJumpUrlTitle", false);
-  /** 显示评论图片 */
-  __publicField(Comment2, "resolvePictures", true);
 
   // src/core/ui/like.ts
   init_tampermonkey();
@@ -27664,7 +27666,8 @@ const MODULES = `
   var arr = [];
   var param = [];
   var length;
-  var _Webpack = class {
+  var Webpack = class _Webpack {
+    static load = false;
     backup = window.webpackJsonp;
     constructor() {
       _Webpack.load = true;
@@ -27698,8 +27701,6 @@ const MODULES = `
       });
     }
   };
-  var Webpack = _Webpack;
-  __publicField(Webpack, "load", false);
   function webpackHook(len, pos, rpc, params = ["t", "e", "i"]) {
     Webpack.load || new Webpack();
     if (!arr[len]) {
@@ -28940,7 +28941,7 @@ const MODULES = `
   var read_default = '<!DOCTYPE html>\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head itemprop="Article" itemscope="itemscope" itemtype="http://schema.org/Article">\\r\\n    <meta charset="UTF-8" />\\r\\n    <meta data-n-head="true" name="viewport" content="width=device-width,initial-scale=1,user-scalable=0" />\\r\\n    <meta name="theme-color" content="#de698c" />\\r\\n    <meta http="Cache-Control" content="no-transform" />\\r\\n    <meta name="format-detection" content="telephone=no" />\\r\\n    <meta name="applicable-device" content="pc" />\\r\\n    <link rel="apple-touch-icon-precomposed" href="//static.hdslb.com/mobile/img/512.png" />\\r\\n    <link rel="icon" type="image/vnd.microsoft.icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <link rel="apple-touch-icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <link data-n-head="true" rel="icon" type="image/x-icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <link data-n-head="true" rel="apple-touch-icon-precomposed" type="image/x-icon"\\r\\n        href="//static.hdslb.com/mobile/img/512.png" />\\r\\n    <title>哔哩哔哩专栏</title>\\r\\n    <link href="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.css"\\r\\n        rel="stylesheet" />\\r\\n    <style type="text/css">\\r\\n        .nav-tab-bar .tab-item[data-tab-id="41"]:before {\\r\\n            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAA6lBMVEUAAAAiIiIkJCT///8jIyMiIiIiIiIiIiJVVVUjIyMjIyMlJSU0NDT9/f0iIiIoKCjz8/NCQkIjIyMjIyMrKysiIiJFRUWQkJAiIiIlJSUjIyMkJCQzMzNAQEDv7+/7+/tHR0ciIiIlJSUjIyNKSkp7e3tcXFxoaGgjIyMjIyMkJCT8/PxDQ0MnJyf39/fx8fHn5+cvLy/i4uLe3t7R0dHAwMA0NDQjIyOtra06Ojo+Pj4iIiJAQEBOTk5VVVVwcHBtbW1hYWEjIyMjIyMjIyMiIiIiIiIlJSUpKSkkJCT///95eXltbW1zc3PUVbhEAAAASnRSTlMAf4H+6NOdaAOnQRQF/asO/vTs5NnXxcO6NzMaCgT++fLv3s7GwMC/v6Fi+vr59PDn5ePh2dHOzMrKyMjGw8C/v7+1sZeVUikfHAMz54kAAAEUSURBVCjPldLXboMwFIDhQ7DNDBA2JGmTNLt7772d9v1fp5hSjEOkqP+lP/lIlg+sTVcaRV1gKXE/mLWBZWqYSEUMjfjsYv/4Hr0zxJYKlYxgItOsaMpmItHwA82TkQGgEMG2JrTITwGkRsXs80f6F/oU0b4el3YaQI585l1pm/6bgHZ/Ry7tcgYCaoetjcKaV1ZXwGSwvSi0efNsgoAvI0oXLYc9MXwyQcTBSXb83XOoPIw7AGlawQ8ks4FfPWc47fyec5yHmTHddZmJqEU57t16baghOqL0IArdVxvq6I3GvqvN2bU6JkRK+Odx5P0LFbIaicLWBKurTPX0/IEWV24WBpaJEWksRbBmlkstLaXosK4fYdYsW/LHMigAAAAASUVORK5CYII=);\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container report-wrap-module"></div>\\r\\n    <div class="page-container"></div>\\r\\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\\r\\n    <script src="//static.hdslb.com/public/intersection-observer.js"><\\/script>\\r\\n    <script src="//static.hdslb.com/public/timing.min.js"><\\/script>\\r\\n    <script src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/biliapp/biliapp.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/manifest.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/vendor.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
   // src/page/read.ts
-  var PageRead = class extends Page {
+  var PageRead = class _PageRead extends Page {
     readInfo;
     cvid;
     bars = [
@@ -29076,7 +29077,7 @@ const MODULES = `
       this.webpackjsonp();
       super.updateDom();
       document.querySelector(".page-container").innerHTML = this.readInfoStr;
-      PageRead.rightCopyEnable();
+      _PageRead.rightCopyEnable();
     }
     /** 解锁右键菜单及复制 */
     static rightCopyEnable() {
@@ -30508,7 +30509,8 @@ const MODULES = `
         this.switch("webRTC", "WebRTC", "<strong>关闭</strong>以禁用p2p共享带宽", void 0, void 0, "B站使用【WebRTC】实现p2p共享，等同于将您的设备变成了B站的一个视频服务器节点，别人观看相同的视频或直播便可以从您的设备取流而不必访问B站固有的服务器。脚本默认<strong>关闭</strong>了此功能，以减轻小水管的带宽压力，如果您的带宽允许，还是推荐开启，人人为我，我为人人。bilibili~乾杯 - ( ゜-゜)つロ！"),
         this.switch("elecShow", "充电鸣谢", "允许视频结尾的充电鸣谢"),
         this.switch("videoDisableAA", "禁用视频渲染抗锯齿", '详见<a href="https://github.com/MotooriKashin/Bilibili-Old/issues/292" target="_blank">#292</a>说明'),
-        this.switch("ugcSection", "视频合集", "以播单形式呈现", void 0, void 0, "视频合集在旧版页面时代本不存在，但其实质类似于上古的播单，所以直接使用播单页面进行模拟。值得一提的是真正的播单页面相关接口已完全被404，如果有幸访问到脚本会直接替换为缓存的播单号769——因为只缓存了这一项数据。另外播单详情页面还是404状态，以后可能也会用缓存数据修复，让后人能一窥范例。")
+        this.switch("ugcSection", "视频合集", "以播单形式呈现", void 0, void 0, "视频合集在旧版页面时代本不存在，但其实质类似于上古的播单，所以直接使用播单页面进行模拟。值得一提的是真正的播单页面相关接口已完全被404，如果有幸访问到脚本会直接替换为缓存的播单号769——因为只缓存了这一项数据。另外播单详情页面还是404状态，以后可能也会用缓存数据修复，让后人能一窥范例。"),
+        this.switch("heartbeatBlock", "无痕模式", "禁用视频心跳", void 0, void 0, "禁用视频心跳便不会产生播放器历史记录。鉴于B站网页端开始严重限制未登录用户的权限，比如弹幕减少，评论只能看第一页等。可以启用本功能模拟【无痕模式】来使用，享受已登录用户的权限但B站不会知道你看了什么视频。<br/>※ 刷新页面生效")
       ]);
       this.menuitem.player.addCard("自动化操作");
       this.menuitem.player.addSetting([
