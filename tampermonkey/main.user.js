@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.6.4-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.6.5-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -161,6 +161,7 @@ const MODULES = `
   // tampermonkey/index.ts
   var init_tampermonkey = __esm({
     "tampermonkey/index.ts"() {
+      "use strict";
       init_gm();
       init_polyfill();
     }
@@ -15088,11 +15089,6 @@ const MODULES = `
   };
 
   // src/page/space.ts
-  var Mid = {
-    11783021: "哔哩哔哩番剧出差",
-    1988098633: "b站_戲劇咖",
-    2042149112: "b站_綜藝咖"
-  };
   var PageSpace = class {
     mid;
     /** 失效视频aid */
@@ -15119,11 +15115,13 @@ const MODULES = `
         case 11783021:
         case 1988098633:
         case 2042149112:
-          mid_default.data.name = Mid[this.mid];
           mid_default.data.official.desc = mid_default.data.name + " 官方帐号";
           xhrHook("acc/info?", void 0, (obj) => {
             if (obj.responseText && obj.responseText.includes("-404")) {
               obj.response = obj.responseText = JSON.stringify(mid_default);
+              toast.warning("该用户被404，已使用缓存数据恢复访问！");
+            } else if (obj.responseType === "blob" && obj.response.size === 46) {
+              obj.response = new Blob([JSON.stringify(mid_default)], { type: "application/json" });
               toast.warning("该用户被404，已使用缓存数据恢复访问！");
             }
           }, false);
@@ -15545,7 +15543,9 @@ const MODULES = `
           e.preventDefault();
           if (newURL == window.location.href)
             return;
-          this.updateLocation(newURL);
+          if (e.navigationType !== "traverse") {
+            this.updateLocation(newURL, e.navigationType);
+          }
         }
       });
       window.addEventListener("click", (e) => this.anchorClick(e));
@@ -15587,10 +15587,14 @@ const MODULES = `
       this.updateLocation(this.clear(location.href));
     }
     /** 更新URL而不触发重定向 */
-    updateLocation(url) {
+    updateLocation(url, fun) {
       const Url = new self.URL(url);
       if (Url.host === location.host) {
-        window.history.replaceState(window.history.state, "", url);
+        if (fun === "push") {
+          window.history.pushState(window.history.state, "", url);
+        } else {
+          window.history.replaceState(window.history.state, "", url);
+        }
       }
     }
     /** 点击回调 */
