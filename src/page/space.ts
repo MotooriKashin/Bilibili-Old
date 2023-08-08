@@ -40,14 +40,19 @@ export class PageSpace {
             case 11783021:
             case 1988098633:
             case 2042149112:
-                json.data.name = Mid[this.mid];
                 json.data.official.desc = json.data.name + ' 官方帐号';
                 xhrHook("acc/info?", undefined, obj => {
                     if (obj.responseText && obj.responseText.includes("-404")) {
                         obj.response = obj.responseText = JSON.stringify(json);
-                        toast.warning("该用户被404，已使用缓存数据恢复访问！")
+                        toast.warning("该用户被404，已使用缓存数据恢复访问！");
+                    } else if (obj.responseType === 'blob' && obj.response.size === 46) {
+                        obj.response = new Blob([JSON.stringify(json)], { type: 'application/json' });
+                        toast.warning("该用户被404，已使用缓存数据恢复访问！");
                     }
                 }, false);
+                // xhrHook('x/space/navnum', args => {
+                //     args[1] = args[1].replace('mid=0', `mid=${this.mid}`);
+                // });
                 break;
             default:
                 break;
