@@ -40,7 +40,9 @@ class UrlCleaner {
                 e.preventDefault(); // 阻止原事件看情况是否转发
                 if (newURL == window.location.href) return // 如果清理后和原来一样就直接返回
                 // 否则就处理清理后的链接
-                this.updateLocation(newURL);
+                if ((<NavigateEvent>e).navigationType !== 'traverse') {
+                    this.updateLocation(newURL, <any>(<NavigateEvent>e).navigationType);
+                }
             }
         });
         // 处理点击事件
@@ -86,10 +88,14 @@ class UrlCleaner {
         this.updateLocation(this.clear(location.href));
     }
     /** 更新URL而不触发重定向 */
-    updateLocation(url: string) {
+    updateLocation(url: string, fun?: 'push') {
         const Url = new self.URL(url);
         if (Url.host === location.host) {
-            window.history.replaceState(window.history.state, "", url);
+            if (fun === 'push') {
+                window.history.pushState(window.history.state, "", url);
+            } else {
+                window.history.replaceState(window.history.state, "", url);
+            }
         }
     }
     /** 点击回调 */
