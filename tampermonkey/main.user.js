@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.6.5-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.6.7-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -28487,6 +28487,10 @@ const MODULES = `
           }
         } else {
           if (res.data && res.data.View) {
+            const response = \`{ "code": 0, "message": "0", "ttl": 1, "data": \${JSON.stringify(res.data.View.stat)} }\`;
+            xhrHook.async("/x/web-interface/archive/stat?", void 0, async () => {
+              return { response, responseText: response, responseType: "json" };
+            });
             Promise.resolve().then(() => {
               user.userStatus.staff && res.data.View.staff && this.staff(res.data.View.staff);
             });
