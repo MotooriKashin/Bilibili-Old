@@ -19,6 +19,7 @@ import { objUrl, urlObj } from "../utils/format/url";
 import { propertyHook } from "../utils/hook/method";
 import { jsonpHook } from "../utils/hook/node";
 import { webpackHook } from "../utils/hook/webpack";
+import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
 import { Scrollbar } from "../utils/scrollbar";
 import { PageBangumi } from "./bangumi";
@@ -140,6 +141,11 @@ export class PageAV extends Page {
                 }
             } else {
                 if (res.data && res.data.View) {
+                    const response = `{ "code": 0, "message": "0", "ttl": 1, "data": ${JSON.stringify(res.data.View.stat)} }`;
+                    xhrHook.async('/x/web-interface/archive/stat?', undefined, async () => {
+                        // 原接口被429，使用本处数据替代
+                        return { response, responseText: response, responseType: 'json' };
+                    });
                     Promise.resolve().then(() => {
                         user.userStatus!.staff && res.data.View.staff && this.staff(res.data.View.staff);
                     });
