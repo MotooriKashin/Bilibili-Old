@@ -533,13 +533,15 @@ export class Comment {
             const pictureList = [];
             if (content) {
                 if (content.rich_text?.note?.images) {
-                    content.pictures || (content.pictures = []);
-                    content.rich_text.note.images.forEach((d: any) => {
-                        content.pictures.push({
-                            img_src: d,
-                            click_url: content.rich_text.note.click_url
+                    if (!content.pictures) {
+                        content.pictures = [];
+                        content.rich_text.note.images.forEach((d: any) => {
+                            content.pictures.push({
+                                img_src: d,
+                                click_url: content.rich_text.note.click_url
+                            })
                         })
-                    })
+                    }
                 }
                 if (content.rich_text?.note?.click_url && !content.message.includes(content.rich_text.note.click_url)) {
                     pictureList.push(`<a href="${content.rich_text.note.click_url}" target="_blank" style="font-size: 14px;">${content.rich_text.note.click_url}</a>`);
