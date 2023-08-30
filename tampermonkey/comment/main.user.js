@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.2.1
+// @version      2.2.2
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -15,12 +15,6 @@
 
 (function () {
 
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => {
-  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-  return value;
-};
 
 // src/utils/typeof.ts
 var isArray = Array.isArray;
@@ -102,83 +96,84 @@ function jsonCheck(str) {
 }
 
 // src/io/urls.ts
-var _URLS = class {
+var URLS = class _URLS {
+  // protocol + //
+  static P_AUTO = "//";
+  static P_HTTP = "http://";
+  static P_HTTPS = "https://";
+  static P_WS = "ws://";
+  static P_WSS = "wss://";
+  // domain
+  static D_WWW = "www.bilibili.com";
+  static D_API = "api.bilibili.com";
+  static D_APP = "app.bilibili.com";
+  static D_MANAGER = "manager.bilibili.co";
+  static D_INTERFACE = "interface.bilibili.com";
+  static D_PASSPORT = "passport.bilibili.com";
+  static D_BANGUMI = "bangumi.bilibili.com";
+  static D_SPACE = "space.bilibili.com";
+  static D_STATIC_S = "static.hdslb.com";
+  static D_CHAT = "chat.bilibili.com";
+  static D_DATA = "data.bilibili.com";
+  static D_COMMENT = "comment.bilibili.com";
+  static D_BROADCAST = "broadcast.bilibili.com";
+  static D_MISAKA_SW = "misaka-sw.bilibili.com";
+  static D_MEMBER = "member.bilibili.com";
+  static D_BVC = "bvc.bilivideo.com";
+  static D_S1 = "s1.hdslb.com";
+  static D_API_GLOBAL = "api.global.bilibili.com";
+  static D_ACCOUNT = "account.bilibili.com";
+  static D_INTL = "apiintl.biliapi.net";
+  static D_API_VC = "api.vc.bilibili.com";
+  static WEBSHOW_LOCS = _URLS.P_AUTO + _URLS.D_API + "/x/web-show/res/locs";
+  static INDEX_TOP_RCMD = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/index/top/rcmd";
+  static PAGE_HEADER = _URLS.P_AUTO + _URLS.D_API + "/x/web-show/page/header";
+  static SEASON_RANK_LIST = _URLS.P_AUTO + _URLS.D_API + "/pgc/season/rank/web/list";
+  static VIDEO = _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/video.min.js";
+  static JQUERY = _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/jquery.min.js";
+  static ARTICLE_CARDS = _URLS.P_AUTO + _URLS.D_API + "/x/article/cards";
+  static VIEW_DETAIL = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view/detail";
+  static VIEW = _URLS.P_AUTO + _URLS.D_API + "/view";
+  static X_VIEW = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view";
+  static PAGE_LIST = _URLS.P_AUTO + _URLS.D_API + "/x/player/pagelist";
+  static TAG_INFO = _URLS.P_AUTO + _URLS.D_API + "/x/tag/info";
+  static TAG_TOP = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/tag/top";
+  static BANGUMI_SEASON = _URLS.P_AUTO + _URLS.D_BANGUMI + "/view/web_api/season";
+  static SEASON_STATUS = _URLS.P_AUTO + _URLS.D_API + "/pgc/view/web/season/user/status";
+  static SEASON_SECTION = _URLS.P_AUTO + _URLS.D_API + "/pgc/web/season/section";
+  static GLOBAL_OGV_VIEW = _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/view/app/season";
+  static GLOBAL_OGV_PLAYURL = _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/playurl";
+  static APP_PGC_PLAYURL = _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurl";
+  static ACCOUNT_GETCARDBYMID = _URLS.P_AUTO + _URLS.D_ACCOUNT + "/api/member/getCardByMid";
+  static LOGIN_APP_THIRD = _URLS.P_AUTO + _URLS.D_PASSPORT + "/login/app/third";
+  static PLAYER = _URLS.P_AUTO + _URLS.D_API + "/x/player/v2";
+  static PLAYURL_PROJ = _URLS.P_AUTO + _URLS.D_APP + "/v2/playurlproj";
+  static PGC_PLAYURL_PROJ = _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurlproj";
+  static PGC_PLAYURL_TV = _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurltv";
+  static UGC_PLAYURL_TV = _URLS.P_AUTO + _URLS.D_API + "/x/tv/ugc/playurl";
+  static PGC_PLAYURL = _URLS.P_AUTO + _URLS.D_API + "/pgc/player/web/playurl";
+  static PLAYURL = _URLS.P_AUTO + _URLS.D_API + "/x/player/playurl";
+  static INTL_PLAYURL = _URLS.P_AUTO + _URLS.D_APP + "/x/intl/playurl";
+  static INTL_OGV_PLAYURL = _URLS.P_AUTO + _URLS.D_INTL + "/intl/gateway/ogv/player/api/playurl";
+  static PLAYURL_INTERFACE = _URLS.P_AUTO + _URLS.D_INTERFACE + "/v2/playurl";
+  static PLAYURL_BANGUMI = _URLS.P_AUTO + _URLS.D_BANGUMI + "/player/web_api/v2/playurl";
+  static LIKE = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/like";
+  static HAS_LIKE = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/has/like";
+  static DM_WEB_VIEW = _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/view";
+  static DM_WEB_SEG_SO = _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/seg.so";
+  static STAT = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/stat";
+  static SLIDE_SHOW = _URLS.P_AUTO + _URLS.D_API + "/pgc/operation/api/slideshow";
+  static SEARCH_SQUARE = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/search/square";
+  static SPACE_ARC = _URLS.P_AUTO + _URLS.D_API + "/x/space/wbi/arc/search";
+  static NEWLIST = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/newlist";
+  static SEARCH = _URLS.P_AUTO + _URLS.D_API + "/search";
+  static REPLY = _URLS.P_AUTO + _URLS.D_API + "/x/v2/reply";
+  static ARTICLE_UPCOVER = _URLS.P_AUTO + _URLS.D_API + "/x/article/creative/article/upcover";
+  static DRAW_IMAGE_UPLOAD = _URLS.P_AUTO + _URLS.D_API_VC + "/api/v1/drawImage/upload";
+  static DYNAMIC_UPLOAD_BFS = _URLS.P_AUTO + _URLS.D_API + "/x/dynamic/feed/draw/upload_bfs";
+  /** 退出登录 */
+  static PASSPORT_LOGIN_EXIT = _URLS.P_AUTO + _URLS.D_PASSPORT + "/login/exit/v2";
 };
-var URLS = _URLS;
-// protocol + //
-__publicField(URLS, "P_AUTO", "//");
-__publicField(URLS, "P_HTTP", "http://");
-__publicField(URLS, "P_HTTPS", "https://");
-__publicField(URLS, "P_WS", "ws://");
-__publicField(URLS, "P_WSS", "wss://");
-// domain
-__publicField(URLS, "D_WWW", "www.bilibili.com");
-__publicField(URLS, "D_API", "api.bilibili.com");
-__publicField(URLS, "D_APP", "app.bilibili.com");
-__publicField(URLS, "D_MANAGER", "manager.bilibili.co");
-__publicField(URLS, "D_INTERFACE", "interface.bilibili.com");
-__publicField(URLS, "D_PASSPORT", "passport.bilibili.com");
-__publicField(URLS, "D_BANGUMI", "bangumi.bilibili.com");
-__publicField(URLS, "D_SPACE", "space.bilibili.com");
-__publicField(URLS, "D_STATIC_S", "static.hdslb.com");
-__publicField(URLS, "D_CHAT", "chat.bilibili.com");
-__publicField(URLS, "D_DATA", "data.bilibili.com");
-__publicField(URLS, "D_COMMENT", "comment.bilibili.com");
-__publicField(URLS, "D_BROADCAST", "broadcast.bilibili.com");
-__publicField(URLS, "D_MISAKA_SW", "misaka-sw.bilibili.com");
-__publicField(URLS, "D_MEMBER", "member.bilibili.com");
-__publicField(URLS, "D_BVC", "bvc.bilivideo.com");
-__publicField(URLS, "D_S1", "s1.hdslb.com");
-__publicField(URLS, "D_API_GLOBAL", "api.global.bilibili.com");
-__publicField(URLS, "D_ACCOUNT", "account.bilibili.com");
-__publicField(URLS, "D_INTL", "apiintl.biliapi.net");
-__publicField(URLS, "D_API_VC", "api.vc.bilibili.com");
-__publicField(URLS, "WEBSHOW_LOCS", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/res/locs");
-__publicField(URLS, "INDEX_TOP_RCMD", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/index/top/rcmd");
-__publicField(URLS, "PAGE_HEADER", _URLS.P_AUTO + _URLS.D_API + "/x/web-show/page/header");
-__publicField(URLS, "SEASON_RANK_LIST", _URLS.P_AUTO + _URLS.D_API + "/pgc/season/rank/web/list");
-__publicField(URLS, "VIDEO", _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/video.min.js");
-__publicField(URLS, "JQUERY", _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/jquery.min.js");
-__publicField(URLS, "ARTICLE_CARDS", _URLS.P_AUTO + _URLS.D_API + "/x/article/cards");
-__publicField(URLS, "VIEW_DETAIL", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view/detail");
-__publicField(URLS, "VIEW", _URLS.P_AUTO + _URLS.D_API + "/view");
-__publicField(URLS, "X_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view");
-__publicField(URLS, "PAGE_LIST", _URLS.P_AUTO + _URLS.D_API + "/x/player/pagelist");
-__publicField(URLS, "TAG_INFO", _URLS.P_AUTO + _URLS.D_API + "/x/tag/info");
-__publicField(URLS, "TAG_TOP", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/tag/top");
-__publicField(URLS, "BANGUMI_SEASON", _URLS.P_AUTO + _URLS.D_BANGUMI + "/view/web_api/season");
-__publicField(URLS, "SEASON_STATUS", _URLS.P_AUTO + _URLS.D_API + "/pgc/view/web/season/user/status");
-__publicField(URLS, "SEASON_SECTION", _URLS.P_AUTO + _URLS.D_API + "/pgc/web/season/section");
-__publicField(URLS, "GLOBAL_OGV_VIEW", _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/view/app/season");
-__publicField(URLS, "GLOBAL_OGV_PLAYURL", _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/playurl");
-__publicField(URLS, "APP_PGC_PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurl");
-__publicField(URLS, "ACCOUNT_GETCARDBYMID", _URLS.P_AUTO + _URLS.D_ACCOUNT + "/api/member/getCardByMid");
-__publicField(URLS, "LOGIN_APP_THIRD", _URLS.P_AUTO + _URLS.D_PASSPORT + "/login/app/third");
-__publicField(URLS, "PLAYER", _URLS.P_AUTO + _URLS.D_API + "/x/player/v2");
-__publicField(URLS, "PLAYURL_PROJ", _URLS.P_AUTO + _URLS.D_APP + "/v2/playurlproj");
-__publicField(URLS, "PGC_PLAYURL_PROJ", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurlproj");
-__publicField(URLS, "PGC_PLAYURL_TV", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/api/playurltv");
-__publicField(URLS, "UGC_PLAYURL_TV", _URLS.P_AUTO + _URLS.D_API + "/x/tv/ugc/playurl");
-__publicField(URLS, "PGC_PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/pgc/player/web/playurl");
-__publicField(URLS, "PLAYURL", _URLS.P_AUTO + _URLS.D_API + "/x/player/playurl");
-__publicField(URLS, "INTL_PLAYURL", _URLS.P_AUTO + _URLS.D_APP + "/x/intl/playurl");
-__publicField(URLS, "INTL_OGV_PLAYURL", _URLS.P_AUTO + _URLS.D_INTL + "/intl/gateway/ogv/player/api/playurl");
-__publicField(URLS, "PLAYURL_INTERFACE", _URLS.P_AUTO + _URLS.D_INTERFACE + "/v2/playurl");
-__publicField(URLS, "PLAYURL_BANGUMI", _URLS.P_AUTO + _URLS.D_BANGUMI + "/player/web_api/v2/playurl");
-__publicField(URLS, "LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/like");
-__publicField(URLS, "HAS_LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/has/like");
-__publicField(URLS, "DM_WEB_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/view");
-__publicField(URLS, "DM_WEB_SEG_SO", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/seg.so");
-__publicField(URLS, "STAT", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/stat");
-__publicField(URLS, "SLIDE_SHOW", _URLS.P_AUTO + _URLS.D_API + "/pgc/operation/api/slideshow");
-__publicField(URLS, "SEARCH_SQUARE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/search/square");
-__publicField(URLS, "SPACE_ARC", _URLS.P_AUTO + _URLS.D_API + "/x/space/wbi/arc/search");
-__publicField(URLS, "NEWLIST", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/newlist");
-__publicField(URLS, "SEARCH", _URLS.P_AUTO + _URLS.D_API + "/search");
-__publicField(URLS, "REPLY", _URLS.P_AUTO + _URLS.D_API + "/x/v2/reply");
-__publicField(URLS, "ARTICLE_UPCOVER", _URLS.P_AUTO + _URLS.D_API + "/x/article/creative/article/upcover");
-__publicField(URLS, "DRAW_IMAGE_UPLOAD", _URLS.P_AUTO + _URLS.D_API_VC + "/api/v1/drawImage/upload");
-__publicField(URLS, "DYNAMIC_UPLOAD_BFS", _URLS.P_AUTO + _URLS.D_API + "/x/dynamic/feed/draw/upload_bfs");
 
 // src/io/api-reply.ts
 async function apiReply(oid, pn = 1, type = 1, sort = 0) {
@@ -539,7 +534,7 @@ function getMetux() {
 }
 
 // src/utils/scrollbar.ts
-var _Scrollbar = class {
+var Scrollbar = class _Scrollbar {
   /**
    * 设置滚动条
    * @param ele 目标节点
@@ -557,6 +552,11 @@ var _Scrollbar = class {
     side && ele.insertAdjacentElement("afterend", _Scrollbar.style.cloneNode(true));
     this.flesh();
   }
+  static mutex = getMetux();
+  static prefix = "scrollbar-" + _Scrollbar.mutex;
+  static style;
+  static thumb = "#999";
+  static track = "#EEE";
   static init() {
     this.style || (this.style = addElement("style", void 0), document.head);
     this.style.textContent = `.${this.prefix}[data-${this.mutex}="${this.mutex}"]{
@@ -654,12 +654,6 @@ var _Scrollbar = class {
     this.flesh();
   }
 };
-var Scrollbar = _Scrollbar;
-__publicField(Scrollbar, "mutex", getMetux());
-__publicField(Scrollbar, "prefix", "scrollbar-" + _Scrollbar.mutex);
-__publicField(Scrollbar, "style");
-__publicField(Scrollbar, "thumb", "#999");
-__publicField(Scrollbar, "track", "#EEE");
 
 // src/core/ui/preview-image.ts
 var PreviewImage = class extends HTMLElement {
@@ -752,14 +746,18 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"rm6ai6l40u"}`) || customElements.define(`preview-image-${"rm6ai6l40u"}`, PreviewImage);
+customElements.get(`preview-image-${"foqb3u12gic"}`) || customElements.define(`preview-image-${"foqb3u12gic"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
 var loading = false;
 var load = false;
 var events = {};
-var _Comment = class {
+var Comment = class _Comment {
+  /** 还原超链接标题 */
+  static commentJumpUrlTitle = false;
+  /** 显示评论图片 */
+  static resolvePictures = true;
   /** 评论页数 */
   count = 0;
   constructor() {
@@ -1227,13 +1225,15 @@ var _Comment = class {
       const pictureList = [];
       if (content) {
         if ((_b = (_a = content.rich_text) == null ? void 0 : _a.note) == null ? void 0 : _b.images) {
-          content.pictures || (content.pictures = []);
-          content.rich_text.note.images.forEach((d) => {
-            content.pictures.push({
-              img_src: d,
-              click_url: content.rich_text.note.click_url
+          if (!content.pictures) {
+            content.pictures = [];
+            content.rich_text.note.images.forEach((d) => {
+              content.pictures.push({
+                img_src: d,
+                click_url: content.rich_text.note.click_url
+              });
             });
-          });
+          }
         }
         if (((_d = (_c = content.rich_text) == null ? void 0 : _c.note) == null ? void 0 : _d.click_url) && !content.message.includes(content.rich_text.note.click_url)) {
           pictureList.push(`<a href="${content.rich_text.note.click_url}" target="_blank" style="font-size: 14px;">${content.rich_text.note.click_url}</a>`);
@@ -1265,11 +1265,6 @@ var _Comment = class {
     };
   }
 };
-var Comment = _Comment;
-/** 还原超链接标题 */
-__publicField(Comment, "commentJumpUrlTitle", false);
-/** 显示评论图片 */
-__publicField(Comment, "resolvePictures", true);
 
 // src/comment.ts
 new Comment();
