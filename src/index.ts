@@ -33,6 +33,7 @@ import { PageAnime } from './page/channel/anime';
 import { PageMovie } from './page/channel/movie';
 import { PageTv } from './page/channel/tv';
 import { PageDocumentary } from './page/channel/documentary';
+import { loginExit } from './page/logout';
 
 document.domain = 'bilibili.com';
 
@@ -143,6 +144,7 @@ Header.videoOffset();
 location.href.includes("www.bilibili.com/account/history") && new PageHistory();
 BLOD.path[2] == "live.bilibili.com" && new PageLive();
 BLOD.path[2] == "t.bilibili.com" && new PageDynamic();
+location.href.includes('passport.bilibili.com/login?act=exit') && loginExit();
 
 //////////////////////////// 全局定义 ////////////////////////////
 declare global {
