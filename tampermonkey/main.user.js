@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.6.7-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.6.8-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -1608,7 +1608,11 @@ const MODULES = `
         this.pos += length2;
         if (Array.isArray(this.buf))
           return this.buf.slice(start, end);
-        return start === end ? new this.buf.constructor(0) : this._slice.call(this.buf, start, end);
+        if (start === end) {
+          var nativeBuffer = util.Buffer;
+          return nativeBuffer ? nativeBuffer.alloc(0) : new this.buf.constructor(0);
+        }
+        return this._slice.call(this.buf, start, end);
       };
       Reader2.prototype.string = function read_string() {
         var bytes = this.bytes();
@@ -7681,6 +7685,8 @@ const MODULES = `
     static ARTICLE_UPCOVER = _URLS.P_AUTO + _URLS.D_API + "/x/article/creative/article/upcover";
     static DRAW_IMAGE_UPLOAD = _URLS.P_AUTO + _URLS.D_API_VC + "/api/v1/drawImage/upload";
     static DYNAMIC_UPLOAD_BFS = _URLS.P_AUTO + _URLS.D_API + "/x/dynamic/feed/draw/upload_bfs";
+    /** 退出登录 */
+    static PASSPORT_LOGIN_EXIT = _URLS.P_AUTO + _URLS.D_PASSPORT + "/login/exit/v2";
   };
 
   // src/io/grpc/api-dm-web.ts
@@ -20305,13 +20311,15 @@ const MODULES = `
         const pictureList = [];
         if (content) {
           if ((_b2 = (_a3 = content.rich_text) == null ? void 0 : _a3.note) == null ? void 0 : _b2.images) {
-            content.pictures || (content.pictures = []);
-            content.rich_text.note.images.forEach((d) => {
-              content.pictures.push({
-                img_src: d,
-                click_url: content.rich_text.note.click_url
+            if (!content.pictures) {
+              content.pictures = [];
+              content.rich_text.note.images.forEach((d) => {
+                content.pictures.push({
+                  img_src: d,
+                  click_url: content.rich_text.note.click_url
+                });
               });
-            });
+            }
           }
           if (((_d = (_c = content.rich_text) == null ? void 0 : _c.note) == null ? void 0 : _d.click_url) && !content.message.includes(content.rich_text.note.click_url)) {
             pictureList.push(\`<a href="\${content.rich_text.note.click_url}" target="_blank" style="font-size: 14px;">\${content.rich_text.note.click_url}</a>\`);
@@ -31202,6 +31210,45 @@ const MODULES = `
     }
   };
 
+  // src/page/logout.ts
+  init_tampermonkey();
+
+  // src/io/passport-login-exit.ts
+  init_tampermonkey();
+  async function passportLoginExit() {
+    const { DedeUserID, bili_jct } = getCookies();
+    await fetch(URLS.PASSPORT_LOGIN_EXIT, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: \`biliCSRF=\${bili_jct}&gourl=https%3A%2F%2Fwww.bilibili.com%2F\`
+    });
+    return \`https://passport.biligame.com/crossDomain?DedeUserID=\${DedeUserID}&DedeUserID__ckMd5=&SESSDATA=&bili_jct=&gourl=https%3A%2F%2Fwww.bilibili.com%2F\`;
+  }
+
+  // src/page/logout.ts
+  function loginExit() {
+    if (uid) {
+      if (document.readyState === "complete") {
+        const tt = toast.list("正在退出登录 >>>");
+        passportLoginExit().then((d) => {
+          tt.push("> 退出登录成功", "> 正在重定向 >");
+          tt.type = "success";
+          location.replace(d);
+        }).catch((e) => {
+          tt.push("> 退出登录失败", e);
+          tt.type = "error";
+        }).finally(() => {
+          tt.delay = 4;
+        });
+      } else {
+        window.addEventListener("load", loginExit, { once: true });
+      }
+    }
+  }
+
   // src/index.ts
   document.domain = "bilibili.com";
   var _a2;
@@ -31302,6 +31349,7 @@ const MODULES = `
   location.href.includes("www.bilibili.com/account/history") && new PageHistory();
   BLOD.path[2] == "live.bilibili.com" && new PageLive();
   BLOD.path[2] == "t.bilibili.com" && new PageDynamic();
+  location.href.includes("passport.bilibili.com/login?act=exit") && loginExit();
 })();
 // @license MIT
 /*! Bundled license information:
