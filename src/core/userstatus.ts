@@ -182,4 +182,6 @@ export const userStatus = {
     channel: true,
     /** 拦截视频心跳 */
     heartbeatBlock: false,
+    /** 稍后再看重定向 */
+    watchlater2Av: false,
 }

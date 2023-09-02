@@ -6,6 +6,7 @@ import { videoInfo } from "../core/video-info";
 import html from '../html/watchlater.html';
 import { IAidDatail, jsonCheck } from "../io/api";
 import { addCss } from "../utils/element";
+import { urlObj } from "../utils/format/url";
 import { jsonpHook } from "../utils/hook/node";
 import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
@@ -18,6 +19,7 @@ export class PageWatchlater extends Page {
         super(html);
         this.like = new Like();
         new Comment();
+        this.toAv();
         this.enLike();
         this.toview();
         this.living();
@@ -60,5 +62,18 @@ export class PageWatchlater extends Page {
     /** 修复评论播放跳转 */
     protected commentAgent() {
         (<any>window).commentAgent = { seek: (t: number) => (<any>window).player && (<any>window).player.seek(t) };
+    }
+
+    /** 重定向回av页 */
+    private toAv() {
+        if (user.userStatus?.watchlater2Av) {
+            jsonpHook(['web-interface/view?', 'cb_view'], url => {
+                const obj = urlObj(url);
+                if (obj.aid) {
+                    location.replace(`/video/av${obj.aid}`);
+                }
+                return url;
+            });
+        }
     }
 }
