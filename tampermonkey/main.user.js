@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.6.8-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.6.9-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -9071,7 +9071,9 @@ const MODULES = `
     /** 分区主页 */
     channel: true,
     /** 拦截视频心跳 */
-    heartbeatBlock: false
+    heartbeatBlock: false,
+    /** 稍后再看重定向 */
+    watchlater2Av: false
   };
 
   // src/core/ui/alert.ts
@@ -14986,6 +14988,74 @@ const MODULES = `
     ttl: 1
   };
 
+  // src/utils/hook/fetch.ts
+  init_tampermonkey();
+  var FetchHook = class _FetchHook {
+    static inited = false;
+    static rules = /* @__PURE__ */ new Set();
+    static init() {
+      const fetch2 = self.fetch;
+      self.fetch = (input, init) => {
+        var _a3;
+        const url = input instanceof Request ? input.url : typeof input === "string" ? input : input.toJSON();
+        const obj = { input: url, init };
+        let fetchHook;
+        for (const rule of this.rules) {
+          if (rule && rule.urls.every((d) => url.includes(d))) {
+            (_a3 = rule.\$request) == null ? void 0 : _a3.call(rule, obj);
+            rule.\$response && (fetchHook = rule);
+          }
+        }
+        if (fetchHook) {
+          return new Promise((resolve, reject) => {
+            if (fetchHook.noRequest) {
+              fetchHook.\$response().then((d) => {
+                resolve(new Response(d, { status: 200, statusText: "" }));
+              }).catch(reject);
+            } else {
+              fetch2(obj.input, obj.init).then(async (d) => {
+                const res = await fetchHook.\$response(d);
+                resolve(new Response(res, { status: d.status, statusText: d.statusText, headers: d.headers }));
+              }).catch(reject);
+            }
+          });
+        }
+        return fetch2(obj.input, obj.init);
+      };
+      this.inited = true;
+    }
+    urls;
+    /** 不发送原始请求 */
+    noRequest = false;
+    /** 取消本次拦截 */
+    noModify = false;
+    constructor(...urls) {
+      _FetchHook.inited || _FetchHook.init();
+      this.urls = urls;
+      _FetchHook.rules.add(this);
+    }
+    \$request;
+    /**
+     * 拦截修改fetch请求
+     * 
+     * @param callback 修改请求的回调函数，将fetch参数包裹为对象传入，修改对应属性即可。
+     */
+    request(callback) {
+      this.\$request = callback;
+    }
+    \$response;
+    /**
+     * 拦截修改fetch返回值
+     * 
+     * @param callback 修改返回值的回调函数，将原Response传入，异步返回新返回值即可（不修改也得返回，Response特性原始值只能读取一次）
+     * @param noRequest 不发送原始请求，callback中将不会原Response。通常用于不依赖原始返回值便能构造新返回值的情形。
+     */
+    response(callback, noRequest = false) {
+      this.\$response = callback;
+      this.noRequest = noRequest;
+    }
+  };
+
   // src/utils/vdomtool.ts
   init_tampermonkey();
   var VdomTool = class {
@@ -15095,6 +15165,11 @@ const MODULES = `
   };
 
   // src/page/space.ts
+  var Mid = {
+    11783021: "哔哩哔哩番剧出差",
+    1988098633: "b站_戲劇咖",
+    2042149112: "b站_綜藝咖"
+  };
   var PageSpace = class {
     mid;
     /** 失效视频aid */
@@ -15108,12 +15183,6 @@ const MODULES = `
         status.jointime && this.jointime();
         status.lostVideo && this.lostVideo();
       });
-      xhrHook("/fav/resource/list", void 0, (res) => {
-        var _a3;
-        const obj = res.responseType === "json" ? res.response : JSON.parse(res.response);
-        (_a3 = obj.data) == null ? true : delete _a3.ttl;
-        res.response = res.responseType === "json" ? obj : JSON.stringify(obj);
-      }, false);
     }
     /** 修复限制访问up空间 */
     midInfo() {
@@ -15121,7 +15190,8 @@ const MODULES = `
         case 11783021:
         case 1988098633:
         case 2042149112:
-          mid_default.data.official.desc = mid_default.data.name + " 官方帐号";
+          mid_default.data.mid = this.mid;
+          mid_default.data.name = mid_default.data.official.desc = (Mid[this.mid] || Mid[11783021]) + " 官方帐号";
           xhrHook("acc/info?", void 0, (obj) => {
             if (obj.responseText && obj.responseText.includes("-404")) {
               obj.response = obj.responseText = JSON.stringify(mid_default);
@@ -15131,6 +15201,13 @@ const MODULES = `
               toast.warning("该用户被404，已使用缓存数据恢复访问！");
             }
           }, false);
+          new FetchHook("acc/info?").response(async (res) => {
+            const text = await res.text();
+            if (text.includes("-404")) {
+              return JSON.stringify(mid_default);
+            }
+            return text;
+          });
           break;
         default:
           break;
@@ -15179,8 +15256,10 @@ const MODULES = `
     /** 失效视频 */
     lostVideo() {
       xhrHook("x/v3/fav/resource/list", void 0, async (res) => {
+        var _a3;
         try {
           const data = jsonCheck(res.response);
+          (_a3 = data.data) == null ? true : delete _a3.ttl;
           if (data.data.medias) {
             data.data.medias.forEach((d) => {
               d.attr % 2 && this.aids.push(d.id);
@@ -15197,7 +15276,7 @@ const MODULES = `
                 if (ele) {
                   const medias = ele.__vue__.favListDetails.medias;
                   medias == null ? void 0 : medias.forEach((d) => {
-                    var _a3, _b2;
+                    var _a4, _b2;
                     if (d.attr % 2) {
                       msg.push(\`> av\${d.id}\`);
                       if (this.aidInfo[d.id].title) {
@@ -15211,7 +15290,7 @@ const MODULES = `
                       }
                       this.aidInfo[d.id].cover && (d.cover = this.aidInfo[d.id].cover);
                       d.attr = 0;
-                      (_b2 = (_a3 = ele.querySelector(\`[data-aid=\${d.bvid}]\`)) == null ? void 0 : _a3.children[1]) == null ? void 0 : _b2.setAttribute("style", "text-decoration : line-through;color : #ff0000;");
+                      (_b2 = (_a4 = ele.querySelector(\`[data-aid=\${d.bvid}]\`)) == null ? void 0 : _a4.children[1]) == null ? void 0 : _b2.setAttribute("style", "text-decoration : line-through;color : #ff0000;");
                     }
                   });
                 }
@@ -28685,6 +28764,7 @@ const MODULES = `
       super(watchlater_default);
       this.like = new Like();
       new Comment2();
+      this.toAv();
       this.enLike();
       this.toview();
       this.living();
@@ -28730,6 +28810,19 @@ const MODULES = `
     /** 修复评论播放跳转 */
     commentAgent() {
       window.commentAgent = { seek: (t) => window.player && window.player.seek(t) };
+    }
+    /** 重定向回av页 */
+    toAv() {
+      var _a3;
+      if ((_a3 = user.userStatus) == null ? void 0 : _a3.watchlater2Av) {
+        jsonpHook(["web-interface/view?", "cb_view"], (url) => {
+          const obj = urlObj(url);
+          if (obj.aid) {
+            location.replace(\`/video/av\${obj.aid}\`);
+          }
+          return url;
+        });
+      }
     }
   };
 
@@ -30507,7 +30600,8 @@ const MODULES = `
           }
         }, "B站砍掉了不登录能获取的画质，最多只能获取480P。您可以启用【账户授权】功能，授权本脚本使用您的登录信息，如此您退出登录后依然能获取高画质视频流。本功能只会在请求播放源时添加上登录鉴权，不影响页面其他功能的未登录状态，B站也不会记录您的播放记录。本功能适用于那些经常用浏览器无痕模式上B站的用户。若<strong>非常抱歉</strong>报错请关闭本选项！"),
         this.switch("timeLine", "港澳台新番时间表", "填充首页番剧板块", void 0, void 0, "在首页番剧板块中填充港澳台最新番剧更新信息。只提取了最新的30条番剧信息，所以数据中可能不会包含过于久远的更新。本功能只能显示已更新的番剧信息，而不能作为即将更新番剧的预测。"),
-        this.switch("searchAllArea", "全区域搜索", "还原港澳台Bangumi结果", void 0, void 0, "替换搜索页面默认搜索结果，使能够搜索到港澳台bangumi。需要特别注意搜索关键词，港澳台译名通常与简中译名不一致，但也不强制要求繁体，如：<br>别当欧尼酱了 -> 不当哥哥了/不當哥哥了<br>本功能只在默认搜索时生效，更改搜索范围无效。另外，启用本功能搜索到的bangumi会丢失ep列表。")
+        this.switch("searchAllArea", "全区域搜索", "还原港澳台Bangumi结果", void 0, void 0, "替换搜索页面默认搜索结果，使能够搜索到港澳台bangumi。需要特别注意搜索关键词，港澳台译名通常与简中译名不一致，但也不强制要求繁体，如：<br>别当欧尼酱了 -> 不当哥哥了/不當哥哥了<br>本功能只在默认搜索时生效，更改搜索范围无效。另外，启用本功能搜索到的bangumi会丢失ep列表。"),
+        this.switch("watchlater2Av", "稍后再看重定向", "稍后再看重定向回av页")
       ]);
     }
     /** 播放设置 */
