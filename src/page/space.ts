@@ -6,6 +6,7 @@ import { jsonCheck } from "../io/api";
 import json from '../json/mid.json';
 import { debug } from "../utils/debug";
 import { timeFormat } from "../utils/format/time";
+import { FetchHook } from "../utils/hook/fetch";
 import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
 import { VdomTool } from "../utils/vdomtool";
@@ -16,10 +17,14 @@ const Mid = {
     2042149112: 'b站_綜藝咖'
 }
 export class PageSpace {
+
     protected mid: number;
+
     /** 失效视频aid */
     protected aids: number[] = [];
+
     protected aidInfo: Record<'cover' | 'title', string>[] = [];
+
     constructor() {
         this.mid = Number(BLOD.path[3] && BLOD.path[3].split("?")[0]);
         this.midInfo();
@@ -28,19 +33,16 @@ export class PageSpace {
             status.jointime && this.jointime();
             status.lostVideo && this.lostVideo();
         });
-        xhrHook('/fav/resource/list', undefined, res => {
-            const obj = res.responseType === 'json' ? res.response : JSON.parse(res.response);
-            delete obj.data?.ttl;
-            res.response = res.responseType === 'json' ? obj : JSON.stringify(obj);
-        }, false);
     }
+
     /** 修复限制访问up空间 */
     protected midInfo() {
         switch (this.mid) {
             case 11783021:
             case 1988098633:
             case 2042149112:
-                json.data.official.desc = json.data.name + ' 官方帐号';
+                json.data.mid = this.mid;
+                json.data.name = json.data.official.desc = (Mid[this.mid] || Mid[11783021]) + ' 官方帐号';
                 xhrHook("acc/info?", undefined, obj => {
                     if (obj.responseText && obj.responseText.includes("-404")) {
                         obj.response = obj.responseText = JSON.stringify(json);
@@ -50,14 +52,20 @@ export class PageSpace {
                         toast.warning("该用户被404，已使用缓存数据恢复访问！");
                     }
                 }, false);
-                // xhrHook('x/space/navnum', args => {
-                //     args[1] = args[1].replace('mid=0', `mid=${this.mid}`);
-                // });
+                // #494 空间ajax似乎已改用fetch
+                new FetchHook('acc/info?').response(async res => {
+                    const text = await res.text();
+                    if (text.includes('-404')) {
+                        return JSON.stringify(json)
+                    }
+                    return text;
+                })
                 break;
             default:
                 break;
         }
     }
+
     /** 还原相簿 */
     protected album() {
         xhrHook("api.bilibili.com/x/dynamic/feed/draw/doc_list", undefined, obj => {
@@ -74,6 +82,7 @@ export class PageSpace {
             }, 1000)
         }, false);
     }
+
     /** 动态重定向回相簿 */
     static album() {
         xhrHook(['x/polymer/web-dynamic', 'detail?'], undefined, res => {
@@ -83,6 +92,7 @@ export class PageSpace {
             }
         }, false);
     }
+
     /** 注册时间 */
     protected jointime() {
         poll(() => document.querySelector(".section.user-info"), t => {
@@ -97,12 +107,14 @@ export class PageSpace {
                 })
         })
     }
+
     /** 失效视频 */
     protected lostVideo() {
         // 收藏
         xhrHook('x/v3/fav/resource/list', undefined, async res => {
             try {
                 const data = jsonCheck(res.response);
+                delete data.data?.ttl; // 修复收藏时间
                 if (data.data.medias) {
                     data.data.medias.forEach((d: any) => {
                         d.attr % 2 && this.aids.push(d.id);
@@ -144,6 +156,7 @@ export class PageSpace {
             } catch { }
         }, false);
     }
+
     protected lostVideoView() {
         const arr: Promise<void>[] = [];
         while (this.aids.length) {
