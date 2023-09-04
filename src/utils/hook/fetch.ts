@@ -26,14 +26,14 @@ export class FetchHook {
                     if (fetchHook.noRequest) {
                         fetchHook.$response!()
                             .then(d => {
-                                resolve(new Response(d, { status: 200, statusText: '' }));
+                                d ? resolve(new Response(d, { status: 200, statusText: '' })) : reject();
                             })
                             .catch(reject);
                     } else {
                         fetch(obj.input, obj.init)
                             .then(async d => {
-                                const res = await fetchHook.$response!(d);
-                                resolve(new Response(res, { status: d.status, statusText: d.statusText, headers: d.headers }));
+                                const res = await fetchHook.$response!(d.clone());
+                                resolve(res ? new Response(res, { status: d.status, statusText: d.statusText, headers: d.headers }) : d);
                             })
                             .catch(reject);
                     }
@@ -69,15 +69,15 @@ export class FetchHook {
         this.$request = callback;
     }
 
-    private $response?: (res?: Response) => Promise<BodyInit>
+    private $response?: (res?: Response) => Promise<BodyInit | void>
 
     /**
      * 拦截修改fetch返回值
      * 
-     * @param callback 修改返回值的回调函数，将原Response传入，异步返回新返回值即可（不修改也得返回，Response特性原始值只能读取一次）
-     * @param noRequest 不发送原始请求，callback中将不会原Response。通常用于不依赖原始返回值便能构造新返回值的情形。
+     * @param callback 修改返回值的回调函数，将原Response传入，异步返回新返回值即可，也可以不反悔任何值，表示使用不修改原始值
+     * @param noRequest 不发送原始请求，callback中将不会原Response。通常用于不依赖原始返回值便能构造新返回值的情形。此时callback必须返回值！
      */
-    response(callback: (res: Response) => Promise<BodyInit>, noRequest = false) {
+    response(callback: (res: Response) => Promise<BodyInit | void>, noRequest = false) {
         this.$response = <any>callback;
         this.noRequest = noRequest;
     }

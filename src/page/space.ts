@@ -58,7 +58,6 @@ export class PageSpace {
                     if (text.includes('-404')) {
                         return JSON.stringify(json)
                     }
-                    return text;
                 })
                 break;
             default:
