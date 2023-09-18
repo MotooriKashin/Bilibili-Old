@@ -111,7 +111,7 @@ export class Header {
             });
         });
         this.plaza();
-        this.indexIcon();
+        // this.indexIcon();
         this.styleFix();
     }
     static banner() {
@@ -152,6 +152,7 @@ export class Header {
             return { "code": 0, "result": [{ "link": "https://www.bilibili.com/blackboard/x/act_list", "end": 1640966407, "begin": 1456709887, "title": "bilibili 活动", "cover": "http://i0.hdslb.com/bfs/square/6830d0e479eee8cc9a42c3e375ca99a5147390cd.jpg", "id": 9, "created_ts": 1491386053 }, { "link": "http://www.bilibili.com/blackboard/topic_list.html", "end": 1640966418, "begin": 1544258598, "title": "话题列表", "cover": "http://i0.hdslb.com/bfs/square/b1b00a0c3ce8570b48277ae07a2e55603a4a4ddf.jpg", "id": 17, "created_ts": 1491386030 }] }
         }, false);
     }
+    // 已失效 2023-09-18
     /** 顶栏动图 */
     protected static indexIcon() {
         jsonpHook.async("api.bilibili.com/x/web-interface/index/icon", undefined, async () => {

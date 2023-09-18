@@ -27,16 +27,22 @@ import { Header } from "./header";
 import { Page } from "./page";
 
 export class PageAV extends Page {
+
     /** 销毁标记，当前已不是av页，部分回调禁止生效 */
     protected destroy = false;
+
     protected like: Like;
+
     protected webpackJsonp = true;
+
     protected get aid() {
         return BLOD.aid;
     }
+
     protected set aid(v) {
         BLOD.aid = v;
     }
+
     constructor() {
         super(html);
         location.href.replace(/av\d+/i, d => this.aid = <any>d.slice(2));
@@ -61,6 +67,7 @@ export class PageAV extends Page {
         Header.banner();
         this.updateDom();
     }
+
     /**
      * 暴露UI组件
      * 717 -> video.b1b7706abd590dd295794f540f7669a5d8d978b3.js
@@ -74,6 +81,7 @@ export class PageAV extends Page {
             .replace('ut.MenuConfig[e].name', 'ut.MenuConfig[e].name,url:ut.MenuConfig[e].url,subUrl: ut.MenuConfig[e].sub[a].url')
         );
     }
+
     /** 修复分区列表 */
     protected crumbFirstLink() {
         webpackHook(717, 271, (code: string) => code
@@ -81,6 +89,7 @@ export class PageAV extends Page {
             .replace(/breadCrumbSecondLink:[\S\s]+?coined:/, 'breadCrumbSecondLink:function() {return this.breadcrumb.subUrl},coined:')
         );
     }
+
     /**
      * 修复：收藏视频时，在“添加到收藏夹”弹窗中，如果将视频从收藏夹A删除，并同时添加到收藏夹B，点击确定后窗口不消失的问题
      * @example
@@ -93,22 +102,27 @@ export class PageAV extends Page {
     protected favCode() {
         webpackHook(717, 251, (code: string) => code.replace("e[0].code", "e.code").replace("i[0].code", "i.code"));
     }
+
     /** 修复：视频标签链接（tag -> topic） */
     protected tagTopic() {
         webpackHook(717, 660, code => code.replace('tag/"+t.info.tag_id+"/?pagetype=videopage', 'topic/"+t.info.tag_id+"/?pagetype=videopage'));
     }
+
     /** 修复：视频分区 */
     protected menuConfig() {
         webpackHook(717, 100, code => code.replace(/MenuConfig[\S\s]+?LiveMenuConfig/, `MenuConfig=${menuConfig},e.LiveMenuConfig`));
     }
+
     /** 移除上古顶栏 */
     protected ancientHeader() {
         webpackHook(717, 609, () => `()=>{}`);
     }
+
     /** 修复：超链接跳转 */
     protected hyperLink() {
         webpackHook(717, 2, code => code.replace("av$1</a>')", `av$1</a>').replace(/(?!<a[^>]*>)cv([0-9]+)(?![^<]*<\\/a>)/ig, '<a href="//www.bilibili.com/read/cv$1/" target="_blank" data-view="$1">cv$1</a>').replace(/(?!<a[^>]*>)(bv1)(\\w{9})(?![^<]*<\\/a>)/ig, '<a href="//www.bilibili.com/video/bv1$2/" target="_blank">$1$2</a>')`).replace("http://acg.tv/sm", "https://www.nicovideo.jp/watch/sm"));
     }
+
     /**
      * 添加：播放器启动代码
      * 无`__INITIAL_STATE__`启动
@@ -116,6 +130,7 @@ export class PageAV extends Page {
     protected embedPlayer() {
         webpackHook(717, 286, code => code.replace('e("setVideoData",t)', `e("setVideoData",t);$("#bofqi").attr("id","__bofqi").html('<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>');new Function('EmbedPlayer',t.embedPlayer)(window.EmbedPlayer);`));
     }
+
     /** 跳过充电鸣谢 */
     protected elecShow() {
         if (user.userStatus!.elecShow) {
@@ -129,6 +144,7 @@ export class PageAV extends Page {
             jsonpHook.async("api.bilibili.com/x/web-interface/elec/show", undefined, async () => { return { code: -404 } }, false)
         }
     }
+
     /** 检查页面是否失效及bangumi跳转 */
     protected aidLostCheck() {
         jsonpHook("api.bilibili.com/x/web-interface/view/detail", undefined, (res, r, call) => {
@@ -140,24 +156,36 @@ export class PageAV extends Page {
                     return true
                 }
             } else {
-                if (res.data && res.data.View) {
-                    const response = `{ "code": 0, "message": "0", "ttl": 1, "data": ${JSON.stringify(res.data.View.stat)} }`;
-                    xhrHook.async('/x/web-interface/archive/stat?', undefined, async () => {
-                        // 原接口被429，使用本处数据替代
-                        return { response, responseText: response, responseType: 'json' };
-                    });
-                    Promise.resolve().then(() => {
-                        user.userStatus!.staff && res.data.View.staff && this.staff(res.data.View.staff);
-                    });
-                    if (user.userStatus!.ugcSection && res.data.View.ugc_season) {
-                        this.ugcSection(res.data.View.ugc_season, res.data.View.owner);
+                if (res.data) {
+                    if (res.data.View) {
+                        const response = `{ "code": 0, "message": "0", "ttl": 1, "data": ${JSON.stringify(res.data.View.stat)} }`;
+                        xhrHook.async('/x/web-interface/archive/stat?', undefined, async () => {
+                            // 原接口被429，使用本处数据替代
+                            return { response, responseText: response, responseType: 'json' };
+                        });
+                        Promise.resolve().then(() => {
+                            user.userStatus!.staff && res.data.View.staff && this.staff(res.data.View.staff);
+                        });
+                        if (user.userStatus!.ugcSection && res.data.View.ugc_season) {
+                            this.ugcSection(res.data.View.ugc_season, res.data.View.owner);
+                        }
+                        // 记录视频数据
+                        videoInfo.aidDatail(res.data.View);
                     }
-                    // 记录视频数据
-                    videoInfo.aidDatail(res.data.View);
+                    if (res.data.Related) {
+                        const response = JSON.stringify(res.data.Related.map((d: any) => {
+                            return [d.pic, d.aid, d.title, d.stat.view, d.stat.danmaku, , d.stat.favorite]
+                        }));
+                        xhrHook.async('comment.bilibili.com/playtag', undefined, async () => {
+                            // 推荐视频接口404
+                            return { response, responseText: response, responseType: 'json' }
+                        }, false);
+                    }
                 }
             }
         }, false);
     }
+
     /** 通过其他接口获取aid数据 */
     protected async getVideoInfo() {
         const msg = toast.list(`av${this.aid}可能无效，尝试其他接口 >>>`);
@@ -205,6 +233,7 @@ export class PageAV extends Page {
             throw e;
         }
     }
+
     /** 合作UP */
     protected staff(staff: IStaf[]) {
         poll(() => document.querySelector<HTMLDivElement>("#v_upinfo"), node => {
@@ -225,6 +254,7 @@ export class PageAV extends Page {
             box && new Scrollbar(box, true, false);
         });
     }
+
     /** 合集（使用播单模拟） */
     protected ugcSection(season: Record<string, any>, owner: any) {
         toview.cover = season.cover;
@@ -276,6 +306,7 @@ export class PageAV extends Page {
         // 修正播单列表高度
         addCss('.bilibili-player .bilibili-player-auxiliary-area .bilibili-player-playlist .bilibili-player-playlist-playlist {height: calc(100% - 45px);}.bilibili-player-playlist-nav-title,.bilibili-player-playlist-nav-ownername{display: none;}');
     }
+
     /** hook合集切p回调 */
     protected callAppointPart = (p: number, state: Record<'aid' | 'cid', number>) => {
         if (this.destroy) return Reflect.deleteProperty(window, 'callAppointPart');
@@ -302,6 +333,7 @@ export class PageAV extends Page {
                 });
         }
     }
+
     /** 点赞功能 */
     protected enLike() {
         if (user.userStatus!.like) {
