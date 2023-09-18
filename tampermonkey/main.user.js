@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.6.9-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.7.0-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -14765,7 +14765,6 @@ const MODULES = `
         });
       });
       this.plaza();
-      this.indexIcon();
       this.styleFix();
     }
     static banner() {
@@ -14801,6 +14800,7 @@ const MODULES = `
         return { "code": 0, "result": [{ "link": "https://www.bilibili.com/blackboard/x/act_list", "end": 1640966407, "begin": 1456709887, "title": "bilibili 活动", "cover": "http://i0.hdslb.com/bfs/square/6830d0e479eee8cc9a42c3e375ca99a5147390cd.jpg", "id": 9, "created_ts": 1491386053 }, { "link": "http://www.bilibili.com/blackboard/topic_list.html", "end": 1640966418, "begin": 1544258598, "title": "话题列表", "cover": "http://i0.hdslb.com/bfs/square/b1b00a0c3ce8570b48277ae07a2e55603a4a4ddf.jpg", "id": 17, "created_ts": 1491386030 }] };
       }, false);
     }
+    // 已失效 2023-09-18
     /** 顶栏动图 */
     static indexIcon() {
       jsonpHook.async("api.bilibili.com/x/web-interface/index/icon", void 0, async () => {
@@ -15010,12 +15010,12 @@ const MODULES = `
           return new Promise((resolve, reject) => {
             if (fetchHook.noRequest) {
               fetchHook.\$response().then((d) => {
-                resolve(new Response(d, { status: 200, statusText: "" }));
+                d ? resolve(new Response(d, { status: 200, statusText: "" })) : reject();
               }).catch(reject);
             } else {
               fetch2(obj.input, obj.init).then(async (d) => {
-                const res = await fetchHook.\$response(d);
-                resolve(new Response(res, { status: d.status, statusText: d.statusText, headers: d.headers }));
+                const res = await fetchHook.\$response(d.clone());
+                resolve(res ? new Response(res, { status: d.status, statusText: d.statusText, headers: d.headers }) : d);
               }).catch(reject);
             }
           });
@@ -15047,8 +15047,8 @@ const MODULES = `
     /**
      * 拦截修改fetch返回值
      * 
-     * @param callback 修改返回值的回调函数，将原Response传入，异步返回新返回值即可（不修改也得返回，Response特性原始值只能读取一次）
-     * @param noRequest 不发送原始请求，callback中将不会原Response。通常用于不依赖原始返回值便能构造新返回值的情形。
+     * @param callback 修改返回值的回调函数，将原Response传入，异步返回新返回值即可，也可以不反悔任何值，表示使用不修改原始值
+     * @param noRequest 不发送原始请求，callback中将不会原Response。通常用于不依赖原始返回值便能构造新返回值的情形。此时callback必须返回值！
      */
     response(callback, noRequest = false) {
       this.\$response = callback;
@@ -15206,7 +15206,6 @@ const MODULES = `
             if (text.includes("-404")) {
               return JSON.stringify(mid_default);
             }
-            return text;
           });
           break;
         default:
@@ -20036,7 +20035,7 @@ const MODULES = `
       jsonpHook.async("x/v2/reply/jump?", void 0, async (url) => {
         var _a3, _b2;
         const obj = urlObj(url);
-        const data = await fetch(\`https://api.bilibili.com/x/v2/reply/main?csrf=6c09e4c6405d1369c9e94e0d0a4f6790&mode=3&oid=\${obj.oid}&pagination_str=%7B%22offset%22:%22%22%7D&plat=1&seek_rpid=\${obj.rpid}&type=1\`, { credentials: "include" });
+        const data = await fetch(\`https://api.bilibili.com/x/v2/reply/main?csrf=6c09e4c6405d1369c9e94e0d0a4f6790&mode=3&oid=\${obj.oid}&pagination_str=%7B%22offset%22:%22%22%7D&plat=1&seek_rpid=\${obj.rpid}&type=\${obj.type}\`, { credentials: "include" });
         const json = await data.json();
         const { config, control, cursor, seek_root_reply, replies, top, upper } = json.data;
         return {
@@ -28573,18 +28572,28 @@ const MODULES = `
             return true;
           }
         } else {
-          if (res.data && res.data.View) {
-            const response = \`{ "code": 0, "message": "0", "ttl": 1, "data": \${JSON.stringify(res.data.View.stat)} }\`;
-            xhrHook.async("/x/web-interface/archive/stat?", void 0, async () => {
-              return { response, responseText: response, responseType: "json" };
-            });
-            Promise.resolve().then(() => {
-              user.userStatus.staff && res.data.View.staff && this.staff(res.data.View.staff);
-            });
-            if (user.userStatus.ugcSection && res.data.View.ugc_season) {
-              this.ugcSection(res.data.View.ugc_season, res.data.View.owner);
+          if (res.data) {
+            if (res.data.View) {
+              const response = \`{ "code": 0, "message": "0", "ttl": 1, "data": \${JSON.stringify(res.data.View.stat)} }\`;
+              xhrHook.async("/x/web-interface/archive/stat?", void 0, async () => {
+                return { response, responseText: response, responseType: "json" };
+              });
+              Promise.resolve().then(() => {
+                user.userStatus.staff && res.data.View.staff && this.staff(res.data.View.staff);
+              });
+              if (user.userStatus.ugcSection && res.data.View.ugc_season) {
+                this.ugcSection(res.data.View.ugc_season, res.data.View.owner);
+              }
+              videoInfo.aidDatail(res.data.View);
             }
-            videoInfo.aidDatail(res.data.View);
+            if (res.data.Related) {
+              const response = JSON.stringify(res.data.Related.map((d) => {
+                return [d.pic, d.aid, d.title, d.stat.view, d.stat.danmaku, , d.stat.favorite];
+              }));
+              xhrHook.async("comment.bilibili.com/playtag", void 0, async () => {
+                return { response, responseText: response, responseType: "json" };
+              }, false);
+            }
           }
         }
       }, false);
