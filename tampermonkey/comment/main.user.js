@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.2.2
+// @version      2.2.3
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -746,7 +746,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"foqb3u12gic"}`) || customElements.define(`preview-image-${"foqb3u12gic"}`, PreviewImage);
+customElements.get(`preview-image-${"3qlpu5vxg6f"}`) || customElements.define(`preview-image-${"3qlpu5vxg6f"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -871,7 +871,7 @@ var Comment = class _Comment {
     jsonpHook.async("x/v2/reply/jump?", void 0, async (url) => {
       var _a, _b;
       const obj = urlObj(url);
-      const data = await fetch(`https://api.bilibili.com/x/v2/reply/main?csrf=6c09e4c6405d1369c9e94e0d0a4f6790&mode=3&oid=${obj.oid}&pagination_str=%7B%22offset%22:%22%22%7D&plat=1&seek_rpid=${obj.rpid}&type=1`, { credentials: "include" });
+      const data = await fetch(`https://api.bilibili.com/x/v2/reply/main?csrf=6c09e4c6405d1369c9e94e0d0a4f6790&mode=3&oid=${obj.oid}&pagination_str=%7B%22offset%22:%22%22%7D&plat=1&seek_rpid=${obj.rpid}&type=${obj.type}`, { credentials: "include" });
       const json = await data.json();
       const { config, control, cursor, seek_root_reply, replies, top, upper } = json.data;
       return {
