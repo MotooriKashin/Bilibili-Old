@@ -134,7 +134,7 @@ export class Comment {
     private jump() {
         jsonpHook.async('x/v2/reply/jump?', undefined, async url => {
             const obj = urlObj(url);
-            const data = await fetch(`https://api.bilibili.com/x/v2/reply/main?csrf=6c09e4c6405d1369c9e94e0d0a4f6790&mode=3&oid=${obj.oid}&pagination_str=%7B%22offset%22:%22%22%7D&plat=1&seek_rpid=${obj.rpid}&type=1`, { credentials: 'include' });
+            const data = await fetch(`https://api.bilibili.com/x/v2/reply/main?csrf=6c09e4c6405d1369c9e94e0d0a4f6790&mode=3&oid=${obj.oid}&pagination_str=%7B%22offset%22:%22%22%7D&plat=1&seek_rpid=${obj.rpid}&type=${obj.type}`, { credentials: 'include' });
             const json = await data.json();
             const { config, control, cursor, seek_root_reply, replies, top, upper } = json.data;
             return {
