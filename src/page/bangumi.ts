@@ -14,9 +14,9 @@ import { ApiGlobalOgvView } from "../io/api-global-view";
 import { ISubtitle, PlayerResponse } from "../io/api-player";
 import { ApiSeasonSection } from "../io/api-season-section";
 import { apiSeasonStatus, ISeasonStatusResponse } from "../io/api-season-status";
-import { apiStat } from "../io/api-stat";
 import { apiTagInfo } from "../io/api-tag-info";
 import { apiTagTop } from "../io/api-tag-top";
+import { apiViewDetail } from "../io/api-view-detail";
 import { debug } from "../utils/debug";
 import { addCss } from "../utils/element";
 import { unitFormat } from "../utils/format/unit";
@@ -500,11 +500,11 @@ export class PageBangumi extends Page {
                         danmakus.setAttribute("title", "总弹幕数 " + danmaku);
                         debug.log("总播放数：", view, "总弹幕数", danmaku);
                     }
-                    apiStat(BLOD.aid)
-                        .then(({ view, danmaku }) => {
-                            views.textContent = unitFormat(view);
-                            danmakus.textContent = unitFormat(danmaku);
-                            debug.log("总播放数：", view, "总弹幕数", danmaku);
+                    apiViewDetail(BLOD.aid)
+                        .then(({ View }) => {
+                            views.textContent = unitFormat(View.stat.view);
+                            danmakus.textContent = unitFormat(View.stat.danmaku);
+                            debug.log("播放数：", View.stat.view, "弹幕数", View.stat.danmaku);
                         })
                         .catch(e => {
                             debug.error('分集数据', e)
