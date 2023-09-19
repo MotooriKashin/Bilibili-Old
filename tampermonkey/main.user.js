@@ -7654,6 +7654,7 @@ const MODULES = `
     static TAG_TOP = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/tag/top";
     static BANGUMI_SEASON = _URLS.P_AUTO + _URLS.D_BANGUMI + "/view/web_api/season";
     static SEASON_STATUS = _URLS.P_AUTO + _URLS.D_API + "/pgc/view/web/season/user/status";
+    static PGC_SEASON = _URLS.P_AUTO + _URLS.D_API + "/pgc/view/web/season";
     static SEASON_SECTION = _URLS.P_AUTO + _URLS.D_API + "/pgc/web/season/section";
     static GLOBAL_OGV_VIEW = _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/view/app/season";
     static GLOBAL_OGV_PLAYURL = _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/playurl";
@@ -36788,6 +36789,14 @@ const MODULES = `
     }
   };
 
+  // src/io/api-pgc-season.ts
+  init_tampermonkey();
+  async function apiPgcSeason(data) {
+    const response = await fetch(objUrl(URLS.PGC_SEASON, data), { credentials: "include" });
+    const json = await response.json();
+    return jsonCheck(json).result;
+  }
+
   // src/io/api-player.ts
   init_tampermonkey();
   var PlayerResponse = class {
@@ -37134,7 +37143,97 @@ const MODULES = `
           loopTitle2();
           videoInfo.bangumiSeason(bangumi);
         } else {
-          return this.initGlobal();
+          apiPgcSeason(data).then((bangumi2) => {
+            const t2 = window.__INITIAL_STATE__;
+            const status2 = bangumi2.user_status;
+            if (status2) {
+              const i2 = status2.progress ? status2.progress.last_ep_id : -1, n = status2.progress ? status2.progress.last_ep_index : "", s = status2.progress ? status2.progress.last_time : 0, o = status2.vip_info || {};
+              !this.epid && i2 > 0 && (this.epid = i2);
+              t2.userStat = {
+                loaded: true,
+                error: void 0 === status2.pay,
+                follow: status2.follow || 0,
+                pay: status2.pay || 0,
+                payPackPaid: status2.pay_pack_paid || 0,
+                sponsor: status2.sponsor || 0,
+                watchProgress: {
+                  lastEpId: 0 === i2 ? -1 : i2,
+                  lastEpIndex: n,
+                  lastTime: s
+                },
+                vipInfo: {
+                  due_date: o.due_date || 0,
+                  status: o.status || 0,
+                  type: o.type || 0
+                }
+              };
+              this.limit = status2.area_limit || 0;
+              user.userStatus.videoLimit.status || (t2.area = this.limit);
+              t2.seasonFollowed = 1 === status2.follow;
+            }
+            const i = JSON.parse(JSON.stringify(bangumi2));
+            delete i.episodes;
+            delete i.seasons;
+            delete i.up_info;
+            delete i.rights;
+            delete i.publish;
+            delete i.newest_ep;
+            delete i.rating;
+            delete i.pay_pack;
+            delete i.payment;
+            delete i.activity;
+            i.paster_text = i.record;
+            i.season_status = i.status;
+            i.season_type = i.type;
+            i.series_title = i.series.series_title;
+            i.total_ep = i.total !== -1 ? i.total : bangumi2.episodes.length;
+            if (user.userStatus.bangumiEplist)
+              delete i.bkg_cover;
+            user.userStatus.videoLimit.status && bangumi2.rights && (bangumi2.rights.watch_platform = 0);
+            t2.mediaInfo = i;
+            t2.mediaInfo.bkg_cover && (t2.special = true);
+            t2.ssId = bangumi2.season_id || -1;
+            t2.mdId = bangumi2.media_id;
+            bangumi2.episodes.forEach((d2) => {
+              d2.episode_status = d2.status;
+              d2.index = d2.title;
+              d2.index_title = d2.long_title;
+              d2.page = 1;
+              d2.premiere = false;
+            });
+            t2.epInfo = this.epid && bangumi2.episodes.find((d2) => d2.ep_id == this.epid) || bangumi2.episodes[0] || {};
+            t2.epList = bangumi2.episodes || [];
+            t2.seasonList = bangumi2.seasons || [];
+            t2.upInfo = bangumi2.up_info || {};
+            t2.rightsInfo = bangumi2.rights || {};
+            t2.app = 1 === t2.rightsInfo.watch_platform;
+            t2.pubInfo = bangumi2.publish || {};
+            t2.newestEp = bangumi2.new_ep || {};
+            t2.mediaRating = bangumi2.rating || {};
+            t2.payMent = bangumi2.payment || {};
+            t2.activity = bangumi2.activity || {};
+            t2.epStat = this.setEpStat(t2.epInfo.episode_status || t2.mediaInfo.season_status, t2.userStat.pay, t2.userStat.payPackPaid, t2.loginInfo);
+            t2.epId = Number(this.epid || t2.epInfo.ep_id);
+            this.ssid = t2.ssId;
+            this.epid = t2.epId;
+            if (t2.upInfo.mid == /** Classic_Anime */
+            677043260 || t2.upInfo.mid == /** Anime_Ongoing */
+            688418886) {
+              this.th = true;
+            }
+            const title = this.setTitle(t2.epInfo.index, t2.mediaInfo.title, this.Q(t2.mediaInfo.season_type), true);
+            function loopTitle2() {
+              poll(() => document.title != title, () => {
+                document.title = title;
+                if (document.title != title)
+                  loopTitle2();
+              });
+            }
+            loopTitle2();
+            videoInfo.bangumiSeason(bangumi2);
+          }).catch(() => {
+            return this.initGlobal();
+          });
         }
       }).catch((e) => {
         toast.error("初始化bangumi数据出错！", e)();
