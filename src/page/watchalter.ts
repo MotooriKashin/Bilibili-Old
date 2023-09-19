@@ -24,6 +24,7 @@ export class PageWatchlater extends Page {
         this.toview();
         this.living();
         this.commentAgent();
+        this.exp();
         Header.primaryMenu();
         Header.banner();
         this.updateDom();
@@ -75,5 +76,16 @@ export class PageWatchlater extends Page {
                 return url;
             });
         }
+    }
+
+    /** 经验值接口 */
+    protected exp() {
+        xhrHook.async('plus/account/exp.php', undefined, async () => {
+            const res = await fetch('https://api.bilibili.com/x/web-interface/coin/today/exp', { credentials: 'include' });
+            const json = await res.json();
+            json.number = json.data;
+            const response = JSON.stringify(json)
+            return { response, responseText: response, responseType: 'json' }
+        })
     }
 }
