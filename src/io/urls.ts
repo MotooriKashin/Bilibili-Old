@@ -44,6 +44,7 @@ export class URLS {
     static readonly TAG_TOP = URLS.P_AUTO + URLS.D_API + '/x/web-interface/tag/top';
     static readonly BANGUMI_SEASON = URLS.P_AUTO + URLS.D_BANGUMI + '/view/web_api/season';
     static readonly SEASON_STATUS = URLS.P_AUTO + URLS.D_API + '/pgc/view/web/season/user/status';
+    static readonly PGC_SEASON = URLS.P_AUTO + URLS.D_API + '/pgc/view/web/season';
     static readonly SEASON_SECTION = URLS.P_AUTO + URLS.D_API + '/pgc/web/season/section';
     static readonly GLOBAL_OGV_VIEW = URLS.P_AUTO + URLS.D_API_GLOBAL + '/intl/gateway/v2/ogv/view/app/season';
     static readonly GLOBAL_OGV_PLAYURL = URLS.P_AUTO + URLS.D_API_GLOBAL + '/intl/gateway/v2/ogv/playurl';

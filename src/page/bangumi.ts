@@ -11,6 +11,7 @@ import html from '../html/bangumi.html';
 import { jsonCheck } from "../io/api";
 import { apiBangumiSeason, IBangumiEpisode, IBangumiSeasonResponse } from "../io/api-bangumi-season";
 import { ApiGlobalOgvView } from "../io/api-global-view";
+import { apiPgcSeason } from "../io/api-pgc-season";
 import { ISubtitle, PlayerResponse } from "../io/api-player";
 import { ApiSeasonSection } from "../io/api-season-section";
 import { apiSeasonStatus, ISeasonStatusResponse } from "../io/api-season-status";
@@ -250,7 +251,101 @@ export class PageBangumi extends Page {
                     // 记录视频数据
                     videoInfo.bangumiSeason(bangumi);
                 } else {
-                    return this.initGlobal();
+                    apiPgcSeason(data)
+                        .then(bangumi => {
+                            const t = (<any>window).__INITIAL_STATE__;
+                            const status = bangumi.user_status;
+                            if (status) {
+                                const i = status.progress ? status.progress.last_ep_id : -1
+                                    , n = status.progress ? status.progress.last_ep_index : ""
+                                    , s = status.progress ? status.progress.last_time : 0
+                                    , o = status.vip_info || <any>{};
+                                !this.epid && i > 0 && (this.epid = i); // 正常启动必须
+                                t.userStat = {
+                                    loaded: !0,
+                                    error: void 0 === status.pay,
+                                    follow: status.follow || 0,
+                                    pay: status.pay || 0,
+                                    payPackPaid: status.pay_pack_paid || 0,
+                                    sponsor: status.sponsor || 0,
+                                    watchProgress: {
+                                        lastEpId: 0 === i ? -1 : i,
+                                        lastEpIndex: n,
+                                        lastTime: s
+                                    },
+                                    vipInfo: {
+                                        due_date: o.due_date || 0,
+                                        status: o.status || 0,
+                                        type: o.type || 0
+                                    }
+                                };
+                                this.limit = status.area_limit || 0;
+                                user.userStatus!.videoLimit.status || (t.area = this.limit);
+                                t.seasonFollowed = 1 === status.follow;
+                            }
+                            const i = JSON.parse(JSON.stringify(bangumi));
+                            delete i.episodes;
+                            delete i.seasons;
+                            delete i.up_info;
+                            delete i.rights;
+                            delete i.publish;
+                            delete i.newest_ep;
+                            delete i.rating;
+                            delete i.pay_pack;
+                            delete i.payment;
+                            delete i.activity;
+                            i.paster_text = i.record;
+                            i.season_status = i.status;
+                            i.season_type = i.type;
+                            i.series_title = i.series.series_title;
+                            i.total_ep = i.total !== -1 ? i.total : bangumi.episodes.length;
+                            if (user.userStatus!.bangumiEplist) delete i.bkg_cover;
+                            user.userStatus!.videoLimit.status && bangumi.rights && (bangumi.rights.watch_platform = 0);
+                            t.mediaInfo = i;
+                            t.mediaInfo.bkg_cover && (t.special = !0);
+                            t.ssId = bangumi.season_id || -1;
+                            t.mdId = bangumi.media_id;
+                            bangumi.episodes.forEach((d: any) => {
+                                // 修正分p数据差异
+                                d.episode_status = d.status;
+                                d.index = d.title;
+                                d.index_title = d.long_title;
+                                d.page = 1;
+                                d.premiere = false;
+                            });
+                            t.epInfo = (this.epid && bangumi.episodes.find(d => d.ep_id == this.epid)) || bangumi.episodes[0] || {};
+                            t.epList = bangumi.episodes || [];
+                            t.seasonList = bangumi.seasons || [];
+                            t.upInfo = bangumi.up_info || {};
+                            t.rightsInfo = bangumi.rights || {};
+                            t.app = 1 === t.rightsInfo.watch_platform;
+                            t.pubInfo = bangumi.publish || {};
+                            t.newestEp = bangumi.new_ep || {};
+                            t.mediaRating = bangumi.rating || {};
+                            t.payMent = bangumi.payment || {};
+                            t.activity = bangumi.activity || {};
+                            t.epStat = this.setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
+                            t.epId = Number(this.epid || t.epInfo.ep_id);
+                            this.ssid = t.ssId;
+                            this.epid = t.epId;
+
+                            if (t.upInfo.mid == /** Classic_Anime */677043260 || t.upInfo.mid == /** Anime_Ongoing */688418886) {
+                                this.th = true;
+                            }
+                            const title = this.setTitle(t.epInfo.index, t.mediaInfo.title, this.Q(t.mediaInfo.season_type), !0);
+                            function loopTitle() {
+                                poll(() => document.title != title, () => {
+                                    document.title = title;
+                                    if (document.title != title) loopTitle();
+                                })
+                            }
+                            loopTitle();
+                            // 记录视频数据
+                            videoInfo.bangumiSeason(<any>bangumi);
+                        })
+                        .catch(() => {
+                            return this.initGlobal();
+                        });
                 }
             })
             .catch(e => {
