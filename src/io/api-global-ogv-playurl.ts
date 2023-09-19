@@ -4,65 +4,6 @@ import { ApiSign } from "./api-sign";
 import { Sidx } from "./sidx";
 import { URLS } from "./urls";
 
-interface GlobalOgvPlayurlData {
-    season_id?: number;
-    ep_id?: number;
-    access_key: string;
-    appkey?: string;
-    area?: 'th';
-    avid: number;
-    build?: number;
-    cid: number;
-    device: 'android';
-    download?: number;
-    drm_tech_type?: 2 | 3;
-    fnval: number;
-    fnver: number;
-    force_host?: number;
-    fourk: number;
-    from_client: 'PC_APP' | 'BROWSER';
-    mobi_app: 'bstar_a';
-    otype: 'json';
-    platform: 'android';
-    qn: number;
-    session?: string;
-    ts: number;
-    type: string;
-}
-interface IGlobalOgvPlayurlDashAudio {
-    backup_url: string[];
-    bandwidth: number;
-    base_url: string;
-    codecid: number;
-    id: number;
-    md5: string;
-    size: number;
-}
-interface IGlobalOgvPlayurlDashVideo extends Omit<IGlobalOgvPlayurlDashAudio, 'id'> {
-    audio_id: IGlobalOgvPlayurlDashAudio['id'];
-}
-interface IGlobalOgvPlayurlStreamInfo {
-    description: string;
-    display_desc: string;
-    intact: boolean;
-    need_login: boolean;
-    need_vip: boolean;
-    new_description: string;
-    no_rexcode: boolean;
-    quality: IPlayurlQualityNumber;
-}
-interface IGlobalOgvPlayurlResponse {
-    dimension: { height: number; rotate: number; width: number };
-    video_info: {
-        dash_audio: IGlobalOgvPlayurlDashAudio[];
-        quality: IPlayurlQualityNumber;
-        stream_list: {
-            dash_video: IGlobalOgvPlayurlDashVideo;
-            stream_info: IGlobalOgvPlayurlStreamInfo;
-        }[];
-        timelength: number;
-    };
-}
 export class ApiGlobalOgvPlayurl extends ApiSign {
     protected response?: IGlobalOgvPlayurlResponse;
     /**
@@ -202,4 +143,64 @@ export class ApiGlobalOgvPlayurl extends ApiSign {
                 .catch(e => reject(e));
         });
     }
+}
+
+interface GlobalOgvPlayurlData {
+    season_id?: number;
+    ep_id?: number;
+    access_key: string;
+    appkey?: string;
+    area?: 'th';
+    avid: number;
+    build?: number;
+    cid: number;
+    device: 'android';
+    download?: number;
+    drm_tech_type?: 2 | 3;
+    fnval: number;
+    fnver: number;
+    force_host?: number;
+    fourk: number;
+    from_client: 'PC_APP' | 'BROWSER';
+    mobi_app: 'bstar_a';
+    otype: 'json';
+    platform: 'android';
+    qn: number;
+    session?: string;
+    ts: number;
+    type: string;
+}
+interface IGlobalOgvPlayurlDashAudio {
+    backup_url: string[];
+    bandwidth: number;
+    base_url: string;
+    codecid: number;
+    id: number;
+    md5: string;
+    size: number;
+}
+interface IGlobalOgvPlayurlDashVideo extends Omit<IGlobalOgvPlayurlDashAudio, 'id'> {
+    audio_id: IGlobalOgvPlayurlDashAudio['id'];
+}
+interface IGlobalOgvPlayurlStreamInfo {
+    description: string;
+    display_desc: string;
+    intact: boolean;
+    need_login: boolean;
+    need_vip: boolean;
+    new_description: string;
+    no_rexcode: boolean;
+    quality: IPlayurlQualityNumber;
+}
+interface IGlobalOgvPlayurlResponse {
+    dimension: { height: number; rotate: number; width: number };
+    video_info: {
+        dash_audio: IGlobalOgvPlayurlDashAudio[];
+        quality: IPlayurlQualityNumber;
+        stream_list: {
+            dash_video: IGlobalOgvPlayurlDashVideo;
+            stream_info: IGlobalOgvPlayurlStreamInfo;
+        }[];
+        timelength: number;
+    };
 }

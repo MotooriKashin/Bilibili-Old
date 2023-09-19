@@ -1,12 +1,6 @@
 import { CustomElementsInterface } from "../../../utils/customelement";
 import html from '../../../html/checkbox.html';
 
-interface Value {
-    /** 是否选中 */
-    value?: CheckBox['value'];
-    /** 标签 */
-    label?: CheckBox['label'];
-}
 export class CheckBox extends HTMLElement implements CustomElementsInterface {
     private _input: HTMLInputElement;
     private _text: HTMLLabelElement;
@@ -114,4 +108,10 @@ export class CheckBoxs extends HTMLDivElement implements CustomElementsInterface
 }
 customElements.get(`checkboxs-${_MUTEX_}`) || customElements.define(`checkboxs-${_MUTEX_}`, CheckBoxs, { extends: 'div' });
 
+interface Value {
+    /** 是否选中 */
+    value?: CheckBox['value'];
+    /** 标签 */
+    label?: CheckBox['label'];
+}
 export { Value as ICheckBoxValue }

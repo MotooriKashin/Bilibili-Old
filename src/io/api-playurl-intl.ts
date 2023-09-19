@@ -4,19 +4,6 @@ import { ApiSign } from "./api-sign";
 import { fnval, fnver, qn } from "./fnval";
 import { URLS } from "./urls";
 
-interface IApiPlayurlIntl {
-    access_key?: string;
-    device?: string;
-    dl?: number;
-    force_host?: number;
-    mobi_app?: string;
-    qn?: number;
-    platform?: string;
-    build?: number;
-    otype?: string;
-    aid: number;
-    cid: number;
-}
 export class ApiPlayurlIntl extends ApiSign {
     constructor(protected data: IApiPlayurlIntl, dash = true, private pgc = false) {
         super(pgc ? URLS.INTL_OGV_PLAYURL : URLS.INTL_PLAYURL, 'bb3101000e232e27');
@@ -39,4 +26,18 @@ export class ApiPlayurlIntl extends ApiSign {
         }
         return <IPlayurlDash | IPlayurlDurl>jsonCheck(json).data;
     }
+}
+
+interface IApiPlayurlIntl {
+    access_key?: string;
+    device?: string;
+    dl?: number;
+    force_host?: number;
+    mobi_app?: string;
+    qn?: number;
+    platform?: string;
+    build?: number;
+    otype?: string;
+    aid: number;
+    cid: number;
 }

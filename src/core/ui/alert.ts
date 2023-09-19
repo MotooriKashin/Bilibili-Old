@@ -3,10 +3,6 @@ import { isArray } from "../../utils/typeof";
 import { PushButton } from "./utils/button";
 import { PopupBox } from "./utils/popupbox";
 
-interface IButton {
-    text: string;
-    callback?: Function;
-}
 /**
  * 弹窗通知
  * @param msg 通知内容
@@ -37,4 +33,9 @@ export function alert(msg: string | string[], title?: string, buttons?: IButton[
             div.appendChild(button);
         })
     }
+}
+
+interface IButton {
+    text: string;
+    callback?: Function;
 }

@@ -2,14 +2,6 @@ import { CustomElementsInterface } from "../../../utils/customelement";
 import html from '../../../html/select.html';
 import { Scrollbar } from "../../../utils/scrollbar";
 
-interface Value {
-    /** 当前值 */
-    value?: SelectMenu['value'];
-    /** 候选值 */
-    candidate?: SelectMenu['candidate'];
-    /** 候选值对应的行内应该 格式 => 候选值: 样式 */
-    styles?: SelectMenu['styles'];
-}
 export class SelectMenu extends HTMLElement implements CustomElementsInterface {
     private _text: HTMLSpanElement;
     private _list: HTMLUListElement;
@@ -71,4 +63,12 @@ export class SelectMenu extends HTMLElement implements CustomElementsInterface {
 }
 customElements.get(`select-${_MUTEX_}`) || customElements.define(`select-${_MUTEX_}`, SelectMenu);
 
+interface Value {
+    /** 当前值 */
+    value?: SelectMenu['value'];
+    /** 候选值 */
+    candidate?: SelectMenu['candidate'];
+    /** 候选值对应的行内应该 格式 => 候选值: 样式 */
+    styles?: SelectMenu['styles'];
+}
 export { Value as ISelectMenuValue }

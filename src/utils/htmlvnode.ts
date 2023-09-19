@@ -1,16 +1,4 @@
-/** 节点数据 */
-export interface Vdom {
-    /** 节点名称 */
-    tagName: keyof HTMLElementTagNameMap | "text" | "svg";
-    /** 节点属性 */
-    props?: Record<string, string>;
-    /** 子节点 */
-    children?: Vdom[];
-    /** 节点文本（tagName==="text"） */
-    text?: string | number;
-    /** 事件回调 */
-    event?: Partial<Record<keyof DocumentEventMap, (this: Document, ev: DocumentEventMap[keyof DocumentEventMap]) => any>>;
-}
+
 /** Vdom节点模板 */
 class Vnode {
     tagName: string;
@@ -206,4 +194,18 @@ class Scanner {
  */
 export function htmlVnode(html: string) {
     return new Scanner(html).vnode;
+}
+
+/** 节点数据 */
+export interface Vdom {
+    /** 节点名称 */
+    tagName: keyof HTMLElementTagNameMap | "text" | "svg";
+    /** 节点属性 */
+    props?: Record<string, string>;
+    /** 子节点 */
+    children?: Vdom[];
+    /** 节点文本（tagName==="text"） */
+    text?: string | number;
+    /** 事件回调 */
+    event?: Partial<Record<keyof DocumentEventMap, (this: Document, ev: DocumentEventMap[keyof DocumentEventMap]) => any>>;
 }

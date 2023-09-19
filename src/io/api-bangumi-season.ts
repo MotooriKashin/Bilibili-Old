@@ -3,6 +3,12 @@ import { IOwner, jsonCheck } from "./api";
 import { IPendant } from "./api-view-detail";
 import { URLS } from "./urls";
 
+export async function apiBangumiSeason(data: IBangumiSeasonData) {
+    const response = await fetch(objUrl(URLS.BANGUMI_SEASON, <any>data), { credentials: 'include' });
+    const json = await response.json();
+    return <IBangumiSeasonResponse>jsonCheck(json).result;
+}
+
 interface IBangumiSeasonData {
     season_id?: number;
     ep_id?: number;
@@ -108,9 +114,4 @@ export interface IBangumiSeasonResponse {
     total_ep: number;
     up_info?: IOwner;
     pay_pack?: unknown;
-}
-export async function apiBangumiSeason(data: IBangumiSeasonData) {
-    const response = await fetch(objUrl(URLS.BANGUMI_SEASON, <any>data), { credentials: 'include' });
-    const json = await response.json();
-    return <IBangumiSeasonResponse>jsonCheck(json).result;
 }

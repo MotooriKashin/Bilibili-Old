@@ -3,18 +3,6 @@ import { IBangumiEpisode, IBangumiSeasonResponse } from "../io/api-bangumi-seaso
 import toview from '../json/toview.json';
 import { BLOD } from "./bilibili-old";
 
-
-interface MediaImage {
-    sizes?: string;
-    src: string;
-    type?: string;
-}
-interface ICid {
-    album: string;
-    artist: string;
-    title: string;
-    artwork: MediaImage[];
-}
 class VideoInfo {
     private cids: Record<number, ICid> = {};
     private stats: Record<number, IStat> = {};
@@ -146,3 +134,16 @@ class VideoInfo {
 }
 /** 视频信息组件 */
 export const videoInfo = new VideoInfo();
+
+interface MediaImage {
+    sizes?: string;
+    src: string;
+    type?: string;
+}
+
+interface ICid {
+    album: string;
+    artist: string;
+    title: string;
+    artwork: MediaImage[];
+}

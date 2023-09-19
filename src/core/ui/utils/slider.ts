@@ -1,22 +1,6 @@
 import { CustomElementsInterface } from "../../../utils/customelement";
 import html from '../../../html/slider.html';
 
-interface Value {
-    /** 默认值 */
-    value?: number;
-    /** 最小值 */
-    min?: number;
-    /** 最大值 */
-    max?: number;
-    /** 刻度数 */
-    precision?: number;
-    /** 提示信息 */
-    hint?: boolean;
-    /** 固化提示 */
-    solid?: boolean;
-    /** 垂直 */
-    vertical?: boolean;
-}
 /**
  * 节点相对文档的偏移
  * @param node 目标节点
@@ -189,4 +173,20 @@ export class SliderBlock extends HTMLElement implements CustomElementsInterface 
 }
 customElements.get(`slider-${_MUTEX_}`) || customElements.define(`slider-${_MUTEX_}`, SliderBlock);
 
+interface Value {
+    /** 默认值 */
+    value?: number;
+    /** 最小值 */
+    min?: number;
+    /** 最大值 */
+    max?: number;
+    /** 刻度数 */
+    precision?: number;
+    /** 提示信息 */
+    hint?: boolean;
+    /** 固化提示 */
+    solid?: boolean;
+    /** 垂直 */
+    vertical?: boolean;
+}
 export { Value as ISliderBlockValue }

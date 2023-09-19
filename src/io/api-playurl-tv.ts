@@ -4,16 +4,6 @@ import { ApiSign } from "./api-sign";
 import { fnval, fnver, qn } from "./fnval";
 import { URLS } from "./urls";
 
-interface IApiPlayurlTv {
-    access_key?: string;
-    qn?: number;
-    otype?: string;
-    platform?: string;
-    mobi_app?: string;
-    build?: number;
-    avid: number;
-    cid: number;
-}
 export class ApiPlayurlTv extends ApiSign {
     constructor(protected data: IApiPlayurlTv, dash = true, pgc = false) {
         super(pgc ? URLS.PGC_PLAYURL_TV : URLS.UGC_PLAYURL_TV, '27eb53fc9058f8c3');
@@ -31,4 +21,15 @@ export class ApiPlayurlTv extends ApiSign {
         const json = await response.json();
         return <IPlayurlDash | IPlayurlDurl>jsonCheck(json);
     }
+}
+
+interface IApiPlayurlTv {
+    access_key?: string;
+    qn?: number;
+    otype?: string;
+    platform?: string;
+    mobi_app?: string;
+    build?: number;
+    avid: number;
+    cid: number;
 }

@@ -14,7 +14,7 @@ export function debug(...data: any[]) {
     return debug;
 }
 debug.assert = function (condition?: boolean, ...data: any[]) {
-    group.call.push(console.assert.bind(console, `[${timeFormat()}]`, ...arguments));
+    group.call.push((<any>console).assert.bind(console, `[${timeFormat()}]`, ...arguments));
     !group.i && setTimeout(group.call.shift());
     return debug;
 }

@@ -3,11 +3,6 @@ import { isArray } from "../utils/typeof";
 import { IAidDatail, jsonCheck } from "./api";
 import { URLS } from "./urls";
 
-interface IApiArticleCardsData {
-    av?: number | number[],
-    ss?: number | number[],
-    ep?: number | number[]
-};
 export async function apiArticleCards(data: IApiArticleCardsData | string[]) {
     const arr: string[] = [];
     if (isArray(data)) {
@@ -24,3 +19,9 @@ export async function apiArticleCards(data: IApiArticleCardsData | string[]) {
     const json = await response.json();
     return <Record<string, IAidDatail>>jsonCheck(json).data;
 }
+
+interface IApiArticleCardsData {
+    av?: number | number[],
+    ss?: number | number[],
+    ep?: number | number[]
+};

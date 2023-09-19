@@ -2,6 +2,56 @@ import { jsonCheck } from "./api";
 import { ApiSign } from "./api-sign";
 import { URLS } from "./urls";
 
+export class ApiSearch extends ApiSign {
+    constructor(keyword: string) {
+        super(URLS.SEARCH, 'c1b107428d337928');
+        this.data = Object.assign({ keyword: keyword }, {
+            type: 'json',
+            build: 404000,
+            main_ver: 'v4',
+            page: 1,
+            pagesize: 20,
+            platform: 'android',
+            search_type: 'all',
+            source_type: 0,
+            bangumi_num: 1,
+            special_num: 1,
+            topic_num: 1,
+            upuser_num: 1,
+            tv_num: 1,
+            movie_num: 1
+        });
+    }
+    async getData() {
+        const response = await fetch(this.sign());
+        const json = await response.json();
+        return <IApiSearchAndroid>jsonCheck(json);
+    }
+    /**
+     * 转换为网页版搜索结果
+     * @param data 本api结果
+     */
+    static toSearchV2(data: IApiSearchAndroid) {
+        const { code, result } = data;
+        delete (<any>data).code;
+        delete (<any>data).result;
+        delete (<any>data).cache;
+        return {
+            code,
+            data: Object.assign(data, {
+                result: Object.entries(result).map(d => {
+                    return {
+                        result_type: d[0],
+                        data: d[1]
+                    }
+                })
+            }),
+            message: "0",
+            ttl: 1
+        }
+    }
+}
+
 type ISearchTypeAndroid = 'activity' | 'article' | 'bangumi' | 'bili_user' | 'live' | 'live_all'
     | 'live_master' | 'live_room' | 'live_user' | 'media_bangumi' | 'media_ft'
     | 'movie' | 'operation_card' | 'pgc' | 'special' | 'topic' | 'tv' | 'upuser' | 'user'
@@ -202,53 +252,4 @@ export interface IApiSearch {
     top_tlist: { special: number; topic: number; upuser: number; video: number; bangumi: number; };
     total: number;
     track_id: string;
-}
-export class ApiSearch extends ApiSign {
-    constructor(keyword: string) {
-        super(URLS.SEARCH, 'c1b107428d337928');
-        this.data = Object.assign({ keyword: keyword }, {
-            type: 'json',
-            build: 404000,
-            main_ver: 'v4',
-            page: 1,
-            pagesize: 20,
-            platform: 'android',
-            search_type: 'all',
-            source_type: 0,
-            bangumi_num: 1,
-            special_num: 1,
-            topic_num: 1,
-            upuser_num: 1,
-            tv_num: 1,
-            movie_num: 1
-        });
-    }
-    async getData() {
-        const response = await fetch(this.sign());
-        const json = await response.json();
-        return <IApiSearchAndroid>jsonCheck(json);
-    }
-    /**
-     * 转换为网页版搜索结果
-     * @param data 本api结果
-     */
-    static toSearchV2(data: IApiSearchAndroid) {
-        const { code, result } = data;
-        delete (<any>data).code;
-        delete (<any>data).result;
-        delete (<any>data).cache;
-        return {
-            code,
-            data: Object.assign(data, {
-                result: Object.entries(result).map(d => {
-                    return {
-                        result_type: d[0],
-                        data: d[1]
-                    }
-                })
-            }),
-            message: "0",
-            ttl: 1
-        }
-    }
 }

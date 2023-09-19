@@ -3,17 +3,6 @@ import html from '../../html/download.html';
 import { propertryChangeHook } from "../../utils/hook/method";
 import { addElement } from "../../utils/element";
 
-export interface IDownlodData {
-    url?: string[];
-    fileName?: string;
-    quality: string;
-    size: string;
-    color?: IDownloadColor;
-    onClick?: (ev: MouseEvent) => void;
-}
-export type IDownloadColor = 'yellow' | 'pink' | 'purple' | 'red' | 'orange' | 'blue' | 'green'
-    | 'lv9' | 'lv8' | 'lv7' | 'lv6' | 'lv5' | 'lv4' | 'lv3' | 'lv2' | 'lv1';
-export type IDownloadCell = 'mp4' | 'flv' | 'av1' | 'avc' | 'hev' | 'aac' | '';
 export class BilioldDownload extends HTMLElement implements CustomElementsInterface {
     private _container: HTMLDivElement;
     private _cells: Partial<Record<IDownloadCell, HTMLDivElement>> = {};
@@ -57,3 +46,15 @@ export class BilioldDownload extends HTMLElement implements CustomElementsInterf
     }
 }
 customElements.get(`download-${_MUTEX_}`) || customElements.define(`download-${_MUTEX_}`, BilioldDownload);
+
+export interface IDownlodData {
+    url?: string[];
+    fileName?: string;
+    quality: string;
+    size: string;
+    color?: IDownloadColor;
+    onClick?: (ev: MouseEvent) => void;
+}
+export type IDownloadColor = 'yellow' | 'pink' | 'purple' | 'red' | 'orange' | 'blue' | 'green'
+    | 'lv9' | 'lv8' | 'lv7' | 'lv6' | 'lv5' | 'lv4' | 'lv3' | 'lv2' | 'lv1';
+export type IDownloadCell = 'mp4' | 'flv' | 'av1' | 'avc' | 'hev' | 'aac' | '';

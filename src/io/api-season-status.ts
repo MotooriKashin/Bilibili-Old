@@ -2,6 +2,12 @@ import { objUrl } from "../utils/format/url";
 import { jsonCheck } from "./api";
 import { URLS } from "./urls";
 
+export async function apiSeasonStatus(data: ISeasonStatusData) {
+    const response = await fetch(objUrl(URLS.SEASON_STATUS, <any>data), { credentials: 'include' });
+    const json = await response.json();
+    return <ISeasonStatusResponse>jsonCheck(json).result;
+}
+
 interface ISeasonStatusData {
     season_id?: number;
     ep_id?: number;
@@ -35,9 +41,4 @@ export interface ISeasonStatusResponse {
         status: number;
         type: number;
     };
-}
-export async function apiSeasonStatus(data: ISeasonStatusData) {
-    const response = await fetch(objUrl(URLS.SEASON_STATUS, <any>data), { credentials: 'include' });
-    const json = await response.json();
-    return <ISeasonStatusResponse>jsonCheck(json).result;
 }

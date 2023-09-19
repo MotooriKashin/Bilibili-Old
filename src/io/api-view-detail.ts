@@ -2,6 +2,31 @@ import { objUrl } from "../utils/format/url";
 import { IAidDatail, jsonCheck } from "./api";
 import { URLS } from "./urls";
 
+export class ApiViewDetail {
+    code = 0;
+    data: IApiViewDetailResponse = <any>{
+        Card: { archive_count: -1, article_count: -1, card: {}, follower: -1, following: false, like_num: -1, space: {} },
+        Related: <any[]>[],
+        Reply: { page: {}, replies: [] },
+        Spec: null,
+        Tags: <any[]>[],
+        View: <Record<string, any>>{},
+        elec: null,
+        hot_share: {},
+        recommend: null,
+        view_addit: {}
+    }
+    message = "0";
+    ttl = 1;
+}
+export async function apiViewDetail(aid: number) {
+    const response = await fetch(objUrl(URLS.VIEW_DETAIL, {
+        aid
+    }));
+    const json = await response.json();
+    return <IApiViewDetailResponse>jsonCheck(json).data;
+}
+
 interface IOfficial {
     role: number;
     title: string;
@@ -22,6 +47,7 @@ interface INameplate {
     name: string;
     nid: number;
 }
+
 export interface IPendant {
     expire: number;
     image: string;
@@ -135,28 +161,4 @@ export interface IApiViewDetailResponse {
     hot_share: { show: boolean; list: unknown[] };
     recommend: unknown;
     view_addit: boolean[];
-}
-export class ApiViewDetail {
-    code = 0;
-    data: IApiViewDetailResponse = <any>{
-        Card: { archive_count: -1, article_count: -1, card: {}, follower: -1, following: false, like_num: -1, space: {} },
-        Related: <any[]>[],
-        Reply: { page: {}, replies: [] },
-        Spec: null,
-        Tags: <any[]>[],
-        View: <Record<string, any>>{},
-        elec: null,
-        hot_share: {},
-        recommend: null,
-        view_addit: {}
-    }
-    message = "0";
-    ttl = 1;
-}
-export async function apiViewDetail(aid: number) {
-    const response = await fetch(objUrl(URLS.VIEW_DETAIL, {
-        aid
-    }));
-    const json = await response.json();
-    return <IApiViewDetailResponse>jsonCheck(json).data;
 }

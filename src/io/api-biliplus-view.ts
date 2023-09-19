@@ -5,10 +5,6 @@ import { IAidDatail, jsonCheck } from "./api";
 import { IApiViewResponse } from "./api-view";
 import { ApiViewDetail } from "./api-view-detail";
 
-interface IApiViewPlusResponse extends IApiViewResponse {
-    v2_app_api?: IAidDatail;
-    bangumi?: unknown;
-}
 export class apiBiliplusView {
     protected fetch: Promise<Response>;
     constructor(protected aid: number | string) {
@@ -109,4 +105,9 @@ export class apiBiliplusView {
         }, false);
         return JSON.parse(JSON.stringify(result))
     }
+}
+
+interface IApiViewPlusResponse extends IApiViewResponse {
+    v2_app_api?: IAidDatail;
+    bangumi?: unknown;
 }

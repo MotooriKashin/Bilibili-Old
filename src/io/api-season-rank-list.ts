@@ -2,6 +2,15 @@ import { objUrl } from "../utils/format/url";
 import { IStat, jsonCheck } from "./api";
 import { URLS } from "./urls";
 
+export async function apiSeasonRankList(data: IApiSeasonRankListDate) {
+    const response = await fetch(objUrl(URLS.SEASON_RANK_LIST, {
+        season_type: data.season_type,
+        day: 3
+    }));
+    const json = await response.json();
+    return <IApiSeasonRankListResponse[]>jsonCheck(json).data.list;
+}
+
 interface IApiSeasonRankListDate {
     season_type: number;
     day?: number;
@@ -20,12 +29,4 @@ interface IApiSeasonRankListResponse {
     stat: IStat;
     title: string;
     url: string;
-}
-export async function apiSeasonRankList(data: IApiSeasonRankListDate) {
-    const response = await fetch(objUrl(URLS.SEASON_RANK_LIST, {
-        season_type: data.season_type,
-        day: 3
-    }));
-    const json = await response.json();
-    return <IApiSeasonRankListResponse[]>jsonCheck(json).data.list;
 }

@@ -1,3 +1,11 @@
+
+/** 检查并转化json接口返回值。**出错时将直接抛出！** */
+export function jsonCheck<T extends IJsonRespense>(str: string | T) {
+    const result: IJsonRespense = typeof str === 'string' ? JSON.parse(str) : str;
+    if (result.code === 0) return <T>result;
+    throw new Error(`${result.code} ${result.message}`, { cause: result.code });
+}
+
 /** fetch 返回值类型 */
 export type FetchResponseType = 'json' | 'text' | 'arrayBuffer' | 'blob' | 'formData';
 /** API io 基础配置 */
@@ -184,10 +192,4 @@ export interface IDimension {
     width: number;
     height: number;
     rotate: number;
-}
-/** 检查并转化json接口返回值。**出错时将直接抛出！** */
-export function jsonCheck<T extends IJsonRespense>(str: string | T) {
-    const result: IJsonRespense = typeof str === 'string' ? JSON.parse(str) : str;
-    if (result.code === 0) return <T>result;
-    throw new Error(`${result.code} ${result.message}`, { cause: result.code });
 }

@@ -2,17 +2,6 @@ import { objUrl } from "../utils/format/url";
 import { jsonCheck } from "./api";
 import { URLS } from "./urls";
 
-export interface ISubtitle {
-    ai_status: number;
-    ai_type: number;
-    id: number;
-    id_str: string;
-    is_lock: boolean;
-    lan: string;
-    lan_doc: string;
-    subtitle_url: string;
-    type: number;
-}
 export class PlayerResponse {
     allow_bp = false;
     answer_status = 0;
@@ -82,8 +71,21 @@ export class PlayerResponse {
     };
     constructor(public aid: number, public cid: number, public has_next = false) { }
 }
+
 export async function apiPlayer(aid: number, cid: number) {
     const response = await fetch(objUrl(URLS.PLAYER, { aid, cid }));
     const json = await response.json();
     return <PlayerResponse>jsonCheck(json).data;
+}
+
+export interface ISubtitle {
+    ai_status: number;
+    ai_type: number;
+    id: number;
+    id_str: string;
+    is_lock: boolean;
+    lan: string;
+    lan_doc: string;
+    subtitle_url: string;
+    type: number;
 }

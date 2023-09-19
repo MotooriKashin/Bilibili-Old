@@ -2,6 +2,12 @@ import { objUrl } from "../utils/format/url";
 import { jsonCheck } from "./api";
 import { URLS } from "./urls";
 
+export async function accountGetCardByMid(mid: number) {
+    const response = await GM.fetch(objUrl(URLS.ACCOUNT_GETCARDBYMID, { mid }));
+    const json = await response.json()
+    return <IAccountCard>jsonCheck(json).card;
+}
+
 interface IAccountCard {
     DisplayRank: string;
     approve: boolean;
@@ -26,9 +32,4 @@ interface IAccountCard {
     sex: string;
     sign: string;
     spacesta: number;
-}
-export async function accountGetCardByMid(mid: number) {
-    const response = await GM.fetch(objUrl(URLS.ACCOUNT_GETCARDBYMID, { mid }));
-    const json = await response.json()
-    return <IAccountCard>jsonCheck(json).card;
 }

@@ -3,6 +3,23 @@ import { objUrl } from "../utils/format/url";
 import { jsonCheck, IApiData } from "./api";
 import { URLS } from "./urls";
 
+export async function apiWebshowLoc(id: number) {
+    const response = await fetch(objUrl(URLS.WEBSHOW_LOCS.slice(0, -1), {
+        pf: 0,
+        id
+    }));
+    const text = await response.text();
+    return <IApiWebshowLocsResponse[]>jsonCheck(BV2avAll(text)).data;
+}
+export async function apiWebshowLocs(data: IApiWebshowLocsData) {
+    const response = await fetch(objUrl(URLS.WEBSHOW_LOCS, {
+        pf: 0,
+        ids: data.ids.join(',')
+    }));
+    const text = await response.text();
+    return <IApiWebshowLocsResponse[][]>jsonCheck(BV2avAll(text)).data;
+}
+
 interface IApiWebshowLocsData extends IApiData {
     pf?: number;
     ids: number[];
@@ -46,20 +63,4 @@ export interface IApiWebshowLocsResponse {
     sub_title: string;
     title: string;
     url: string;
-}
-export async function apiWebshowLoc(id: number) {
-    const response = await fetch(objUrl(URLS.WEBSHOW_LOCS.slice(0, -1), {
-        pf: 0,
-        id
-    }));
-    const text = await response.text();
-    return <IApiWebshowLocsResponse[]>jsonCheck(BV2avAll(text)).data;
-}
-export async function apiWebshowLocs(data: IApiWebshowLocsData) {
-    const response = await fetch(objUrl(URLS.WEBSHOW_LOCS, {
-        pf: 0,
-        ids: data.ids.join(',')
-    }));
-    const text = await response.text();
-    return <IApiWebshowLocsResponse[][]>jsonCheck(BV2avAll(text)).data;
 }

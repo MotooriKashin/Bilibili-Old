@@ -2,10 +2,6 @@ import { sizeFormat } from "../../utils/format/size";
 import { toObject } from "../../utils/type";
 import { IDownloadCell, IDownloadColor, IDownlodData } from "../ui/download";
 
-export interface IDownlodDataFilter extends IDownlodData {
-    type: IDownloadCell;
-    order?: number;
-}
 export class PlayinfoFilter {
     /** 数据 */
     private record: IDownlodDataFilter[] = [];
@@ -219,4 +215,9 @@ export class PlayinfoFilter {
         url.replace(/\d+\.((flv)|(mp4)|(m4s))/, d => id = <any>Number(d.split(".")[0]));
         return id;
     }
+}
+
+export interface IDownlodDataFilter extends IDownlodData {
+    type: IDownloadCell;
+    order?: number;
 }

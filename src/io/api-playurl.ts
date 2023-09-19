@@ -4,10 +4,6 @@ import { ApiSign } from "./api-sign";
 import { fnval, fnver, qn } from "./fnval";
 import { URLS } from "./urls";
 
-export type IPlayurlFormat = 'mp4' | 'flv480' | 'flv720' | 'flv720_p60' | 'flv' | 'flv_p60' | 'hdflv2';
-export type IPlayurlDescription = '流畅 144P' | '流畅 240P' | '流畅 360P' | '清晰 480P' | '高清 720P' | '高清 720P60' | '高清 1080P' | '高清 1080P+' | '高清 1080P60' | '超清 4K' | 'HDR' | '杜比视界' | '超高清 8K';
-export type IPlayurlQuality = '144P' | '240P' | '360P' | '480P' | '720P' | '720P60' | '1080P' | '1080P+' | '1080P60' | '4K' | 'HDR' | 'Dolby' | '8K';
-export type IPlayurlQualityNumber = 127 | 126 | 125 | 121 | 120 | 116 | 112 | 80 | 74 | 64 | 48 | 32 | 16 | 15 | 6 | 5;
 export const PlayurlDescriptionMap: Record<IPlayurlQualityNumber, IPlayurlDescription> = {
     127: "超高清 8K",
     126: "杜比视界",
@@ -26,6 +22,7 @@ export const PlayurlDescriptionMap: Record<IPlayurlQualityNumber, IPlayurlDescri
     6: "流畅 240P",
     5: "流畅 144P"
 }
+
 export const PlayurlFormatMap: Record<IPlayurlQualityNumber, IPlayurlFormat> = {
     127: "hdflv2",
     126: "hdflv2",
@@ -44,6 +41,7 @@ export const PlayurlFormatMap: Record<IPlayurlQualityNumber, IPlayurlFormat> = {
     6: "mp4",
     5: "mp4"
 };
+
 export const PlayurlQualityMap: Record<IPlayurlQualityNumber, IPlayurlQuality> = {
     127: "8K",
     126: "Dolby",
@@ -62,6 +60,7 @@ export const PlayurlQualityMap: Record<IPlayurlQualityNumber, IPlayurlQuality> =
     6: "240P",
     5: "144P"
 }
+
 export const PlayurlCodecs = {
     30126: 'hvc1.2.4.L153.90',
     126: 'hvc1.2.4.L153.90',
@@ -99,6 +98,7 @@ export const PlayurlCodecs = {
     30232: 'mp4a.40.2', // 中码音频
     30216: 'mp4a.40.2', // 低码音频
 };
+
 export const PlayurlCodecsAPP = {
     30016: 'avc1.64001E', // APP源 360P
     16: 'avc1.64001E', // APP源 360P
@@ -112,6 +112,7 @@ export const PlayurlCodecsAPP = {
     30232: 'mp4a.40.2', // APP源 中码音频
     30280: 'mp4a.40.2' // APP源 高码音频 
 };
+
 export const PlayurlFrameRate = {
     30121: '16000/672',
     121: '16000/672',
@@ -142,6 +143,7 @@ export const PlayurlFrameRate = {
     30005: '16000/672',
     5: '16000/672'
 };
+
 export const PlayurlResolution = {
     30121: [3840, 2160],
     121: [3840, 2160],
@@ -172,60 +174,7 @@ export const PlayurlResolution = {
     30005: [256, 144], // 144P
     5: [256, 144] // 144P
 }
-interface IDash {
-    SegmentBase: { Initialization: string; indexRange: string; };
-    backupUrl: string[];
-    backup_url: string[];
-    bandwidth: number;
-    baseUrl: string;
-    base_url: string;
-    codecid: string;
-    codecs: string;
-    frameRate: string;
-    frame_rate: string;
-    height: number;
-    id: IPlayurlQualityNumber;
-    mimeType: string;
-    mime_type: string;
-    sar: string;
-    segment_base: { initialization: string; index_range: string; };
-    startWithSap: number;
-    start_with_sap: number;
-    width: number;
-}
-interface IPlayurl {
-    accept_description: IPlayurlDescription[];
-    accept_format: string;
-    accept_quality: IPlayurlQualityNumber[];
-    bp: number;
-    code: number;
-    fnval: number;
-    fnver: number;
-    format: IPlayurlFormat;
-    from: string;
-    has_paid: boolean;
-    is_preview: number;
-    message: string;
-    no_rexcode: number;
-    quality: IPlayurlQualityNumber;
-    result: string;
-    seek_param: string;
-    seek_type: string;
-    status: number;
-    support_formats: {
-        description: IPlayurlDescription;
-        codecs: string[];
-        display_desc: IPlayurlQuality;
-        format: IPlayurlFormat;
-        new_description: IPlayurlDescription;
-        quality: IPlayurlQualityNumber;
-        superscript: string;
-    }[];
-    timelength: number;
-    type: string;
-    video_codecid: number;
-    video_project: boolean;
-}
+
 export interface IPlayurlDash extends IPlayurl {
     dash: {
         audio: IDash[],
@@ -249,6 +198,7 @@ export interface IPlayurlDash extends IPlayurl {
         video: IDash[];
     };
 }
+
 export interface IPlayurlDurl extends IPlayurl {
     durl: {
         ahead: string;
@@ -260,6 +210,7 @@ export interface IPlayurlDurl extends IPlayurl {
         vhead: string;
     }[];
 }
+
 export class PlayurlDash {
     accept_description: IPlayurlDash['accept_description'] = [];
     accept_format: IPlayurlDash['accept_format'] = '';
@@ -293,22 +244,7 @@ export class PlayurlDash {
     video_codecid = 7;
     video_project = true;
 }
-interface IAppPgcPlayurlData {
-    accessKey?: string;
-    cid: number;
-    ep_id: number;
-    build?: string;
-    device?: string;
-    force_host?: number;
-    mobi_app?: string;
-    platform?: string;
-}
-interface IApiPlayurl {
-    qn?: number;
-    otype?: string;
-    avid: number;
-    cid: number;
-}
+
 export async function apiPlayurl(data: IApiPlayurl, dash = true, pgc = false, server: string = 'api.bilibili.com'): Promise<IPlayurlDash | IPlayurlDurl> {
     data = Object.assign({
         qn,
@@ -338,4 +274,85 @@ export class ApiAppPgcPlayurl extends ApiSign {
         const json = await response.json();
         return <IPlayurlDash>jsonCheck(json);
     }
+}
+
+export type IPlayurlFormat = 'mp4' | 'flv480' | 'flv720' | 'flv720_p60' | 'flv' | 'flv_p60' | 'hdflv2';
+
+export type IPlayurlDescription = '流畅 144P' | '流畅 240P' | '流畅 360P' | '清晰 480P' | '高清 720P' | '高清 720P60' | '高清 1080P' | '高清 1080P+' | '高清 1080P60' | '超清 4K' | 'HDR' | '杜比视界' | '超高清 8K';
+
+export type IPlayurlQuality = '144P' | '240P' | '360P' | '480P' | '720P' | '720P60' | '1080P' | '1080P+' | '1080P60' | '4K' | 'HDR' | 'Dolby' | '8K';
+
+export type IPlayurlQualityNumber = 127 | 126 | 125 | 121 | 120 | 116 | 112 | 80 | 74 | 64 | 48 | 32 | 16 | 15 | 6 | 5;
+
+interface IDash {
+    SegmentBase: { Initialization: string; indexRange: string; };
+    backupUrl: string[];
+    backup_url: string[];
+    bandwidth: number;
+    baseUrl: string;
+    base_url: string;
+    codecid: string;
+    codecs: string;
+    frameRate: string;
+    frame_rate: string;
+    height: number;
+    id: IPlayurlQualityNumber;
+    mimeType: string;
+    mime_type: string;
+    sar: string;
+    segment_base: { initialization: string; index_range: string; };
+    startWithSap: number;
+    start_with_sap: number;
+    width: number;
+}
+
+interface IPlayurl {
+    accept_description: IPlayurlDescription[];
+    accept_format: string;
+    accept_quality: IPlayurlQualityNumber[];
+    bp: number;
+    code: number;
+    fnval: number;
+    fnver: number;
+    format: IPlayurlFormat;
+    from: string;
+    has_paid: boolean;
+    is_preview: number;
+    message: string;
+    no_rexcode: number;
+    quality: IPlayurlQualityNumber;
+    result: string;
+    seek_param: string;
+    seek_type: string;
+    status: number;
+    support_formats: {
+        description: IPlayurlDescription;
+        codecs: string[];
+        display_desc: IPlayurlQuality;
+        format: IPlayurlFormat;
+        new_description: IPlayurlDescription;
+        quality: IPlayurlQualityNumber;
+        superscript: string;
+    }[];
+    timelength: number;
+    type: string;
+    video_codecid: number;
+    video_project: boolean;
+}
+
+interface IAppPgcPlayurlData {
+    accessKey?: string;
+    cid: number;
+    ep_id: number;
+    build?: string;
+    device?: string;
+    force_host?: number;
+    mobi_app?: string;
+    platform?: string;
+}
+interface IApiPlayurl {
+    qn?: number;
+    otype?: string;
+    avid: number;
+    cid: number;
 }

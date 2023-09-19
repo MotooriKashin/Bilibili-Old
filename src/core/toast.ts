@@ -14,10 +14,6 @@ export const Toastconfig = {
     disabled: false
 };
 
-type ObservedAttributesContainer = 'position' | 'rtl' | 'delay' | 'disabled';
-type ToastType = "success" | "error" | "info" | "warning" | "";
-type Position = 'top-left' | 'top-center' | 'top-right' | 'top-full-width' | 'bottom-left' | 'bottom-right' | 'bottom-center' | 'bottom-full-width';
-
 /** toastr */
 export class Toast extends HTMLDivElement implements CustomElementsInterface {
     /** 关闭按钮 */
@@ -266,3 +262,7 @@ customElements.get(`toast-container-${_MUTEX_}`) || customElements.define(`toast
  * 获取到用户配置后请通过`update`方法更新，否则将使用默认配置。
  */
 export const toast = new ToastContainer();
+
+type ObservedAttributesContainer = 'position' | 'rtl' | 'delay' | 'disabled';
+type ToastType = "success" | "error" | "info" | "warning" | "";
+type Position = 'top-left' | 'top-center' | 'top-right' | 'top-full-width' | 'bottom-left' | 'bottom-right' | 'bottom-center' | 'bottom-full-width';

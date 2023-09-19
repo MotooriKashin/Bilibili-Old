@@ -2,6 +2,12 @@ import { objUrl } from "../utils/format/url";
 import { jsonCheck } from "./api";
 import { URLS } from "./urls";
 
+export async function apiTagInfo(tag_name: string) {
+    const response = await fetch(objUrl(URLS.TAG_INFO, { tag_name }));
+    const json = await response.json();
+    return <IApiTagInfoResponse>jsonCheck(json).data;
+}
+
 interface IApiTagInfoResponse {
     attribute: number;
     content: string;
@@ -20,9 +26,4 @@ interface IApiTagInfoResponse {
     tag_id: number;
     tag_name: string;
     type: number;
-}
-export async function apiTagInfo(tag_name: string) {
-    const response = await fetch(objUrl(URLS.TAG_INFO, { tag_name }));
-    const json = await response.json();
-    return <IApiTagInfoResponse>jsonCheck(json).data;
 }

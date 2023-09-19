@@ -3,12 +3,6 @@ import { ApiSign } from "./api-sign";
 import { fnval, fnver } from "./fnval";
 import { URLS } from "./urls";
 
-interface IApiPlayurlInterface {
-    otype?: string;
-    quality?: number;
-    type?: string;
-    cid: number;
-}
 export class ApiPlayurlInterface extends ApiSign {
     constructor(protected data: IApiPlayurlInterface, pgc = false) {
         super(pgc ? URLS.PLAYURL_BANGUMI : URLS.PLAYURL_INTERFACE, 'YvirImLGlLANCLvM');
@@ -24,4 +18,11 @@ export class ApiPlayurlInterface extends ApiSign {
         const response = await fetch(this.sign(), { credentials: 'include' });
         return <IPlayurlDurl>await response.json();
     }
+}
+
+interface IApiPlayurlInterface {
+    otype?: string;
+    quality?: number;
+    type?: string;
+    cid: number;
 }

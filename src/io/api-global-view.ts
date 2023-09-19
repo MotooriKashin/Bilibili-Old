@@ -2,14 +2,6 @@ import { ApiSign } from "./api-sign";
 import { jsonCheck } from "./api";
 import { URLS } from "./urls";
 
-interface ApiGlobalOgvViewDate {
-    season_id?: number;
-    ep_id?: number;
-    access_key: string;
-    build?: number;
-    mobi_app?: string;
-    s_locale?: string;
-}
 export interface IGlobalOgvEpisode {
     aid: number;
     cid: number;
@@ -35,6 +27,32 @@ export interface IGlobalOgvEpisode {
     title: number;
     title_display: number;
 }
+
+export class ApiGlobalOgvView extends ApiSign {
+    constructor(protected data: ApiGlobalOgvViewDate, server = 'api.global.bilibili.com') {
+        super(URLS.GLOBAL_OGV_VIEW.replace('api.global.bilibili.com', server), '7d089525d3611b1c');
+        this.data = Object.assign({
+            build: 108003,
+            mobi_app: 'bstar_a',
+            s_locale: 'zh_SG'
+        }, data);
+    }
+    async getDate() {
+        const response = await fetch(this.sign());
+        const json = await response.json();
+        return <IGlobalOgvViewResponse>jsonCheck(json).result;
+    }
+}
+
+interface ApiGlobalOgvViewDate {
+    season_id?: number;
+    ep_id?: number;
+    access_key: string;
+    build?: number;
+    mobi_app?: string;
+    s_locale?: string;
+}
+
 interface IGlobalOgvViewResponse {
     activity_dialog: unknown;
     actor: { info: string; title: string; };
@@ -129,19 +147,4 @@ interface IGlobalOgvViewResponse {
     up_info: unknown;
     update_partten: string;
     user_status: { demand_no_pay_epids?: number[]; follow: number; like_state: number; vip: number; };
-}
-export class ApiGlobalOgvView extends ApiSign {
-    constructor(protected data: ApiGlobalOgvViewDate, server = 'api.global.bilibili.com') {
-        super(URLS.GLOBAL_OGV_VIEW.replace('api.global.bilibili.com', server), '7d089525d3611b1c');
-        this.data = Object.assign({
-            build: 108003,
-            mobi_app: 'bstar_a',
-            s_locale: 'zh_SG'
-        }, data);
-    }
-    async getDate() {
-        const response = await fetch(this.sign());
-        const json = await response.json();
-        return <IGlobalOgvViewResponse>jsonCheck(json).result;
-    }
 }
