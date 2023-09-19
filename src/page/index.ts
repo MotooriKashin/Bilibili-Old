@@ -21,6 +21,7 @@ import { poll } from "../utils/poll";
 import { VdomTool } from "../utils/vdomtool";
 import { Header } from "./header";
 import { Page } from "./page";
+import recommendData from "../json/recommend.txt";
 
 /** 初始化数据 */
 const __INITIAL_STATE__ = {
@@ -48,6 +49,7 @@ export class PageIndex extends Page {
         this.ranking();
         this.newlist();
         this.region();
+        this.recommendSpecial();
         Header.primaryMenu();
         Header.banner();
         user.userStatus!.timeLine && this.timeLine();
@@ -259,5 +261,11 @@ export class PageIndex extends Page {
                     debug.error('港澳台新番时间表', e);
                 })
         });
+    }
+
+    protected recommendSpecial() {
+        xhrHook.async('www.bilibili.com/index/recommend.json', undefined, async () => {
+            return { response: recommendData, responseText: recommendData, responseType: "json" }
+        }, false);
     }
 }

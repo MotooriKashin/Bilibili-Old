@@ -6,6 +6,7 @@ import { subArray } from "../utils/format/subarray";
 import { jsonpHook } from "../utils/hook/node";
 import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
+import indexIcon from "../json/index-icon.json";
 
 import cssAvatarAnimation from '../css/avatar-animation.css';
 import cssMessage from '../css/message.css';
@@ -111,7 +112,7 @@ export class Header {
             });
         });
         this.plaza();
-        // this.indexIcon();
+        this.indexIcon();
         this.styleFix();
     }
     static banner() {
@@ -156,10 +157,9 @@ export class Header {
     /** 顶栏动图 */
     protected static indexIcon() {
         jsonpHook.async("api.bilibili.com/x/web-interface/index/icon", undefined, async () => {
-            const data = await fetch("https://www.bilibili.com/index/index-icon.json").then(d => d.json());
             return {
                 code: 0,
-                data: subArray(data.fix),
+                data: subArray(indexIcon.fix),
                 message: "0",
                 ttl: 1
             }
