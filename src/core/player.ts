@@ -114,6 +114,13 @@ class Player {
                     break;
             }
         });
+        if (initData.element) {
+            // 将旧版播放器无法识别的节点重命名
+            if (initData.element.id !== 'bofqi' && initData.element.id !== 'bilibili-player') {
+                initData.element.id = 'bofqi';
+                initData.element.style.cssText = 'margin: 0;padding: 0;width: 100%;height: 100%;';
+            }
+        }
         this.initData.as_wide = true; // 需要替换3.x播放器的场合还是强制宽屏启动吧
         this.dataInitedCallback();
     }
