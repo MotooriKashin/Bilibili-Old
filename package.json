@@ -2,7 +2,7 @@
   "dependencies": {
     "@jsc/chrome": "file:chrome",
     "@jsc/tampermonkey": "file:tampermonkey",
-    "fflate": "^0.8.0",
+    "fflate": "^0.8.1",
     "md5": "^2.3.0",
     "protobufjs": "^7.2.5",
     "quill-delta-to-html-cb": "^0.14.0"
