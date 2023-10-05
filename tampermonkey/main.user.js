@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.7.2-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.7.3-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -11951,9 +11951,7 @@ const MODULES = `
       s = 0;
     if (e == null || e > v.length)
       e = v.length;
-    var n = new u8(e - s);
-    n.set(v.subarray(s, e));
-    return n;
+    return new u8(v.subarray(s, e));
   };
   var ec = [
     "unexpected EOF",
@@ -11985,9 +11983,10 @@ const MODULES = `
     var sl = dat.length, dl = dict ? dict.length : 0;
     if (!sl || st.f && !st.l)
       return buf || new u8(0);
-    var noBuf = !buf || st.i != 2;
+    var noBuf = !buf;
+    var resize = noBuf || st.i != 2;
     var noSt = st.i;
-    if (!buf)
+    if (noBuf)
       buf = new u8(sl * 3);
     var cbuf = function(l2) {
       var bl = buf.length;
@@ -12011,7 +12010,7 @@ const MODULES = `
               err(0);
             break;
           }
-          if (noBuf)
+          if (resize)
             cbuf(bt + l);
           buf.set(dat.subarray(s, t), bt);
           st.b = bt += l, st.p = pos = t * 8, st.f = final;
@@ -12061,7 +12060,7 @@ const MODULES = `
           break;
         }
       }
-      if (noBuf)
+      if (resize)
         cbuf(bt + 131072);
       var lms = (1 << lbt) - 1, dms = (1 << dbt) - 1;
       var lpos = pos;
@@ -12101,7 +12100,7 @@ const MODULES = `
               err(0);
             break;
           }
-          if (noBuf)
+          if (resize)
             cbuf(bt + 131072);
           var end = bt + add;
           if (bt < dt) {
@@ -12111,20 +12110,15 @@ const MODULES = `
             for (; bt < dend; ++bt)
               buf[bt] = dict[shift + bt];
           }
-          for (; bt < end; bt += 4) {
+          for (; bt < end; ++bt)
             buf[bt] = buf[bt - dt];
-            buf[bt + 1] = buf[bt + 1 - dt];
-            buf[bt + 2] = buf[bt + 2 - dt];
-            buf[bt + 3] = buf[bt + 3 - dt];
-          }
-          bt = end;
         }
       }
       st.l = lm, st.p = lpos, st.b = bt, st.f = final;
       if (lm)
         final = 1, st.m = lbt, st.d = dm, st.n = dbt;
     } while (!final);
-    return bt == buf.length ? buf : slc(buf, 0, bt);
+    return bt != buf.length && noBuf ? slc(buf, 0, bt) : buf.subarray(0, bt);
   };
   var wbits = function(d, p, v) {
     v <<= p & 7;
@@ -24882,6 +24876,7 @@ const MODULES = `
   var PageIndex = class extends Page {
     constructor() {
       super(html_default);
+      this.avcheck();
       window.__INITIAL_STATE__ = __INITIAL_STATE__;
       this.locsData();
       this.recommendData();
@@ -25118,6 +25113,12 @@ const MODULES = `
       xhrHook.async("www.bilibili.com/index/recommend.json", void 0, async () => {
         return { response: recommend_default, responseText: recommend_default, responseType: "json" };
       }, false);
+    }
+    avcheck() {
+      const obj = urlObj(location.href);
+      if (obj.aid) {
+        location.replace(\`/video/av\${obj.aid}\`);
+      }
     }
   };
 
@@ -29014,7 +29015,7 @@ const MODULES = `
             control,
             mode: (_a3 = cursor.mode) != null ? _a3 : 3,
             page: { acount: cursor.all_count, count: (_b2 = this.count) != null ? _b2 : cursor.all_count, num: 1, rt_num: 1, size: 20 },
-            replies: [seek_root_reply].concat(replies),
+            replies: seek_root_reply ? [seek_root_reply].concat(replies) : replies,
             support_mode: cursor.support_mode,
             top,
             upper
