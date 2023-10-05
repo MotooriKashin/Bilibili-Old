@@ -144,7 +144,7 @@ export class Comment {
                     control,
                     mode: cursor.mode ?? 3,
                     page: { acount: cursor.all_count, count: this.count ?? cursor.all_count, num: 1, rt_num: 1, size: 20 },
-                    replies: [seek_root_reply].concat(replies),
+                    replies: seek_root_reply ? [seek_root_reply].concat(replies) : replies,
                     support_mode: cursor.support_mode,
                     top,
                     upper

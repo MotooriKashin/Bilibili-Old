@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.2.3
+// @version      2.2.4
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -140,6 +140,7 @@ var URLS = class _URLS {
   static TAG_TOP = _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/tag/top";
   static BANGUMI_SEASON = _URLS.P_AUTO + _URLS.D_BANGUMI + "/view/web_api/season";
   static SEASON_STATUS = _URLS.P_AUTO + _URLS.D_API + "/pgc/view/web/season/user/status";
+  static PGC_SEASON = _URLS.P_AUTO + _URLS.D_API + "/pgc/view/web/season";
   static SEASON_SECTION = _URLS.P_AUTO + _URLS.D_API + "/pgc/web/season/section";
   static GLOBAL_OGV_VIEW = _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/view/app/season";
   static GLOBAL_OGV_PLAYURL = _URLS.P_AUTO + _URLS.D_API_GLOBAL + "/intl/gateway/v2/ogv/playurl";
@@ -746,7 +747,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"3qlpu5vxg6f"}`) || customElements.define(`preview-image-${"3qlpu5vxg6f"}`, PreviewImage);
+customElements.get(`preview-image-${"tm0dtw6dhuq"}`) || customElements.define(`preview-image-${"tm0dtw6dhuq"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -881,7 +882,7 @@ var Comment = class _Comment {
           control,
           mode: (_a = cursor.mode) != null ? _a : 3,
           page: { acount: cursor.all_count, count: (_b = this.count) != null ? _b : cursor.all_count, num: 1, rt_num: 1, size: 20 },
-          replies: [seek_root_reply].concat(replies),
+          replies: seek_root_reply ? [seek_root_reply].concat(replies) : replies,
           support_mode: cursor.support_mode,
           top,
           upper
