@@ -42,6 +42,7 @@ const __INITIAL_STATE__ = {
 export class PageIndex extends Page {
     constructor() {
         super(html);
+        this.avcheck();
         (<any>window).__INITIAL_STATE__ = __INITIAL_STATE__;
         this.locsData();
         this.recommendData();
@@ -267,5 +268,12 @@ export class PageIndex extends Page {
         xhrHook.async('www.bilibili.com/index/recommend.json', undefined, async () => {
             return { response: recommendData, responseText: recommendData, responseType: "json" }
         }, false);
+    }
+
+    protected avcheck() {
+        const obj = urlObj(location.href);
+        if (obj.aid) {
+            location.replace(`/video/av${obj.aid}`);
+        }
     }
 }
