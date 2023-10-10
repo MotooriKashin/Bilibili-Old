@@ -82,11 +82,11 @@ export class Comment {
             set: v => true,
             get: () => {
                 if (load) {
-                    function initComment(tar: string, init: Record<"oid" | "pageType" | "userStatus", any>) {
+                    function initComment(tar: string, init: Record<"oid" | "pageType" | "userStatus" | 'jumpReplyId', any>) {
                         commentHander.reset = function ({ oid }: any) {
                             new Feedback(tar, oid, init.pageType, init.userStatus);
                         }
-                        new Feedback(tar, init.oid, init.pageType, init.userStatus);
+                        new Feedback(tar, init.oid, init.pageType, init.userStatus, init.jumpReplyId);
                         return commentHander;
                     }
                     Reflect.defineProperty(window, "initComment", { configurable: true, value: initComment });
