@@ -38,12 +38,15 @@ export function xhrHook(url: string | string[], modifyOpen?: (args: XMLHttpReque
             this.addEventListener("readystatechange", () => {
                 try {
                     if (this.readyState === 4) {
+                        const { responseType } = this;
                         const response: XMLHttpRequestResponses = { response: this.response, responseType: this.responseType, status: this.status, statusText: this.statusText };
                         (this.responseType === "" || this.responseType === "text") && (response.responseText = <string>this.responseText);
                         (this.responseType === "" || this.responseType === "document") && (response.responseXML = <Document>this.responseXML);
                         modifyResponse(response);
                         Reflect.defineProperty(this, "response", { configurable: true, value: response.response });
                         try {
+                            // 允许修改返回值类型
+                            response.responseType && responseType !== response.responseType && setResponseType(response.responseType, this);
                             if (response.responseXML) {
                                 response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
                             } else if (response.response) {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.7.4-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.7.5-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -8060,12 +8060,14 @@ const MODULES = `
           this.addEventListener("readystatechange", () => {
             try {
               if (this.readyState === 4) {
+                const { responseType } = this;
                 const response = { response: this.response, responseType: this.responseType, status: this.status, statusText: this.statusText };
                 (this.responseType === "" || this.responseType === "text") && (response.responseText = this.responseText);
                 (this.responseType === "" || this.responseType === "document") && (response.responseXML = this.responseXML);
                 modifyResponse(response);
                 Reflect.defineProperty(this, "response", { configurable: true, value: response.response });
                 try {
+                  response.responseType && responseType !== response.responseType && setResponseType(response.responseType, this);
                   if (response.responseXML) {
                     response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
                   } else if (response.response) {
@@ -38397,6 +38399,7 @@ const MODULES = `
       super(search_default);
       this.location();
       this.initState();
+      this.hotword();
       this.style();
       this.gat();
       this.rqt();
@@ -38478,6 +38481,11 @@ const MODULES = `
         (_b2 = (_a3 = res.data) == null ? void 0 : _a3.result) == null ? void 0 : _b2.forEach((d) => {
           d.data || (d.data = []);
         });
+      }, false);
+    }
+    hotword() {
+      xhrHook("main/hotword?", void 0, (res) => {
+        res.responseType = "json";
       }, false);
     }
   };

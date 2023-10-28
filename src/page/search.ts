@@ -6,6 +6,7 @@ import { addCss } from "../utils/element";
 import { urlObj } from "../utils/format/url";
 import { propertyHook } from "../utils/hook/method";
 import { jsonpHook } from "../utils/hook/node";
+import { xhrHook } from '../utils/hook/xhr';
 import { poll } from "../utils/poll";
 import { timeout } from '../utils/timer';
 import { Page } from "./page";
@@ -15,6 +16,7 @@ export class PageSearch extends Page {
         super(html);
         this.location();
         this.initState();
+        this.hotword();
         this.style();
         this.gat();
         this.rqt();
@@ -97,6 +99,12 @@ export class PageSearch extends Page {
             res.data?.result?.forEach((d: any) => {
                 d.data || (d.data = []); // 各分类就算无结果也必须是数组
             });
+        }, false);
+    }
+
+    protected hotword() {
+        xhrHook('main/hotword?', undefined, res => {
+            res.responseType = 'json';
         }, false);
     }
 }
