@@ -3,9 +3,9 @@
  * @author kashin
  */
 
+import { Android, buvid } from "../../../../android";
 import { jsonCheck } from "../../../../api";
 import { ApiSign } from "../../../../api-sign";
-import { buvid } from "../../../../buvid";
 import { URLS } from "../../../../urls";
 
 /** passport.bilibili.com/x/passport-tv-login/qrcode/auth_code */
@@ -14,18 +14,18 @@ export async function authCode() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-            'user-agent': 'Mozilla/5.0 BiliDroid/6.72.0 (bbcallen@gmail.com) os/android model/XQ-CT72 mobi_app/android build/6720300 channel/bilih5 innerVer/6720310 osVer/12 network/2',
+            'user-agent': Android["user-agent"],
             'buvid': buvid(),
         },
         credentials: 'include',
         body: new ApiSign('', '27eb53fc9058f8c3').sign({
-            build: '6720300',
-            c_locale: 'zh-Hans_CN',
+            build: Android.build,
+            c_locale: Android.c_locale,
             channel: 'website',
             local_id: buvid(),
-            mobi_app: 'android',
-            platform: 'android',
-            s_locale: 'zh-Hans_CN',
+            mobi_app: Android.mobi_app,
+            platform: Android.platform,
+            s_locale: Android.s_locale,
             ts: Math.floor(Date.now() / 1000),
         }).param,
     });

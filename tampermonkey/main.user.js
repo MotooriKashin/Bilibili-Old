@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.7.6-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.7.7-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -38651,7 +38651,7 @@ const MODULES = `
   // src/io/passport.bilibili.com/x/passport-tv-login/h5/qrcode/confirm.ts
   init_tampermonkey();
 
-  // src/io/buvid.ts
+  // src/io/android.ts
   init_tampermonkey();
   var import_md53 = __toESM(require_md5());
   var _buvid = "";
@@ -38668,7 +38668,7 @@ const MODULES = `
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
-        "user-agent": "Mozilla/5.0 BiliDroid/6.72.0 (bbcallen@gmail.com) os/android model/XQ-CT72 mobi_app/android build/6720300 channel/bilih5 innerVer/6720310 osVer/12 network/2",
+        "user-agent": "Mozilla/5.0 BiliDroid/7.54.0 (bbcallen@gmail.com) os/android model/XQ-CT72 mobi_app/android build/7540300 channel/bilih5 innerVer/7540310 osVer/12 network/2" /* user-agent */,
         "buvid": buvid()
       },
       credentials: "include",
@@ -38685,18 +38685,18 @@ const MODULES = `
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
-        "user-agent": "Mozilla/5.0 BiliDroid/6.72.0 (bbcallen@gmail.com) os/android model/XQ-CT72 mobi_app/android build/6720300 channel/bilih5 innerVer/6720310 osVer/12 network/2",
+        "user-agent": "Mozilla/5.0 BiliDroid/7.54.0 (bbcallen@gmail.com) os/android model/XQ-CT72 mobi_app/android build/7540300 channel/bilih5 innerVer/7540310 osVer/12 network/2" /* user-agent */,
         "buvid": buvid()
       },
       credentials: "include",
       body: new ApiSign("", "27eb53fc9058f8c3").sign({
-        build: "6720300",
-        c_locale: "zh-Hans_CN",
+        build: "7540300" /* build */,
+        c_locale: "zh-Hans_CN" /* c_locale */,
         channel: "website",
         local_id: buvid(),
-        mobi_app: "android",
-        platform: "android",
-        s_locale: "zh-Hans_CN",
+        mobi_app: "android" /* mobi_app */,
+        platform: "android" /* platform */,
+        s_locale: "zh-Hans_CN" /* s_locale */,
         ts: Math.floor(Date.now() / 1e3)
       }).param
     });
@@ -38711,18 +38711,18 @@ const MODULES = `
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
-        "user-agent": "Mozilla/5.0 BiliDroid/6.72.0 (bbcallen@gmail.com) os/android model/XQ-CT72 mobi_app/android build/6720300 channel/bilih5 innerVer/6720310 osVer/12 network/2",
+        "user-agent": "Mozilla/5.0 BiliDroid/7.54.0 (bbcallen@gmail.com) os/android model/XQ-CT72 mobi_app/android build/7540300 channel/bilih5 innerVer/7540310 osVer/12 network/2" /* user-agent */,
         "buvid": buvid()
       },
       credentials: "include",
       body: new ApiSign("", "27eb53fc9058f8c3").sign({
-        build: "6720300",
-        c_locale: "zh-Hans_CN",
+        build: "7540300" /* build */,
+        c_locale: "zh-Hans_CN" /* c_locale */,
         channel: "website",
         local_id: buvid(),
-        mobi_app: "android",
-        platform: "android",
-        s_locale: "zh-Hans_CN",
+        mobi_app: "android" /* mobi_app */,
+        platform: "android" /* platform */,
+        s_locale: "zh-Hans_CN" /* s_locale */,
         ts: Math.floor(Date.now() / 1e3),
         auth_code: authCode2
       }).param
