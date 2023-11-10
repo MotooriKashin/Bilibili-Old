@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.7.5-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.7.6-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -307,7 +307,7 @@ const MODULES = `
     "node_modules/md5/md5.js"(exports2, module2) {
       init_tampermonkey();
       (function() {
-        var crypt = require_crypt(), utf8 = require_charenc().utf8, isBuffer = require_is_buffer(), bin = require_charenc().bin, md53 = function(message, options) {
+        var crypt = require_crypt(), utf8 = require_charenc().utf8, isBuffer = require_is_buffer(), bin = require_charenc().bin, md54 = function(message, options) {
           if (message.constructor == String)
             if (options && options.encoding === "binary")
               message = bin.stringToBytes(message);
@@ -323,7 +323,7 @@ const MODULES = `
           }
           m[l >>> 5] |= 128 << l % 32;
           m[(l + 64 >>> 9 << 4) + 14] = l;
-          var FF = md53._ff, GG = md53._gg, HH = md53._hh, II = md53._ii;
+          var FF = md54._ff, GG = md54._gg, HH = md54._hh, II = md54._ii;
           for (var i = 0; i < m.length; i += 16) {
             var aa = a, bb = b, cc = c, dd = d;
             a = FF(a, b, c, d, m[i + 0], 7, -680876936);
@@ -397,28 +397,28 @@ const MODULES = `
           }
           return crypt.endian([a, b, c, d]);
         };
-        md53._ff = function(a, b, c, d, x, s, t) {
+        md54._ff = function(a, b, c, d, x, s, t) {
           var n = a + (b & c | ~b & d) + (x >>> 0) + t;
           return (n << s | n >>> 32 - s) + b;
         };
-        md53._gg = function(a, b, c, d, x, s, t) {
+        md54._gg = function(a, b, c, d, x, s, t) {
           var n = a + (b & d | c & ~d) + (x >>> 0) + t;
           return (n << s | n >>> 32 - s) + b;
         };
-        md53._hh = function(a, b, c, d, x, s, t) {
+        md54._hh = function(a, b, c, d, x, s, t) {
           var n = a + (b ^ c ^ d) + (x >>> 0) + t;
           return (n << s | n >>> 32 - s) + b;
         };
-        md53._ii = function(a, b, c, d, x, s, t) {
+        md54._ii = function(a, b, c, d, x, s, t) {
           var n = a + (c ^ (b | ~d)) + (x >>> 0) + t;
           return (n << s | n >>> 32 - s) + b;
         };
-        md53._blocksize = 16;
-        md53._digestsize = 16;
+        md54._blocksize = 16;
+        md54._digestsize = 16;
         module2.exports = function(message, options) {
           if (message === void 0 || message === null)
             throw new Error("Illegal argument " + message);
-          var digestbytes = crypt.wordsToBytes(md53(message, options));
+          var digestbytes = crypt.wordsToBytes(md54(message, options));
           return options && options.asBytes ? digestbytes : options && options.asString ? bin.bytesToString(digestbytes) : crypt.bytesToHex(digestbytes);
         };
       })();
@@ -7688,6 +7688,9 @@ const MODULES = `
     static DYNAMIC_UPLOAD_BFS = _URLS.P_AUTO + _URLS.D_API + "/x/dynamic/feed/draw/upload_bfs";
     /** 退出登录 */
     static PASSPORT_LOGIN_EXIT = _URLS.P_AUTO + _URLS.D_PASSPORT + "/login/exit/v2";
+    static PASSPORT_AUTH_CODE = _URLS.P_AUTO + _URLS.D_PASSPORT + "/x/passport-tv-login/qrcode/auth_code";
+    static PASSPORT_QRCODE_CONFIRM = _URLS.P_AUTO + _URLS.D_PASSPORT + "/x/passport-tv-login/h5/qrcode/confirm";
+    static PASSPORT_QRCODE_POLL = _URLS.P_AUTO + _URLS.D_PASSPORT + "/x/passport-tv-login/qrcode/poll";
   };
 
   // src/io/grpc/api-dm-web.ts
@@ -9766,7 +9769,7 @@ const MODULES = `
       url.params.appkey = this.appkey;
       url.sort();
       url.params.sign = (0, import_md5.default)((api ? \`api=\${decodeURIComponent(api)}\` : url.param) + appSecret);
-      return url.toJSON();
+      return url;
     }
     get appSecret() {
       switch (this.appkey) {
@@ -9807,7 +9810,7 @@ const MODULES = `
   };
   async function urlSign(url, searchParams = {}, appkey = "c1b107428d337928") {
     const api = new ApiSign(url, appkey);
-    const response = await fetch(api.sign(searchParams));
+    const response = await fetch(api.sign(searchParams).toJSON());
     return await response.json();
   }
 
@@ -10108,7 +10111,7 @@ const MODULES = `
       }, data, pgc ? { module: "bangumi", season_type: 1 } : {});
     }
     async getData() {
-      const response = await fetch(this.sign(), { credentials: "include" });
+      const response = await fetch(this.sign().toJSON(), { credentials: "include" });
       return await response.json();
     }
   };
@@ -10132,7 +10135,7 @@ const MODULES = `
       }, data, dash ? { fnval, fnver } : {});
     }
     async getData() {
-      const response = await GM.fetch(this.sign());
+      const response = await GM.fetch(this.sign().toJSON());
       const json = await response.json();
       if (this.pgc) {
         return jsonCheck(json);
@@ -10157,7 +10160,7 @@ const MODULES = `
       }, data, dash ? { fnval, fnver } : {});
     }
     async getData() {
-      const response = await fetch(this.sign());
+      const response = await fetch(this.sign().toJSON());
       const json = await response.json();
       return jsonCheck(json);
     }
@@ -10180,7 +10183,7 @@ const MODULES = `
       pgc && (this.data.module = "bangumi");
     }
     async getData() {
-      const response = await fetch(this.sign());
+      const response = await fetch(this.sign().toJSON());
       return await response.json();
     }
   };
@@ -13594,7 +13597,7 @@ const MODULES = `
     async getDate() {
       if (this.response)
         return this.response;
-      const response = await fetch(this.sign());
+      const response = await fetch(this.sign().toJSON());
       const json = await response.json();
       return this.response = jsonCheck(json).data;
     }
@@ -36792,7 +36795,7 @@ const MODULES = `
       }, data);
     }
     async getDate() {
-      const response = await fetch(this.sign());
+      const response = await fetch(this.sign().toJSON());
       const json = await response.json();
       return jsonCheck(json).result;
     }
@@ -38354,7 +38357,7 @@ const MODULES = `
       });
     }
     async getData() {
-      const response = await fetch(this.sign());
+      const response = await fetch(this.sign().toJSON());
       const json = await response.json();
       return jsonCheck(json);
     }
@@ -38639,18 +38642,102 @@ const MODULES = `
       this.api = encodeURIComponent(api);
     }
     async getData() {
-      const response = await fetch(this.sign({ api: this.api }, this.api), { credentials: "include" });
+      const response = await fetch(this.sign({ api: this.api }, this.api).toJSON(), { credentials: "include" });
       const json = await response.json();
       return jsonCheck(json).data;
     }
   };
 
+  // src/io/passport.bilibili.com/x/passport-tv-login/h5/qrcode/confirm.ts
+  init_tampermonkey();
+
+  // src/io/buvid.ts
+  init_tampermonkey();
+  var import_md53 = __toESM(require_md5());
+  var _buvid = "";
+  function buvid() {
+    if (_buvid)
+      return _buvid;
+    const buvid2 = (0, import_md53.default)(Math.random().toString()).toUpperCase();
+    return _buvid = "XX" + buvid2[2] + buvid2[12] + buvid2[22] + buvid2;
+  }
+
+  // src/io/passport.bilibili.com/x/passport-tv-login/h5/qrcode/confirm.ts
+  async function confirm(authCode2, csrf = getCookies().bili_jct) {
+    const response = await GM.fetch(URLS.PASSPORT_QRCODE_CONFIRM, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        "user-agent": "Mozilla/5.0 BiliDroid/6.72.0 (bbcallen@gmail.com) os/android model/XQ-CT72 mobi_app/android build/6720300 channel/bilih5 innerVer/6720310 osVer/12 network/2",
+        "buvid": buvid()
+      },
+      credentials: "include",
+      body: objUrl("", { auth_code: authCode2, csrf, scanning_type: 1 })
+    });
+    const json = await response.json();
+    return jsonCheck(json).data.gourl;
+  }
+
+  // src/io/passport.bilibili.com/x/passport-tv-login/qrcode/auth_code.ts
+  init_tampermonkey();
+  async function authCode() {
+    const response = await GM.fetch(URLS.PASSPORT_AUTH_CODE, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        "user-agent": "Mozilla/5.0 BiliDroid/6.72.0 (bbcallen@gmail.com) os/android model/XQ-CT72 mobi_app/android build/6720300 channel/bilih5 innerVer/6720310 osVer/12 network/2",
+        "buvid": buvid()
+      },
+      credentials: "include",
+      body: new ApiSign("", "27eb53fc9058f8c3").sign({
+        build: "6720300",
+        c_locale: "zh-Hans_CN",
+        channel: "website",
+        local_id: buvid(),
+        mobi_app: "android",
+        platform: "android",
+        s_locale: "zh-Hans_CN",
+        ts: Math.floor(Date.now() / 1e3)
+      }).param
+    });
+    const json = await response.json();
+    return jsonCheck(json).data.auth_code;
+  }
+
+  // src/io/passport.bilibili.com/x/passport-tv-login/qrcode/poll.ts
+  init_tampermonkey();
+  async function poll2(authCode2) {
+    const response = await GM.fetch(URLS.PASSPORT_QRCODE_POLL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        "user-agent": "Mozilla/5.0 BiliDroid/6.72.0 (bbcallen@gmail.com) os/android model/XQ-CT72 mobi_app/android build/6720300 channel/bilih5 innerVer/6720310 osVer/12 network/2",
+        "buvid": buvid()
+      },
+      credentials: "include",
+      body: new ApiSign("", "27eb53fc9058f8c3").sign({
+        build: "6720300",
+        c_locale: "zh-Hans_CN",
+        channel: "website",
+        local_id: buvid(),
+        mobi_app: "android",
+        platform: "android",
+        s_locale: "zh-Hans_CN",
+        ts: Math.floor(Date.now() / 1e3),
+        auth_code: authCode2
+      }).param
+    });
+    const json = await response.json();
+    return jsonCheck(json).data.access_token;
+  }
+
   // src/core/accesskey.ts
   var AccessKey = class {
+    authCode = "";
     constructor() {
       const button = [{
         text: "开始授权",
-        callback: () => this.get()
+        callback: () => this.poll()
       }];
       if (user.userStatus.accessKey.token) {
         button[0].text = "刷新授权";
@@ -38663,6 +38750,7 @@ const MODULES = `
         "【账户授权】将授权脚本获取您的登录鉴权，允许脚本访问一些网页端无权访问的B站接口，以实现【解除播放限制】等功能。",
         "警告：如果您启用了脚本的【解除播放限制】功能，并且选择使用【自定义】服务器，请务必自行确认服务器的可信度！",
         "第三方服务器获得授权等于您在上面登录了B站，好比在网吧登录又忘了退出，第三方能用您的账户实现任何登录状态能进行的操作！",
+        "成功授权将添加一条扫码登录信息！",
         "个中风险请务必知悉！<strong>如无必要，切莫授权！</strong>"
       ], "授权确认", button);
     }
@@ -38682,6 +38770,45 @@ const MODULES = `
           user.userStatus.accessKey.date = date;
           user.userStatus.accessKey.dateStr = dateStr;
           msg.push("> ------- 授权成功 -------", \`> 鉴权: \${obj.access_key}\`, \`> 日期：\${dateStr}\`);
+          msg.type = "success";
+          msg.delay = 4;
+        }).catch((e) => {
+          msg.push("> 授权出错！", e);
+          msg.type = "error";
+          msg.delay = 4;
+        });
+      } else {
+        toast.warning("请先登录B站账户！");
+        biliQuickLogin();
+      }
+    }
+    /**
+     * 新版方法  
+     * @see https://github.com/lzghzr/TampermonkeyJS/blob/master/libBilibiliToken/libBilibiliToken.ts
+     */
+    poll() {
+      if (uid) {
+        const msg = toast.list("正在申请账户授权 >>>", "> 获取登录二维码");
+        authCode().then((d) => {
+          if (!d) {
+            msg.push("> 未能获取到二维码！");
+            throw new Error("获取二维码出错！", { cause: d });
+          }
+          msg.push("> 获取到二维码", \`> \${d}\`);
+          this.authCode = d;
+          return confirm(d);
+        }).then((d) => {
+          msg.push("> 扫描二维码", \`> \${d}\`, "> 拉取token");
+          return poll2(this.authCode);
+        }).then((d) => {
+          if (!d)
+            throw new Error("未能获取到鉴权参数~");
+          const date = (/* @__PURE__ */ new Date()).getTime();
+          const dateStr = timeFormat(date, true);
+          user.userStatus.accessKey.token = d;
+          user.userStatus.accessKey.date = date;
+          user.userStatus.accessKey.dateStr = dateStr;
+          msg.push("> ------- 授权成功 -------", \`> 鉴权: \${d}\`, \`> 日期：\${dateStr}\`);
           msg.type = "success";
           msg.delay = 4;
         }).catch((e) => {
