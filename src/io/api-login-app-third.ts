@@ -8,7 +8,7 @@ export class ApiLoginAppThird extends ApiSign {
         this.api = encodeURIComponent(api);
     }
     async getData() {
-        const response = await fetch(this.sign({ api: this.api }, this.api), { credentials: 'include' });
+        const response = await fetch(this.sign({ api: this.api }, this.api).toJSON(), { credentials: 'include' });
         const json = await response.json();
         return <ILoginAppThirdResponse>jsonCheck(json).data;
     }

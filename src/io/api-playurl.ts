@@ -270,7 +270,7 @@ export class ApiAppPgcPlayurl extends ApiSign {
         }, data);
     }
     async getData() {
-        const response = await fetch(this.sign());
+        const response = await fetch(this.sign().toJSON());
         const json = await response.json();
         return <IPlayurlDash>jsonCheck(json);
     }

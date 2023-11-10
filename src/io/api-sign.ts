@@ -92,7 +92,7 @@ export class ApiSign {
         url.params.appkey = this.appkey;
         url.sort();
         url.params.sign = md5((api ? `api=${decodeURIComponent(api)}` : url.param) + appSecret);
-        return url.toJSON();
+        return url;
     }
     protected get appSecret() {
         switch (this.appkey) {
@@ -133,6 +133,6 @@ export class ApiSign {
 }
 export async function urlSign(url: string, searchParams = {}, appkey: keyof typeof APP_KEY = 'c1b107428d337928') {
     const api = new ApiSign(url, appkey);
-    const response = await fetch(api.sign(searchParams));
+    const response = await fetch(api.sign(searchParams).toJSON());
     return await response.json();
 }

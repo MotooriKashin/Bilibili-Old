@@ -23,7 +23,7 @@ export class ApiSearch extends ApiSign {
         });
     }
     async getData() {
-        const response = await fetch(this.sign());
+        const response = await fetch(this.sign().toJSON());
         const json = await response.json();
         return <IApiSearchAndroid>jsonCheck(json);
     }

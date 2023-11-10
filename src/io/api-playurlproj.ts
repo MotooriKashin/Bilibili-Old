@@ -17,7 +17,7 @@ export class ApiPlayurlProj extends ApiSign {
         pgc && (this.data.module = "bangumi");
     }
     async getData() {
-        const response = await fetch(this.sign());
+        const response = await fetch(this.sign().toJSON());
         return <IPlayurlDurl>await response.json();
     }
 }

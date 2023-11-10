@@ -78,4 +78,7 @@ export class URLS {
     static readonly DYNAMIC_UPLOAD_BFS = URLS.P_AUTO + URLS.D_API + '/x/dynamic/feed/draw/upload_bfs';
     /** 退出登录 */
     static readonly PASSPORT_LOGIN_EXIT = URLS.P_AUTO + URLS.D_PASSPORT + '/login/exit/v2';
+    static readonly PASSPORT_AUTH_CODE = URLS.P_AUTO + URLS.D_PASSPORT + '/x/passport-tv-login/qrcode/auth_code';
+    static readonly PASSPORT_QRCODE_CONFIRM = URLS.P_AUTO + URLS.D_PASSPORT + '/x/passport-tv-login/h5/qrcode/confirm';
+    static readonly PASSPORT_QRCODE_POLL = URLS.P_AUTO + URLS.D_PASSPORT + '/x/passport-tv-login/qrcode/poll';
 }

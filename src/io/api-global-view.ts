@@ -38,7 +38,7 @@ export class ApiGlobalOgvView extends ApiSign {
         }, data);
     }
     async getDate() {
-        const response = await fetch(this.sign());
+        const response = await fetch(this.sign().toJSON());
         const json = await response.json();
         return <IGlobalOgvViewResponse>jsonCheck(json).result;
     }

@@ -15,7 +15,7 @@ export class ApiPlayurlInterface extends ApiSign {
         }, data, pgc ? { module: "bangumi", season_type: 1 } : {});
     }
     async getData() {
-        const response = await fetch(this.sign(), { credentials: 'include' });
+        const response = await fetch(this.sign().toJSON(), { credentials: 'include' });
         return <IPlayurlDurl>await response.json();
     }
 }

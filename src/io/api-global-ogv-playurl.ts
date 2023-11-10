@@ -24,7 +24,7 @@ export class ApiGlobalOgvPlayurl extends ApiSign {
     }
     async getDate() {
         if (this.response) return this.response;
-        const response = await fetch(this.sign());
+        const response = await fetch(this.sign().toJSON());
         const json = await response.json();
         return this.response = <IGlobalOgvPlayurlResponse>jsonCheck(json).data;
     }

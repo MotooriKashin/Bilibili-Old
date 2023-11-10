@@ -19,7 +19,7 @@ export class ApiPlayurlIntl extends ApiSign {
         }, data, dash ? { fnval, fnver } : {});
     }
     async getData() {
-        const response = await GM.fetch(this.sign());
+        const response = await GM.fetch(this.sign().toJSON());
         const json = await response.json();
         if (this.pgc) {
             return <IPlayurlDash | IPlayurlDurl>jsonCheck(json);
