@@ -75,13 +75,14 @@ export class AccessKey {
         if (uid) {
             const msg = toast.list('正在申请账户授权 >>>', '> 获取登录二维码');
             authCode()
-                .then(d => {
+                .then(async d => {
                     if (!d) {
                         msg.push('> 未能获取到二维码！')
                         throw new Error('获取二维码出错！', { cause: d })
                     }
                     msg.push('> 获取到二维码', `> ${d}`);
                     this.authCode = d;
+                    await this.defer();
                     return confirm(d);
                 })
                 .then(d => {
@@ -109,6 +110,13 @@ export class AccessKey {
             biliQuickLogin();
         }
     }
+
+    defer() {
+        return new Promise((resolve) => {
+            setTimeout(resolve, Math.floor(Math.random() * 1e3) + 3e3);
+        });
+    }
+
     remove() {
         user.userStatus!.accessKey.token = <any>undefined;
         user.userStatus!.accessKey.date = 0;

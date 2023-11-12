@@ -38818,13 +38818,14 @@ const MODULES = `
     poll() {
       if (uid) {
         const msg = toast.list("正在申请账户授权 >>>", "> 获取登录二维码");
-        authCode().then((d) => {
+        authCode().then(async (d) => {
           if (!d) {
             msg.push("> 未能获取到二维码！");
             throw new Error("获取二维码出错！", { cause: d });
           }
           msg.push("> 获取到二维码", \`> \${d}\`);
           this.authCode = d;
+          await this.defer();
           return confirm(d);
         }).then((d) => {
           msg.push("> 扫描二维码", \`> \${d}\`, "> 拉取token");
@@ -38849,6 +38850,11 @@ const MODULES = `
         toast.warning("请先登录B站账户！");
         biliQuickLogin();
       }
+    }
+    defer() {
+      return new Promise((resolve) => {
+        setTimeout(resolve, Math.floor(Math.random() * 1e3) + 3e3);
+      });
     }
     remove() {
       user.userStatus.accessKey.token = void 0;
