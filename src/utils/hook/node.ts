@@ -1,5 +1,5 @@
 import { debug } from "../debug";
-import { urlObj } from "../format/url";
+import { objUrl, urlObj } from "../format/url";
 
 const appendChild = Element.prototype.appendChild;
 const insertBefore = Element.prototype.insertBefore;
@@ -135,4 +135,39 @@ jsonpHook.scriptIntercept = (url: string | string[], redirect?: (url: string) =>
  */
 function removeJsonphook(id: number) {
     id >= 0 && delete jsonp[id - 1];
+}
+
+/**
+ * jsonp转xhr，改用fetch请求，可用于修复受损的jsonp请求
+ * 
+ * @param url 需要拦截的脚本的src匹配关键词或词组，词组间是并的关系，即必须同时满足才会触发拦截回调。
+ * @returns 取消拦截的方法
+ */
+jsonpHook.xhr = (url: string | string[]) => {
+    const one = Array.isArray(url) ? url : [url];
+    const two = function (this: HTMLScriptElement) {
+        try {
+            // "https://s.search.bilibili.com/main/suggest?jsoncallback=jqueryCallback_bili_6048207588082448&func=suggest&suggest_type=accurate&sub_type=tag&main_ver=v1&highlight=&userid=49811844&bangumi_acc_num=1&special_acc_num=1&topic_acc_num=1&upuser_acc_num=3&tag_num=10&special_num=10&bangumi_num=10&upuser_num=3&term=&rnd=0.19763260300544117&_=1699787584468"
+            const obj = urlObj(this.src);
+            if (obj) {
+                const callback: any = obj.callback || obj.jsoncallback;
+                const call: any = window[callback];
+                const url = this.src;
+                this.removeAttribute("src");
+                delete obj.callback;
+                delete obj.jsoncallback;
+                fetch(objUrl(url.split('?')[0], obj))
+                    .then(d => d.json())
+                    .then(d => {
+                        call(d);
+                        this.dispatchEvent(new ProgressEvent("load"));
+                    })
+                    .catch(() => {
+                        this.dispatchEvent(new ProgressEvent("error"));
+                    });
+            }
+        } catch (e) { debug.error("jsonphook", one, e) }
+    }
+    const iid = jsonp.push([one, two]);
+    return () => { removeJsonphook(iid) };
 }

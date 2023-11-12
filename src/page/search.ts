@@ -21,6 +21,7 @@ export class PageSearch extends Page {
         this.gat();
         this.rqt();
         this.updateDom();
+        jsonpHook.xhr('s.search.bilibili.com/main/suggest');
     }
     /** 修正URL */
     protected location() {

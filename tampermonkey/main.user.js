@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.7.7-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.7.8-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -14641,6 +14641,34 @@ const MODULES = `
   function removeJsonphook(id) {
     id >= 0 && delete jsonp[id - 1];
   }
+  jsonpHook.xhr = (url) => {
+    const one = Array.isArray(url) ? url : [url];
+    const two = function() {
+      try {
+        const obj = urlObj(this.src);
+        if (obj) {
+          const callback = obj.callback || obj.jsoncallback;
+          const call = window[callback];
+          const url2 = this.src;
+          this.removeAttribute("src");
+          delete obj.callback;
+          delete obj.jsoncallback;
+          fetch(objUrl(url2.split("?")[0], obj)).then((d) => d.json()).then((d) => {
+            call(d);
+            this.dispatchEvent(new ProgressEvent("load"));
+          }).catch(() => {
+            this.dispatchEvent(new ProgressEvent("error"));
+          });
+        }
+      } catch (e) {
+        debug.error("jsonphook", one, e);
+      }
+    };
+    const iid = jsonp.push([one, two]);
+    return () => {
+      removeJsonphook(iid);
+    };
+  };
 
   // src/json/index-icon.json
   var index_icon_default = {
@@ -38407,6 +38435,7 @@ const MODULES = `
       this.gat();
       this.rqt();
       this.updateDom();
+      jsonpHook.xhr("s.search.bilibili.com/main/suggest");
     }
     /** 修正URL */
     location() {
