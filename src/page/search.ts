@@ -21,8 +21,13 @@ export class PageSearch extends Page {
         this.gat();
         this.rqt();
         this.updateDom();
+    }
+
+    /** 修复搜索推荐词 */
+    static suggest() {
         jsonpHook.xhr('s.search.bilibili.com/main/suggest');
     }
+
     /** 修正URL */
     protected location() {
         // 搜索首页不应含有任何路径

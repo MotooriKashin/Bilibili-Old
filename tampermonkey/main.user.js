@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.7.8-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.7.9-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -38435,6 +38435,9 @@ const MODULES = `
       this.gat();
       this.rqt();
       this.updateDom();
+    }
+    /** 修复搜索推荐词 */
+    static suggest() {
       jsonpHook.xhr("s.search.bilibili.com/main/suggest");
     }
     /** 修正URL */
@@ -40710,6 +40713,7 @@ const MODULES = `
   }
   BLOD.path[2] == "message.bilibili.com" && Header.message();
   Header.videoOffset();
+  PageSearch.suggest();
   /space\\.bilibili\\.com/.test(location.href) && new PageSpace();
   /bangumi\\/media\\/md/.test(location.href) && new PageMedia();
   location.href.includes("www.bilibili.com/account/history") && new PageHistory();

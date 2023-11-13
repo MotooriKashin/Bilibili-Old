@@ -139,6 +139,7 @@ try {
 } catch (e) { }
 BLOD.path[2] == "message.bilibili.com" && Header.message();
 Header.videoOffset();
+PageSearch.suggest();
 /space\.bilibili\.com/.test(location.href) && new PageSpace();
 /bangumi\/media\/md/.test(location.href) && new PageMedia();
 location.href.includes("www.bilibili.com/account/history") && new PageHistory();
