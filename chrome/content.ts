@@ -121,7 +121,7 @@ window.addEventListener("beforeunload", () => {
 
 documentPictureInPicture?.addEventListener('enter', e => {
     if (documentPictureInPicture.window) {
-        const url = chrome.runtime.getURL('/video.css');
+        const url = chrome.runtime.getURL('/player/video.css');
         const link = document.createElement('link');
 
         link.rel = 'stylesheet';
