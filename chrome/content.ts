@@ -118,3 +118,14 @@ window.addEventListener("beforeunload", () => {
         data: arr
     });
 });
+
+documentPictureInPicture?.addEventListener('enter', e => {
+    if (documentPictureInPicture.window) {
+        const url = chrome.runtime.getURL('/options.css');
+        const link = document.createElement('link');
+
+        link.rel = 'stylesheet';
+        link.href = url;
+        documentPictureInPicture.window.document.head.appendChild(link);
+    }
+});
