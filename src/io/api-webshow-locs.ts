@@ -1,4 +1,4 @@
-import { BV2avAll } from "../utils/abv";
+import { AV } from "../utils/av";
 import { objUrl } from "../utils/format/url";
 import { jsonCheck, IApiData } from "./api";
 import { URLS } from "./urls";
@@ -9,7 +9,7 @@ export async function apiWebshowLoc(id: number) {
         id
     }));
     const text = await response.text();
-    return <IApiWebshowLocsResponse[]>jsonCheck(BV2avAll(text)).data;
+    return <IApiWebshowLocsResponse[]>jsonCheck(AV.fromStr(text)).data;
 }
 export async function apiWebshowLocs(data: IApiWebshowLocsData) {
     const response = await fetch(objUrl(URLS.WEBSHOW_LOCS, {
@@ -17,7 +17,7 @@ export async function apiWebshowLocs(data: IApiWebshowLocsData) {
         ids: data.ids.join(',')
     }));
     const text = await response.text();
-    return <IApiWebshowLocsResponse[][]>jsonCheck(BV2avAll(text)).data;
+    return <IApiWebshowLocsResponse[][]>jsonCheck(AV.fromStr(text)).data;
 }
 
 interface IApiWebshowLocsData extends IApiData {

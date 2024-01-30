@@ -1,5 +1,5 @@
 import { apiReply } from "../io/api-reply";
-import { BV2avAll } from "../utils/abv";
+import { AV } from "../utils/av";
 import { addCss, addElement, loadScript } from "../utils/element";
 import { urlObj } from "../utils/format/url";
 import { jsonpHook } from "../utils/hook/node";
@@ -524,7 +524,7 @@ export class Comment {
                 }
             }
 
-            return BV2avAll(str);
+            return AV.fromStr(str);
         };
     }
     /** 评论图片 */

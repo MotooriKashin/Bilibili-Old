@@ -1,4 +1,4 @@
-import { abv, BV2avAll } from "../utils/abv";
+import { AV } from "../utils/av";
 import { URL } from "../utils/format/url";
 
 /** 垃圾参数序列 */
@@ -62,11 +62,11 @@ class UrlCleaner {
             const params = url.params;
             // 旧版页面一般不支持bvid，转化为aid
             if (params.bvid) {
-                params.aid = <string>abv(params.bvid);
+                params.aid = <string>AV.fromBV(<string>params.bvid);
             }
             // B站偶有发病出现名为aid实为bvid的情况
             if (params.aid && !Number(params.aid)) {
-                params.aid = <string>abv(params.aid);
+                params.aid = <string>AV.fromBV(<string>params.aid);
             }
             // 通杀
             paramsSet.forEach(d => { delete params[d]; });
@@ -78,8 +78,8 @@ class UrlCleaner {
                     }
                 }
             });
-            url.base = BV2avAll(url.base);
-            url.hash && (url.hash = BV2avAll(url.hash));
+            url.base = AV.fromStr(url.base);
+            url.hash && (url.hash = AV.fromStr(url.hash));
             return url.toJSON();
         } else return str;
     }

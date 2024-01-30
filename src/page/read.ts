@@ -4,12 +4,12 @@ import { toast } from '../core/toast';
 import html from '../html/read.html';
 import { IStat } from "../io/api";
 import { IUserInfo } from "../io/api-view-detail";
-import { BV2avAll } from '../utils/abv';
 import { debug } from "../utils/debug";
 import { addCss, loadScript } from "../utils/element";
 import { propertyHook } from "../utils/hook/method";
 import { webpackHook } from '../utils/hook/webpack';
 import { Page } from "./page";
+import { AV } from '../utils/av';
 
 interface ReadInfo {
     act_id: number;
@@ -158,7 +158,7 @@ export class PageRead extends Page {
                 debug.error(e)
             }
         }
-        return BV2avAll(str);
+        return AV.fromStr(str);
     }
     protected tagContainer() {
         this.readInfoStr += (this.readInfo.tags || []).reduce((o, d) => {

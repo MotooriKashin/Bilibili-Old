@@ -3,7 +3,7 @@ import { apiBiliplusView } from "../io/api-biliplus-view";
 import { apiPlayerPagelist } from "../io/api-player-pagelist";
 import { apiView } from "../io/api-view";
 import { apiXView } from "../io/api-x-view";
-import { abv } from "./abv";
+import { AV } from "./av";
 import { debug } from "./debug";
 import { objUrl, urlObj } from "./format/url";
 
@@ -55,9 +55,9 @@ export async function urlParam(url: string, redirect = true): Promise<UrlParam> 
     let pgc = false;
     !aid && (aid = obj.avid);
     !aid && (url.replace(/[aA][vV]\d+/, d => aid = d.substring(2)));
-    !aid && (url.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/, d => aid = <string>abv(d)));
-    !aid && obj.bvid && (aid = abv(obj.bvid));
-    aid && !Number(aid) && (aid = abv(aid));
+    !aid && (url.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/, d => aid = AV.fromBV(<string>d)));
+    !aid && obj.bvid && (aid = AV.fromBV(<string>obj.bvid));
+    aid && !Number(aid) && (aid = AV.fromBV(<string>aid));
     p = p || 1;
     !ssid && (ssid = obj.seasonId);
     !ssid && (ssid = obj.season_id);
