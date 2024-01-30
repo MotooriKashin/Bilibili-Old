@@ -54,7 +54,7 @@ export async function saveAs(content: BufferSource | Blob | string, fileName: st
     a.addEventListener("load", () => URL.revokeObjectURL(a.href));
     // document.body.appendChild(a);
     a.click();
-	setTimeout(() => {
+    setTimeout(() => {
         a.remove();
         window.URL.revokeObjectURL(a.href);
     }, 3000);
@@ -87,25 +87,11 @@ export function fileRead(accept?: string, multiple?: boolean) {
         multiple && (input.multiple = multiple);
         input.style.opacity = "0";
 
-        // ToDo: Remove this workaround once
-        // https://github.com/whatwg/html/issues/6376 is specified and supported.
-        // > 2023-02-25 chromium Implement cancel event on <input type=file>
-        // > https://bugs.chromium.org/p/chromium/issues/detail?id=1227424
-        const rejectOnPageInteraction = () => {
-            window.removeEventListener('pointermove', rejectOnPageInteraction);
-            window.removeEventListener('pointerdown', rejectOnPageInteraction);
-            window.removeEventListener('keydown', rejectOnPageInteraction);
+        input.addEventListener('cancel', () => {
             reject(new DOMException('The user aborted a request.', 'AbortError'));
-        };
-
-        window.addEventListener('pointermove', rejectOnPageInteraction);
-        window.addEventListener('pointerdown', rejectOnPageInteraction);
-        window.addEventListener('keydown', rejectOnPageInteraction);
+        });
 
         input.addEventListener('change', () => {
-            window.removeEventListener('pointermove', rejectOnPageInteraction);
-            window.removeEventListener('pointerdown', rejectOnPageInteraction);
-            window.removeEventListener('keydown', rejectOnPageInteraction);
             resolve(input.multiple ? input.files : input.files![0]);
         });
 

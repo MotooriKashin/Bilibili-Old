@@ -7816,19 +7816,10 @@ const MODULES = `
       accept && (input.accept = accept);
       multiple && (input.multiple = multiple);
       input.style.opacity = "0";
-      const rejectOnPageInteraction = () => {
-        window.removeEventListener("pointermove", rejectOnPageInteraction);
-        window.removeEventListener("pointerdown", rejectOnPageInteraction);
-        window.removeEventListener("keydown", rejectOnPageInteraction);
+      input.addEventListener("cancel", () => {
         reject(new DOMException("The user aborted a request.", "AbortError"));
-      };
-      window.addEventListener("pointermove", rejectOnPageInteraction);
-      window.addEventListener("pointerdown", rejectOnPageInteraction);
-      window.addEventListener("keydown", rejectOnPageInteraction);
+      });
       input.addEventListener("change", () => {
-        window.removeEventListener("pointermove", rejectOnPageInteraction);
-        window.removeEventListener("pointerdown", rejectOnPageInteraction);
-        window.removeEventListener("keydown", rejectOnPageInteraction);
         resolve(input.multiple ? input.files : input.files[0]);
       });
       input.click();
@@ -8464,9 +8455,6 @@ const MODULES = `
     function fromBV(bvid) {
       if (REG_EXP_SHORT.test(bvid)) {
         bvid = "BV" + bvid;
-      }
-      if (!REG_EXP.test(bvid)) {
-        throw new TypeError(\`\${bvid} is illegal\`);
       }
       let r = 0n;
       for (let i = 3; i < BV_LEN; i++) {

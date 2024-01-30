@@ -65,9 +65,9 @@ export namespace AV {
         if (REG_EXP_SHORT.test(bvid)) {
             bvid = 'BV' + bvid;
         }
-        if (!REG_EXP.test(bvid)) {
-            throw new TypeError(`${bvid} is illegal`);
-        }
+        // if (!REG_EXP.test(bvid)) {
+        //     throw new TypeError(`${bvid} is illegal`);
+        // }
 
         let r = 0n;
         for (let i = 3; i < BV_LEN; i++) {
