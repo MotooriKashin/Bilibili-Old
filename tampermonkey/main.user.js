@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.7.9-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.8.0-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -1492,7 +1492,7 @@ const MODULES = `
       Reader2.create = create();
       Reader2.prototype._slice = util.Array.prototype.subarray || /* istanbul ignore next */
       util.Array.prototype.slice;
-      Reader2.prototype.uint32 = function read_uint32_setup() {
+      Reader2.prototype.uint32 = /* @__PURE__ */ function read_uint32_setup() {
         var value = 4294967295;
         return function read_uint32() {
           value = (this.buf[this.pos] & 127) >>> 0;
@@ -3713,10 +3713,10 @@ const MODULES = `
         function finish(err2, root) {
           if (!callback)
             return;
-          var cb = callback;
-          callback = null;
           if (sync)
             throw err2;
+          var cb = callback;
+          callback = null;
           cb(err2, root);
         }
         function getBundledFileName(filename2) {
@@ -4414,7 +4414,7 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       Object.defineProperty(exports2, "__esModule", { value: true });
-      var InsertDataQuill = function() {
+      var InsertDataQuill = /* @__PURE__ */ function() {
         function InsertDataQuill2(type, value) {
           this.type = type;
           this.value = value;
@@ -4422,7 +4422,7 @@ const MODULES = `
         return InsertDataQuill2;
       }();
       exports2.InsertDataQuill = InsertDataQuill;
-      var InsertDataCustom = function() {
+      var InsertDataCustom = /* @__PURE__ */ function() {
         function InsertDataCustom2(type, value) {
           this.type = type;
           this.value = value;
@@ -5091,7 +5091,7 @@ const MODULES = `
       function eq(value, other) {
         return value === other || value !== value && other !== other;
       }
-      var isArguments = baseIsArguments(function() {
+      var isArguments = baseIsArguments(/* @__PURE__ */ function() {
         return arguments;
       }()) ? baseIsArguments : function(value) {
         return isObjectLike(value) && hasOwnProperty.call(value, "callee") && !propertyIsEnumerable.call(value, "callee");
@@ -6183,14 +6183,14 @@ const MODULES = `
         };
       }();
       Object.defineProperty(exports2, "__esModule", { value: true });
-      var InlineGroup = function() {
+      var InlineGroup = /* @__PURE__ */ function() {
         function InlineGroup2(ops) {
           this.ops = ops;
         }
         return InlineGroup2;
       }();
       exports2.InlineGroup = InlineGroup;
-      var SingleItem = function() {
+      var SingleItem = /* @__PURE__ */ function() {
         function SingleItem2(op) {
           this.op = op;
         }
@@ -6212,7 +6212,7 @@ const MODULES = `
         return BlotBlock2;
       }(SingleItem);
       exports2.BlotBlock = BlotBlock;
-      var BlockGroup = function() {
+      var BlockGroup = /* @__PURE__ */ function() {
         function BlockGroup2(op, ops) {
           this.op = op;
           this.ops = ops;
@@ -6220,14 +6220,14 @@ const MODULES = `
         return BlockGroup2;
       }();
       exports2.BlockGroup = BlockGroup;
-      var ListGroup = function() {
+      var ListGroup = /* @__PURE__ */ function() {
         function ListGroup2(items) {
           this.items = items;
         }
         return ListGroup2;
       }();
       exports2.ListGroup = ListGroup;
-      var ListItem = function() {
+      var ListItem = /* @__PURE__ */ function() {
         function ListItem2(item, innerList) {
           if (innerList === void 0) {
             innerList = null;
@@ -6238,21 +6238,21 @@ const MODULES = `
         return ListItem2;
       }();
       exports2.ListItem = ListItem;
-      var TableGroup = function() {
+      var TableGroup = /* @__PURE__ */ function() {
         function TableGroup2(rows) {
           this.rows = rows;
         }
         return TableGroup2;
       }();
       exports2.TableGroup = TableGroup;
-      var TableRow = function() {
+      var TableRow = /* @__PURE__ */ function() {
         function TableRow2(cells) {
           this.cells = cells;
         }
         return TableRow2;
       }();
       exports2.TableRow = TableRow;
-      var TableCell = function() {
+      var TableCell = /* @__PURE__ */ function() {
         function TableCell2(item) {
           this.item = item;
         }
@@ -8366,53 +8366,120 @@ const MODULES = `
     return jsonCheck(json).data;
   }
 
-  // src/utils/abv.ts
+  // src/utils/av.ts
   init_tampermonkey();
-  var Abv = class {
-    base58Table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF";
-    digitMap = [11, 10, 3, 8, 4, 6];
-    xor = 177451812;
-    add = 8728348608;
-    bvidTemplate = ["B", "V", 1, "", "", 4, "", 1, "", 7, "", ""];
-    table = {};
-    constructor() {
-      for (let i = 0; i < 58; i++)
-        this.table[this.base58Table[i]] = i;
+  var AV;
+  ((AV2) => {
+    const XOR_CODE = 23442827791579n;
+    const MASK_CODE = 2251799813685247n;
+    const MAX_AID = 1n << 51n;
+    const MIN_AID = 1n;
+    const BASE = 58n;
+    const BYTES = ["B", "V", 1, "", "", "", "", "", "", "", "", ""];
+    const BV_LEN = BYTES.length;
+    const ALPHABET = [
+      "F",
+      "c",
+      "w",
+      "A",
+      "P",
+      "N",
+      "K",
+      "T",
+      "M",
+      "u",
+      "g",
+      "3",
+      "G",
+      "V",
+      "5",
+      "L",
+      "j",
+      "7",
+      "E",
+      "J",
+      "n",
+      "H",
+      "p",
+      "W",
+      "s",
+      "x",
+      "4",
+      "t",
+      "",
+      "8",
+      "h",
+      "a",
+      "Y",
+      "e",
+      "v",
+      "i",
+      "q",
+      "B",
+      "z",
+      "6",
+      "r",
+      "k",
+      "C",
+      "y",
+      "1",
+      "2",
+      "m",
+      "U",
+      "S",
+      "D",
+      "Q",
+      "X",
+      "9",
+      "R",
+      "d",
+      "o",
+      "Z",
+      "f"
+    ];
+    const DIGIT_MAP = [0, 1, 2, 9, 7, 5, 6, 4, 8, 3, 10, 11];
+    const REG_EXP = new RegExp(\`^[bB][vV]1[\${ALPHABET.join("")}]{9}\$\`, "g");
+    const REG_EXP_SHORT = new RegExp(\`^1[\${ALPHABET.join("")}]{9}\$\`, "g");
+    const REG_EXP_STR = new RegExp(\`[bB][vV]1[\${ALPHABET.join("")}]{9}\`, "g");
+    function toBV(avid) {
+      typeof avid === "bigint" || (avid = BigInt(avid));
+      if (avid < MIN_AID) {
+        throw new RangeError(\`Av \${avid} is smaller than \${MIN_AID}\`);
+      }
+      if (avid >= MAX_AID) {
+        throw new RangeError(\`Av \${avid} is bigger than \${MAX_AID}\`);
+      }
+      const bytes = Array.from(BYTES);
+      let bv_idx = BV_LEN - 1;
+      let tmp = (MAX_AID | avid) ^ XOR_CODE;
+      while (tmp !== 0n) {
+        let table_idx = tmp % BASE;
+        bytes[DIGIT_MAP[Number(bv_idx)]] = ALPHABET[Number(table_idx)];
+        tmp /= BASE;
+        bv_idx -= 1;
+      }
+      return bytes.join("");
     }
-    /**
-     * av/BV互转
-     * @param input av或BV，可带av/BV前缀
-     * @returns 转化结果
-     */
-    check(input) {
-      if (/^[aA][vV][0-9]+\$/.test(String(input)) || /^\\d+\$/.test(String(input)))
-        return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
-      if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
-        return this.bvToAv("BV" + input);
-      if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
-        return this.bvToAv(String(input));
-      throw input;
+    AV2.toBV = toBV;
+    function fromBV(bvid) {
+      if (REG_EXP_SHORT.test(bvid)) {
+        bvid = "BV" + bvid;
+      }
+      if (!REG_EXP.test(bvid)) {
+        throw new TypeError(\`\${bvid} is illegal\`);
+      }
+      let r = 0n;
+      for (let i = 3; i < BV_LEN; i++) {
+        r = r * BASE + BigInt(ALPHABET.indexOf(bvid[DIGIT_MAP[i]]));
+      }
+      return \`\${r & MASK_CODE ^ XOR_CODE}\`;
     }
-    bvToAv(BV) {
-      let r = 0;
-      for (let i = 0; i < 6; i++)
-        r += this.table[BV[this.digitMap[i]]] * 58 ** i;
-      return r - this.add ^ this.xor;
+    AV2.fromBV = fromBV;
+    function fromStr(str) {
+      return str.replace(REG_EXP_STR, (s) => "av" + fromBV(s));
     }
-    avToBv(av) {
-      let bv = Array.from(this.bvidTemplate);
-      av = (av ^ this.xor) + this.add;
-      for (let i = 0; i < 6; i++)
-        bv[this.digitMap[i]] = this.base58Table[parseInt(String(av / 58 ** i)) % 58];
-      return bv.join("");
-    }
-  };
-  function abv(input) {
-    return new Abv().check(input);
-  }
-  function BV2avAll(str) {
-    return str.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
-  }
+    AV2.fromStr = fromStr;
+  })(AV || (AV = {}));
 
   // src/utils/utils.ts
   function getUrlValue(name) {
@@ -8430,9 +8497,9 @@ const MODULES = `
     let pgc = false;
     !aid && (aid = obj.avid);
     !aid && url.replace(/[aA][vV]\\d+/, (d) => aid = d.substring(2));
-    !aid && url.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/, (d) => aid = abv(d));
-    !aid && obj.bvid && (aid = abv(obj.bvid));
-    aid && !Number(aid) && (aid = abv(aid));
+    !aid && url.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/, (d) => aid = AV.fromBV(d));
+    !aid && obj.bvid && (aid = AV.fromBV(obj.bvid));
+    aid && !Number(aid) && (aid = AV.fromBV(aid));
     p = p || 1;
     !ssid && (ssid = obj.seasonId);
     !ssid && (ssid = obj.season_id);
@@ -24626,10 +24693,10 @@ const MODULES = `
       if (url && !str.includes("passport.bilibili.com")) {
         const params = url.params;
         if (params.bvid) {
-          params.aid = abv(params.bvid);
+          params.aid = AV.fromBV(params.bvid);
         }
         if (params.aid && !Number(params.aid)) {
-          params.aid = abv(params.aid);
+          params.aid = AV.fromBV(params.aid);
         }
         paramsSet.forEach((d) => {
           delete params[d];
@@ -24641,8 +24708,8 @@ const MODULES = `
             }
           }
         });
-        url.base = BV2avAll(url.base);
-        url.hash && (url.hash = BV2avAll(url.hash));
+        url.base = AV.fromStr(url.base);
+        url.hash && (url.hash = AV.fromStr(url.hash));
         return url.toJSON();
       } else
         return str;
@@ -24822,7 +24889,7 @@ const MODULES = `
       id
     }));
     const text = await response.text();
-    return jsonCheck(BV2avAll(text)).data;
+    return jsonCheck(AV.fromStr(text)).data;
   }
   async function apiWebshowLocs(data) {
     const response = await fetch(objUrl(URLS.WEBSHOW_LOCS, {
@@ -24830,7 +24897,7 @@ const MODULES = `
       ids: data.ids.join(",")
     }));
     const text = await response.text();
-    return jsonCheck(BV2avAll(text)).data;
+    return jsonCheck(AV.fromStr(text)).data;
   }
 
   // src/utils/format/unit.ts
@@ -29382,7 +29449,7 @@ const MODULES = `
             this.jumpReportIndex++;
           }
         }
-        return BV2avAll(str);
+        return AV.fromStr(str);
       };
     }
     /** 评论图片 */
@@ -38288,7 +38355,7 @@ const MODULES = `
           debug.error(e);
         }
       }
-      return BV2avAll(str);
+      return AV.fromStr(str);
     }
     tagContainer() {
       this.readInfoStr += (this.readInfo.tags || []).reduce((o, d) => {
