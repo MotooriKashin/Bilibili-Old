@@ -1,4 +1,4 @@
-import manifest from './manifest.json' assert { type: 'json' };
+import manifest from './manifest.json' with { type: 'json' };
 import esbuild from 'esbuild';
 
 const banner = Object.entries(manifest).reduce((s, d) => {

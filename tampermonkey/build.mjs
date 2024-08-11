@@ -1,4 +1,4 @@
-import manifest from './manifest.json' assert { type: 'json' };
+import manifest from './manifest.json' with { type: 'json' };
 import fs from 'fs-extra';
 import esbuild from 'esbuild';
 import { exec } from 'child_process';

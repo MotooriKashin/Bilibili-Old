@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.8.1-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.8.2-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -80,8 +80,7 @@ const MODULES = `
                 arr2[0] && (s[arr2[0]] = arr2[1] || "");
                 return s;
               }, {});
-              if (!response)
-                return reject(statusText);
+              if (!response) return reject(statusText);
               const res = new Response(response, { status, statusText, headers });
               Object.defineProperties(res, {
                 url: { value: finalUrl }
@@ -103,8 +102,7 @@ const MODULES = `
       if (typeof Element.prototype.replaceChildren === "undefined") {
         Reflect.defineProperty(Element.prototype, "replaceChildren", {
           value: function() {
-            while (this.lastChild)
-              this.removeChild(this.lastChild);
+            while (this.lastChild) this.removeChild(this.lastChild);
             this.append.call(this, ...arguments);
           },
           writable: true,
@@ -124,10 +122,8 @@ const MODULES = `
       if (typeof Array.prototype.at === "undefined") {
         let at = function(n) {
           n = Math.trunc(n) || 0;
-          if (n < 0)
-            n += this.length;
-          if (n < 0 || n >= this.length)
-            return void 0;
+          if (n < 0) n += this.length;
+          if (n < 0 || n >= this.length) return void 0;
           return this[n];
         };
         at2 = at;
@@ -238,8 +234,7 @@ const MODULES = `
           base64ToBytes: function(base642) {
             base642 = base642.replace(/[^A-Z0-9+\\/]/ig, "");
             for (var bytes = [], i = 0, imod4 = 0; i < base642.length; imod4 = ++i % 4) {
-              if (imod4 == 0)
-                continue;
+              if (imod4 == 0) continue;
               bytes.push((base64map.indexOf(base642.charAt(i - 1)) & Math.pow(2, -2 * imod4 + 8) - 1) << imod4 * 2 | base64map.indexOf(base642.charAt(i)) >>> 6 - imod4 * 2);
             }
             return bytes;
@@ -617,175 +612,171 @@ const MODULES = `
       init_tampermonkey();
       module2.exports = factory(factory);
       function factory(exports3) {
-        if (typeof Float32Array !== "undefined")
-          (function() {
-            var f32 = new Float32Array([-0]), f8b = new Uint8Array(f32.buffer), le = f8b[3] === 128;
-            function writeFloat_f32_cpy(val, buf, pos) {
-              f32[0] = val;
-              buf[pos] = f8b[0];
-              buf[pos + 1] = f8b[1];
-              buf[pos + 2] = f8b[2];
-              buf[pos + 3] = f8b[3];
+        if (typeof Float32Array !== "undefined") (function() {
+          var f32 = new Float32Array([-0]), f8b = new Uint8Array(f32.buffer), le = f8b[3] === 128;
+          function writeFloat_f32_cpy(val, buf, pos) {
+            f32[0] = val;
+            buf[pos] = f8b[0];
+            buf[pos + 1] = f8b[1];
+            buf[pos + 2] = f8b[2];
+            buf[pos + 3] = f8b[3];
+          }
+          function writeFloat_f32_rev(val, buf, pos) {
+            f32[0] = val;
+            buf[pos] = f8b[3];
+            buf[pos + 1] = f8b[2];
+            buf[pos + 2] = f8b[1];
+            buf[pos + 3] = f8b[0];
+          }
+          exports3.writeFloatLE = le ? writeFloat_f32_cpy : writeFloat_f32_rev;
+          exports3.writeFloatBE = le ? writeFloat_f32_rev : writeFloat_f32_cpy;
+          function readFloat_f32_cpy(buf, pos) {
+            f8b[0] = buf[pos];
+            f8b[1] = buf[pos + 1];
+            f8b[2] = buf[pos + 2];
+            f8b[3] = buf[pos + 3];
+            return f32[0];
+          }
+          function readFloat_f32_rev(buf, pos) {
+            f8b[3] = buf[pos];
+            f8b[2] = buf[pos + 1];
+            f8b[1] = buf[pos + 2];
+            f8b[0] = buf[pos + 3];
+            return f32[0];
+          }
+          exports3.readFloatLE = le ? readFloat_f32_cpy : readFloat_f32_rev;
+          exports3.readFloatBE = le ? readFloat_f32_rev : readFloat_f32_cpy;
+        })();
+        else (function() {
+          function writeFloat_ieee754(writeUint, val, buf, pos) {
+            var sign = val < 0 ? 1 : 0;
+            if (sign)
+              val = -val;
+            if (val === 0)
+              writeUint(1 / val > 0 ? (
+                /* positive */
+                0
+              ) : (
+                /* negative 0 */
+                2147483648
+              ), buf, pos);
+            else if (isNaN(val))
+              writeUint(2143289344, buf, pos);
+            else if (val > 34028234663852886e22)
+              writeUint((sign << 31 | 2139095040) >>> 0, buf, pos);
+            else if (val < 11754943508222875e-54)
+              writeUint((sign << 31 | Math.round(val / 1401298464324817e-60)) >>> 0, buf, pos);
+            else {
+              var exponent = Math.floor(Math.log(val) / Math.LN2), mantissa = Math.round(val * Math.pow(2, -exponent) * 8388608) & 8388607;
+              writeUint((sign << 31 | exponent + 127 << 23 | mantissa) >>> 0, buf, pos);
             }
-            function writeFloat_f32_rev(val, buf, pos) {
-              f32[0] = val;
-              buf[pos] = f8b[3];
-              buf[pos + 1] = f8b[2];
-              buf[pos + 2] = f8b[1];
-              buf[pos + 3] = f8b[0];
-            }
-            exports3.writeFloatLE = le ? writeFloat_f32_cpy : writeFloat_f32_rev;
-            exports3.writeFloatBE = le ? writeFloat_f32_rev : writeFloat_f32_cpy;
-            function readFloat_f32_cpy(buf, pos) {
-              f8b[0] = buf[pos];
-              f8b[1] = buf[pos + 1];
-              f8b[2] = buf[pos + 2];
-              f8b[3] = buf[pos + 3];
-              return f32[0];
-            }
-            function readFloat_f32_rev(buf, pos) {
-              f8b[3] = buf[pos];
-              f8b[2] = buf[pos + 1];
-              f8b[1] = buf[pos + 2];
-              f8b[0] = buf[pos + 3];
-              return f32[0];
-            }
-            exports3.readFloatLE = le ? readFloat_f32_cpy : readFloat_f32_rev;
-            exports3.readFloatBE = le ? readFloat_f32_rev : readFloat_f32_cpy;
-          })();
-        else
-          (function() {
-            function writeFloat_ieee754(writeUint, val, buf, pos) {
-              var sign = val < 0 ? 1 : 0;
-              if (sign)
-                val = -val;
-              if (val === 0)
-                writeUint(1 / val > 0 ? (
-                  /* positive */
-                  0
-                ) : (
-                  /* negative 0 */
-                  2147483648
-                ), buf, pos);
-              else if (isNaN(val))
-                writeUint(2143289344, buf, pos);
-              else if (val > 34028234663852886e22)
-                writeUint((sign << 31 | 2139095040) >>> 0, buf, pos);
-              else if (val < 11754943508222875e-54)
-                writeUint((sign << 31 | Math.round(val / 1401298464324817e-60)) >>> 0, buf, pos);
-              else {
-                var exponent = Math.floor(Math.log(val) / Math.LN2), mantissa = Math.round(val * Math.pow(2, -exponent) * 8388608) & 8388607;
-                writeUint((sign << 31 | exponent + 127 << 23 | mantissa) >>> 0, buf, pos);
-              }
-            }
-            exports3.writeFloatLE = writeFloat_ieee754.bind(null, writeUintLE);
-            exports3.writeFloatBE = writeFloat_ieee754.bind(null, writeUintBE);
-            function readFloat_ieee754(readUint, buf, pos) {
-              var uint = readUint(buf, pos), sign = (uint >> 31) * 2 + 1, exponent = uint >>> 23 & 255, mantissa = uint & 8388607;
-              return exponent === 255 ? mantissa ? NaN : sign * Infinity : exponent === 0 ? sign * 1401298464324817e-60 * mantissa : sign * Math.pow(2, exponent - 150) * (mantissa + 8388608);
-            }
-            exports3.readFloatLE = readFloat_ieee754.bind(null, readUintLE);
-            exports3.readFloatBE = readFloat_ieee754.bind(null, readUintBE);
-          })();
-        if (typeof Float64Array !== "undefined")
-          (function() {
-            var f64 = new Float64Array([-0]), f8b = new Uint8Array(f64.buffer), le = f8b[7] === 128;
-            function writeDouble_f64_cpy(val, buf, pos) {
-              f64[0] = val;
-              buf[pos] = f8b[0];
-              buf[pos + 1] = f8b[1];
-              buf[pos + 2] = f8b[2];
-              buf[pos + 3] = f8b[3];
-              buf[pos + 4] = f8b[4];
-              buf[pos + 5] = f8b[5];
-              buf[pos + 6] = f8b[6];
-              buf[pos + 7] = f8b[7];
-            }
-            function writeDouble_f64_rev(val, buf, pos) {
-              f64[0] = val;
-              buf[pos] = f8b[7];
-              buf[pos + 1] = f8b[6];
-              buf[pos + 2] = f8b[5];
-              buf[pos + 3] = f8b[4];
-              buf[pos + 4] = f8b[3];
-              buf[pos + 5] = f8b[2];
-              buf[pos + 6] = f8b[1];
-              buf[pos + 7] = f8b[0];
-            }
-            exports3.writeDoubleLE = le ? writeDouble_f64_cpy : writeDouble_f64_rev;
-            exports3.writeDoubleBE = le ? writeDouble_f64_rev : writeDouble_f64_cpy;
-            function readDouble_f64_cpy(buf, pos) {
-              f8b[0] = buf[pos];
-              f8b[1] = buf[pos + 1];
-              f8b[2] = buf[pos + 2];
-              f8b[3] = buf[pos + 3];
-              f8b[4] = buf[pos + 4];
-              f8b[5] = buf[pos + 5];
-              f8b[6] = buf[pos + 6];
-              f8b[7] = buf[pos + 7];
-              return f64[0];
-            }
-            function readDouble_f64_rev(buf, pos) {
-              f8b[7] = buf[pos];
-              f8b[6] = buf[pos + 1];
-              f8b[5] = buf[pos + 2];
-              f8b[4] = buf[pos + 3];
-              f8b[3] = buf[pos + 4];
-              f8b[2] = buf[pos + 5];
-              f8b[1] = buf[pos + 6];
-              f8b[0] = buf[pos + 7];
-              return f64[0];
-            }
-            exports3.readDoubleLE = le ? readDouble_f64_cpy : readDouble_f64_rev;
-            exports3.readDoubleBE = le ? readDouble_f64_rev : readDouble_f64_cpy;
-          })();
-        else
-          (function() {
-            function writeDouble_ieee754(writeUint, off0, off1, val, buf, pos) {
-              var sign = val < 0 ? 1 : 0;
-              if (sign)
-                val = -val;
-              if (val === 0) {
-                writeUint(0, buf, pos + off0);
-                writeUint(1 / val > 0 ? (
-                  /* positive */
-                  0
-                ) : (
-                  /* negative 0 */
-                  2147483648
-                ), buf, pos + off1);
-              } else if (isNaN(val)) {
-                writeUint(0, buf, pos + off0);
-                writeUint(2146959360, buf, pos + off1);
-              } else if (val > 17976931348623157e292) {
-                writeUint(0, buf, pos + off0);
-                writeUint((sign << 31 | 2146435072) >>> 0, buf, pos + off1);
+          }
+          exports3.writeFloatLE = writeFloat_ieee754.bind(null, writeUintLE);
+          exports3.writeFloatBE = writeFloat_ieee754.bind(null, writeUintBE);
+          function readFloat_ieee754(readUint, buf, pos) {
+            var uint = readUint(buf, pos), sign = (uint >> 31) * 2 + 1, exponent = uint >>> 23 & 255, mantissa = uint & 8388607;
+            return exponent === 255 ? mantissa ? NaN : sign * Infinity : exponent === 0 ? sign * 1401298464324817e-60 * mantissa : sign * Math.pow(2, exponent - 150) * (mantissa + 8388608);
+          }
+          exports3.readFloatLE = readFloat_ieee754.bind(null, readUintLE);
+          exports3.readFloatBE = readFloat_ieee754.bind(null, readUintBE);
+        })();
+        if (typeof Float64Array !== "undefined") (function() {
+          var f64 = new Float64Array([-0]), f8b = new Uint8Array(f64.buffer), le = f8b[7] === 128;
+          function writeDouble_f64_cpy(val, buf, pos) {
+            f64[0] = val;
+            buf[pos] = f8b[0];
+            buf[pos + 1] = f8b[1];
+            buf[pos + 2] = f8b[2];
+            buf[pos + 3] = f8b[3];
+            buf[pos + 4] = f8b[4];
+            buf[pos + 5] = f8b[5];
+            buf[pos + 6] = f8b[6];
+            buf[pos + 7] = f8b[7];
+          }
+          function writeDouble_f64_rev(val, buf, pos) {
+            f64[0] = val;
+            buf[pos] = f8b[7];
+            buf[pos + 1] = f8b[6];
+            buf[pos + 2] = f8b[5];
+            buf[pos + 3] = f8b[4];
+            buf[pos + 4] = f8b[3];
+            buf[pos + 5] = f8b[2];
+            buf[pos + 6] = f8b[1];
+            buf[pos + 7] = f8b[0];
+          }
+          exports3.writeDoubleLE = le ? writeDouble_f64_cpy : writeDouble_f64_rev;
+          exports3.writeDoubleBE = le ? writeDouble_f64_rev : writeDouble_f64_cpy;
+          function readDouble_f64_cpy(buf, pos) {
+            f8b[0] = buf[pos];
+            f8b[1] = buf[pos + 1];
+            f8b[2] = buf[pos + 2];
+            f8b[3] = buf[pos + 3];
+            f8b[4] = buf[pos + 4];
+            f8b[5] = buf[pos + 5];
+            f8b[6] = buf[pos + 6];
+            f8b[7] = buf[pos + 7];
+            return f64[0];
+          }
+          function readDouble_f64_rev(buf, pos) {
+            f8b[7] = buf[pos];
+            f8b[6] = buf[pos + 1];
+            f8b[5] = buf[pos + 2];
+            f8b[4] = buf[pos + 3];
+            f8b[3] = buf[pos + 4];
+            f8b[2] = buf[pos + 5];
+            f8b[1] = buf[pos + 6];
+            f8b[0] = buf[pos + 7];
+            return f64[0];
+          }
+          exports3.readDoubleLE = le ? readDouble_f64_cpy : readDouble_f64_rev;
+          exports3.readDoubleBE = le ? readDouble_f64_rev : readDouble_f64_cpy;
+        })();
+        else (function() {
+          function writeDouble_ieee754(writeUint, off0, off1, val, buf, pos) {
+            var sign = val < 0 ? 1 : 0;
+            if (sign)
+              val = -val;
+            if (val === 0) {
+              writeUint(0, buf, pos + off0);
+              writeUint(1 / val > 0 ? (
+                /* positive */
+                0
+              ) : (
+                /* negative 0 */
+                2147483648
+              ), buf, pos + off1);
+            } else if (isNaN(val)) {
+              writeUint(0, buf, pos + off0);
+              writeUint(2146959360, buf, pos + off1);
+            } else if (val > 17976931348623157e292) {
+              writeUint(0, buf, pos + off0);
+              writeUint((sign << 31 | 2146435072) >>> 0, buf, pos + off1);
+            } else {
+              var mantissa;
+              if (val < 22250738585072014e-324) {
+                mantissa = val / 5e-324;
+                writeUint(mantissa >>> 0, buf, pos + off0);
+                writeUint((sign << 31 | mantissa / 4294967296) >>> 0, buf, pos + off1);
               } else {
-                var mantissa;
-                if (val < 22250738585072014e-324) {
-                  mantissa = val / 5e-324;
-                  writeUint(mantissa >>> 0, buf, pos + off0);
-                  writeUint((sign << 31 | mantissa / 4294967296) >>> 0, buf, pos + off1);
-                } else {
-                  var exponent = Math.floor(Math.log(val) / Math.LN2);
-                  if (exponent === 1024)
-                    exponent = 1023;
-                  mantissa = val * Math.pow(2, -exponent);
-                  writeUint(mantissa * 4503599627370496 >>> 0, buf, pos + off0);
-                  writeUint((sign << 31 | exponent + 1023 << 20 | mantissa * 1048576 & 1048575) >>> 0, buf, pos + off1);
-                }
+                var exponent = Math.floor(Math.log(val) / Math.LN2);
+                if (exponent === 1024)
+                  exponent = 1023;
+                mantissa = val * Math.pow(2, -exponent);
+                writeUint(mantissa * 4503599627370496 >>> 0, buf, pos + off0);
+                writeUint((sign << 31 | exponent + 1023 << 20 | mantissa * 1048576 & 1048575) >>> 0, buf, pos + off1);
               }
             }
-            exports3.writeDoubleLE = writeDouble_ieee754.bind(null, writeUintLE, 0, 4);
-            exports3.writeDoubleBE = writeDouble_ieee754.bind(null, writeUintBE, 4, 0);
-            function readDouble_ieee754(readUint, off0, off1, buf, pos) {
-              var lo = readUint(buf, pos + off0), hi = readUint(buf, pos + off1);
-              var sign = (hi >> 31) * 2 + 1, exponent = hi >>> 20 & 2047, mantissa = 4294967296 * (hi & 1048575) + lo;
-              return exponent === 2047 ? mantissa ? NaN : sign * Infinity : exponent === 0 ? sign * 5e-324 * mantissa : sign * Math.pow(2, exponent - 1075) * (mantissa + 4503599627370496);
-            }
-            exports3.readDoubleLE = readDouble_ieee754.bind(null, readUintLE, 0, 4);
-            exports3.readDoubleBE = readDouble_ieee754.bind(null, readUintBE, 4, 0);
-          })();
+          }
+          exports3.writeDoubleLE = writeDouble_ieee754.bind(null, writeUintLE, 0, 4);
+          exports3.writeDoubleBE = writeDouble_ieee754.bind(null, writeUintBE, 4, 0);
+          function readDouble_ieee754(readUint, off0, off1, buf, pos) {
+            var lo = readUint(buf, pos + off0), hi = readUint(buf, pos + off1);
+            var sign = (hi >> 31) * 2 + 1, exponent = hi >>> 20 & 2047, mantissa = 4294967296 * (hi & 1048575) + lo;
+            return exponent === 2047 ? mantissa ? NaN : sign * Infinity : exponent === 0 ? sign * 5e-324 * mantissa : sign * Math.pow(2, exponent - 1075) * (mantissa + 4503599627370496);
+          }
+          exports3.readDoubleLE = readDouble_ieee754.bind(null, readUintLE, 0, 4);
+          exports3.readDoubleBE = readDouble_ieee754.bind(null, readUintBE, 4, 0);
+        })();
         return exports3;
       }
       function writeUintLE(val, buf, pos) {
@@ -1422,9 +1413,8 @@ const MODULES = `
         } : function writeBytesBuffer_copy(val, buf, pos) {
           if (val.copy)
             val.copy(buf, pos, 0, val.length);
-          else
-            for (var i = 0; i < val.length; )
-              buf[pos++] = val[i++];
+          else for (var i = 0; i < val.length; )
+            buf[pos++] = val[i++];
         };
       };
       BufferWriter.prototype.bytes = function write_bytes_buffer(value) {
@@ -1496,20 +1486,15 @@ const MODULES = `
         var value = 4294967295;
         return function read_uint32() {
           value = (this.buf[this.pos] & 127) >>> 0;
-          if (this.buf[this.pos++] < 128)
-            return value;
+          if (this.buf[this.pos++] < 128) return value;
           value = (value | (this.buf[this.pos] & 127) << 7) >>> 0;
-          if (this.buf[this.pos++] < 128)
-            return value;
+          if (this.buf[this.pos++] < 128) return value;
           value = (value | (this.buf[this.pos] & 127) << 14) >>> 0;
-          if (this.buf[this.pos++] < 128)
-            return value;
+          if (this.buf[this.pos++] < 128) return value;
           value = (value | (this.buf[this.pos] & 127) << 21) >>> 0;
-          if (this.buf[this.pos++] < 128)
-            return value;
+          if (this.buf[this.pos++] < 128) return value;
           value = (value | (this.buf[this.pos] & 15) << 28) >>> 0;
-          if (this.buf[this.pos++] < 128)
-            return value;
+          if (this.buf[this.pos++] < 128) return value;
           if ((this.pos += 5) > this.len) {
             this.pos = this.len;
             throw indexOutOfRange(this, 10);
@@ -2039,8 +2024,7 @@ const MODULES = `
       function bake(values, offset3) {
         var i = 0, o = {};
         offset3 |= 0;
-        while (i < values.length)
-          o[s[i + offset3]] = values[i++];
+        while (i < values.length) o[s[i + offset3]] = values[i++];
         return o;
       }
       types.basic = bake([
@@ -2918,8 +2902,7 @@ const MODULES = `
         var gen = util.codegen(["r", "l"], mtype.name + "\$decode")("if(!(r instanceof Reader))")("r=Reader.create(r)")("var c=l===undefined?r.len:r.pos+l,m=new this.ctor" + (mtype.fieldsArray.filter(function(field2) {
           return field2.map;
         }).length ? ",k,value" : ""))("while(r.pos<c){")("var t=r.uint32()");
-        if (mtype.group)
-          gen("if((t&7)===4)")("break");
+        if (mtype.group) gen("if((t&7)===4)")("break");
         gen("switch(t>>>3){");
         var i = 0;
         for (; i < /* initializes */
@@ -2928,43 +2911,29 @@ const MODULES = `
           gen("case %i: {", field.id);
           if (field.map) {
             gen("if(%s===util.emptyObject)", ref)("%s={}", ref)("var c2 = r.uint32()+r.pos");
-            if (types.defaults[field.keyType] !== void 0)
-              gen("k=%j", types.defaults[field.keyType]);
-            else
-              gen("k=null");
-            if (types.defaults[type] !== void 0)
-              gen("value=%j", types.defaults[type]);
-            else
-              gen("value=null");
+            if (types.defaults[field.keyType] !== void 0) gen("k=%j", types.defaults[field.keyType]);
+            else gen("k=null");
+            if (types.defaults[type] !== void 0) gen("value=%j", types.defaults[type]);
+            else gen("value=null");
             gen("while(r.pos<c2){")("var tag2=r.uint32()")("switch(tag2>>>3){")("case 1: k=r.%s(); break", field.keyType)("case 2:");
-            if (types.basic[type] === void 0)
-              gen("value=types[%i].decode(r,r.uint32())", i);
-            else
-              gen("value=r.%s()", type);
+            if (types.basic[type] === void 0) gen("value=types[%i].decode(r,r.uint32())", i);
+            else gen("value=r.%s()", type);
             gen("break")("default:")("r.skipType(tag2&7)")("break")("}")("}");
-            if (types.long[field.keyType] !== void 0)
-              gen('%s[typeof k==="object"?util.longToHash(k):k]=value', ref);
-            else
-              gen("%s[k]=value", ref);
+            if (types.long[field.keyType] !== void 0) gen('%s[typeof k==="object"?util.longToHash(k):k]=value', ref);
+            else gen("%s[k]=value", ref);
           } else if (field.repeated) {
             gen("if(!(%s&&%s.length))", ref, ref)("%s=[]", ref);
-            if (types.packed[type] !== void 0)
-              gen("if((t&7)===2){")("var c2=r.uint32()+r.pos")("while(r.pos<c2)")("%s.push(r.%s())", ref, type)("}else");
-            if (types.basic[type] === void 0)
-              gen(field.resolvedType.group ? "%s.push(types[%i].decode(r))" : "%s.push(types[%i].decode(r,r.uint32()))", ref, i);
-            else
-              gen("%s.push(r.%s())", ref, type);
-          } else if (types.basic[type] === void 0)
-            gen(field.resolvedType.group ? "%s=types[%i].decode(r)" : "%s=types[%i].decode(r,r.uint32())", ref, i);
-          else
-            gen("%s=r.%s()", ref, type);
+            if (types.packed[type] !== void 0) gen("if((t&7)===2){")("var c2=r.uint32()+r.pos")("while(r.pos<c2)")("%s.push(r.%s())", ref, type)("}else");
+            if (types.basic[type] === void 0) gen(field.resolvedType.group ? "%s.push(types[%i].decode(r))" : "%s.push(types[%i].decode(r,r.uint32()))", ref, i);
+            else gen("%s.push(r.%s())", ref, type);
+          } else if (types.basic[type] === void 0) gen(field.resolvedType.group ? "%s=types[%i].decode(r)" : "%s=types[%i].decode(r,r.uint32())", ref, i);
+          else gen("%s=r.%s()", ref, type);
           gen("break")("}");
         }
         gen("default:")("r.skipType(t&7)")("break")("}")("}");
         for (i = 0; i < mtype._fieldsArray.length; ++i) {
           var rfield = mtype._fieldsArray[i];
-          if (rfield.required)
-            gen("if(!m.hasOwnProperty(%j))", rfield.name)("throw util.ProtocolError(%j,{instance:m})", missing(rfield));
+          if (rfield.required) gen("if(!m.hasOwnProperty(%j))", rfield.name)("throw util.ProtocolError(%j,{instance:m})", missing(rfield));
         }
         return gen("return m");
       }
@@ -2986,8 +2955,7 @@ const MODULES = `
         if (field.resolvedType) {
           if (field.resolvedType instanceof Enum) {
             gen("switch(%s){", ref)("default:")("return%j", invalid(field, "enum value"));
-            for (var keys = Object.keys(field.resolvedType.values), j = 0; j < keys.length; ++j)
-              gen("case %i:", field.resolvedType.values[keys[j]]);
+            for (var keys = Object.keys(field.resolvedType.values), j = 0; j < keys.length; ++j) gen("case %i:", field.resolvedType.values[keys[j]]);
             gen("break")("}");
           } else {
             gen("{")("var e=types[%i].verify(%s);", fieldIndex, ref)("if(e)")("return%j+e", field.name + ".")("}");
@@ -3050,13 +3018,11 @@ const MODULES = `
       function verifier(mtype) {
         var gen = util.codegen(["m"], mtype.name + "\$verify")('if(typeof m!=="object"||m===null)')("return%j", "object expected");
         var oneofs = mtype.oneofsArray, seenFirstField = {};
-        if (oneofs.length)
-          gen("var p={}");
+        if (oneofs.length) gen("var p={}");
         for (var i = 0; i < /* initializes */
         mtype.fieldsArray.length; ++i) {
           var field = mtype._fieldsArray[i].resolve(), ref = "m" + util.safeProp(field.name);
-          if (field.optional)
-            gen("if(%s!=null&&m.hasOwnProperty(%j)){", ref, field.name);
+          if (field.optional) gen("if(%s!=null&&m.hasOwnProperty(%j)){", ref, field.name);
           if (field.map) {
             gen("if(!util.isObject(%s))", ref)("return%j", invalid(field, "object"))("var k=Object.keys(%s)", ref)("for(var i=0;i<k.length;++i){");
             genVerifyKey(gen, field, "k[i]");
@@ -3067,15 +3033,13 @@ const MODULES = `
           } else {
             if (field.partOf) {
               var oneofProp = util.safeProp(field.partOf.name);
-              if (seenFirstField[field.partOf.name] === 1)
-                gen("if(p%s===1)", oneofProp)("return%j", field.partOf.name + ": multiple values");
+              if (seenFirstField[field.partOf.name] === 1) gen("if(p%s===1)", oneofProp)("return%j", field.partOf.name + ": multiple values");
               seenFirstField[field.partOf.name] = 1;
               gen("p%s=1", oneofProp);
             }
             genVerifyValue(gen, field, i, ref);
           }
-          if (field.optional)
-            gen("}");
+          if (field.optional) gen("}");
         }
         return gen("return null");
       }
@@ -3098,15 +3062,13 @@ const MODULES = `
             for (var values = field.resolvedType.values, keys = Object.keys(values), i = 0; i < keys.length; ++i) {
               if (values[keys[i]] === field.typeDefault && !defaultAlreadyEmitted) {
                 gen("default:")('if(typeof(d%s)==="number"){m%s=d%s;break}', prop, prop, prop);
-                if (!field.repeated)
-                  gen("break");
+                if (!field.repeated) gen("break");
                 defaultAlreadyEmitted = true;
               }
               gen("case%j:", keys[i])("case %i:", values[keys[i]])("m%s=%j", prop, values[keys[i]])("break");
             }
             gen("}");
-          } else
-            gen('if(typeof d%s!=="object")', prop)("throw TypeError(%j)", field.fullName + ": object expected")("m%s=types[%i].fromObject(d%s)", prop, fieldIndex, prop);
+          } else gen('if(typeof d%s!=="object")', prop)("throw TypeError(%j)", field.fullName + ": object expected")("m%s=types[%i].fromObject(d%s)", prop, fieldIndex, prop);
         } else {
           var isUnsigned = false;
           switch (field.type) {
@@ -3147,8 +3109,7 @@ const MODULES = `
       converter.fromObject = function fromObject(mtype) {
         var fields = mtype.fieldsArray;
         var gen = util.codegen(["d"], mtype.name + "\$fromObject")("if(d instanceof this.ctor)")("return d");
-        if (!fields.length)
-          return gen("return new this.ctor");
+        if (!fields.length) return gen("return new this.ctor");
         gen("var m=new this.ctor");
         for (var i = 0; i < fields.length; ++i) {
           var field = fields[i].resolve(), prop = util.safeProp(field.name);
@@ -3171,8 +3132,7 @@ const MODULES = `
               prop + "[i]"
             )("}")("}");
           } else {
-            if (!(field.resolvedType instanceof Enum))
-              gen("if(d%s!=null){", prop);
+            if (!(field.resolvedType instanceof Enum)) gen("if(d%s!=null){", prop);
             genValuePartial_fromObject(
               gen,
               field,
@@ -3180,18 +3140,15 @@ const MODULES = `
               i,
               prop
             );
-            if (!(field.resolvedType instanceof Enum))
-              gen("}");
+            if (!(field.resolvedType instanceof Enum)) gen("}");
           }
         }
         return gen("return m");
       };
       function genValuePartial_toObject(gen, field, fieldIndex, prop) {
         if (field.resolvedType) {
-          if (field.resolvedType instanceof Enum)
-            gen("d%s=o.enums===String?(types[%i].values[m%s]===undefined?m%s:types[%i].values[m%s]):m%s", prop, fieldIndex, prop, prop, fieldIndex, prop, prop);
-          else
-            gen("d%s=types[%i].toObject(m%s,o)", prop, fieldIndex, prop);
+          if (field.resolvedType instanceof Enum) gen("d%s=o.enums===String?(types[%i].values[m%s]===undefined?m%s:types[%i].values[m%s]):m%s", prop, fieldIndex, prop, prop, fieldIndex, prop, prop);
+          else gen("d%s=types[%i].toObject(m%s,o)", prop, fieldIndex, prop);
         } else {
           var isUnsigned = false;
           switch (field.type) {
@@ -3228,29 +3185,24 @@ const MODULES = `
             (fields[i].resolve().repeated ? repeatedFields : fields[i].map ? mapFields : normalFields).push(fields[i]);
         if (repeatedFields.length) {
           gen("if(o.arrays||o.defaults){");
-          for (i = 0; i < repeatedFields.length; ++i)
-            gen("d%s=[]", util.safeProp(repeatedFields[i].name));
+          for (i = 0; i < repeatedFields.length; ++i) gen("d%s=[]", util.safeProp(repeatedFields[i].name));
           gen("}");
         }
         if (mapFields.length) {
           gen("if(o.objects||o.defaults){");
-          for (i = 0; i < mapFields.length; ++i)
-            gen("d%s={}", util.safeProp(mapFields[i].name));
+          for (i = 0; i < mapFields.length; ++i) gen("d%s={}", util.safeProp(mapFields[i].name));
           gen("}");
         }
         if (normalFields.length) {
           gen("if(o.defaults){");
           for (i = 0; i < normalFields.length; ++i) {
             var field = normalFields[i], prop = util.safeProp(field.name);
-            if (field.resolvedType instanceof Enum)
-              gen("d%s=o.enums===String?%j:%j", prop, field.resolvedType.valuesById[field.typeDefault], field.typeDefault);
-            else if (field.long)
-              gen("if(util.Long){")("var n=new util.Long(%i,%i,%j)", field.typeDefault.low, field.typeDefault.high, field.typeDefault.unsigned)("d%s=o.longs===String?n.toString():o.longs===Number?n.toNumber():n", prop)("}else")("d%s=o.longs===String?%j:%i", prop, field.typeDefault.toString(), field.typeDefault.toNumber());
+            if (field.resolvedType instanceof Enum) gen("d%s=o.enums===String?%j:%j", prop, field.resolvedType.valuesById[field.typeDefault], field.typeDefault);
+            else if (field.long) gen("if(util.Long){")("var n=new util.Long(%i,%i,%j)", field.typeDefault.low, field.typeDefault.high, field.typeDefault.unsigned)("d%s=o.longs===String?n.toString():o.longs===Number?n.toNumber():n", prop)("}else")("d%s=o.longs===String?%j:%i", prop, field.typeDefault.toString(), field.typeDefault.toNumber());
             else if (field.bytes) {
               var arrayDefault = "[" + Array.prototype.slice.call(field.typeDefault).join(",") + "]";
               gen("if(o.bytes===String)d%s=%j", prop, String.fromCharCode.apply(String, field.typeDefault))("else{")("d%s=%s", prop, arrayDefault)("if(o.bytes!==Array)d%s=util.newBuffer(d%s)", prop, prop)("}");
-            } else
-              gen("d%s=%j", prop, field.typeDefault);
+            } else gen("d%s=%j", prop, field.typeDefault);
           }
           gen("}");
         }
@@ -3288,8 +3240,7 @@ const MODULES = `
               index,
               prop
             );
-            if (field.partOf)
-              gen("if(o.oneofs)")("d%s=%j", util.safeProp(field.partOf.name), field.name);
+            if (field.partOf) gen("if(o.oneofs)")("d%s=%j", util.safeProp(field.partOf.name), field.name);
           }
           gen("}");
         }
@@ -3465,10 +3416,8 @@ const MODULES = `
       Type3.generateConstructor = function generateConstructor(mtype) {
         var gen = util.codegen(["p"], mtype.name);
         for (var i = 0, field; i < mtype.fieldsArray.length; ++i)
-          if ((field = mtype._fieldsArray[i]).map)
-            gen("this%s={}", util.safeProp(field.name));
-          else if (field.repeated)
-            gen("this%s=[]", util.safeProp(field.name));
+          if ((field = mtype._fieldsArray[i]).map) gen("this%s={}", util.safeProp(field.name));
+          else if (field.repeated) gen("this%s=[]", util.safeProp(field.name));
         return gen("if(p)for(var ks=Object.keys(p),i=0;i<ks.length;++i)if(p[ks[i]]!=null)")("this[ks[i]]=p[ks[i]]");
       };
       function clearCache(type) {
@@ -3723,8 +3672,7 @@ const MODULES = `
           var idx = filename2.lastIndexOf("google/protobuf/");
           if (idx > -1) {
             var altname = filename2.substring(idx);
-            if (altname in common)
-              return altname;
+            if (altname in common) return altname;
           }
           return null;
         }
@@ -4266,10 +4214,8 @@ const MODULES = `
           ref = "m" + util.safeProp(field.name);
           if (field.map) {
             gen("if(%s!=null&&Object.hasOwnProperty.call(m,%j)){", ref, field.name)("for(var ks=Object.keys(%s),i=0;i<ks.length;++i){", ref)("w.uint32(%i).fork().uint32(%i).%s(ks[i])", (field.id << 3 | 2) >>> 0, 8 | types.mapKey[field.keyType], field.keyType);
-            if (wireType === void 0)
-              gen("types[%i].encode(%s[ks[i]],w.uint32(18).fork()).ldelim().ldelim()", index, ref);
-            else
-              gen(".uint32(%i).%s(%s[ks[i]]).ldelim()", 16 | wireType, type, ref);
+            if (wireType === void 0) gen("types[%i].encode(%s[ks[i]],w.uint32(18).fork()).ldelim().ldelim()", index, ref);
+            else gen(".uint32(%i).%s(%s[ks[i]]).ldelim()", 16 | wireType, type, ref);
             gen("}")("}");
           } else if (field.repeated) {
             gen("if(%s!=null&&%s.length){", ref, ref);
@@ -4279,17 +4225,14 @@ const MODULES = `
               gen("for(var i=0;i<%s.length;++i)", ref);
               if (wireType === void 0)
                 genTypePartial(gen, field, index, ref + "[i]");
-              else
-                gen("w.uint32(%i).%s(%s[i])", (field.id << 3 | wireType) >>> 0, type, ref);
+              else gen("w.uint32(%i).%s(%s[i])", (field.id << 3 | wireType) >>> 0, type, ref);
             }
             gen("}");
           } else {
-            if (field.optional)
-              gen("if(%s!=null&&Object.hasOwnProperty.call(m,%j))", ref, field.name);
+            if (field.optional) gen("if(%s!=null&&Object.hasOwnProperty.call(m,%j))", ref, field.name);
             if (wireType === void 0)
               genTypePartial(gen, field, index, ref);
-            else
-              gen("w.uint32(%i).%s(%s)", (field.id << 3 | wireType) >>> 0, type, ref);
+            else gen("w.uint32(%i).%s(%s)", (field.id << 3 | wireType) >>> 0, type, ref);
           }
         }
         return gen("return w");
@@ -5499,13 +5442,10 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       var __importStar = exports2 && exports2.__importStar || function(mod2) {
-        if (mod2 && mod2.__esModule)
-          return mod2;
+        if (mod2 && mod2.__esModule) return mod2;
         var result = {};
         if (mod2 != null) {
-          for (var k in mod2)
-            if (Object.hasOwnProperty.call(mod2, k))
-              result[k] = mod2[k];
+          for (var k in mod2) if (Object.hasOwnProperty.call(mod2, k)) result[k] = mod2[k];
         }
         result["default"] = mod2;
         return result;
@@ -5742,13 +5682,10 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       var __importStar = exports2 && exports2.__importStar || function(mod2) {
-        if (mod2 && mod2.__esModule)
-          return mod2;
+        if (mod2 && mod2.__esModule) return mod2;
         var result = {};
         if (mod2 != null) {
-          for (var k in mod2)
-            if (Object.hasOwnProperty.call(mod2, k))
-              result[k] = mod2[k];
+          for (var k in mod2) if (Object.hasOwnProperty.call(mod2, k)) result[k] = mod2[k];
         }
         result["default"] = mod2;
         return result;
@@ -5847,13 +5784,10 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       var __importStar = exports2 && exports2.__importStar || function(mod2) {
-        if (mod2 && mod2.__esModule)
-          return mod2;
+        if (mod2 && mod2.__esModule) return mod2;
         var result = {};
         if (mod2 != null) {
-          for (var k in mod2)
-            if (Object.hasOwnProperty.call(mod2, k))
-              result[k] = mod2[k];
+          for (var k in mod2) if (Object.hasOwnProperty.call(mod2, k)) result[k] = mod2[k];
         }
         result["default"] = mod2;
         return result;
@@ -6170,9 +6104,7 @@ const MODULES = `
         var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d, b) {
           d.__proto__ = b;
         } || function(d, b) {
-          for (var p in b)
-            if (b.hasOwnProperty(p))
-              d[p] = b[p];
+          for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         };
         return function(d, b) {
           extendStatics(d, b);
@@ -6510,13 +6442,10 @@ const MODULES = `
       "use strict";
       init_tampermonkey();
       var __importStar = exports2 && exports2.__importStar || function(mod2) {
-        if (mod2 && mod2.__esModule)
-          return mod2;
+        if (mod2 && mod2.__esModule) return mod2;
         var result = {};
         if (mod2 != null) {
-          for (var k in mod2)
-            if (Object.hasOwnProperty.call(mod2, k))
-              result[k] = mod2[k];
+          for (var k in mod2) if (Object.hasOwnProperty.call(mod2, k)) result[k] = mod2[k];
         }
         result["default"] = mod2;
         return result;
@@ -7003,8 +6932,7 @@ const MODULES = `
   function objUrl(url, obj) {
     const res = new URL2(url);
     Object.entries(obj).forEach((d) => {
-      if (d[1] === void 0 || d[1] === null)
-        return;
+      if (d[1] === void 0 || d[1] === null) return;
       res.params[d[0]] = d[1];
     });
     return res.toJSON();
@@ -7127,8 +7055,7 @@ const MODULES = `
       let start = 0;
       let popd = false;
       for (this.pos = 0; this.pos < this.html.length; this.pos++) {
-        if (stop)
-          break;
+        if (stop) break;
         switch (this.html[this.pos]) {
           case '"':
             value = !value;
@@ -7157,8 +7084,7 @@ const MODULES = `
             break;
         }
       }
-      if (!popd)
-        this.tagSingle();
+      if (!popd) this.tagSingle();
       this.removeScanned(this.pos--);
     }
     /** 出栈检查 空元素直接出栈*/
@@ -7527,16 +7453,12 @@ const MODULES = `
     static bigInt(num1, num2) {
       String(num1).replace(/\\d+/, (d) => num1 = d.replace(/^0+/, ""));
       String(num2).replace(/\\d+/, (d) => num2 = d.replace(/^0+/, ""));
-      if (num1.length > num2.length)
-        return true;
-      else if (num1.length < num2.length)
-        return false;
+      if (num1.length > num2.length) return true;
+      else if (num1.length < num2.length) return false;
       else {
         for (let i = 0; i < num1.length; i++) {
-          if (num1[i] > num2[i])
-            return true;
-          if (num1[i] < num2[i])
-            return false;
+          if (num1[i] > num2[i]) return true;
+          if (num1[i] < num2[i]) return false;
         }
         return false;
       }
@@ -8012,8 +7934,7 @@ const MODULES = `
   init_tampermonkey();
   function jsonCheck(str) {
     const result = typeof str === "string" ? JSON.parse(str) : str;
-    if (result.code === 0)
-      return result;
+    if (result.code === 0) return result;
     throw new Error(\`\${result.code} \${result.message}\`, { cause: result.code });
   }
 
@@ -8043,41 +7964,39 @@ const MODULES = `
     const one = Array.isArray(url) ? url : [url];
     const two = function(args) {
       once && id && delete rules[id - 1];
-      if (modifyOpen)
-        try {
-          modifyOpen(args);
-        } catch (e) {
-          debug.error("modifyOpen of xhrhook", one, e);
-        }
-      if (modifyResponse)
-        try {
-          this.addEventListener("readystatechange", () => {
-            try {
-              if (this.readyState === 4) {
-                const { responseType } = this;
-                const response = { response: this.response, responseType: this.responseType, status: this.status, statusText: this.statusText };
-                (this.responseType === "" || this.responseType === "text") && (response.responseText = this.responseText);
-                (this.responseType === "" || this.responseType === "document") && (response.responseXML = this.responseXML);
-                modifyResponse(response);
-                Reflect.defineProperty(this, "response", { configurable: true, value: response.response });
-                try {
-                  response.responseType && responseType !== response.responseType && setResponseType(response.responseType, this);
-                  if (response.responseXML) {
-                    response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
-                  } else if (response.response) {
-                    response.responseText = typeof response.response === "object" ? JSON.stringify(response.response) : response.response;
-                    Reflect.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
-                  }
-                } catch {
+      if (modifyOpen) try {
+        modifyOpen(args);
+      } catch (e) {
+        debug.error("modifyOpen of xhrhook", one, e);
+      }
+      if (modifyResponse) try {
+        this.addEventListener("readystatechange", () => {
+          try {
+            if (this.readyState === 4) {
+              const { responseType } = this;
+              const response = { response: this.response, responseType: this.responseType, status: this.status, statusText: this.statusText };
+              (this.responseType === "" || this.responseType === "text") && (response.responseText = this.responseText);
+              (this.responseType === "" || this.responseType === "document") && (response.responseXML = this.responseXML);
+              modifyResponse(response);
+              Reflect.defineProperty(this, "response", { configurable: true, value: response.response });
+              try {
+                response.responseType && responseType !== response.responseType && setResponseType(response.responseType, this);
+                if (response.responseXML) {
+                  response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
+                } else if (response.response) {
+                  response.responseText = typeof response.response === "object" ? JSON.stringify(response.response) : response.response;
+                  Reflect.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
                 }
+              } catch {
               }
-            } catch (e) {
-              debug.error("modifyResponse of xhrhook", one, e);
             }
-          });
-        } catch (e) {
-          debug.error("modifyResponse of xhrhook", one, e);
-        }
+          } catch (e) {
+            debug.error("modifyResponse of xhrhook", one, e);
+          }
+        });
+      } catch (e) {
+        debug.error("modifyResponse of xhrhook", one, e);
+      }
     };
     const iid = rules.push([one, two]);
     return () => {
@@ -8261,8 +8180,7 @@ const MODULES = `
           res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
         }, false);
         return JSON.parse(JSON.stringify(result));
-      } else
-        return this.view2Detail_v1(data);
+      } else return this.view2Detail_v1(data);
     }
     view2Detail_v1(data) {
       var _a3, _b2, _c, _d, _e, _f, _g;
@@ -8473,8 +8391,7 @@ const MODULES = `
   function getUrlValue(name) {
     const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|\$)", "i");
     const r = window.location.search.substr(1).match(reg);
-    if (r != null)
-      return decodeURIComponent(r[2]);
+    if (r != null) return decodeURIComponent(r[2]);
     return null;
   }
   var catchs = { aid: {}, ssid: {}, epid: {} };
@@ -8496,13 +8413,11 @@ const MODULES = `
     !epid && (epid = obj.ep_id);
     !epid && url.replace(/[eE][pP]\\d+/, (d) => epid = d.substring(2));
     if (!ssid && !epid && aid) {
-      if (catchs.aid[aid])
-        return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+      if (catchs.aid[aid]) return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
       if (!cid) {
         try {
           let data = await apiXView(aid);
-          if (data.redirect_url)
-            return urlParam(objUrl(data.redirect_url, { aid, cid, ssid, epid, p }));
+          if (data.redirect_url) return urlParam(objUrl(data.redirect_url, { aid, cid, ssid, epid, p }));
           catchs.aid[aid] = data.pages;
           catchs.aid[aid].forEach((d) => d.aid = aid);
           return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
@@ -8524,8 +8439,7 @@ const MODULES = `
                 let data = await new apiBiliplusView(aid).getDate();
                 catchs.aid[aid] = data.list || data.v2_app_api && data.v2_app_api.pages;
                 catchs.aid[aid].forEach((d) => d.aid = aid);
-                if (redirect && data.v2_app_api && data.v2_app_api.redirect_url)
-                  return urlParam(objUrl(data.v2_app_api.redirect_url, { aid, cid, ssid, epid, p }));
+                if (redirect && data.v2_app_api && data.v2_app_api.redirect_url) return urlParam(objUrl(data.v2_app_api.redirect_url, { aid, cid, ssid, epid, p }));
                 return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
               } catch (e4) {
                 debug.error("biliplus", e4);
@@ -8536,10 +8450,8 @@ const MODULES = `
       }
     }
     if (ssid || epid) {
-      if (ssid && catchs.ssid[ssid])
-        return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
-      if (epid && catchs.epid[epid])
-        return catchs.epid[epid];
+      if (ssid && catchs.ssid[ssid]) return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
+      if (epid && catchs.epid[epid]) return catchs.epid[epid];
       pgc = true;
       let data = await apiBangumiSeason({ ep_id: epid, season_id: ssid });
       ssid = data.season_id;
@@ -8550,8 +8462,7 @@ const MODULES = `
         catchs.aid[d.aid].push(d);
         catchs.ssid[ssid].push(catchs.epid[d.ep_id] = d);
       });
-      if (epid)
-        return catchs.epid[epid];
+      if (epid) return catchs.epid[epid];
       return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
     }
     return { aid, cid, ssid, epid, p, pgc };
@@ -8580,8 +8491,7 @@ const MODULES = `
         input = NaN;
         break;
       default:
-        if (!input)
-          break;
+        if (!input) break;
         try {
           const temp = JSON.parse(input);
           if (typeof temp !== "number" || input === String(temp)) {
@@ -8596,8 +8506,7 @@ const MODULES = `
           } catch {
           }
           try {
-            if (/^\\d+n\$/.test(input))
-              input = BigInt(input.slice(0, -1));
+            if (/^\\d+n\$/.test(input)) input = BigInt(input.slice(0, -1));
           } catch {
           }
         }
@@ -8853,8 +8762,7 @@ const MODULES = `
       return toObject(this.getAttribute("disabled"));
     }
     attributeChangedCallback(name, oldValue, newValue) {
-      if (oldValue === newValue)
-        return;
+      if (oldValue === newValue) return;
       switch (name) {
         case "position":
           newValue && (this.container.className = \`toast-\${newValue}\`);
@@ -8928,8 +8836,7 @@ const MODULES = `
       this.setAttribute("type", v);
     }
     attributeChangedCallback(name, oldValue, newValue) {
-      if (oldValue === newValue)
-        return;
+      if (oldValue === newValue) return;
       switch (name) {
         case "type":
           if (newValue === "old") {
@@ -9619,15 +9526,13 @@ const MODULES = `
     }
     /** 原生旧版播放器使用protobuf弹幕 */
     listSoFix() {
-      if (this.listSoFixed)
-        return;
+      if (this.listSoFixed) return;
       this.listSoFixed = true;
       const that = this;
       new WorkerHook().postMessage(function(message) {
         if (message.url && message.url.includes("list.so")) {
           user.userStatus.dmwrap && that.trim();
-          if (!user.userStatus.dmproto)
-            return false;
+          if (!user.userStatus.dmproto) return false;
           const params = urlObj(message.url);
           const startTime = (/* @__PURE__ */ new Date()).getTime();
           that.getSegDanmaku(void 0, params.oid).then((d) => {
@@ -9658,17 +9563,14 @@ const MODULES = `
       });
     }
     async getSegDanmaku(aid = BLOD.aid, cid = BLOD.cid) {
-      if (!cid)
-        throw new Error(\`无法获取弹幕 aid：\${aid} cid：\${cid}\`);
+      if (!cid) throw new Error(\`无法获取弹幕 aid：\${aid} cid：\${cid}\`);
       return new ApiDmWeb(aid, cid).toCmd();
     }
     /** 加载本地xml弹幕 */
     localDmXml() {
       var _a3;
-      if (!window.player)
-        return toast.warning("未找到播放器实例！请在播放页面使用。");
-      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm))
-        return toast.warning("未启用【重构播放器】，无法载入弹幕！");
+      if (!window.player) return toast.warning("未找到播放器实例！请在播放页面使用。");
+      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm)) return toast.warning("未启用【重构播放器】，无法载入弹幕！");
       const msg = toast.list("加载本地弹幕 >>>", "> 请选择一个弹幕文件，拓展名：.xml，编码：utf-8");
       fileRead(".xml").then((d) => {
         msg.push("> -------loading-------", \`> 弹幕：\${d.name}\`, \`> 类型：\${d.type}\`, \`> 大小：\${sizeFormat(d.size)}\`);
@@ -9689,10 +9591,8 @@ const MODULES = `
     /** 加载本地json弹幕 */
     localDmJson() {
       var _a3;
-      if (!window.player)
-        return toast.warning("未找到播放器实例！请在播放页面使用。");
-      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm))
-        return toast.warning("未启用【重构播放器】，无法载入弹幕！");
+      if (!window.player) return toast.warning("未找到播放器实例！请在播放页面使用。");
+      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm)) return toast.warning("未启用【重构播放器】，无法载入弹幕！");
       const msg = toast.list("加载本地弹幕 >>>", "> 请选择一个弹幕文件，拓展名：.json，编码：utf-8");
       fileRead(".json").then((d) => {
         msg.push("> -------loading-------", \`> 弹幕：\${d.name}\`, \`> 类型：\${d.type}\`, \`> 大小：\${sizeFormat(d.size)}\`);
@@ -9713,8 +9613,7 @@ const MODULES = `
     /** 下载弹幕 */
     async download(aid = BLOD.aid, cid = BLOD.cid) {
       var _a3;
-      if (!cid)
-        return toast.warning("未找到播放器实例！请在播放页面使用。");
+      if (!cid) return toast.warning("未找到播放器实例！请在播放页面使用。");
       const dms = ((_a3 = window.player) == null ? void 0 : _a3.getDanmaku) ? window.player.getDanmaku() : await new ApiDmWeb(aid, cid).getData();
       const metadata = videoInfo.metadata;
       const title = metadata ? \`\${metadata.album}(\${metadata.title})\` : \`\${aid}.\${cid}\`;
@@ -9726,10 +9625,8 @@ const MODULES = `
     /** 加载在线弹幕 */
     async onlineDm(str) {
       var _a3;
-      if (!window.player)
-        return toast.warning("未找到播放器实例！请在播放页面使用。");
-      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm))
-        return toast.warning("未启用【重构播放器】，无法载入弹幕！");
+      if (!window.player) return toast.warning("未找到播放器实例！请在播放页面使用。");
+      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm)) return toast.warning("未启用【重构播放器】，无法载入弹幕！");
       const msg = toast.list("加载在线弹幕 >>>", "> -------在线弹幕-------", \`> 目标：\${str}\`);
       const { aid, cid } = await urlParam(str);
       msg.push(\`> aid：\${aid}\`, \`> cid：\${cid}\`);
@@ -12517,7 +12414,7 @@ const MODULES = `
         st.w = dict.length;
       }
     }
-    return dflt(dat, opt.level == null ? 6 : opt.level, opt.mem == null ? Math.ceil(Math.max(8, Math.min(13, Math.log(dat.length))) * 1.5) : 12 + opt.mem, pre, post, st);
+    return dflt(dat, opt.level == null ? 6 : opt.level, opt.mem == null ? st.l ? Math.ceil(Math.max(8, Math.min(13, Math.log(dat.length))) * 1.5) : 20 : 12 + opt.mem, pre, post, st);
   };
   var wbytes = function(d, b, v) {
     for (; v; ++b)
@@ -13178,8 +13075,7 @@ const MODULES = `
       video.forEach((d) => {
         const url = d.backupUrl || d.backup_url || [];
         (d.baseUrl || d.base_url) && url.unshift(d.baseUrl || d.base_url);
-        if (!url.length)
-          return;
+        if (!url.length) return;
         let type = "";
         if (d.codecs) {
           type = d.codecs.includes("avc") ? "avc" : d.codecs.includes("av01") ? "av1" : "hev";
@@ -13255,8 +13151,7 @@ const MODULES = `
   observe.observe(document, { childList: true, subtree: true });
   function observerAddedNodes(callback) {
     try {
-      if (typeof callback === "function")
-        nodelist.push(callback);
+      if (typeof callback === "function") nodelist.push(callback);
       return nodelist.length - 1;
     } catch (e) {
       debug.error(e);
@@ -13265,8 +13160,7 @@ const MODULES = `
   var switchlist = [];
   function switchVideo(callback) {
     try {
-      if (typeof callback === "function")
-        switchlist.push(callback);
+      if (typeof callback === "function") switchlist.push(callback);
     } catch (e) {
       debug.error("switchVideo", e);
     }
@@ -13605,8 +13499,7 @@ const MODULES = `
           range: \`bytes=\${this.start}-\${this.end}\`
         }
       }).then((d) => {
-        if ((d.status >= 300 || d.status < 200) && d.status !== 304)
-          throw new Error(\`\${d.status} \${d.statusText}\`, { cause: d.status });
+        if ((d.status >= 300 || d.status < 200) && d.status !== 304) throw new Error(\`\${d.status} \${d.statusText}\`, { cause: d.status });
         return d.arrayBuffer();
       }).then((d) => {
         const data = new Uint8Array(d);
@@ -13650,8 +13543,7 @@ const MODULES = `
     }
     response;
     async getDate() {
-      if (this.response)
-        return this.response;
+      if (this.response) return this.response;
       const response = await fetch(this.sign().toJSON());
       const json = await response.json();
       return this.response = jsonCheck(json).data;
@@ -13747,17 +13639,13 @@ const MODULES = `
           ]).then(() => {
             const avc = [], hev = [], video = [];
             playurl.dash.video.forEach((d2) => {
-              if (d2.codecid == 7)
-                avc.push(d2);
-              else
-                hev.push(d2);
+              if (d2.codecid == 7) avc.push(d2);
+              else hev.push(d2);
             });
             let length2 = avc.length > hev.length ? avc.length : hev.length;
             for (let i = length2 - 1; i >= 0; i--) {
-              if (avc[i])
-                video.push(avc[i]);
-              if (hev[i])
-                video.push(hev[i]);
+              if (avc[i]) video.push(avc[i]);
+              if (hev[i]) video.push(hev[i]);
             }
             playurl.dash.video = video;
             playurl.accept_format = set.join(",");
@@ -14012,8 +13900,7 @@ const MODULES = `
     }
     /** 开始监听 */
     enable() {
-      if (this.listening)
-        return;
+      if (this.listening) return;
       const disable = xhrHook.async("/playurl?", (args) => {
         const obj = urlObj(args[1]);
         this.updateVaribale(obj);
@@ -14120,8 +14007,7 @@ const MODULES = `
     /** 访问港澳台代理 */
     async gat(obj) {
       this.toast || (this.toast = toast.list());
-      if (!user.userStatus.videoLimit[AREA[this.area]])
-        throw new Error(\`无有效代理服务器：\${AREA[this.area]}\`);
+      if (!user.userStatus.videoLimit[AREA[this.area]]) throw new Error(\`无有效代理服务器：\${AREA[this.area]}\`);
       const server = user.userStatus.videoLimit[AREA[this.area]];
       obj.area = AREA[this.area];
       this.toast.push(\`> 代理服务器：\${server}\`);
@@ -14148,8 +14034,7 @@ const MODULES = `
      * @param uposName 替换的代理服务器名 keyof typeof {@link UPOS}
      */
     uposReplace(str, uposName) {
-      if (uposName === "不替换")
-        return str;
+      if (uposName === "不替换") return str;
       this.upos = true;
       clearTimeout(this.timer);
       this.timer = setTimeout(() => this.upos = false, 1e3);
@@ -14292,10 +14177,8 @@ const MODULES = `
     gets = [];
     /** 下载当前视频 */
     default() {
-      if (this.downloading)
-        return;
-      if (!BLOD.cid)
-        return toast.warning("未找到视频文件");
+      if (this.downloading) return;
+      if (!BLOD.cid) return toast.warning("未找到视频文件");
       this.ui.show();
       user.userStatus.TVresource || this.getPlayInfo();
       user.userStatus.downloadType.includes("mp4") && this.getMp4();
@@ -14303,14 +14186,12 @@ const MODULES = `
       user.userStatus.downloadType.includes("dash") && this.getDash();
     }
     getPlayInfo() {
-      if (this.gets.includes("_"))
-        return;
+      if (this.gets.includes("_")) return;
       this.decodePlayinfo(videoLimit.__playinfo__);
       this.gets.push("_");
     }
     getMp4() {
-      if (this.data.mp4 || this.gets.includes("mp4"))
-        return;
+      if (this.data.mp4 || this.gets.includes("mp4")) return;
       this.downloading++;
       (BLOD.pgc ? this.mp4(BLOD.cid) : this.flv(BLOD.aid, BLOD.cid)).then((d) => {
         this.gets.push("mp4");
@@ -14320,8 +14201,7 @@ const MODULES = `
       });
     }
     getFlv() {
-      if (this.data.flv || this.gets.includes("flv"))
-        return;
+      if (this.data.flv || this.gets.includes("flv")) return;
       this.downloading++;
       (user.userStatus.TVresource ? this.tv(BLOD.aid, BLOD.cid, false, user.userStatus.downloadQn) : this.interface(BLOD.cid, user.userStatus.downloadQn)).then((d) => {
         this.gets.push("flv");
@@ -14331,8 +14211,7 @@ const MODULES = `
       });
     }
     getDash() {
-      if (this.data.aac || this.gets.includes("dash") || this.data.hev || this.data.av1)
-        return;
+      if (this.data.aac || this.gets.includes("dash") || this.data.hev || this.data.av1) return;
       this.downloading++;
       (user.userStatus.TVresource ? this.tv(BLOD.aid, BLOD.cid) : this.dash(BLOD.aid, BLOD.cid)).then((d) => {
         this.gets.push("dash");
@@ -14590,12 +14469,11 @@ const MODULES = `
     const one = Array.isArray(url) ? url : [url];
     const two = function() {
       once && id && delete jsonp[id - 1];
-      if (redirect)
-        try {
-          this.src = redirect(this.src) || this.src;
-        } catch (e) {
-          debug.error("redirect of jsonphook", one, e);
-        }
+      if (redirect) try {
+        this.src = redirect(this.src) || this.src;
+      } catch (e) {
+        debug.error("redirect of jsonphook", one, e);
+      }
       if (modifyResponse) {
         const obj = urlObj(this.src);
         if (obj) {
@@ -23727,34 +23605,20 @@ const MODULES = `
       if (tid) {
         return (_a3 = this.tid[tid]) != null ? _a3 : 142;
       }
-      if (location.href.includes("v/douga"))
-        return 1576;
-      if (location.href.includes("/anime"))
-        return 1612;
-      if (location.href.includes("v/music"))
-        return 1580;
-      if (location.href.includes("/guochuang"))
-        return 1920;
-      if (location.href.includes("v/dance"))
-        return 1584;
-      if (location.href.includes("v/game"))
-        return 1588;
-      if (location.href.includes("v/knowledge"))
-        return 1592;
-      if (location.href.includes("v/tech"))
-        return 3129;
-      if (location.href.includes("v/life"))
-        return 1600;
-      if (location.href.includes("v/kichiku"))
-        return 1608;
-      if (location.href.includes("v/fashion"))
-        return 1604;
-      if (location.href.includes("v/ent"))
-        return 1596;
-      if (location.href.includes("v/cinephile"))
-        return 2210;
-      if (location.href.includes("/cinema"))
-        return 1634;
+      if (location.href.includes("v/douga")) return 1576;
+      if (location.href.includes("/anime")) return 1612;
+      if (location.href.includes("v/music")) return 1580;
+      if (location.href.includes("/guochuang")) return 1920;
+      if (location.href.includes("v/dance")) return 1584;
+      if (location.href.includes("v/game")) return 1588;
+      if (location.href.includes("v/knowledge")) return 1592;
+      if (location.href.includes("v/tech")) return 3129;
+      if (location.href.includes("v/life")) return 1600;
+      if (location.href.includes("v/kichiku")) return 1608;
+      if (location.href.includes("v/fashion")) return 1604;
+      if (location.href.includes("v/ent")) return 1596;
+      if (location.href.includes("v/cinephile")) return 2210;
+      if (location.href.includes("/cinema")) return 1634;
       return 142;
     }
     /** 顶栏分区 */
@@ -23868,10 +23732,8 @@ const MODULES = `
     }
     /** 是否mini顶栏 */
     static isMiniHead(d) {
-      if (/\\/v\\/(douga|music|dance|game|knowledge|tech|life|kichiku|fashion|information|ent|cinephile|car|sports|animal)\\//.test(location.href))
-        return true;
-      if (/\\/mooc\\//.test(location.href))
-        return true;
+      if (/\\/v\\/(douga|music|dance|game|knowledge|tech|life|kichiku|fashion|information|ent|cinephile|car|sports|animal)\\//.test(location.href)) return true;
+      if (/\\/mooc\\//.test(location.href)) return true;
       return location.href.includes("blackboard/topic_list") || location.href.includes("blackboard/x/act_list") || document.querySelector(".large-header") || document.querySelector(".bili-banner") || (d == null ? void 0 : d.getAttribute("type")) == "all" ? false : true;
     }
     constructor() {
@@ -23907,8 +23769,7 @@ const MODULES = `
         target.style.display = "none";
         target.hidden = true;
       }
-      if (this.oldHeadLoaded)
-        return;
+      if (this.oldHeadLoaded) return;
       this.oldHeadLoaded = true;
       addCss("#internationalHeader,#biliMainHeader,#bili-header-container{display: none;}");
       document.body.insertBefore(this.oldHeader, document.body.firstChild);
@@ -24270,8 +24131,7 @@ const MODULES = `
         var _a3;
         const result = res.responseType === "json" ? res.response : JSON.parse(res.response);
         if (result.code === 0) {
-          if (((_a3 = result.data) == null ? void 0 : _a3.item.type) === "DYNAMIC_TYPE_DRAW")
-            location.replace(\`https://h.bilibili.com/\${result.data.item.basic.rid_str}\`);
+          if (((_a3 = result.data) == null ? void 0 : _a3.item.type) === "DYNAMIC_TYPE_DRAW") location.replace(\`https://h.bilibili.com/\${result.data.item.basic.rid_str}\`);
         }
       }, false);
     }
@@ -24343,8 +24203,7 @@ const MODULES = `
       while (this.aids.length) {
         arr2.push((async () => {
           const d = this.aids.shift();
-          if (this.aidInfo[d])
-            return;
+          if (this.aidInfo[d]) return;
           let title, cover;
           await GM.fetch(\`//www.biliplus.com/video/av\${d}\`).then((d2) => d2.text()).then((d2) => {
             if (d2.match(/\\<title\\>.+?\\ \\-\\ AV/)) {
@@ -24661,8 +24520,7 @@ const MODULES = `
         const newURL = this.clear(e.destination.url);
         if (e.destination.url != newURL) {
           e.preventDefault();
-          if (newURL == window.location.href)
-            return;
+          if (newURL == window.location.href) return;
           if (e.navigationType !== "traverse") {
             this.updateLocation(newURL, e.navigationType);
           }
@@ -24699,8 +24557,7 @@ const MODULES = `
         url.base = AV.fromStr(url.base);
         url.hash && (url.hash = AV.fromStr(url.hash));
         return url.toJSON();
-      } else
-        return str;
+      } else return str;
     }
     /** 净化URL */
     location() {
@@ -24731,8 +24588,7 @@ const MODULES = `
     /** 净化a标签 */
     anchor(list) {
       list.forEach((d) => {
-        if (!d.href)
-          return;
+        if (!d.href) return;
         d.href = this.clear(d.href);
       });
     }
@@ -24826,8 +24682,7 @@ const MODULES = `
         }
       });
     }
-    if (!arr2.length)
-      throw new Error("输入参数不能为空！");
+    if (!arr2.length) throw new Error("输入参数不能为空！");
     const response = await fetch(objUrl(URLS.ARTICLE_CARDS, { ids: arr2.join(",") }));
     const json = await response.json();
     return jsonCheck(json).data;
@@ -25081,9 +24936,7 @@ const MODULES = `
               response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
             }
           }
-          if (response.data.preview)
-            for (let i = 0; i < response.data.preview.length; i++)
-              response.data.preview[i].url = response.data.preview[i].link;
+          if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
           obj.response = obj.responseText = JSON.stringify(response);
         }
       }, false);
@@ -28478,8 +28331,7 @@ const MODULES = `
         const that = this;
         propertyHook(v, "createPlayer", function() {
           debug("新版播放器试图启动！");
-          if (that.isEmbedPlayer)
-            throw new Error("爆破新版播放器！");
+          if (that.isEmbedPlayer) throw new Error("爆破新版播放器！");
           that.nanoPlayer = createPlayer.call(v, ...arguments);
           that.createPlayer(...arguments);
           that.connect = that.nanoPlayer.connect;
@@ -28683,8 +28535,7 @@ const MODULES = `
     }
     regised = false;
     switchVideo() {
-      if (this.regised)
-        return;
+      if (this.regised) return;
       this.regised = true;
       let cache;
       switchVideo(() => {
@@ -28752,8 +28603,7 @@ const MODULES = `
       clearTimeout(this.playbackRateTimer);
       this.playbackRateTimer = setTimeout(() => {
         const video = document.querySelector("#bilibiliPlayer video");
-        if (!video)
-          return toast.warning("未找到播放器！请在播放页面使用。");
+        if (!video) return toast.warning("未找到播放器！请在播放页面使用。");
         video.playbackRate = Number(playbackRate);
       }, 100);
     }
@@ -28800,8 +28650,7 @@ const MODULES = `
     /** 弹幕保护计划 */
     danmakuProtect() {
       var _a3;
-      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm))
-        return;
+      if (!((_a3 = window.player) == null ? void 0 : _a3.appendDm)) return;
       const cid = Number(BLOD.cid);
       if (cid && danmakuProtect.includes(cid)) {
         alert("此视频高级弹幕部分丢失，点击确认加载备份弹幕。<br>※ 请在原弹幕加载完后再点确定，以免备份弹幕被覆盖。", "弹幕保护计划", [
@@ -28849,8 +28698,7 @@ const MODULES = `
      * @param force 强制更新
      */
     async loadplayer(force = false) {
-      if (!window.jQuery)
-        await loadScript(URLS.JQUERY);
+      if (!window.jQuery) await loadScript(URLS.JQUERY);
       try {
         if (user.userStatus.bilibiliplayer) {
           if (true) {
@@ -28859,11 +28707,9 @@ const MODULES = `
               GM.getValue("bilibiliplayerstyle")
             ]);
             if (force || !data[0] || !data[1]) {
-              if (this.updating)
-                throw new Error("一次只能运行一个更新实例！");
+              if (this.updating) throw new Error("一次只能运行一个更新实例！");
               this.updating = true;
-              if (!BLOD.version)
-                throw new Error(\`未知错误导致脚本版本异常！version：\${BLOD.version}\`);
+              if (!BLOD.version) throw new Error(\`未知错误导致脚本版本异常！version：\${BLOD.version}\`);
               const msg = toast.list(
                 "更新播放器组件 >>>",
                 "> 可能需要花费一点时间，请不要关闭页面！",
@@ -28919,10 +28765,8 @@ const MODULES = `
     }
     changeNaiveVideo() {
       var _a3;
-      if (!window.player)
-        return toast.warning("未找到播放器实例！请在播放页面使用。");
-      if (!((_a3 = window.player) == null ? void 0 : _a3.changeNaiveVideo))
-        return toast.warning("未启用【重构播放器】，无法播放本地视频！");
+      if (!window.player) return toast.warning("未找到播放器实例！请在播放页面使用。");
+      if (!((_a3 = window.player) == null ? void 0 : _a3.changeNaiveVideo)) return toast.warning("未启用【重构播放器】，无法播放本地视频！");
       const msg = toast.list("播放本地文件 >>>", "> 请选择一个mp4文件", "> 音视频编码必须被浏览器支持！");
       fileRead(".mp4").then((d) => {
         var _a4;
@@ -29116,8 +28960,6 @@ const MODULES = `
     /** 修补评论组件 */
     bbCommentModify() {
       this.styleFix();
-      this.initAbtest();
-      this._renderBottomPagination();
       this._createListCon();
       this._createSubReplyItem();
       this._registerEvent();
@@ -29134,85 +28976,94 @@ const MODULES = `
       addCss(".image-exhibition {margin-top: 8px;user-select: none;} .image-exhibition .image-item-wrap {max-width: 240px;display: flex;justify-content: center;position: relative;border-radius: 4px;overflow: hidden;cursor: zoom-in;} .image-exhibition .image-item-wrap.vertical {flex-direction: column} .image-exhibition .image-item-wrap.extra-long {justify-content: start;} .image-exhibition .image-item-wrap img {width: 100%;}", "image-exhibition");
     }
     /** 退出abtest，获取翻页评论区 */
-    initAbtest() {
-      const that = this;
-      Feedback.prototype.initAbtest = function() {
-        this.abtest = {};
-        this.abtest.optimize = false;
-        if (this.jumpId || this.noPage) {
-          this.abtest.optimize = false;
-        }
-        if (this.appMode === "comic") {
-          this.abtest.optimize = false;
-        }
-        that.getPageCount(this).finally(() => {
-          var _a3;
-          this.init();
-          if (!document.querySelector(".b-head")) {
-            const div = addElement("div", { class: \`b-head\` }, void 0, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
-            const com = document.querySelector(".bb-comment");
-            com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
-            (_a3 = com == null ? void 0 : com.parentElement) == null ? void 0 : _a3.classList.add("common");
-            addCss(".b-head {    font-size: 18px;    line-height: 24px;    color: #222;    margin: 0 0 20px;}.b-head .results {    margin-right: 10px;}", "b-head");
-          }
-        });
-        this._registerEvent();
-      };
-    }
+    //     protected initAbtest() {
+    //         const that = this;
+    //         Feedback.prototype.initAbtest = function () {
+    //             this.abtest = {};
+    //             this.abtest.optimize = false; //abtest.web_reply_list
+    //             if (this.jumpId || this.noPage) {
+    //                 this.abtest.optimize = false;
+    //             } // TODO: 漫画独立处理他们的pc 端内容
+    //             if (this.appMode === 'comic') {
+    //                 this.abtest.optimize = false;
+    //             }
+    //             // 优先获取评论总数
+    //             that.getPageCount(this).finally(() => {
+    //                 this.init();
+    //                 if (!document.querySelector('.b-head')) {
+    //                     // 补充评论总数节点
+    //                     const div = addElement('div', { class: \`b-head\` }, undefined, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
+    //                     const com = document.querySelector<HTMLElement>('.bb-comment');
+    //                     com?.insertAdjacentElement('beforebegin', div);
+    //                     com?.parentElement?.classList.add('common');
+    //                     addCss('.b-head {\\
+    //     font-size: 18px;\\
+    //     line-height: 24px;\\
+    //     color: #222;\\
+    //     margin: 0 0 20px;\\
+    // }\\
+    // .b-head .results {\\
+    //     margin-right: 10px;\\
+    // }', 'b-head');
+    //                 }
+    //             });
+    //             this._registerEvent();
+    //         };
+    //     }
     /** 添加回小页码区 */
-    _renderBottomPagination() {
-      Feedback.prototype._renderBottomPagination = function(pageInfo) {
-        if (this.noPage) {
-          var isLastPage = pageInfo.count <= this.pageSize;
-          var html = "";
-          if (isLastPage) {
-            html = "没有更多了～";
-          } else {
-            html = '<a class="more-link" href="javascript:">查看更多评论</a>';
-          }
-          this.\$root.find(".bottom-page").addClass("center").html(html);
-          return;
-        }
-        const count = Math.ceil(pageInfo.count / pageInfo.size);
-        if (count > 1) {
-          this.\$root.find(".header-interaction").addClass("paging-box").paging({
-            pageCount: count,
-            current: pageInfo.num,
-            backFn: (p) => {
-              this.\$root.trigger("replyPageChange", {
-                p,
-                isBottom: true
-              });
-              this.trigger("replyPageChange", {
-                p,
-                isBottom: true
-              });
-              this.currentPage = p;
-            }
-          });
-          this.\$root.find(".bottom-page").paging({
-            pageCount: count,
-            current: pageInfo.num,
-            jump: true,
-            smallSize: this.smallPager,
-            backFn: (p) => {
-              this.\$root.trigger("replyPageChange", {
-                p,
-                isBottom: true
-              });
-              this.trigger("replyPageChange", {
-                p,
-                isBottom: true
-              });
-              this.currentPage = p;
-            }
-          });
-        } else {
-          this.\$root.find(".header-page").html("");
-          this.\$root.find(".bottom-page").html("");
-        }
-      };
-    }
+    // protected _renderBottomPagination() {
+    //     Feedback.prototype._renderBottomPagination = function (pageInfo: any) {
+    //         if (this.noPage) {
+    //             var isLastPage = pageInfo.count <= this.pageSize;
+    //             var html = '';
+    //             if (isLastPage) {
+    //                 html = '没有更多了～';
+    //             } else {
+    //                 html = '<a class="more-link" href="javascript:">查看更多评论</a>';
+    //             }
+    //             this.\$root.find('.bottom-page').addClass('center').html(html);
+    //             return;
+    //         }
+    //         const count = Math.ceil(pageInfo.count / pageInfo.size);
+    //         if (count > 1) {
+    //             this.\$root.find(".header-interaction").addClass("paging-box").paging({
+    //                 pageCount: count,
+    //                 current: pageInfo.num,
+    //                 backFn: (p: any) => {
+    //                     this.\$root.trigger('replyPageChange', {
+    //                         p: p,
+    //                         isBottom: true
+    //                     });
+    //                     this.trigger('replyPageChange', {
+    //                         p: p,
+    //                         isBottom: true
+    //                     });
+    //                     this.currentPage = p;
+    //                 }
+    //             })
+    //             this.\$root.find('.bottom-page').paging({
+    //                 pageCount: count,
+    //                 current: pageInfo.num,
+    //                 jump: true,
+    //                 smallSize: this.smallPager,
+    //                 backFn: (p: any) => {
+    //                     this.\$root.trigger('replyPageChange', {
+    //                         p: p,
+    //                         isBottom: true
+    //                     });
+    //                     this.trigger('replyPageChange', {
+    //                         p: p,
+    //                         isBottom: true
+    //                     });
+    //                     this.currentPage = p;
+    //                 }
+    //             });
+    //         } else {
+    //             this.\$root.find(".header-page").html("");
+    //             this.\$root.find('.bottom-page').html('');
+    //         }
+    //     };
+    // }
     /** 顶层评论ip属地 */
     _createListCon() {
       Feedback.prototype._createListCon = function(item, i, pos) {
@@ -29295,8 +29146,7 @@ const MODULES = `
         _registerEvent.call(this, e);
         let n = this.\$root;
         let \$ = window.\$;
-        if (e)
-          n = \$(e);
+        if (e) n = \$(e);
         let l = this;
         n.on("click.dialog", ".dialog", function() {
           let clickTarget = this;
@@ -37183,8 +37033,7 @@ const MODULES = `
           let loopTitle2 = function() {
             poll(() => document.title != title, () => {
               document.title = title;
-              if (document.title != title)
-                loopTitle2();
+              if (document.title != title) loopTitle2();
             });
           };
           var loopTitle = loopTitle2;
@@ -37206,8 +37055,7 @@ const MODULES = `
           delete i.pay_pack;
           delete i.payment;
           delete i.activity;
-          if (user.userStatus.bangumiEplist)
-            delete i.bkg_cover;
+          if (user.userStatus.bangumiEplist) delete i.bkg_cover;
           user.userStatus.videoLimit.status && bangumi.rights && (bangumi.rights.watch_platform = 0);
           t.mediaInfo = i;
           t.mediaInfo.bkg_cover && (t.special = true);
@@ -37282,8 +37130,7 @@ const MODULES = `
             i.season_type = i.type;
             i.series_title = i.series.series_title;
             i.total_ep = i.total !== -1 ? i.total : bangumi2.episodes.length;
-            if (user.userStatus.bangumiEplist)
-              delete i.bkg_cover;
+            if (user.userStatus.bangumiEplist) delete i.bkg_cover;
             user.userStatus.videoLimit.status && bangumi2.rights && (bangumi2.rights.watch_platform = 0);
             t2.mediaInfo = i;
             t2.mediaInfo.bkg_cover && (t2.special = true);
@@ -37320,8 +37167,7 @@ const MODULES = `
             function loopTitle2() {
               poll(() => document.title != title, () => {
                 document.title = title;
-                if (document.title != title)
-                  loopTitle2();
+                if (document.title != title) loopTitle2();
               });
             }
             loopTitle2();
@@ -37336,8 +37182,7 @@ const MODULES = `
         if (window.__INITIAL_STATE__.special) {
           addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
         }
-        if (document.compatMode === "BackCompat")
-          addCss(".header-info > .count-wrapper {height: 18px !important;}");
+        if (document.compatMode === "BackCompat") addCss(".header-info > .count-wrapper {height: 18px !important;}");
         window.addEventListener("resize", (e) => {
           const container = document.querySelector(".main-container");
           if (container) {
@@ -37856,8 +37701,7 @@ const MODULES = `
         return s;
       }, []);
       player.addModifyArgument((args) => {
-        if (this.destroy)
-          return;
+        if (this.destroy) return;
         const obj = urlObj(\`?\${args[2]}\`);
         obj.playlist = encodeURIComponent(JSON.stringify({ code: 0, data: toview_default, message: "0", ttl: 1 }));
         args[2] = objUrl("", obj);
@@ -37868,8 +37712,7 @@ const MODULES = `
     /** hook合集切p回调 */
     callAppointPart = (p, state) => {
       var _a3;
-      if (this.destroy)
-        return Reflect.deleteProperty(window, "callAppointPart");
+      if (this.destroy) return Reflect.deleteProperty(window, "callAppointPart");
       const vue = (_a3 = document.querySelector("#app")) == null ? void 0 : _a3.__vue__;
       if (vue) {
         vue.\$store.state.aid = state.aid;
@@ -37891,8 +37734,7 @@ const MODULES = `
       if (user.userStatus.like) {
         poll(() => document.querySelector("#viewbox_report > div.number > span.u.coin"), (d) => {
           var _a3;
-          if (this.destroy)
-            return this.like.remove();
+          if (this.destroy) return this.like.remove();
           (_a3 = d.parentElement) == null ? void 0 : _a3.insertBefore(this.like, d);
           addCss(".video-info-m .number .ulike {margin-left: 15px;margin-right: 5px;}", "ulike-av");
         });
@@ -38312,8 +38154,7 @@ const MODULES = `
       this.readInfoStr += \`<div class="head-container"><div class="banner-img-holder"></div><div class="bangumi-rating-container"></div><div class="argue-flag hidden"></div><div class="title-container">
         <h1 class="title">\${this.readInfo.title}</h1><div class="info">
         <a class="category-link" href="//www.bilibili.com/read/\${this.bars.find((d) => {
-        if (d[0] == this.readInfo.category.parent_id)
-          return d;
+        if (d[0] == this.readInfo.category.parent_id) return d;
       })[2]}#rid=\${this.readInfo.category.id}" target="_blank"><span>\${this.readInfo.category.name}</span></a> <span class="create-time" data-ts="\${this.readInfo.ctime}"></span><div class="article-data"></div>
         </div></div><div style="display:none" class="author-container">
         <a class="author-face" href="//space.bilibili.com/\${this.readInfo.author.mid}" target="_blank"><img data-face-src="\${this.readInfo.author.face.replace("http:", "")}" src="\${this.readInfo.author.face.replace("http:", "")}" class="author-face-img" /></a> <a class="author-name" href="//space.bilibili.com/\${this.readInfo.author.mid}" target="_blank">\${this.readInfo.author.name}</a><div class="attention-btn slim-border">关注</div></div></div>\`;
@@ -38743,8 +38584,7 @@ const MODULES = `
   var import_md53 = __toESM(require_md5());
   var _buvid = "";
   function buvid() {
-    if (_buvid)
-      return _buvid;
+    if (_buvid) return _buvid;
     const buvid2 = (0, import_md53.default)(Math.random().toString()).toUpperCase();
     return _buvid = "XX" + buvid2[2] + buvid2[12] + buvid2[22] + buvid2;
   }
@@ -38851,8 +38691,7 @@ const MODULES = `
           const date = (/* @__PURE__ */ new Date()).getTime();
           const dateStr = timeFormat(date, true);
           const obj = urlObj(d.url);
-          if (!obj.access_key)
-            throw new Error("未能获取到鉴权参数~");
+          if (!obj.access_key) throw new Error("未能获取到鉴权参数~");
           user.userStatus.accessKey.token = obj.access_key;
           user.userStatus.accessKey.date = date;
           user.userStatus.accessKey.dateStr = dateStr;
@@ -38889,8 +38728,7 @@ const MODULES = `
           msg.push("> 扫描二维码", \`> \${d}\`, "> 拉取token");
           return poll2(this.authCode);
         }).then((d) => {
-          if (!d)
-            throw new Error("未能获取到鉴权参数~");
+          if (!d) throw new Error("未能获取到鉴权参数~");
           const date = (/* @__PURE__ */ new Date()).getTime();
           const dateStr = timeFormat(date, true);
           user.userStatus.accessKey.token = d;
@@ -39266,8 +39104,7 @@ const MODULES = `
       this.setAttribute("label", v);
     }
     attributeChangedCallback(name, oldValue, newValue) {
-      if (oldValue === newValue)
-        return;
+      if (oldValue === newValue) return;
       switch (name) {
         case "label":
           this._text.textContent = newValue;
@@ -39375,8 +39212,7 @@ const MODULES = `
       return this.\$value;
     }
     set value(v) {
-      if (this.\$value === v)
-        return;
+      if (this.\$value === v) return;
       this.\$value = v || "";
       this._input.value = this.\$value;
     }
@@ -39440,8 +39276,7 @@ const MODULES = `
       return this.\$value;
     }
     set value(v) {
-      if (this.\$value === v)
-        return;
+      if (this.\$value === v) return;
       this.\$value = v || "";
       this._text.textContent = v || "";
       v && this.\$styles[v] && this._text.setAttribute("style", this.\$styles[v]);
@@ -39559,10 +39394,8 @@ const MODULES = `
         this._progress.style.cssText = \`width: \${pv * 100}%;\`;
         if (this.\$hint) {
           this._hinter.textContent = this.\$value;
-          if (this._hinter.style.display !== "block")
-            this._hinter.style.display = "block";
-          if (this.\$solid)
-            return;
+          if (this._hinter.style.display !== "block") this._hinter.style.display = "block";
+          if (this.\$solid) return;
           clearTimeout(nHint);
           nHint = setTimeout(() => this._hinter.style.display = "", 300);
         }
@@ -39574,11 +39407,9 @@ const MODULES = `
       return this.\$value;
     }
     set value(v) {
-      if (this.\$vertical)
-        v = this.\$max - v + this.\$min;
+      if (this.\$vertical) v = this.\$max - v + this.\$min;
       v = (this.\$max - this.\$min) * Math.round((v - this.\$min) / (this.\$max - this.\$min) * this.\$precision) / this.\$precision + this.\$min;
-      if (v === this.\$value)
-        return;
+      if (v === this.\$value) return;
       this.\$value = v;
       this.showChange();
     }
@@ -39587,11 +39418,9 @@ const MODULES = `
       return this.\$min;
     }
     set min(v) {
-      if (v === this.\$min || v >= this.\$max)
-        return;
+      if (v === this.\$min || v >= this.\$max) return;
       this.\$min = v;
-      if (v > this.\$value)
-        this.value = v;
+      if (v > this.\$value) this.value = v;
       this.showChange();
     }
     /** 最大值 */
@@ -39599,11 +39428,9 @@ const MODULES = `
       return this.\$max;
     }
     set max(v) {
-      if (v === this.\$max || v <= this.\$min)
-        return;
+      if (v === this.\$max || v <= this.\$min) return;
       this.\$max = v;
-      if (v < this.\$value)
-        this.value = v;
+      if (v < this.\$value) this.value = v;
       this.showChange();
     }
     /** 刻度数 */
@@ -39611,8 +39438,7 @@ const MODULES = `
       return this.\$precision;
     }
     set precision(v) {
-      if (v === this.\$precision)
-        return;
+      if (v === this.\$precision) return;
       this.\$precision = v;
       this.value = this.\$value;
     }
@@ -39621,8 +39447,7 @@ const MODULES = `
       return this.\$hint;
     }
     set hint(v) {
-      if (v === this.\$hint)
-        return;
+      if (v === this.\$hint) return;
       this.\$hint = v;
     }
     /** 固化提示 */
@@ -39630,8 +39455,7 @@ const MODULES = `
       return this.\$solid;
     }
     set solid(v) {
-      if (v === this.\$solid)
-        return;
+      if (v === this.\$solid) return;
       this.\$solid = v;
       this.showChange();
     }
@@ -39640,8 +39464,7 @@ const MODULES = `
       return this.\$vertical;
     }
     set vertical(v) {
-      if (v === this.\$vertical)
-        return;
+      if (v === this.\$vertical) return;
       this.\$vertical = v;
       this.style.transform = v ? "rotate(-90deg)" : "";
     }
@@ -39687,8 +39510,7 @@ const MODULES = `
       return this.\$value;
     }
     set value(v) {
-      if (this.\$value === v)
-        return;
+      if (this.\$value === v) return;
       if (v) {
         this._bar.setAttribute("checked", "checked");
         this._knob.setAttribute("checked", "checked");
@@ -39903,7 +39725,7 @@ const MODULES = `
     initSettingStyle() {
       this.menuitem.style.addSetting([
         this.switch("header", "恢复旧版顶栏", "替换所有B站页面中的顶栏为旧版", void 0, void 0, "除非替换后实在不和谐，一般都会进行替换。"),
-        this.switch("comment", "恢复评论翻页", "替换瀑布流评论区", void 0, void 0, "评论区版本将被固定，可能享受不到B站后续为评论区推出的新功能。本功能有专门独立为一个脚本，不要重复安装。"),
+        // this.switch('comment', '恢复评论翻页', '替换瀑布流评论区', undefined, undefined, '评论区版本将被固定，可能享受不到B站后续为评论区推出的新功能。本功能有专门独立为一个脚本，不要重复安装。'),
         this.switch("staff", "合作UP主", "联合投稿显示合作UP主", void 0, void 0, "在原av页up主信息处列出所有合作up主。"),
         this.switch("bangumiEplist", "保留bangumi分P", "牺牲特殊背景图", void 0, void 0, "旧版bangumi遇到有特殊背景图的视频时，会隐藏播放器下方的分集选择界面，二者不可得兼。"),
         this.switch("jointime", "注册时间", "个人空间显示账户注册时间"),
