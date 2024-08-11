@@ -2,17 +2,17 @@
   "dependencies": {
     "@jsc/chrome": "file:chrome",
     "@jsc/tampermonkey": "file:tampermonkey",
-    "fflate": "^0.8.1",
-    "md5": "^2.3.0",
-    "protobufjs": "^7.2.5",
-    "quill-delta-to-html-cb": "^0.14.0"
+    "fflate": "*",
+    "md5": "*",
+    "protobufjs": "*",
+    "quill-delta-to-html-cb": "*"
   },
   "devDependencies": {
-    "@types/md5": "^2.3.4",
-    "esbuild": "^0.20.0",
-    "fs-extra": "^11.1.1",
-    "navigation-api-types": "^0.5.0",
-    "typescript": "^5.2.2"
+    "@types/md5": "*",
+    "esbuild": "*",
+    "fs-extra": "*",
+    "navigation-api-types": "*",
+    "typescript": "*"
   },
   "scripts": {
     "tsc": "tsc --noEmit -p ./src/tsconfig.json",

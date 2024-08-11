@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.2.5
+// @version      2.2.6
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -76,8 +76,7 @@ var URL = class {
 function objUrl(url, obj) {
   const res = new URL(url);
   Object.entries(obj).forEach((d) => {
-    if (d[1] === void 0 || d[1] === null)
-      return;
+    if (d[1] === void 0 || d[1] === null) return;
     res.params[d[0]] = d[1];
   });
   return res.toJSON();
@@ -90,8 +89,7 @@ function urlObj(url) {
 // src/io/api.ts
 function jsonCheck(str) {
   const result = typeof str === "string" ? JSON.parse(str) : str;
-  if (result.code === 0)
-    return result;
+  if (result.code === 0) return result;
   throw new Error(`${result.code} ${result.message}`, { cause: result.code });
 }
 
@@ -174,6 +172,9 @@ var URLS = class _URLS {
   static DYNAMIC_UPLOAD_BFS = _URLS.P_AUTO + _URLS.D_API + "/x/dynamic/feed/draw/upload_bfs";
   /** 退出登录 */
   static PASSPORT_LOGIN_EXIT = _URLS.P_AUTO + _URLS.D_PASSPORT + "/login/exit/v2";
+  static PASSPORT_AUTH_CODE = _URLS.P_AUTO + _URLS.D_PASSPORT + "/x/passport-tv-login/qrcode/auth_code";
+  static PASSPORT_QRCODE_CONFIRM = _URLS.P_AUTO + _URLS.D_PASSPORT + "/x/passport-tv-login/h5/qrcode/confirm";
+  static PASSPORT_QRCODE_POLL = _URLS.P_AUTO + _URLS.D_PASSPORT + "/x/passport-tv-login/qrcode/poll";
 };
 
 // src/io/api-reply.ts
@@ -183,52 +184,116 @@ async function apiReply(oid, pn = 1, type = 1, sort = 0) {
   return jsonCheck(json).data;
 }
 
-// src/utils/abv.ts
-var Abv = class {
-  base58Table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF";
-  digitMap = [11, 10, 3, 8, 4, 6];
-  xor = 177451812;
-  add = 8728348608;
-  bvidTemplate = ["B", "V", 1, "", "", 4, "", 1, "", 7, "", ""];
-  table = {};
-  constructor() {
-    for (let i = 0; i < 58; i++)
-      this.table[this.base58Table[i]] = i;
+// src/utils/av.ts
+var AV;
+((AV2) => {
+  const XOR_CODE = 23442827791579n;
+  const MASK_CODE = 2251799813685247n;
+  const MAX_AID = 1n << 51n;
+  const MIN_AID = 1n;
+  const BASE = 58n;
+  const BYTES = ["B", "V", 1, "", "", "", "", "", "", "", "", ""];
+  const BV_LEN = BYTES.length;
+  const ALPHABET = [
+    "F",
+    "c",
+    "w",
+    "A",
+    "P",
+    "N",
+    "K",
+    "T",
+    "M",
+    "u",
+    "g",
+    "3",
+    "G",
+    "V",
+    "5",
+    "L",
+    "j",
+    "7",
+    "E",
+    "J",
+    "n",
+    "H",
+    "p",
+    "W",
+    "s",
+    "x",
+    "4",
+    "t",
+    "b",
+    "8",
+    "h",
+    "a",
+    "Y",
+    "e",
+    "v",
+    "i",
+    "q",
+    "B",
+    "z",
+    "6",
+    "r",
+    "k",
+    "C",
+    "y",
+    "1",
+    "2",
+    "m",
+    "U",
+    "S",
+    "D",
+    "Q",
+    "X",
+    "9",
+    "R",
+    "d",
+    "o",
+    "Z",
+    "f"
+  ];
+  const DIGIT_MAP = [0, 1, 2, 9, 7, 5, 6, 4, 8, 3, 10, 11];
+  const REG_EXP = new RegExp(`^[bB][vV]1[${ALPHABET.join("")}]{9}$`, "g");
+  const REG_EXP_SHORT = new RegExp(`^1[${ALPHABET.join("")}]{9}$`, "g");
+  const REG_EXP_STR = new RegExp(`[bB][vV]1[${ALPHABET.join("")}]{9}`, "g");
+  function toBV(avid) {
+    typeof avid === "bigint" || (avid = BigInt(avid));
+    if (avid < MIN_AID) {
+      throw new RangeError(`Av ${avid} is smaller than ${MIN_AID}`);
+    }
+    if (avid >= MAX_AID) {
+      throw new RangeError(`Av ${avid} is bigger than ${MAX_AID}`);
+    }
+    const bytes = Array.from(BYTES);
+    let bv_idx = BV_LEN - 1;
+    let tmp = (MAX_AID | avid) ^ XOR_CODE;
+    while (tmp !== 0n) {
+      let table_idx = tmp % BASE;
+      bytes[DIGIT_MAP[Number(bv_idx)]] = ALPHABET[Number(table_idx)];
+      tmp /= BASE;
+      bv_idx -= 1;
+    }
+    return bytes.join("");
   }
-  /**
-   * av/BV互转
-   * @param input av或BV，可带av/BV前缀
-   * @returns 转化结果
-   */
-  check(input) {
-    if (/^[aA][vV][0-9]+$/.test(String(input)) || /^\d+$/.test(String(input)))
-      return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
-    if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(String(input)))
-      return this.bvToAv("BV" + input);
-    if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(String(input)))
-      return this.bvToAv(String(input));
-    throw input;
+  AV2.toBV = toBV;
+  function fromBV(bvid) {
+    if (REG_EXP_SHORT.test(bvid)) {
+      bvid = "BV" + bvid;
+    }
+    let r = 0n;
+    for (let i = 3; i < BV_LEN; i++) {
+      r = r * BASE + BigInt(ALPHABET.indexOf(bvid[DIGIT_MAP[i]]));
+    }
+    return `${r & MASK_CODE ^ XOR_CODE}`;
   }
-  bvToAv(BV) {
-    let r = 0;
-    for (let i = 0; i < 6; i++)
-      r += this.table[BV[this.digitMap[i]]] * 58 ** i;
-    return r - this.add ^ this.xor;
+  AV2.fromBV = fromBV;
+  function fromStr(str) {
+    return str.replace(REG_EXP_STR, (s) => "av" + fromBV(s));
   }
-  avToBv(av) {
-    let bv = Array.from(this.bvidTemplate);
-    av = (av ^ this.xor) + this.add;
-    for (let i = 0; i < 6; i++)
-      bv[this.digitMap[i]] = this.base58Table[parseInt(String(av / 58 ** i)) % 58];
-    return bv.join("");
-  }
-};
-function abv(input) {
-  return new Abv().check(input);
-}
-function BV2avAll(str) {
-  return str.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
-}
+  AV2.fromStr = fromStr;
+})(AV || (AV = {}));
 
 // src/utils/poll.ts
 function poll(check, callback, delay = 100, stop = 180) {
@@ -405,12 +470,11 @@ function jsonpHook(url, redirect, modifyResponse, once = true) {
   const one = Array.isArray(url) ? url : [url];
   const two = function() {
     once && id && delete jsonp[id - 1];
-    if (redirect)
-      try {
-        this.src = redirect(this.src) || this.src;
-      } catch (e) {
-        debug.error("redirect of jsonphook", one, e);
-      }
+    if (redirect) try {
+      this.src = redirect(this.src) || this.src;
+    } catch (e) {
+      debug.error("redirect of jsonphook", one, e);
+    }
     if (modifyResponse) {
       const obj = urlObj(this.src);
       if (obj) {
@@ -511,6 +575,34 @@ jsonpHook.scriptIntercept = (url, redirect, text) => {
 function removeJsonphook(id) {
   id >= 0 && delete jsonp[id - 1];
 }
+jsonpHook.xhr = (url) => {
+  const one = Array.isArray(url) ? url : [url];
+  const two = function() {
+    try {
+      const obj = urlObj(this.src);
+      if (obj) {
+        const callback = obj.callback || obj.jsoncallback;
+        const call = window[callback];
+        const url2 = this.src;
+        this.removeAttribute("src");
+        delete obj.callback;
+        delete obj.jsoncallback;
+        fetch(objUrl(url2.split("?")[0], obj)).then((d) => d.json()).then((d) => {
+          call(d);
+          this.dispatchEvent(new ProgressEvent("load"));
+        }).catch(() => {
+          this.dispatchEvent(new ProgressEvent("error"));
+        });
+      }
+    } catch (e) {
+      debug.error("jsonphook", one, e);
+    }
+  };
+  const iid = jsonp.push([one, two]);
+  return () => {
+    removeJsonphook(iid);
+  };
+};
 
 // src/core/quickLogin.ts
 function biliQuickLogin() {
@@ -747,7 +839,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"79aw4nxx4q"}`) || customElements.define(`preview-image-${"79aw4nxx4q"}`, PreviewImage);
+customElements.get(`preview-image-${"d1taabnn0j6"}`) || customElements.define(`preview-image-${"d1taabnn0j6"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -895,8 +987,6 @@ var Comment = class _Comment {
   /** 修补评论组件 */
   bbCommentModify() {
     this.styleFix();
-    this.initAbtest();
-    this._renderBottomPagination();
     this._createListCon();
     this._createSubReplyItem();
     this._registerEvent();
@@ -913,85 +1003,94 @@ var Comment = class _Comment {
     addCss(".image-exhibition {margin-top: 8px;user-select: none;} .image-exhibition .image-item-wrap {max-width: 240px;display: flex;justify-content: center;position: relative;border-radius: 4px;overflow: hidden;cursor: zoom-in;} .image-exhibition .image-item-wrap.vertical {flex-direction: column} .image-exhibition .image-item-wrap.extra-long {justify-content: start;} .image-exhibition .image-item-wrap img {width: 100%;}", "image-exhibition");
   }
   /** 退出abtest，获取翻页评论区 */
-  initAbtest() {
-    const that = this;
-    Feedback.prototype.initAbtest = function() {
-      this.abtest = {};
-      this.abtest.optimize = false;
-      if (this.jumpId || this.noPage) {
-        this.abtest.optimize = false;
-      }
-      if (this.appMode === "comic") {
-        this.abtest.optimize = false;
-      }
-      that.getPageCount(this).finally(() => {
-        var _a;
-        this.init();
-        if (!document.querySelector(".b-head")) {
-          const div = addElement("div", { class: `b-head` }, void 0, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
-          const com = document.querySelector(".bb-comment");
-          com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
-          (_a = com == null ? void 0 : com.parentElement) == null ? void 0 : _a.classList.add("common");
-          addCss(".b-head {    font-size: 18px;    line-height: 24px;    color: #222;    margin: 0 0 20px;}.b-head .results {    margin-right: 10px;}", "b-head");
-        }
-      });
-      this._registerEvent();
-    };
-  }
+  //     protected initAbtest() {
+  //         const that = this;
+  //         Feedback.prototype.initAbtest = function () {
+  //             this.abtest = {};
+  //             this.abtest.optimize = false; //abtest.web_reply_list
+  //             if (this.jumpId || this.noPage) {
+  //                 this.abtest.optimize = false;
+  //             } // TODO: 漫画独立处理他们的pc 端内容
+  //             if (this.appMode === 'comic') {
+  //                 this.abtest.optimize = false;
+  //             }
+  //             // 优先获取评论总数
+  //             that.getPageCount(this).finally(() => {
+  //                 this.init();
+  //                 if (!document.querySelector('.b-head')) {
+  //                     // 补充评论总数节点
+  //                     const div = addElement('div', { class: `b-head` }, undefined, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
+  //                     const com = document.querySelector<HTMLElement>('.bb-comment');
+  //                     com?.insertAdjacentElement('beforebegin', div);
+  //                     com?.parentElement?.classList.add('common');
+  //                     addCss('.b-head {\
+  //     font-size: 18px;\
+  //     line-height: 24px;\
+  //     color: #222;\
+  //     margin: 0 0 20px;\
+  // }\
+  // .b-head .results {\
+  //     margin-right: 10px;\
+  // }', 'b-head');
+  //                 }
+  //             });
+  //             this._registerEvent();
+  //         };
+  //     }
   /** 添加回小页码区 */
-  _renderBottomPagination() {
-    Feedback.prototype._renderBottomPagination = function(pageInfo) {
-      if (this.noPage) {
-        var isLastPage = pageInfo.count <= this.pageSize;
-        var html = "";
-        if (isLastPage) {
-          html = "没有更多了～";
-        } else {
-          html = '<a class="more-link" href="javascript:">查看更多评论</a>';
-        }
-        this.$root.find(".bottom-page").addClass("center").html(html);
-        return;
-      }
-      const count = Math.ceil(pageInfo.count / pageInfo.size);
-      if (count > 1) {
-        this.$root.find(".header-interaction").addClass("paging-box").paging({
-          pageCount: count,
-          current: pageInfo.num,
-          backFn: (p) => {
-            this.$root.trigger("replyPageChange", {
-              p,
-              isBottom: true
-            });
-            this.trigger("replyPageChange", {
-              p,
-              isBottom: true
-            });
-            this.currentPage = p;
-          }
-        });
-        this.$root.find(".bottom-page").paging({
-          pageCount: count,
-          current: pageInfo.num,
-          jump: true,
-          smallSize: this.smallPager,
-          backFn: (p) => {
-            this.$root.trigger("replyPageChange", {
-              p,
-              isBottom: true
-            });
-            this.trigger("replyPageChange", {
-              p,
-              isBottom: true
-            });
-            this.currentPage = p;
-          }
-        });
-      } else {
-        this.$root.find(".header-page").html("");
-        this.$root.find(".bottom-page").html("");
-      }
-    };
-  }
+  // protected _renderBottomPagination() {
+  //     Feedback.prototype._renderBottomPagination = function (pageInfo: any) {
+  //         if (this.noPage) {
+  //             var isLastPage = pageInfo.count <= this.pageSize;
+  //             var html = '';
+  //             if (isLastPage) {
+  //                 html = '没有更多了～';
+  //             } else {
+  //                 html = '<a class="more-link" href="javascript:">查看更多评论</a>';
+  //             }
+  //             this.$root.find('.bottom-page').addClass('center').html(html);
+  //             return;
+  //         }
+  //         const count = Math.ceil(pageInfo.count / pageInfo.size);
+  //         if (count > 1) {
+  //             this.$root.find(".header-interaction").addClass("paging-box").paging({
+  //                 pageCount: count,
+  //                 current: pageInfo.num,
+  //                 backFn: (p: any) => {
+  //                     this.$root.trigger('replyPageChange', {
+  //                         p: p,
+  //                         isBottom: true
+  //                     });
+  //                     this.trigger('replyPageChange', {
+  //                         p: p,
+  //                         isBottom: true
+  //                     });
+  //                     this.currentPage = p;
+  //                 }
+  //             })
+  //             this.$root.find('.bottom-page').paging({
+  //                 pageCount: count,
+  //                 current: pageInfo.num,
+  //                 jump: true,
+  //                 smallSize: this.smallPager,
+  //                 backFn: (p: any) => {
+  //                     this.$root.trigger('replyPageChange', {
+  //                         p: p,
+  //                         isBottom: true
+  //                     });
+  //                     this.trigger('replyPageChange', {
+  //                         p: p,
+  //                         isBottom: true
+  //                     });
+  //                     this.currentPage = p;
+  //                 }
+  //             });
+  //         } else {
+  //             this.$root.find(".header-page").html("");
+  //             this.$root.find('.bottom-page').html('');
+  //         }
+  //     };
+  // }
   /** 顶层评论ip属地 */
   _createListCon() {
     Feedback.prototype._createListCon = function(item, i, pos) {
@@ -1074,8 +1173,7 @@ var Comment = class _Comment {
       _registerEvent.call(this, e);
       let n = this.$root;
       let $ = window.$;
-      if (e)
-        n = $(e);
+      if (e) n = $(e);
       let l = this;
       n.on("click.dialog", ".dialog", function() {
         let clickTarget = this;
@@ -1216,7 +1314,7 @@ var Comment = class _Comment {
           this.jumpReportIndex++;
         }
       }
-      return BV2avAll(str);
+      return AV.fromStr(str);
     };
   }
   /** 评论图片 */
