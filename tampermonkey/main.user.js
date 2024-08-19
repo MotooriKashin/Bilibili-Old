@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.8.2-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.8.3-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -1635,6 +1635,7 @@ const MODULES = `
           case 5:
             this.skip(4);
             break;
+          /* istanbul ignore next */
           default:
             throw Error("invalid wire type " + wireType + " at offset " + this.pos);
         }
@@ -3087,6 +3088,7 @@ const MODULES = `
               break;
             case "uint64":
               isUnsigned = true;
+            // eslint-disable-next-line no-fallthrough
             case "int64":
             case "sint64":
             case "fixed64":
@@ -3158,6 +3160,7 @@ const MODULES = `
               break;
             case "uint64":
               isUnsigned = true;
+            // eslint-disable-next-line no-fallthrough
             case "int64":
             case "sint64":
             case "fixed64":
@@ -7105,6 +7108,7 @@ const MODULES = `
         case "meta":
         case "param":
         case "path":
+        // svg专属
         case "source":
         case "track":
         case "wbr":
@@ -28960,6 +28964,8 @@ const MODULES = `
     /** 修补评论组件 */
     bbCommentModify() {
       this.styleFix();
+      this.initAbtest();
+      this._renderBottomPagination();
       this._createListCon();
       this._createSubReplyItem();
       this._registerEvent();
@@ -28976,94 +28982,85 @@ const MODULES = `
       addCss(".image-exhibition {margin-top: 8px;user-select: none;} .image-exhibition .image-item-wrap {max-width: 240px;display: flex;justify-content: center;position: relative;border-radius: 4px;overflow: hidden;cursor: zoom-in;} .image-exhibition .image-item-wrap.vertical {flex-direction: column} .image-exhibition .image-item-wrap.extra-long {justify-content: start;} .image-exhibition .image-item-wrap img {width: 100%;}", "image-exhibition");
     }
     /** 退出abtest，获取翻页评论区 */
-    //     protected initAbtest() {
-    //         const that = this;
-    //         Feedback.prototype.initAbtest = function () {
-    //             this.abtest = {};
-    //             this.abtest.optimize = false; //abtest.web_reply_list
-    //             if (this.jumpId || this.noPage) {
-    //                 this.abtest.optimize = false;
-    //             } // TODO: 漫画独立处理他们的pc 端内容
-    //             if (this.appMode === 'comic') {
-    //                 this.abtest.optimize = false;
-    //             }
-    //             // 优先获取评论总数
-    //             that.getPageCount(this).finally(() => {
-    //                 this.init();
-    //                 if (!document.querySelector('.b-head')) {
-    //                     // 补充评论总数节点
-    //                     const div = addElement('div', { class: \`b-head\` }, undefined, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
-    //                     const com = document.querySelector<HTMLElement>('.bb-comment');
-    //                     com?.insertAdjacentElement('beforebegin', div);
-    //                     com?.parentElement?.classList.add('common');
-    //                     addCss('.b-head {\\
-    //     font-size: 18px;\\
-    //     line-height: 24px;\\
-    //     color: #222;\\
-    //     margin: 0 0 20px;\\
-    // }\\
-    // .b-head .results {\\
-    //     margin-right: 10px;\\
-    // }', 'b-head');
-    //                 }
-    //             });
-    //             this._registerEvent();
-    //         };
-    //     }
+    initAbtest() {
+      const that = this;
+      Feedback.prototype.initAbtest = function() {
+        this.abtest = {};
+        this.abtest.optimize = false;
+        if (this.jumpId || this.noPage) {
+          this.abtest.optimize = false;
+        }
+        if (this.appMode === "comic") {
+          this.abtest.optimize = false;
+        }
+        that.getPageCount(this).finally(() => {
+          var _a3;
+          this.init();
+          if (!document.querySelector(".b-head")) {
+            const div = addElement("div", { class: \`b-head\` }, void 0, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
+            const com = document.querySelector(".bb-comment");
+            com == null ? void 0 : com.insertAdjacentElement("beforebegin", div);
+            (_a3 = com == null ? void 0 : com.parentElement) == null ? void 0 : _a3.classList.add("common");
+            addCss(".b-head {    font-size: 18px;    line-height: 24px;    color: #222;    margin: 0 0 20px;}.b-head .results {    margin-right: 10px;}", "b-head");
+          }
+        });
+        this._registerEvent();
+      };
+    }
     /** 添加回小页码区 */
-    // protected _renderBottomPagination() {
-    //     Feedback.prototype._renderBottomPagination = function (pageInfo: any) {
-    //         if (this.noPage) {
-    //             var isLastPage = pageInfo.count <= this.pageSize;
-    //             var html = '';
-    //             if (isLastPage) {
-    //                 html = '没有更多了～';
-    //             } else {
-    //                 html = '<a class="more-link" href="javascript:">查看更多评论</a>';
-    //             }
-    //             this.\$root.find('.bottom-page').addClass('center').html(html);
-    //             return;
-    //         }
-    //         const count = Math.ceil(pageInfo.count / pageInfo.size);
-    //         if (count > 1) {
-    //             this.\$root.find(".header-interaction").addClass("paging-box").paging({
-    //                 pageCount: count,
-    //                 current: pageInfo.num,
-    //                 backFn: (p: any) => {
-    //                     this.\$root.trigger('replyPageChange', {
-    //                         p: p,
-    //                         isBottom: true
-    //                     });
-    //                     this.trigger('replyPageChange', {
-    //                         p: p,
-    //                         isBottom: true
-    //                     });
-    //                     this.currentPage = p;
-    //                 }
-    //             })
-    //             this.\$root.find('.bottom-page').paging({
-    //                 pageCount: count,
-    //                 current: pageInfo.num,
-    //                 jump: true,
-    //                 smallSize: this.smallPager,
-    //                 backFn: (p: any) => {
-    //                     this.\$root.trigger('replyPageChange', {
-    //                         p: p,
-    //                         isBottom: true
-    //                     });
-    //                     this.trigger('replyPageChange', {
-    //                         p: p,
-    //                         isBottom: true
-    //                     });
-    //                     this.currentPage = p;
-    //                 }
-    //             });
-    //         } else {
-    //             this.\$root.find(".header-page").html("");
-    //             this.\$root.find('.bottom-page').html('');
-    //         }
-    //     };
-    // }
+    _renderBottomPagination() {
+      Feedback.prototype._renderBottomPagination = function(pageInfo) {
+        if (this.noPage) {
+          var isLastPage = pageInfo.count <= this.pageSize;
+          var html = "";
+          if (isLastPage) {
+            html = "没有更多了～";
+          } else {
+            html = '<a class="more-link" href="javascript:">查看更多评论</a>';
+          }
+          this.\$root.find(".bottom-page").addClass("center").html(html);
+          return;
+        }
+        const count = Math.ceil(pageInfo.count / pageInfo.size);
+        if (count > 1) {
+          this.\$root.find(".header-interaction").addClass("paging-box").paging({
+            pageCount: count,
+            current: pageInfo.num,
+            backFn: (p) => {
+              this.\$root.trigger("replyPageChange", {
+                p,
+                isBottom: true
+              });
+              this.trigger("replyPageChange", {
+                p,
+                isBottom: true
+              });
+              this.currentPage = p;
+            }
+          });
+          this.\$root.find(".bottom-page").paging({
+            pageCount: count,
+            current: pageInfo.num,
+            jump: true,
+            smallSize: this.smallPager,
+            backFn: (p) => {
+              this.\$root.trigger("replyPageChange", {
+                p,
+                isBottom: true
+              });
+              this.trigger("replyPageChange", {
+                p,
+                isBottom: true
+              });
+              this.currentPage = p;
+            }
+          });
+        } else {
+          this.\$root.find(".header-page").html("");
+          this.\$root.find(".bottom-page").html("");
+        }
+      };
+    }
     /** 顶层评论ip属地 */
     _createListCon() {
       Feedback.prototype._createListCon = function(item, i, pos) {
@@ -39725,7 +39722,7 @@ const MODULES = `
     initSettingStyle() {
       this.menuitem.style.addSetting([
         this.switch("header", "恢复旧版顶栏", "替换所有B站页面中的顶栏为旧版", void 0, void 0, "除非替换后实在不和谐，一般都会进行替换。"),
-        // this.switch('comment', '恢复评论翻页', '替换瀑布流评论区', undefined, undefined, '评论区版本将被固定，可能享受不到B站后续为评论区推出的新功能。本功能有专门独立为一个脚本，不要重复安装。'),
+        this.switch("comment", "恢复评论翻页", "替换瀑布流评论区", void 0, void 0, "评论区版本将被固定，可能享受不到B站后续为评论区推出的新功能。本功能有专门独立为一个脚本，不要重复安装。"),
         this.switch("staff", "合作UP主", "联合投稿显示合作UP主", void 0, void 0, "在原av页up主信息处列出所有合作up主。"),
         this.switch("bangumiEplist", "保留bangumi分P", "牺牲特殊背景图", void 0, void 0, "旧版bangumi遇到有特殊背景图的视频时，会隐藏播放器下方的分集选择界面，二者不可得兼。"),
         this.switch("jointime", "注册时间", "个人空间显示账户注册时间"),
