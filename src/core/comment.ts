@@ -157,8 +157,8 @@ export class Comment {
     /** 修补评论组件 */
     protected bbCommentModify() {
         this.styleFix();
-        // this.initAbtest();
-        // this._renderBottomPagination();
+        this.initAbtest();
+        this._renderBottomPagination();
         this._createListCon();
         this._createSubReplyItem();
         this._registerEvent();
@@ -178,104 +178,104 @@ export class Comment {
         addCss('.image-exhibition {margin-top: 8px;user-select: none;} .image-exhibition .image-item-wrap {max-width: 240px;display: flex;justify-content: center;position: relative;border-radius: 4px;overflow: hidden;cursor: zoom-in;} .image-exhibition .image-item-wrap.vertical {flex-direction: column} .image-exhibition .image-item-wrap.extra-long {justify-content: start;} .image-exhibition .image-item-wrap img {width: 100%;}', 'image-exhibition');
     }
     /** 退出abtest，获取翻页评论区 */
-    //     protected initAbtest() {
-    //         const that = this;
-    //         Feedback.prototype.initAbtest = function () {
+    protected initAbtest() {
+        const that = this;
+        Feedback.prototype.initAbtest = function () {
 
-    //             this.abtest = {};
-    //             this.abtest.optimize = false; //abtest.web_reply_list
+            this.abtest = {};
+            this.abtest.optimize = false; //abtest.web_reply_list
 
-    //             if (this.jumpId || this.noPage) {
-    //                 this.abtest.optimize = false;
-    //             } // TODO: 漫画独立处理他们的pc 端内容
+            if (this.jumpId || this.noPage) {
+                this.abtest.optimize = false;
+            } // TODO: 漫画独立处理他们的pc 端内容
 
 
-    //             if (this.appMode === 'comic') {
-    //                 this.abtest.optimize = false;
-    //             }
+            if (this.appMode === 'comic') {
+                this.abtest.optimize = false;
+            }
 
-    //             // 优先获取评论总数
-    //             that.getPageCount(this).finally(() => {
-    //                 this.init();
-    //                 if (!document.querySelector('.b-head')) {
-    //                     // 补充评论总数节点
-    //                     const div = addElement('div', { class: `b-head` }, undefined, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
-    //                     const com = document.querySelector<HTMLElement>('.bb-comment');
-    //                     com?.insertAdjacentElement('beforebegin', div);
-    //                     com?.parentElement?.classList.add('common');
-    //                     addCss('.b-head {\
-    //     font-size: 18px;\
-    //     line-height: 24px;\
-    //     color: #222;\
-    //     margin: 0 0 20px;\
-    // }\
-    // .b-head .results {\
-    //     margin-right: 10px;\
-    // }', 'b-head');
-    //                 }
-    //             });
+            // 优先获取评论总数
+            that.getPageCount(this).finally(() => {
+                this.init();
+                if (!document.querySelector('.b-head')) {
+                    // 补充评论总数节点
+                    const div = addElement('div', { class: `b-head` }, undefined, '<span class="b-head-t results"></span><span class="b-head-t">评论</span>');
+                    const com = document.querySelector<HTMLElement>('.bb-comment');
+                    com?.insertAdjacentElement('beforebegin', div);
+                    com?.parentElement?.classList.add('common');
+                    addCss('.b-head {\
+    font-size: 18px;\
+    line-height: 24px;\
+    color: #222;\
+    margin: 0 0 20px;\
+}\
+.b-head .results {\
+    margin-right: 10px;\
+}', 'b-head');
+                }
+            });
 
-    //             this._registerEvent();
-    //         };
-    //     }
+            this._registerEvent();
+        };
+    }
     /** 添加回小页码区 */
-    // protected _renderBottomPagination() {
-    //     Feedback.prototype._renderBottomPagination = function (pageInfo: any) {
-    //         if (this.noPage) {
-    //             var isLastPage = pageInfo.count <= this.pageSize;
-    //             var html = '';
+    protected _renderBottomPagination() {
+        Feedback.prototype._renderBottomPagination = function (pageInfo: any) {
+            if (this.noPage) {
+                var isLastPage = pageInfo.count <= this.pageSize;
+                var html = '';
 
-    //             if (isLastPage) {
-    //                 html = '没有更多了～';
-    //             } else {
-    //                 html = '<a class="more-link" href="javascript:">查看更多评论</a>';
-    //             }
+                if (isLastPage) {
+                    html = '没有更多了～';
+                } else {
+                    html = '<a class="more-link" href="javascript:">查看更多评论</a>';
+                }
 
-    //             this.$root.find('.bottom-page').addClass('center').html(html);
-    //             return;
-    //         }
+                this.$root.find('.bottom-page').addClass('center').html(html);
+                return;
+            }
 
-    //         const count = Math.ceil(pageInfo.count / pageInfo.size);
+            const count = Math.ceil(pageInfo.count / pageInfo.size);
 
-    //         if (count > 1) {
-    //             this.$root.find(".header-interaction").addClass("paging-box").paging({
-    //                 pageCount: count,
-    //                 current: pageInfo.num,
-    //                 backFn: (p: any) => {
-    //                     this.$root.trigger('replyPageChange', {
-    //                         p: p,
-    //                         isBottom: true
-    //                     });
-    //                     this.trigger('replyPageChange', {
-    //                         p: p,
-    //                         isBottom: true
-    //                     });
-    //                     this.currentPage = p;
-    //                 }
-    //             })
-    //             this.$root.find('.bottom-page').paging({
-    //                 pageCount: count,
-    //                 current: pageInfo.num,
-    //                 jump: true,
-    //                 smallSize: this.smallPager,
-    //                 backFn: (p: any) => {
-    //                     this.$root.trigger('replyPageChange', {
-    //                         p: p,
-    //                         isBottom: true
-    //                     });
-    //                     this.trigger('replyPageChange', {
-    //                         p: p,
-    //                         isBottom: true
-    //                     });
-    //                     this.currentPage = p;
-    //                 }
-    //             });
-    //         } else {
-    //             this.$root.find(".header-page").html("");
-    //             this.$root.find('.bottom-page').html('');
-    //         }
-    //     };
-    // }
+            if (count > 1) {
+                this.$root.find(".header-interaction").addClass("paging-box").paging({
+                    pageCount: count,
+                    current: pageInfo.num,
+                    backFn: (p: any) => {
+                        this.$root.trigger('replyPageChange', {
+                            p: p,
+                            isBottom: true
+                        });
+                        this.trigger('replyPageChange', {
+                            p: p,
+                            isBottom: true
+                        });
+                        this.currentPage = p;
+                    }
+                })
+                this.$root.find('.bottom-page').paging({
+                    pageCount: count,
+                    current: pageInfo.num,
+                    jump: true,
+                    smallSize: this.smallPager,
+                    backFn: (p: any) => {
+                        this.$root.trigger('replyPageChange', {
+                            p: p,
+                            isBottom: true
+                        });
+                        this.trigger('replyPageChange', {
+                            p: p,
+                            isBottom: true
+                        });
+                        this.currentPage = p;
+                    }
+                });
+            } else {
+                this.$root.find(".header-page").html("");
+                this.$root.find('.bottom-page').html('');
+            }
+        };
+    }
     /** 顶层评论ip属地 */
     protected _createListCon() {
         Feedback.prototype._createListCon = function (item: any, i: any, pos: any) {

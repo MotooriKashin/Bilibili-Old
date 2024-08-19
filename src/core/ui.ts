@@ -230,7 +230,7 @@ export class UI {
     protected initSettingStyle() {
         this.menuitem.style.addSetting([
             this.switch('header', '恢复旧版顶栏', '替换所有B站页面中的顶栏为旧版', undefined, undefined, '除非替换后实在不和谐，一般都会进行替换。'),
-            // this.switch('comment', '恢复评论翻页', '替换瀑布流评论区', undefined, undefined, '评论区版本将被固定，可能享受不到B站后续为评论区推出的新功能。本功能有专门独立为一个脚本，不要重复安装。'),
+            this.switch('comment', '恢复评论翻页', '替换瀑布流评论区', undefined, undefined, '评论区版本将被固定，可能享受不到B站后续为评论区推出的新功能。本功能有专门独立为一个脚本，不要重复安装。'),
             this.switch('staff', '合作UP主', '联合投稿显示合作UP主', undefined, undefined, '在原av页up主信息处列出所有合作up主。'),
             this.switch('bangumiEplist', '保留bangumi分P', '牺牲特殊背景图', undefined, undefined, '旧版bangumi遇到有特殊背景图的视频时，会隐藏播放器下方的分集选择界面，二者不可得兼。'),
             this.switch('jointime', '注册时间', '个人空间显示账户注册时间'),
