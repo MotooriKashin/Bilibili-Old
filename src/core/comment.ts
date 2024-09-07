@@ -28,12 +28,12 @@ export class Comment {
         events = {};
         this.bbComment();
         this.initComment();
+        this.BiliComments();
         this.pageCount();
         this.jump();
     }
     /** 捕获评论组件 */
     protected bbComment() {
-        const that = this;
         Reflect.defineProperty(window, "bbComment", {
             configurable: true,
             set: v => {
@@ -106,6 +106,42 @@ export class Comment {
             }
         });
     }
+
+    protected BiliComments() {
+        Reflect.defineProperty(self, 'BiliComments', {
+            configurable: true,
+            set: v => true,
+            get: () => {
+                return class extends EventTarget {
+                    constructor(private arg: IBiliComments) {
+                        super();
+                    }
+
+                    mount(parent: HTMLElement) {
+                        if (load) {
+                            const [type, oid] = this.arg.params.split(",");
+                            new Feedback(parent, oid, type, undefined, this.arg.seekId);
+                            setTimeout(() => {
+                                this.dispatchEvent(new Event('inited'));
+                                this.dispatchEvent(new Event('expand'));
+                                // this.dispatchEvent(new Event('seek'));
+                            });
+                        } else {
+                            if (!loading) {
+                                loadScript(`//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js`).then(() => {
+                                    load = true;
+                                })
+                            }
+                            loading = true;
+                            setTimeout(() => this.mount(parent), 100);
+                        }
+                        return this;
+                    }
+                }
+            }
+        });
+    }
+
     /** 修复按时间排序评论翻页数 */
     protected pageCount() {
         jsonpHook("api.bilibili.com/x/v2/reply?", undefined, (res, url) => {
@@ -572,4 +608,9 @@ export class Comment {
             biliQuickLogin();
         }
     }
+}
+
+interface IBiliComments {
+    params: string;
+    seekId?: number;
 }
