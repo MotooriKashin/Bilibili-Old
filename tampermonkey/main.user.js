@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.8.3-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.8.4-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -28837,12 +28837,12 @@ const MODULES = `
       events = {};
       this.bbComment();
       this.initComment();
+      this.BiliComments();
       this.pageCount();
       this.jump();
     }
     /** 捕获评论组件 */
     bbComment() {
-      const that = this;
       Reflect.defineProperty(window, "bbComment", {
         configurable: true,
         set: (v) => {
@@ -28910,6 +28910,39 @@ const MODULES = `
             loading = true;
             setTimeout(() => window.initComment(...arguments), 100);
             return commentHander;
+          };
+        }
+      });
+    }
+    BiliComments() {
+      Reflect.defineProperty(self, "BiliComments", {
+        configurable: true,
+        set: (v) => true,
+        get: () => {
+          return class extends EventTarget {
+            constructor(arg) {
+              super();
+              this.arg = arg;
+            }
+            mount(parent) {
+              if (load) {
+                const [type, oid] = this.arg.params.split(",");
+                new Feedback(parent, oid, type, void 0, this.arg.seekId);
+                setTimeout(() => {
+                  this.dispatchEvent(new Event("inited"));
+                  this.dispatchEvent(new Event("expand"));
+                });
+              } else {
+                if (!loading) {
+                  loadScript(\`//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js\`).then(() => {
+                    load = true;
+                  });
+                }
+                loading = true;
+                setTimeout(() => this.mount(parent), 100);
+              }
+              return this;
+            }
           };
         }
       });
