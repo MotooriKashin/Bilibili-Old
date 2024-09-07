@@ -113,12 +113,16 @@ export class Comment {
             set: v => true,
             get: () => {
                 return class extends EventTarget {
+
+                    $parent?: HTMLElement;
+
                     constructor(private arg: IBiliComments) {
                         super();
                     }
 
                     mount(parent: HTMLElement) {
                         if (load) {
+                            this.$parent = parent;
                             const [type, oid] = this.arg.params.split(",");
                             new Feedback(parent, oid, type, undefined, this.arg.seekId);
                             setTimeout(() => {
@@ -136,6 +140,18 @@ export class Comment {
                             setTimeout(() => this.mount(parent), 100);
                         }
                         return this;
+                    }
+
+                    dispatchAction({ type, args, callback }: any) {
+                        switch (type) {
+                            case 'reload': {
+                                const [type, oid] = args[0].params.split(",");
+                                this.$parent?.replaceChildren();
+                                new Feedback(this.$parent, oid, type, undefined, this.arg.seekId);
+                                callback?.();
+                                break;
+                            }
+                        }
                     }
                 }
             }
