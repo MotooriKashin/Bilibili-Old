@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.8.4-1272ee50230293555dec1d2e23fc5c74215b4c86
+// @version      10.8.5-1272ee50230293555dec1d2e23fc5c74215b4c86
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -28924,8 +28924,10 @@ const MODULES = `
               super();
               this.arg = arg;
             }
+            \$parent;
             mount(parent) {
               if (load) {
+                this.\$parent = parent;
                 const [type, oid] = this.arg.params.split(",");
                 new Feedback(parent, oid, type, void 0, this.arg.seekId);
                 setTimeout(() => {
@@ -28942,6 +28944,18 @@ const MODULES = `
                 setTimeout(() => this.mount(parent), 100);
               }
               return this;
+            }
+            dispatchAction({ type, args, callback }) {
+              var _a3;
+              switch (type) {
+                case "reload": {
+                  const [type2, oid] = args[0].params.split(",");
+                  (_a3 = this.\$parent) == null ? void 0 : _a3.replaceChildren();
+                  new Feedback(this.\$parent, oid, type2, void 0, this.arg.seekId);
+                  callback == null ? void 0 : callback();
+                  break;
+                }
+              }
             }
           };
         }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.2.8
+// @version      2.2.9
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -839,7 +839,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"v95uvd9kmh"}`) || customElements.define(`preview-image-${"v95uvd9kmh"}`, PreviewImage);
+customElements.get(`preview-image-${"f6jo3gkpoyp"}`) || customElements.define(`preview-image-${"f6jo3gkpoyp"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -947,8 +947,10 @@ var Comment = class _Comment {
             super();
             this.arg = arg;
           }
+          $parent;
           mount(parent) {
             if (load) {
+              this.$parent = parent;
               const [type, oid] = this.arg.params.split(",");
               new Feedback(parent, oid, type, void 0, this.arg.seekId);
               setTimeout(() => {
@@ -965,6 +967,18 @@ var Comment = class _Comment {
               setTimeout(() => this.mount(parent), 100);
             }
             return this;
+          }
+          dispatchAction({ type, args, callback }) {
+            var _a;
+            switch (type) {
+              case "reload": {
+                const [type2, oid] = args[0].params.split(",");
+                (_a = this.$parent) == null ? void 0 : _a.replaceChildren();
+                new Feedback(this.$parent, oid, type2, void 0, this.arg.seekId);
+                callback == null ? void 0 : callback();
+                break;
+              }
+            }
           }
         };
       }
