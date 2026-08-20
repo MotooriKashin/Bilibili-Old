@@ -1,0 +1,24 @@
+:host {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    container: danmaku / size;
+    pointer-events: none;
+    overflow: clip;
+
+    /* 弹幕基本属性 */
+    font-weight: bold;
+    font-family: attr(data-font, "黑体");
+
+    /* 动画状态 */
+    --playing: running;
+    /* 动画基础时间 */
+    --duration: attr(data-duration ms, 4500ms);
+    /* 弹幕缩放 */
+    --scale: attr(data-scale type(<number>), 1);
+    /* 弹幕不透明度 */
+    opacity: attr(data-opacity type(<number>), 1);
+    /* 边框样式 */
+    --border: attr(data-border, '0');
+}

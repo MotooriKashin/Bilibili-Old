@@ -1,0 +1,1616 @@
+@import url(../widget/indentify.css);
+
+:root {
+    color-scheme: light dark;
+    interpolate-size: allow-keywords;
+}
+
+body {
+    /* 清除用户代理样式 */
+    margin: 0;
+
+    --cid: attr(data-cid);
+    --p: attr(data-p type(<integer>), 1);
+}
+
+.bili-wrapper {
+    inline-size: 980px;
+    margin-inline: auto;
+    display: flex;
+    column-gap: 20px;
+
+    @media screen and (width > 1400px) {
+        inline-size: 1160px;
+    }
+
+    @media screen and (width > 2160px) {
+        inline-size: 1920px;
+    }
+
+    >.video-info-m {
+        flex: 1;
+        min-inline-size: 0;
+        padding-block: 5px 8px;
+
+        >h1 {
+            margin-block: 0;
+            margin-inline-end: 60px;
+            padding-block: 8px;
+            font-size: 18px;
+            text-wrap: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            block-size: 24px;
+            line-height: 24px;
+            color: #525659;
+            font-weight: normal;
+        }
+
+        >.tm-info {
+            block-size: 16px;
+            color: #666;
+            font-size: 12px;
+            margin-block-start: 6px;
+            display: flex;
+            align-items: center;
+            column-gap: 32px;
+
+            >span {
+                display: flex;
+                align-items: center;
+
+                >a {
+                    color: inherit;
+                    transition: .2s;
+
+                    &:not(:last-child)::after {
+                        content: ' > ';
+                        white-space-collapse: preserve;
+                    }
+
+                    &:hover {
+                        color: #00a1d6;
+                    }
+                }
+            }
+
+            >button {
+                transition: .2s;
+
+                &:hover {
+                    color: #00a1d6;
+                }
+            }
+        }
+
+        >.number {
+            display: flex;
+            column-gap: 60px;
+            column-rule: 1px solid #eee;
+            font-size: 12px;
+
+            >div {
+                display: flex;
+                column-gap: 30px;
+            }
+
+            >.v>span {
+                display: flex;
+                align-items: center;
+
+                &::before {
+                    content: '';
+                    flex: 0 0 28px;
+                    aspect-ratio: 1;
+                    min-inline-size: 0;
+                    background-image: url(https://static.hdslb.com/images/base/icons.png);
+                    background-repeat: no-repeat;
+                }
+
+                &::after {
+                    content: attr(data-value, '--');
+                }
+
+                &.play::before {
+                    background-position: -659px -210px;
+                }
+
+                &.dm::before {
+                    background-position: -659px -275px;
+                }
+
+                &.chart {
+
+                    &::before {
+                        background-position: -660px -1682px;
+                    }
+
+                    &::after {
+                        content: '最高全站日排行' attr(data-value, '--') '名';
+                    }
+
+                    &:not([data-value]) {
+                        display: none;
+                    }
+                }
+            }
+
+            >.u {
+                >button {
+                    display: flex;
+                    align-items: center;
+
+                    >svg {
+                        block-size: 1.75em;
+                        overflow: visible;
+                    }
+
+                    &.like {
+                        &::before {
+                            content: '';
+                            flex: 0 0 60px;
+                            min-inline-size: 0;
+                            block-size: 60px;
+                            background-image: url(https://s1.hdslb.com/bfs/static/bangumi/play/asserts/anim-order.png);
+                            background-repeat: no-repeat;
+                            background-position-y: -120px;
+                            animation: likend 660ms steps(11) forwards;
+                        }
+
+                        &:not(.d):hover::before {
+                            background-position-y: 0px;
+                            animation: like 1440ms steps(24) infinite;
+                        }
+
+                        &.d::before {
+                            background-position-y: -60px;
+                            animation: liked 1860ms steps(31) forwards;
+                        }
+
+                        &::after {
+                            content: '点赞 ' attr(data-value, '--');
+                            white-space-collapse: preserve;
+                        }
+                    }
+
+                    &.coin {
+                        &::before {
+                            content: '';
+                            flex: 0 0 60px;
+                            min-inline-size: 0;
+                            block-size: 60px;
+                            background-image: url(https://s1.hdslb.com/bfs/static/jinkela/videoplay/asserts/anim-coin-small.png);
+                            background-repeat: no-repeat;
+                        }
+
+                        &:not(.d):hover::before {
+                            animation: coin 1140ms steps(19) infinite;
+                        }
+
+                        &.d::before {
+                            background-position-y: -60px;
+                            animation: coind 2340ms steps(39) forwards;
+                        }
+
+                        &::after {
+                            content: '硬币 ' attr(data-value, '--');
+                            white-space-collapse: preserve;
+                        }
+                    }
+
+                    &.fav {
+                        &::before {
+                            content: '';
+                            flex: 0 0 60px;
+                            min-inline-size: 0;
+                            block-size: 60px;
+                            background-image: url(https://s1.hdslb.com/bfs/static/jinkela/videoplay/asserts/anim-collect.png);
+                            background-repeat: no-repeat;
+                            background-position-y: -120px;
+                            animation: favnd 360ms steps(6) forwards;
+                        }
+
+                        &:not(.d):hover::before {
+                            background-position-y: 0px;
+                            animation: fav 1260ms steps(21) infinite;
+                        }
+
+                        &.d::before {
+                            background-position-y: -60px;
+                            animation: favd 1740ms steps(29) forwards;
+                        }
+
+                        &::after {
+                            content: '收藏 ' attr(data-value, '--');
+                            white-space-collapse: preserve;
+                        }
+                    }
+                }
+
+                >#coin-operated-m {
+                    inline-size: 430px;
+                    border-radius: 4px;
+                    padding-inline: 16px;
+                    box-sizing: border-box;
+
+
+                    &:popover-open {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    }
+
+                    &::backdrop {
+                        color: #000000a6;
+                        backdrop-filter: blur(4px);
+                    }
+
+                    >.hide {
+                        align-self: self-end;
+                        flex: 0 0 20px;
+                        min-inline-size: 0px;
+                        aspect-ratio: 1;
+                        background-image: url(https://static.hdslb.com/images/base/icons.png);
+                        background-repeat: no-repeat;
+                        background-position: -470px -534px;
+                        translate: 0 50%;
+
+                        &:hover {
+                            background-position: -534px -534px;
+                        }
+                    }
+
+                    >.coin-title {
+                        font-size: 16px;
+                        color: #222;
+
+                        >span {
+                            font-size: 30px;
+                            color: #00a1d6;
+
+                            &::before {
+                                content: '2';
+                            }
+                        }
+
+                        &:has(~.mc>:first-child>:checked)>span::before {
+                            content: '1';
+                        }
+                    }
+
+                    >.mc {
+                        margin-block-start: 35px;
+                        display: flex;
+                        column-gap: 30px;
+
+                        >label {
+                            flex: 0 0 160px;
+                            block-size: 230px;
+                            border: 2px dashed #ccd0d6;
+                            border-radius: 5px;
+                            background-repeat: no-repeat;
+                            background-size: contain;
+                            background-position: center;
+                            color: #99a2aa;
+                            cursor: pointer;
+
+                            &:hover {
+                                color: #02a0d8;
+                                border-color: currentColor;
+                            }
+
+                            &:first-child {
+                                background-image: url(https://s1.hdslb.com/bfs/static/jinkela/videoplay/asserts/22-gray.png);
+
+                                &::before {
+                                    content: '1硬币';
+                                    font-size: 14px;
+                                    margin-inline-start: 15px;
+                                }
+
+                                &:has(>:checked) {
+                                    color: #02a0d8;
+                                    border-color: currentColor;
+                                    border-style: solid;
+                                    background-image: url(https://s1.hdslb.com/bfs/static/jinkela/videoplay/asserts/22.gif);
+                                }
+                            }
+
+                            &:last-child {
+                                background-image: url(https://s1.hdslb.com/bfs/static/jinkela/videoplay/asserts/33-gray.png);
+
+                                &::before {
+                                    content: '2硬币';
+                                    font-size: 14px;
+                                    margin-inline-start: 15px;
+                                }
+
+                                &:has(>:checked) {
+                                    color: #02a0d8;
+                                    border-color: currentColor;
+                                    border-style: solid;
+                                    background-image: url(https://s1.hdslb.com/bfs/static/jinkela/videoplay/asserts/33.gif);
+                                }
+                            }
+
+                            >input {
+                                appearance: none;
+                                display: none;
+                            }
+                        }
+                    }
+
+                    >.submit {
+                        margin-block: 25px;
+                        flex: 0 0 24px;
+                        min-block-size: 0;
+                        background-color: #00a1d6;
+                        color: AccentColorText;
+                        font-size: 14px;
+                        padding-inline: 18px;
+                        border-radius: 4px;
+                        transition: .3s;
+
+                        &:hover {
+                            background-color: #00b5e5;
+                        }
+
+                        &:active {
+                            background-color: #01769c;
+                        }
+                    }
+                }
+
+                >#collection-m {
+                    inline-size: 420px;
+                    border-radius: 4px;
+                    padding-block-end: 18px;
+
+                    &:popover-open {
+                        display: flex;
+                        flex-direction: column;
+                        row-gap: 20px;
+                        row-rule: 1px solid #e5e9ef;
+                    }
+
+                    &::backdrop {
+                        color: #000000a6;
+                        backdrop-filter: blur(4px);
+                    }
+
+                    >header {
+                        flex: 0 0 30px;
+                        min-inline-size: 0;
+                        font-size: 16px;
+                        color: #222;
+                        padding-inline: 20px;
+                        align-content: center;
+                        text-align: center;
+                        translate: 0 5px;
+                        position: relative;
+
+                        >button {
+                            position: absolute;
+                            inset-inline-end: 20px;
+                            display: inline-block;
+                            inline-size: 20px;
+                            aspect-ratio: 1;
+                            background-image: url(https://static.hdslb.com/images/base/icons.png);
+                            background-repeat: no-repeat;
+                            background-position: -470px -534px;
+
+                            &:hover {
+                                background-position: -534px -534px;
+                            }
+                        }
+                    }
+
+                    >div {
+                        flex: 0 0 300px;
+                        min-inline-size: 0;
+                        padding-block: 24px;
+                        padding-inline: 36px;
+                        overflow-block: auto;
+                        scrollbar-width: thin;
+                        scrollbar-gutter: stable both-edges;
+                        display: flex;
+                        flex-direction: column;
+                        row-gap: 24px;
+
+                        >label {
+                            flex-shrink: 0;
+                            min-inline-size: 0;
+                            display: flex;
+                            column-gap: 18px;
+                            font-size: 14px;
+                            cursor: pointer;
+
+                            >input {
+                                font-size: 18px;
+                                cursor: pointer;
+                            }
+
+                            &.state::before {
+                                order: 1;
+                                content: '[私密]';
+                                font-style: italic;
+                                color: #999;
+                            }
+
+                            &::after {
+                                margin-inline-start: auto;
+                                order: 1;
+                                content: attr(data-cur, '0') '/' attr(data-max, '∞');
+                                color: #6d757a;
+                                font-size: 12px;
+                            }
+
+                            &:hover {
+                                color: #00a1d6;
+                            }
+                        }
+                    }
+
+                    >button {
+                        align-self: center;
+                        flex: 0 0 40px;
+                        inline-size: 160px;
+                        color: AccentColorText;
+                        background-color: #00a1d6;
+                        border-radius: 4px;
+                        font-size: 14px;
+
+                        &:hover {
+                            background-color: #00b5e5;
+                        }
+
+                        &:disabled {
+                            background-color: #e5e9ef;
+                            color: #b8c0cc;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    >.up-info-m {
+        flex: 0 0 315px;
+        min-inline-size: 0;
+        margin-block: 15px;
+        display: flex;
+        column-gap: 20px;
+
+        >.u-face {
+            flex: 0 0 68px;
+            align-self: self-start;
+            aspect-ratio: 1;
+
+            >img {
+                inline-size: 100%;
+                block-size: 100%;
+                border-radius: 50%;
+            }
+        }
+
+        >.info {
+            flex: 1;
+            min-inline-size: 0;
+            font-size: 12px;
+
+            >.user {
+                display: flex;
+                block-size: 22px;
+
+                >.name {
+                    font-size: 14px;
+                    color: #00a1d6;
+                    text-wrap: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                >.message {
+                    margin-inline-start: auto;
+                    color: #6d757a;
+                    display: flex;
+
+                    &::before {
+                        content: '';
+                        flex: 0 0 30px;
+                        min-inline-size: 0;
+                        background-image: url(https://static.hdslb.com/images/base/icons.png);
+                        background-repeat: no-repeat;
+                        background-position: -272px -2007px;
+                    }
+
+                    &:hover {
+                        color: #00a1d6;
+                    }
+                }
+            }
+
+            >.sign {
+                transition: .3s;
+                line-height: 20px;
+                overflow: hidden;
+                position: relative;
+
+                >button {
+                    position: absolute;
+                    inset-inline-end: 0;
+                    inset-block-end: 0;
+                    cursor: pointer;
+                    color: #00a1d6;
+                    background-color: Canvas;
+
+                    &.d::after {
+                        content: '收起';
+                    }
+
+                    &::after {
+                        content: '查看更多';
+                    }
+
+                    &:hover {
+                        color: #f25d8e;
+                    }
+                }
+
+                &:not(:has(>.d)) {
+                    block-size: 40px;
+                }
+
+                &:not(:hover)>button {
+                    opacity: 0;
+                }
+            }
+
+            >.number {
+                color: #99a2aa;
+                margin-block: 3px;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+
+                >span {
+                    line-height: 23px;
+
+                    &::after {
+                        content: attr(data-value, '--');
+                    }
+                }
+            }
+
+            >.btn {
+                margin-block-start: 10px;
+                block-size: 30px;
+                display: flex;
+                column-gap: 12px;
+
+                >button {
+                    background-color: #00a1d6;
+                    color: AccentColorText;
+                    border: 1px solid transparent;
+                    font-size: 14px;
+                    border-radius: 4px;
+                    transition: .2s;
+
+                    &:first-child {
+                        flex: 1;
+                        min-inline-size: 0;
+
+                        &::before {
+                            content: '+关注';
+                        }
+
+                        &.d {
+                            flex: 0 0 60px;
+                            color: #99a2aa;
+                            border-color: #e5e9ef;
+                            background-color: Canvas;
+
+                            &::before {
+                                content: '已关注';
+                            }
+
+                            &~button {
+                                flex: 1;
+                            }
+                        }
+                    }
+
+                    &:last-child {
+                        flex: 0 0 60px;
+                        min-inline-size: 0;
+                        color: #f25d8e;
+                        background-color: Canvas;
+                        border: 1px solid #f25d8e;
+                        cursor: not-allowed;
+
+                        &:hover {
+                            background-color: #f25d8e;
+                            color: AccentColorText;
+                        }
+                    }
+
+                    &:hover {
+                        background-color: #00b5e5;
+                    }
+                }
+            }
+        }
+    }
+
+    >.l-wrapper {
+        flex: 1;
+        min-inline-size: 0;
+        padding-block: 30px;
+        display: flex;
+        flex-direction: column;
+        row-gap: 60px;
+        row-rule: 1px solid #e5e9ef;
+        font-size: 12px;
+
+        >.activity-m {
+            font-size: 14px;
+            overflow: hidden;
+            border: 1px solid #e5e9ef;
+            border-radius: 4px;
+            display: flex;
+
+            >div {
+                flex: 1;
+                min-inline-size: 0;
+                padding-inline-start: 20px;
+                font-weight: bold;
+                align-content: center;
+
+                &::before {
+                    content: '本视频参加过';
+                    font-weight: normal;
+                }
+
+                &::after {
+                    content: '活动，该活动已结束~';
+                    font-weight: normal;
+                }
+
+                &.ing::after {
+                    content: '活动，该活动正在火热进行中~';
+                }
+            }
+
+            >a {
+                flex: 0 0 320px;
+                min-inline-size: 0;
+
+                >img {
+                    inline-size: 100%;
+                    object-fit: cover;
+                    mask-image: linear-gradient(90deg, transparent, black 30%);
+                }
+            }
+
+            &:empty {
+                display: none;
+            }
+        }
+
+        >.s_tag {
+            display: flex;
+            flex-direction: column;
+            row-gap: 10px;
+
+            >.tag-area {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px 10px;
+
+                >a {
+                    block-size: 22px;
+                    padding-inline: 10px;
+                    border-radius: 20px;
+                    color: #6d757a;
+                    border: 1px solid #e5e9ef;
+                    align-content: center;
+
+                    &:hover {
+                        color: #00a1d6;
+                        border-color: currentColor;
+                    }
+                }
+
+                &::after {
+                    content: '+';
+                    inline-size: 23px;
+                    aspect-ratio: 1;
+                    align-content: center;
+                    text-align: center;
+                    color: #6d757a;
+                    border: 1px solid #e5e9ef;
+                    border-radius: 50%;
+                    cursor: not-allowed;
+                }
+            }
+
+            >.btn-view-tag {
+                color: #eceff3;
+                display: flex;
+                column-gap: 20px;
+                column-rule: 1px solid currentColor;
+
+                >a {
+                    color: #6d757a;
+                    cursor: not-allowed;
+
+                    &:hover {
+                        color: #00a1d6;
+                    }
+                }
+            }
+        }
+
+        >.video-desc-m {
+            position: relative;
+
+            >.reprint {
+                display: flex;
+                margin-block-end: 20px;
+
+                &::before {
+                    content: '';
+                    flex: 0 0 14px;
+                    min-inline-size: 0;
+                    background-image: url(https://static.hdslb.com/images/base/icons.png);
+                    background-repeat: no-repeat;
+                    background-position: -793px -535px;
+                }
+
+                &::after {
+                    content: '未经作者授权 禁止转载';
+                    color: #222;
+                }
+            }
+
+            >.info {
+                transition: .3s;
+                line-height: 20px;
+                color: #6d757a;
+                overflow: hidden;
+                text-wrap: wrap;
+
+                >a {
+                    color: #00a1d6;
+
+                    &:hover {
+                        color: #f25d8e;
+                    }
+                }
+
+                &:not(.d)~button {
+                    display: none;
+                }
+
+                &:not(:has(~button.d)) {
+                    block-size: 120px;
+                }
+            }
+
+            >button {
+                position: absolute;
+                inset-inline-end: 0;
+                inset-block-start: 100%;
+                cursor: pointer;
+                color: #00a1d6;
+
+                &.d::after {
+                    content: '收起';
+                }
+
+                &::after {
+                    content: '查看更多';
+                }
+
+                &:hover {
+                    color: #f25d8e;
+                }
+            }
+        }
+
+        >.video-like-m {
+            display: flex;
+            flex-direction: column;
+            row-gap: 30px;
+            position: relative;
+
+            &::before {
+                content: '看过该视频的还喜欢';
+                font-size: 18px;
+                line-height: 24px;
+                color: #222;
+                vertical-align: middle;
+            }
+
+            >.like-list {
+                display: grid;
+                grid-auto-flow: column;
+                grid-auto-columns: calc((100% - 4 * 16px) / 5);
+                column-gap: 16px;
+                scroll-behavior: smooth;
+                overflow-inline: auto;
+                overscroll-behavior-inline: contain;
+                scroll-snap-type: inline mandatory;
+                scrollbar-width: none;
+
+                >a {
+                    display: flex;
+                    flex-direction: column;
+                    row-gap: 8px;
+                    scroll-snap-align: start;
+
+                    >div {
+                        min-block-size: 0;
+                        aspect-ratio: 16 / 10;
+                        border-radius: 4px;
+                        position: relative;
+                        overflow: hidden;
+                        background-color: black;
+
+                        >img {
+                            inline-size: 100%;
+                            block-size: 100%;
+                            object-fit: cover;
+                        }
+
+                        >div {
+                            position: absolute;
+                            inset-inline-start: 6px;
+                            inset-block-end: 2px;
+                            font-size: 12px;
+                            line-height: 1.5;
+                            color: AccentColorText;
+                        }
+
+                    }
+
+                    >span {
+                        block-size: 40px;
+                        line-height: 20px;
+                        overflow: hidden;
+                        color: #222;
+                    }
+
+                    &:hover {
+                        >div>img {
+                            mask-image: image(#000000cc);
+                        }
+
+                        >span {
+                            color: #00a1d6;
+                        }
+                    }
+
+                    &:not(:hover)>div>div {
+                        opacity: 0;
+                    }
+                }
+
+                &::scroll-button(*) {
+                    position: absolute;
+                    inset-block-start: 50%;
+                    translate: 0 -50%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    inline-size: 30px;
+                    block-size: 54px;
+                    font-size: 12px;
+                    color: AccentColorText;
+                    background-color: #00000099;
+                    transition: .3s;
+                }
+
+                &::scroll-button(inline-start) {
+                    content: '<';
+                    inset-inline-start: 0;
+                    border-start-end-radius: 4px;
+                    border-end-end-radius: 4px;
+                }
+
+                &::scroll-button(inline-end) {
+                    content: '>';
+                    inset-inline-end: 0;
+                    border-start-start-radius: 4px;
+                    border-end-start-radius: 4px;
+                }
+
+                &::scroll-button(*):disabled {
+                    opacity: 0;
+                }
+            }
+        }
+    }
+
+    >.r-wrapper {
+        align-self: self-start;
+        flex: 0 0 270px;
+        min-inline-size: 0;
+        padding-block: 30px;
+
+        >.elecrank-wrapper {
+            margin-block: 30px 40px;
+            margin-inline-start: 10px;
+            border: 1px solid #e5e9ef;
+            border-start-start-radius: 4px;
+            border-start-end-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            row-gap: 1px;
+            row-rule: 1px solid #e5e9ef;
+            position: relative;
+
+            >.elecrank-header {
+                flex: 0 0 80px;
+                min-block-size: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                >a {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    column-gap: 10px;
+                    background-color: Canvas;
+                    font-size: 18px;
+                    color: #00a1d6;
+                    text-wrap: nowrap;
+                    translate: 0 -50%;
+
+                    &::before,
+                    &::after {
+                        content: '';
+                        min-inline-size: 0;
+                        background-image: url(https://static.hdslb.com/images/base/icons.png);
+                        background-repeat: no-repeat;
+                    }
+
+                    &::before {
+                        flex: 0 0 28px;
+                        block-size: 16px;
+                        background-position: -656px -1368px;
+                    }
+
+                    &::after {
+                        flex: 0 0 16px;
+                        aspect-ratio: 1;
+                        background-position: -663px -1432px;
+                    }
+
+                    &:hover {
+                        color: #f25d8e;
+                    }
+                }
+
+                >.tilte {
+                    font-size: 12px;
+                    color: #222;
+                    line-height: 1;
+                    translate: 0 -50%;
+
+                    &::before {
+                        content: '历史充电人数：';
+                    }
+
+                    &::after {
+                        content: attr(data-value, '0') '人';
+                    }
+                }
+            }
+
+            >.elecrank-content {
+                display: grid;
+                grid-auto-flow: column;
+                grid-auto-columns: 100%;
+                scroll-behavior: smooth;
+                overflow-inline: auto;
+                overscroll-behavior-inline: contain;
+                scroll-snap-type: inline mandatory;
+                scrollbar-width: none;
+                scroll-marker-group: before;
+
+                &::scroll-marker-group {
+                    position: absolute;
+                    inset-block-end: calc(100% - 80px);
+                    inset-inline: 0;
+                    display: flex;
+                    block-size: 27px;
+                }
+
+                >div {
+                    scroll-snap-align: start;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    >img {
+                        margin-block-start: 40px;
+                        flex: 0 0 210px;
+                        min-block-size: 0;
+                    }
+
+                    >pre {
+                        margin-block-start: 30px;
+                        font-size: 12px;
+                        line-height: 18px;
+                        color: #99a2aa;
+                        text-align: center;
+                    }
+
+                    >button {
+                        flex: 0 0 40px;
+                        min-inline-size: 0;
+                        inline-size: 160px;
+                        margin-block-start: 16px;
+                        margin-block-end: 30px;
+                        border-radius: 4px;
+                        background-color: #00a1d6;
+                        font-size: 14px;
+                        color: AccentColorText;
+                        cursor: not-allowed;
+
+                        &:hover {
+                            background-color: #00b5e5;
+                        }
+                    }
+
+                    &::scroll-marker {
+                        flex: 1 1 0;
+                        min-inline-size: 0;
+                        text-wrap: nowrap;
+                        color: #99a2aa;
+                        font-size: 12px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border-block-end: 1px solid transparent;
+                    }
+
+                    &::scroll-marker:target-current {
+                        color: #00a1d6;
+                        border-color: currentColor;
+                    }
+                }
+
+                >.month {
+                    padding-block: 24px 12px;
+                    align-items: normal;
+                    row-gap: 20px;
+                    counter-reset: month;
+                    overflow-block: auto;
+                    scrollbar-width: thin;
+                    contain: strict;
+
+                    >div {
+                        display: flex;
+                        align-items: center;
+                        margin-inline: 20px;
+                        font-size: 12px;
+                        counter-increment: month;
+
+                        >a {
+                            display: flex;
+                            align-items: center;
+                            column-gap: 10px;
+
+                            >img {
+                                block-size: 24px;
+                                aspect-ratio: 1;
+                                border-radius: 50%;
+                            }
+                        }
+
+                        &:nth-child(-n+3)>a>img {
+                            block-size: 52px;
+                        }
+
+                        &:not(:nth-child(-n+3))::before {
+                            content: counter(month);
+                            display: inline-block;
+                            inline-size: 16px;
+                            aspect-ratio: 1;
+                            line-height: 16px;
+                            border-radius: 4px;
+                            font-weight: 700;
+                            background-color: #b8c0cc;
+                            color: AccentColorText;
+                            text-align: center;
+                            margin-inline-end: 13px;
+                        }
+
+                        &::after {
+                            content: attr(data-value, '--');
+                            color: #f25d8e;
+                            margin-inline-start: auto;
+                        }
+                    }
+                }
+
+                >.opus::scroll-marker {
+                    content: '本作品充电(' attr(data-value, '0') '人)';
+                }
+
+                >.month::scroll-marker {
+                    content: '本月所有充电(' attr(data-value, '0') '人)';
+                }
+            }
+        }
+    }
+}
+
+.player-box {
+    border-block: 1px solid #e5e9ef;
+    background-color: #f6f9fa;
+    padding-block: 22px;
+
+    >.multi-page {
+        margin-inline: auto;
+        margin-block-end: 20px;
+        inline-size: 980px;
+        box-sizing: border-box;
+        display: flex;
+        column-gap: 12px;
+        font-size: 12px;
+
+        @media screen and (width > 1400px) {
+            inline-size: 1160px;
+        }
+
+        @media screen and (width > 2160px) {
+            inline-size: 1920px;
+        }
+
+        >div {
+            flex: 1;
+            min-inline-size: 0;
+            display: grid;
+            grid-template-columns: repeat(7, minmax(120px, 1fr));
+            grid-auto-rows: 25px;
+            gap: 20px 12px;
+            counter-reset: pages;
+            overflow: hidden;
+            transition: .3s;
+
+            >button {
+                color: if(style(--cid: attr(data-cid)): white; else: #222);
+                padding-inline: 7px;
+                border-radius: 4px;
+                border: 1px solid if(style(--cid: attr(data-cid)): #00a1d6; else: #ccd0d7);
+                background-color: if(style(--cid: attr(data-cid)): #00a1d6);
+                pointer-events: if(style(--cid: attr(data-cid)): none);
+                text-align: start;
+                text-wrap: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                counter-increment: pages;
+
+                &::before {
+                    content: counter(pages) '、';
+                }
+
+                &:hover {
+                    color: AccentColorText;
+                    background-color: #00a1d6;
+                    border-color: #00a1d6;
+                }
+            }
+
+            &:not(.d)~button {
+                display: none;
+            }
+        }
+
+        >button {
+            flex: 0 0 60px;
+            min-inline-size: 0;
+            align-self: self-start;
+            color: #222;
+            border-radius: 4px;
+            border: 1px solid #ccd0d7;
+            padding-block: 3px;
+
+            &:hover {
+                color: AccentColorText;
+                background-color: #00a1d6;
+                border-color: #00a1d6;
+            }
+
+            &::before {
+                content: '展开';
+            }
+
+            &.d::before {
+                content: '收起';
+            }
+        }
+
+        &:not(:has(>div>:nth-child(2))) {
+            display: none;
+        }
+
+        &:not(:has(>button.d))>div {
+            block-size: 25px;
+
+            >button {
+                order: if(style(--p > attr(data-p type(<integer>))): 1);
+            }
+        }
+    }
+
+    #__bofqi {
+        margin-inline: auto;
+        --inline-size: 980px;
+        inline-size: var(--inline-size);
+        block-size: calc(var(--inline-size) / 16 * 9);
+
+        @media screen and (width > 1400px) {
+            --inline-size: 1160px;
+        }
+
+        @media screen and (width > 2160px) {
+            --inline-size: 1920px;
+        }
+    }
+
+    .video-toolbar-module {
+        margin-inline: auto;
+        margin-block-start: 20px;
+        block-size: 80px;
+        color: #444;
+        border: 1px solid #e5e9ef;
+        background-color: Canvas;
+        border-radius: 4px;
+        inline-size: 980px;
+        display: flex;
+        box-sizing: border-box;
+
+        @media screen and (width > 1400px) {
+            inline-size: 1160px;
+        }
+
+        @media screen and (width > 2160px) {
+            inline-size: 1920px;
+        }
+
+        >.share-box {
+            padding-inline: 20px 10px;
+            display: flex;
+            align-items: center;
+            column-gap: 7px;
+            cursor: pointer;
+            position: relative;
+            border-inline: 1px solid transparent;
+
+            >header {
+                margin-inline-end: 10px;
+                color: black;
+                font-size: 18px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+
+                &::before {
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    inset-inline-start: 100%;
+                    inset-block-start: 50%;
+                    inline-size: 12px;
+                    aspect-ratio: 1;
+                    background-image: url(https://static.hdslb.com/images/base/icons.png);
+                    background-repeat: no-repeat;
+                    background-position: -933px -927px;
+                }
+
+                &::after {
+                    content: attr(data-value, '--');
+                    color: #6d757a;
+                    font-size: 12px;
+                }
+            }
+
+            &:hover {
+                border-inline-color: #e5e9ef;
+                border-start-start-radius: 4px;
+                box-shadow: 0 2px 4px #00000029;
+            }
+
+            >button {
+                flex: 0 0 40px;
+                aspect-ratio: 1;
+                background-image: url(https://static.hdslb.com/images/base/icons.png);
+                background-repeat: no-repeat;
+
+                &:hover {
+                    background-position-x: -1427px;
+                }
+            }
+
+            >.dynmic {
+                background-position: -1357px -972px;
+
+                &:hover {
+                    background-position-x: -1421px;
+                }
+            }
+
+            >.weibo {
+                background-position: -1357px -586px;
+            }
+
+            >.zone {
+                background-position: -1357px -726px;
+            }
+
+            >.qq {
+                background-position: -1357px -796px;
+            }
+
+            >.tieba {
+                background-position: -1357px -656px;
+            }
+        }
+
+        >.fav-box {
+            padding-inline-start: 76px;
+            display: flex;
+            background-image: url(https://s1.hdslb.com/bfs/static/jinkela/videoplay/asserts/anim-fav.png);
+            background-repeat: no-repeat;
+
+            &:not(.d):hover {
+                animation: fav-box 1300ms steps(13) infinite;
+            }
+
+            >span {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: Canvas;
+
+                &::before {
+                    content: '收藏';
+                    min-inline-size: 3em;
+                    color: black;
+                    font-size: 16px;
+                }
+
+                &::after {
+                    content: attr(data-value, '--');
+                    color: #6d757a;
+                    font-size: 12px;
+                }
+            }
+
+            &.d {
+                background-position-x: -1120px;
+
+                &>span::before {
+                    content: '已收藏';
+                }
+            }
+        }
+
+        >.coin-box {
+            padding-inline-start: 68px;
+            display: flex;
+            background-image: url(https://s1.hdslb.com/bfs/static/jinkela/videoplay/asserts/anim-coin.png);
+            background-repeat: no-repeat;
+            background-position-y: -10px;
+
+            &:not(.d):hover {
+                animation: coin-box 700ms steps(7) infinite;
+            }
+
+            >span {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: Canvas;
+
+                &::before {
+                    content: '投币';
+                    min-inline-size: 3em;
+                    color: black;
+                    font-size: 16px;
+                }
+
+                &::after {
+                    content: attr(data-value, '--');
+                    color: #6d757a;
+                    font-size: 12px;
+                }
+            }
+
+            &.d {
+                background-position-x: -641px;
+
+                &>span::before {
+                    content: '已投币';
+                }
+            }
+        }
+
+        >.see-later-box {
+            padding-inline-start: 68px;
+            display: flex;
+            background-image: url(https://s1.hdslb.com/bfs/static/jinkela/videoplay/asserts/anim-wait.png);
+            background-repeat: no-repeat;
+
+            &:not(.d):hover {
+                animation: see-later-box 1100ms steps(11) infinite;
+            }
+
+            >span {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: Canvas;
+
+                &::before {
+                    content: '稍后再看';
+                    color: black;
+                    font-size: 16px;
+                }
+
+                &::after {
+                    content: '马克一下~';
+                    color: #6d757a;
+                    font-size: 12px;
+                }
+            }
+
+            &.d {
+                background-position-x: -960px;
+
+                &>span::after {
+                    content: '已马克~';
+                }
+            }
+        }
+
+        >.app-box {
+            padding-inline-start: 74px;
+            display: flex;
+            background-image: url(https://s1.hdslb.com/bfs/static/jinkela/videoplay/asserts/anim-app.png);
+            background-repeat: no-repeat;
+            animation: app-out 900ms steps(9) forwards;
+
+            &:hover {
+                animation:
+                    app-in 900ms steps(9) forwards,
+                    app-loop 600ms steps(6) 900ms infinite;
+            }
+
+            >span {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: Canvas;
+
+                &::before {
+                    content: '用手机看';
+                    color: black;
+                    font-size: 16px;
+                }
+
+                &::after {
+                    content: '转移阵地~';
+                    color: #6d757a;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+
+@keyframes like {
+    to {
+        background-position-x: -1440px;
+    }
+}
+
+@keyframes liked {
+    to {
+        background-position-x: -1860px;
+    }
+}
+
+@keyframes likend {
+    to {
+        background-position-x: -660px;
+    }
+}
+
+@keyframes coin {
+    to {
+        background-position-x: -1140px;
+    }
+}
+
+@keyframes coind {
+    to {
+        background-position-x: -2340px;
+    }
+}
+
+@keyframes fav {
+    to {
+        background-position-x: -1260px;
+    }
+}
+
+@keyframes favd {
+    to {
+        background-position-x: -1740px;
+    }
+}
+
+@keyframes favnd {
+    to {
+        background-position-x: -360px;
+    }
+}
+
+/* 收藏动画 */
+@keyframes fav-box {
+    to {
+        background-position-x: -1040px;
+    }
+}
+
+/* 硬币动画 */
+@keyframes coin-box {
+    to {
+        background-position-x: -560px;
+    }
+}
+
+/* 稍后再看动画 */
+@keyframes see-later-box {
+    to {
+        background-position-x: -880px;
+    }
+}
+
+/* APP */
+@keyframes app-in {
+    to {
+        background-position-x: -720px;
+    }
+}
+
+@keyframes app-loop {
+    from {
+        background-position-x: -720px;
+    }
+
+    to {
+        background-position-x: -1200px;
+    }
+}
+
+@keyframes app-out {
+    from {
+        background-position-x: -720px;
+    }
+
+    to {
+        background-position-x: 0px;
+    }
+}

@@ -1,0 +1,43 @@
+:host {
+    position: absolute;
+    display: block;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+    line-height: 1.125;
+    white-space: pre;
+
+    /* 动画延迟 */
+    --delay: attr(data-delay ms, 0ms);
+    /* 阴影颜色 */
+    --shadow: if(style(--color: rgb(0, 0, 0)): none; else: black);
+    /* 弹幕宽度 */
+    --width: attr(data-width px, 0px);
+    /* 弹幕高度 */
+    --height: attr(data-height px, 0px);
+    /* 弹幕块向偏移 */
+    --y: attr(data-y px, 0px);
+
+    font-size: calc(attr(data-fontsize px, 25px) * var(--scale));
+    color: attr(data-color type(<color>), white);
+    text-shadow: if(style(--border: '1'):0px 0px 1px var(--shadow), 0 0 1px var(--shadow), 0 0 1px var(--shadow);
+            style(--border: '2'):1px 1px 2px var(--shadow), 0 0 1px var(--shadow);
+            else:1px 0 1px var(--shadow), 0 1px 1px var(--shadow), 0 -1px 1px var(--shadow), -1px 0 1px var(--shadow));
+
+    >img {
+        block-size: 1em;
+    }
+}
+
+/* 普权弹幕排版 */
+:host(.special) {
+    font-size: calc(attr(data-fontsize px, 25px) * 100cqb / 440px);
+}
+
+:host(.colorful) {
+    background-size: cover;
+    text-shadow: none;
+    background-image: linear-gradient(to right, #f14e9d, #2f8acb);
+    background-clip: text;
+    -webkit-text-fill-color: AccentColorText;
+    -webkit-text-stroke: 2px transparent;
+}

@@ -1,0 +1,83 @@
+{
+    "$schema": "https://json.schemastore.org/chrome-manifest",
+    "action": {
+        "default_icon": {
+            "128": "assets/icon.png"
+        }
+    },
+    "author": "Akari",
+    "background": {
+        "service_worker": "index.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "run_at": "document_start",
+            "js": [
+                "isolated/index.js"
+            ],
+            "matches": [
+                "*://*.bilibili.com/*",
+                "*://*.biligame.com/*"
+            ],
+            "all_frames": true
+        },
+        {
+            "run_at": "document_start",
+            "js": [
+                "main/index.js"
+            ],
+            "matches": [
+                "*://*.bilibili.com/*",
+                "*://*.biligame.com/*"
+            ],
+            "world": "MAIN",
+            "all_frames": true
+        }
+    ],
+    "declarative_net_request": {
+        "rule_resources": [
+            {
+                "id": "track",
+                "enabled": true,
+                "path": "/assets/track.json"
+            },
+            {
+                "id": "hook",
+                "enabled": true,
+                "path": "/assets/hook.json"
+            }
+        ]
+    },
+    "default_locale": "zh",
+    "description": "__MSG_description__",
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "icons": {
+        "128": "assets/icon.png"
+    },
+    "manifest_version": 3,
+    "message_serialization": "structured_clone",
+    "minimum_chrome_version": "150",
+    "name": "__MSG_name__",
+    "permissions": [
+        "scripting",
+        "storage",
+        "declarativeNetRequestWithHostAccess",
+        "sidePanel",
+        "activeTab"
+    ],
+    "version": "1.0.0",
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "*"
+            ],
+            "matches": [
+                "*://*.bilibili.com/*",
+                "*://*.biligame.com/*"
+            ]
+        }
+    ]
+}

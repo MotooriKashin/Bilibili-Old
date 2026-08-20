@@ -1,0 +1,301 @@
+[
+    {
+        "id": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "transform": {
+                    "queryTransform": {
+                        "removeParams": [
+                            "spm_id_from",
+                            "from_source",
+                            "msource",
+                            "bsource",
+                            "seid",
+                            "source",
+                            "session_id",
+                            "visit_id",
+                            "sourceFrom",
+                            "from_spmid",
+                            "share_source",
+                            "share_medium",
+                            "share_plat",
+                            "share_session_id",
+                            "share_tag",
+                            "unique_k",
+                            "vd_source",
+                            "csource",
+                            "tab",
+                            "is_story_h5",
+                            "share_from",
+                            "plat_id",
+                            "-Arouter",
+                            "spmid",
+                            "broadcast_type",
+                            "is_room_feed",
+                            "live_from",
+                            "search_source"
+                        ]
+                    }
+                }
+            }
+        },
+        "condition": {
+            "requestDomains": [
+                "bilibili.com"
+            ],
+            "resourceTypes": [
+                "main_frame",
+                "sub_frame",
+                "stylesheet",
+                "script",
+                "image",
+                "font",
+                "object",
+                "xmlhttprequest",
+                "ping",
+                "csp_report",
+                "media",
+                "websocket",
+                "webtransport",
+                "webbundle",
+                "other"
+            ]
+        }
+    },
+    {
+        "id": 2,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "requestDomains": [
+                "cm.bilibili.com"
+            ],
+            "resourceTypes": [
+                "xmlhttprequest"
+            ],
+            "requestMethods": [
+                "post"
+            ]
+        }
+    },
+    {
+        "id": 3,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "requestDomains": [
+                "data.bilibili.com"
+            ],
+            "resourceTypes": [
+                "xmlhttprequest",
+                "ping"
+            ]
+        }
+    },
+    {
+        "id": 4,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "requestDomains": [
+                "data.bilivideo.com"
+            ],
+            "resourceTypes": [
+                "xmlhttprequest",
+                "ping"
+            ]
+        }
+    },
+    {
+        "id": 5,
+        "action": {
+            "type": "modifyHeaders",
+            "responseHeaders": [
+                {
+                    "header": "content-type",
+                    "operation": "set",
+                    "value": "application/protobuf"
+                }
+            ]
+        },
+        "condition": {
+            "urlFilter": "||bilibili.com/x/*/dm/web/view^",
+            "resourceTypes": [
+                "xmlhttprequest",
+                "other"
+            ]
+        }
+    },
+    {
+        "id": 6,
+        "action": {
+            "type": "modifyHeaders",
+            "responseHeaders": [
+                {
+                    "header": "content-type",
+                    "operation": "set",
+                    "value": "application/protobuf"
+                }
+            ]
+        },
+        "condition": {
+            "urlFilter": "||bilibili.com/x/*/dm/web/seg.so^",
+            "resourceTypes": [
+                "xmlhttprequest",
+                "other"
+            ]
+        }
+    },
+    {
+        "id": 7,
+        "action": {
+            "type": "modifyHeaders",
+            "responseHeaders": [
+                {
+                    "header": "content-type",
+                    "operation": "set",
+                    "value": "application/protobuf"
+                }
+            ]
+        },
+        "condition": {
+            "urlFilter": "||hdslb.com/bfs/dm/*.bin^",
+            "resourceTypes": [
+                "xmlhttprequest",
+                "other"
+            ]
+        }
+    },
+    {
+        "id": 8,
+        "action": {
+            "type": "modifyHeaders",
+            "responseHeaders": [
+                {
+                    "header": "content-type",
+                    "operation": "set",
+                    "value": "application/protobuf"
+                }
+            ]
+        },
+        "condition": {
+            "urlFilter": "||hdslb.com/*videoshot*.bin^",
+            "resourceTypes": [
+                "xmlhttprequest",
+                "other"
+            ]
+        }
+    },
+    {
+        "id": 9,
+        "action": {
+            "type": "modifyHeaders",
+            "responseHeaders": [
+                {
+                    "header": "content-type",
+                    "operation": "set",
+                    "value": "video/mp4"
+                }
+            ]
+        },
+        "condition": {
+            "urlFilter": "||bilivideo.com/*.m4s^",
+            "resourceTypes": [
+                "media",
+                "xmlhttprequest",
+                "other"
+            ]
+        }
+    },
+    {
+        "id": 10,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "extensionPath": "/main/log-reporter.js"
+            }
+        },
+        "condition": {
+            "urlFilter": "||hdslb.com/*log-reporter.js^",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 11,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "extensionPath": "/main/auto-append-spmid.js"
+            }
+        },
+        "condition": {
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "urlFilter": "spmid",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 12,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "extensionPath": "/main/reporter-pb.js"
+            }
+        },
+        "condition": {
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "urlFilter": "reporter-pb",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 13,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "extensionPath": "/main/user-fingerprint.js"
+            }
+        },
+        "condition": {
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "urlFilter": "user-fingerprint",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 14,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "extensionPath": "/main/bili-collect.js"
+            }
+        },
+        "condition": {
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "urlFilter": "bili-collect",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    }
+]

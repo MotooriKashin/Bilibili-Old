@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+package bilibili.broadcast.v1;
+
+// 核心包装结构
+message BroadcastFrame {
+    // 请求消息信息
+    FrameOption options = 1;
+    // 业务target_path
+    string target_path = 2;
+    // 业务pb内容
+    Any body = 3;
+}
+
+// google.protobuf.Any
+message Any {
+    string type_url = 1;
+    bytes value = 2;
+}
+
+// google.protobuf.Empty
+message Empty {}
+
+// 请求消息信息
+message FrameOption {
+    // 消息id
+    //   - client: 本次连接唯一的消息id，可用于回执
+    //   - server: 唯一消息id，可用于上报或者回执
+    optional int64 message_id = 1;
+    // frame序号
+    //   - client: 客户端应该每次请求时frame seq++，会返回对应的对称req/resp
+    //   - server: 服务端下行消息，只会返回默认值：0
+    int64 sequence = 2;
+    // 是否进行消息回执(发出MessageAckReq)
+    // downstream 上只有服务端设置为true，客户端响应
+    // upstream   上只有客户端设置为true，服务端响应
+    // 响应帧禁止设置is_ack，协议上禁止循环
+    // 通常只有业务帧才可能设置is_ack, 因为协议栈(例如心跳、鉴权)另有响应约定
+    optional bool is_ack = 3;
+    // 业务状态码
+    optional Status status = 4;
+    // 业务ack来源, 仅downstream时候由服务端填写.
+    optional string ack_origin = 5;
+}
+
+// 业务状态码
+message Status {
+  // 业务错误码
+  // 当code是[UNKNOWN = 2]时，details为业务详细的错误信息，进行proto any转换成业务码结构体
+  int32 code = 1;
+  // 对错误码的的解释
+  string message = 2;
+  // 是调用方和被调用方约定好的额外的proto结构，包含一些详细的错误处理方案等
+  repeated Any details = 3;
+}
+
+// 鉴权请求，通过authorization验证绑定用户mid
+message AuthReq {
+    // 冷启动id，算法uuid，重新起启会变
+    string guid = 1;
+    // 连接id，算法uuid，重连会变
+    optional string conn_id = 2;
+    // 最后收到的消息id，用于过虑重连后获取未读的消息
+    optional int64 last_msg_id = 3;
+}
+
+// 鉴权返回
+message AuthResp {}
+
+// 消息回执
+message MessageAckReq {
+    // 消息id
+    int64 ack_id = 1;
+    // ack来源，由业务指定用于埋点跟踪
+    string ack_origin = 2;
+    // 消息对应的target_path，方便业务区分和监控统计
+    string target_path = 3;
+}
+
+// 心跳请求
+// 心跳保活：成功心跳为4分45秒，重试心跳为30s，三次收不到进行重连（不超过5分45）
+message HeartbeatReq{}
+
+// 心跳返回
+message HeartbeatResp{}
+
+// 路径订阅请求
+message TargetPath {
+    // 需要订阅的target_paths
+    repeated string target_paths = 1;
+}
+
+// 房间操作请求
+message RoomReq {
+    // {type}://{room_id} 如 video://aid/cid
+    string id = 1;
+    oneof event {
+        RoomJoinEvent join = 2;
+        RoomLeaveEvent leave = 3;
+        RoomOnlineEvent online = 4;
+        RoomMessageEvent msg = 5;
+    }
+}
+
+// 房间操作返回
+message RoomResp {
+    // {type}://{room_id} 如 video://aid/cid
+    string id = 1;
+    oneof event {
+        RoomJoinEvent join = 2;
+        RoomLeaveEvent leave = 3;
+        RoomOnlineEvent online = 4;
+        RoomMessageEvent msg = 5;
+        RoomErrorEvent err = 6;
+    }
+}
+
+message RoomJoinEvent {}
+
+message RoomLeaveEvent {}
+
+message RoomOnlineEvent {
+    optional int32 online = 1;
+}
+message RoomMessageEvent {
+    string target_path = 1;
+    Any body = 2;
+}
+message RoomErrorEvent {
+    Status status = 1;
+}

@@ -1,0 +1,77 @@
+[
+    {
+        "id": 1,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "extensionPath": "/main/comment.js"
+            }
+        },
+        "condition": {
+            "urlFilter": "static.hdslb.com/phoenix/dist/js/comment.min.js",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 2,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "extensionPath": "/main/bili-comments.js"
+            }
+        },
+        "condition": {
+            "urlFilter": "s1.hdslb.com/bfs/seed/jinkela/commentpc/bili-comments.js",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 3,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "extensionPath": "/main/video.js"
+            }
+        },
+        "condition": {
+            "urlFilter": "s1.hdslb.com/bfs/static/player/main/video.js",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 4,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "extensionPath": "/main/core.js"
+            }
+        },
+        "condition": {
+            "urlFilter": "s1.hdslb.com/bfs/seed/jinkela/short/player/js/core.js",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 5,
+        "action": {
+            "type": "redirect",
+            "redirect": {
+                "extensionPath": "/main/core.js"
+            }
+        },
+        "condition": {
+            "urlFilter": "||s1.hdslb.com/bfs/static/player/main/core*.js^",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    }
+]

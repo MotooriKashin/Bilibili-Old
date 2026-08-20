@@ -1,0 +1,16 @@
+:host {
+    transform: if(style(--special: '1'): revert; else: translateY(var(--y)));
+    translate: calc(50cqi - 50%);
+    opacity: 0;
+    animation: dmMode5 var(--duration) linear var(--delay) var(--playing);
+}
+
+@keyframes dmMode5 {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

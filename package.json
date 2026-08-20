@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "@types/chrome": "*",
+    "esbuild": "*",
+    "ts-proto": "*",
+    "tsx": "*"
+  },
+  "scripts": {
+    "build": "tsx src/build/index.ts"
+  },
+  "type": "module",
+  "allowScripts": {
+    "esbuild@*": true
+  }
+}

@@ -1,0 +1,160 @@
+@import url(../indentify.css);
+
+:host {
+    color-scheme: light dark;
+    interpolate-size: allow-keywords;
+    display: block;
+    padding-block-start: 20px;
+    color: #99a2aa;
+    font-size: 12px;
+
+    >.footer-wrp {
+        background-color: #f6f9fa;
+        padding-block: 40px 60px;
+
+        >.footer-cnt {
+            inline-size: 980px;
+            margin-inline: auto;
+            display: flex;
+            flex-direction: column;
+            row-gap: 30px;
+
+            @media screen and (width > 1400px) {
+                inline-size: 1160px;
+            }
+
+            @media screen and (width > 2160px) {
+                inline-size: 1920px;
+            }
+
+            >.boston-postcards {
+                display: grid;
+                grid-template-columns: 9fr 9fr 7fr;
+                column-gap: 80px;
+                column-rule: solid 1px #e5e9ef;
+                font-size: 14px;
+                line-height: 1;
+
+                >div {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                    row-gap: 16px;
+
+                    >div {
+                        grid-column: 1 / -1;
+                    }
+
+                    >a {
+                        color: #222;
+
+                        &:any-link:hover {
+                            color: #00a1d6;
+                        }
+                    }
+
+                    >.block {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, 82px);
+
+                        >div {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            row-gap: 6px;
+                            cursor: pointer;
+
+                            >svg {
+                                inline-size: 60px;
+                            }
+
+                            &::after {
+                                content: attr(data-label, none);
+                                color: #222;
+                            }
+
+                            &:hover::after {
+                                color: #00a1d6;
+                            }
+                        }
+                    }
+                }
+            }
+
+            >.partner {
+                display: flex;
+                column-gap: 15px;
+
+                >.left {
+                    flex: 0 0 100px;
+                    min-inline-size: 0;
+                    display: flex;
+                    flex-direction: column;
+                    row-gap: 5px;
+
+                    >.jvs-cert {
+                        aspect-ratio: 66 / 25;
+                        position: relative;
+                        overflow: hidden;
+
+                        >img {
+                            position: absolute;
+                            inset: 0;
+                            inline-size: 100%;
+                            block-size: 100%;
+                            object-fit: cover;
+                            animation: fadeTransition 6s infinite ease-in-out;
+
+                            &:last-child {
+                                animation-delay: -3s;
+                            }
+                        }
+                    }
+                }
+
+                >.right {
+                    flex: 1;
+                    min-inline-size: 0;
+
+                    >div {
+                        display: flex;
+                        column-gap: 8px;
+                        line-height: 2;
+
+                        >a {
+                            color: inherit;
+                            transition: .3s;
+                            display: flex;
+                            align-items: center;
+                            column-gap: .25em;
+
+                            &:hover {
+                                color: #222;
+                            }
+
+                            >img {
+                                block-size: 1.5em;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}
+
+@keyframes fadeTransition {
+
+    0%,
+    45% {
+        opacity: 1;
+        z-index: 2;
+    }
+
+    55%,
+    100% {
+        opacity: 0;
+        z-index: 1;
+    }
+}

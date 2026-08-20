@@ -1,0 +1,91 @@
+<header>评论</header>
+<div>
+    <header>
+        <button data-sort="2" command="--sort" commandfor="ipt">按热度排序</button>
+        <button data-sort="0" command="--sort" commandfor="ipt">按时间排序</button>
+        <div title="B站不再提供官方的总页码数据，此处显示的是估计值">
+            <button data-pn="--" command="--pn" commandfor="ipt">上一页</button>
+            <button data-pn="1" command="--pn" commandfor="ipt">1</button>
+            <span>...</span>
+            <button data-pn="-2" command="--pn" commandfor="ipt"></button>
+            <button data-pn="-1" command="--pn" commandfor="ipt"></button>
+            <span data-pn="0" command="--pn" commandfor="ipt"></span>
+            <button data-pn="+1" command="--pn" commandfor="ipt"></button>
+            <button data-pn="+2" command="--pn" commandfor="ipt"></button>
+            <span>...</span>
+            <button data-pn="+n" command="--pn" commandfor="ipt"></button>
+            <button data-pn="++" command="--pn" commandfor="ipt">下一页</button>
+        </div>
+    </header>
+    <div id="comment-send">
+        <div class="user-face"><img fetchpriority="low" loading="lazy" src="//static.hdslb.com/images/akari.jpg"></div>
+        <form id="ipt" autocomplete="off">
+            <textarea name="message" cols="80" rows="5"></textarea>
+            <button class="submit">发表评论</button>
+            <button type="button" class="comment-emoji" command="show-popover" commandfor="emoji">表情</button>
+        </form>
+        <div id="emoji" popover="auto"></div>
+    </div>
+    <div class="comment-list"></div>
+    <div class="paging-box" title="B站不再提供官方的总页码数据，此处显示的是估计值">
+        <button data-pn="--" command="--pn" commandfor="ipt">上一页</button>
+        <button data-pn="1" command="--pn" commandfor="ipt">1</button>
+        <span>...</span>
+        <button data-pn="-2" command="--pn" commandfor="ipt"></button>
+        <button data-pn="-1" command="--pn" commandfor="ipt"></button>
+        <span data-pn="0" command="--pn" commandfor="ipt"></span>
+        <button data-pn="+1" command="--pn" commandfor="ipt"></button>
+        <button data-pn="+2" command="--pn" commandfor="ipt"></button>
+        <span>...</span>
+        <button data-pn="+n" command="--pn" commandfor="ipt"></button>
+        <button data-pn="++" command="--pn" commandfor="ipt">下一页</button>
+        <form id="paging" autocomplete="off">共<span></span>页，跳至<input name="pn" type="number" min="1" step="1">页</form>
+    </div>
+    <div id="dialog" popover="auto">
+        <div></div>
+        <div class="loading">加载中...</div>
+    </div>
+    <div id="image" popover="auto"></div>
+    <div id="opera-list" popover="auto">
+        <button command="--block" commandfor="ipt">加入黑名单</button>
+        <button command="show-popover" commandfor="comment-report">举报</button>
+        <button class="del" command="--del" commandfor="ipt">删除</button>
+        <form id="comment-report" popover="auto">
+            <header>请选择举报理由</header>
+            <div>
+                <div data-label="违反法律法规">
+                    <label><input type="radio" name="reason" value="9">违法违规</label>
+                    <label><input type="radio" name="reason" value="2">色情</label>
+                    <label><input type="radio" name="reason" value="10">低俗</label>
+                </div>
+                <div data-label="谣言类不实信息">
+                    <label><input type="radio" name="reason" value="19">涉政谣言</label>
+                    <label><input type="radio" name="reason" value="21">疫情谣言</label>
+                    <label><input type="radio" name="reason" value="20">涉社会事件谣言</label>
+                    <label><input type="radio" name="reason" value="22">虚假不实信息</label>
+                </div>
+                <div data-label="侵犯个人权益">
+                    <label><input type="radio" name="reason" value="7">人身攻击</label>
+                    <label><input type="radio" name="reason" value="15">侵犯隐私</label>
+                </div>
+                <div data-label="有害社区环境">
+                    <label><input type="radio" name="reason" value="1">垃圾广告</label>
+                    <label><input type="radio" name="reason" value="4">引战</label>
+                    <label><input type="radio" name="reason" value="5">剧透</label>
+                    <label><input type="radio" name="reason" value="3">刷屏</label>
+                    <label><input type="radio" name="reason" value="16">抢楼</label>
+                    <label><input type="radio" name="reason" value="8">内容不相关</label>
+                    <label><input type="radio" name="reason" value="17">青少年不良信息</label>
+                </div>
+                <div>
+                    <label><input type="radio" name="reason" value="0">其他</label>
+                    <textarea name="content" placeholder="自定义理由" minlength="2" maxlength="200"></textarea>
+                </div>
+            </div>
+            <footer>
+                <button type="button" command="hide-popover" commandfor="comment-report">取消</button>
+                <button>确定</button>
+            </footer>
+        </form>
+    </div>
+</div>

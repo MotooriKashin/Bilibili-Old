@@ -1,0 +1,1142 @@
+@import url(../indentify.css);
+
+:host {
+    color-scheme: light dark;
+    interpolate-size: allow-keywords;
+    display: block;
+    position: relative;
+    font-size: 12px;
+
+    >.nav-menu {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0;
+        block-size: 42px;
+        color: #222;
+        background-color: #ffffff66;
+        box-shadow: #0000001a 0 1px 2px;
+        backdrop-filter: blur(4px);
+        display: flex;
+
+        >.nav-wrapper {
+            inline-size: 980px;
+            margin-inline: auto;
+            display: flex;
+            justify-content: space-between;
+
+            @media screen and (width > 1400px) {
+                inline-size: 1160px;
+            }
+
+            @media screen and (width > 2160px) {
+                inline-size: 1920px;
+            }
+
+            >.nav-con {
+                display: flex;
+
+                >a {
+                    padding-inline: 7px;
+                    text-wrap: nowrap;
+                    color: #222;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    column-gap: 4px;
+
+                    &:hover {
+                        background-color: #ffffff4d;
+                    }
+
+                    >img {
+                        block-size: 32px;
+                        aspect-ratio: 1;
+                        border-radius: 50%;
+                        transition: 0.3s;
+                        transform-origin: top;
+                    }
+
+                    &:hover>img {
+                        translate: 0px 16px;
+                        scale: 2;
+                    }
+                }
+
+                >.home::before {
+                    content: '\E668';
+                    font-size: 20px;
+                    font-family: "header";
+                    color: #00a1d6;
+                }
+
+                >.dl::before {
+                    content: '\E724';
+                    font-size: 16px;
+                    font-family: "header";
+                    color: #00a1d6;
+                }
+
+                >.up-load {
+                    position: relative;
+
+                    >a {
+                        text-wrap: nowrap;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        column-gap: 4px;
+                        inline-size: 68px;
+                        block-size: 46px;
+                        font-size: 14px;
+                        color: AccentColorText;
+                        background-color: #f45a8d;
+                        border-end-start-radius: 6px;
+                        border-end-end-radius: 6px;
+
+                        &:hover {
+                            background-color: #fb7299;
+                        }
+                    }
+
+
+                    >div {
+                        position: absolute;
+                        inset-block-start: 100%;
+                        inset-inline-end: 0;
+                        background-color: Canvas;
+                        border-end-start-radius: 4px;
+                        border-end-end-radius: 4px;
+                        box-shadow: #00000029 0px 2px 4px;
+                        display: grid;
+                        grid-auto-flow: column;
+                        grid-auto-columns: 68px;
+                        grid-auto-rows: 64px;
+
+                        >a {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            color: #f25d8e;
+                            transition: 0.2s;
+
+                            &::before {
+                                content: '';
+                                flex: 0 0 20px;
+                                aspect-ratio: 1;
+                                background-image: url(https://static.hdslb.com/images/base/icons.png);
+                                background-repeat: no-repeat;
+                                transition: 0.2s;
+                            }
+
+                            &:hover {
+                                background-color: #e5e9ef;
+
+                                &::before {
+                                    translate: 0 -2px;
+                                }
+                            }
+                        }
+
+                        >.i-art::before {
+                            background-position: -534px -919px;
+                        }
+
+                        >.i-ap::before {
+                            background-position: -534px -983px;
+                        }
+
+                        >.i-vp::before {
+                            background-position: -471px -919px;
+                        }
+
+                        >.i-vm::before {
+                            background-position: -471px -982px;
+                        }
+                    }
+
+                    &:not(:hover)>div {
+                        display: none;
+                    }
+                }
+
+                >#profile-m {
+                    position-area: block-end;
+                    inline-size: 260px;
+                    padding-block-start: 50px;
+                    box-shadow: #00000029 0px 2px 4px;
+                    border-radius: 4px;
+
+                    &:popover-open {
+                        display: flex;
+                        flex-direction: column;
+                    }
+
+                    >header {
+                        align-self: center;
+                        color: #fb7299;
+                        margin-block-end: 8px;
+                        font-weight: bold;
+                    }
+
+                    >.big-vip {
+                        align-self: center;
+                        flex: 0 0 18px;
+                        min-block-size: 0;
+                    }
+
+                    >.btns-profile {
+                        margin-block-start: 15px;
+                        margin-inline: 20px;
+                        display: flex;
+                        column-gap: 12px;
+
+                        >.bi {
+                            display: flex;
+                            column-gap: 2px;
+                            color: #222;
+
+                            &::before {
+                                content: '';
+                                flex: 0 0 18px;
+                                min-inline-size: 0;
+                                aspect-ratio: 1;
+                                background-image: url(https://static.hdslb.com/images/base/icons.png);
+                                background-repeat: no-repeat;
+                                background-position: -343px -471px;
+                            }
+                        }
+
+                        >.bb {
+                            display: flex;
+                            column-gap: 2px;
+                            color: #222;
+
+                            &::before {
+                                content: '';
+                                flex: 0 0 18px;
+                                min-inline-size: 0;
+                                aspect-ratio: 1;
+                                background-image: url(https://static.hdslb.com/images/base/icons.png);
+                                background-repeat: no-repeat;
+                                background-position: -407px -471px;
+                            }
+                        }
+
+                        >.email {
+                            margin-inline-start: auto;
+                            display: flex;
+
+                            &::before {
+                                content: '';
+                                flex: 0 0 18px;
+                                min-inline-size: 0;
+                                aspect-ratio: 1;
+                                background-image: url(https://static.hdslb.com/images/base/icons.png);
+                                background-repeat: no-repeat;
+                                background-position: -279px -534px;
+                            }
+
+                            &.d::before {
+                                background-position: -343px -534px;
+                            }
+                        }
+
+                        >.phone {
+                            display: flex;
+
+                            &::before {
+                                content: '';
+                                flex: 0 0 18px;
+                                min-inline-size: 0;
+                                aspect-ratio: 1;
+                                background-image: url(https://static.hdslb.com/images/base/icons.png);
+                                background-repeat: no-repeat;
+                                background-position: -279px -599px;
+                            }
+
+                            &.d::before {
+                                background-position: -343px -599px;
+                            }
+                        }
+                    }
+
+                    >.grade {
+                        margin-block: 24px 30px;
+                        margin-inline: 20px;
+                        display: flex;
+                        align-items: center;
+                        position: relative;
+
+                        &::before {
+                            flex: 0;
+                            content: '等级';
+                            text-wrap: nowrap;
+                            margin-inline-end: 1em;
+                        }
+
+                        >header {
+                            flex: 0 0 18px;
+                            min-inline-size: 0;
+                            aspect-ratio: 1;
+                            border-radius: 50%;
+                            background-color: #f3cb85;
+                            background-image: url(https://s1.hdslb.com/bfs/seed/jinkela/header/images/grade_icon.png);
+                            background-repeat: no-repeat;
+
+                            &.lv0 {
+                                background-position: -153px -8px;
+                                background-color: #ccc;
+                            }
+
+                            &.lv1 {
+                                background-position: -153px -44px;
+                            }
+
+                            &.lv2 {
+                                background-position: -153px -80px;
+                            }
+
+                            &.lv3 {
+                                background-position: -153px -116px;
+                            }
+
+                            &.lv4 {
+                                background-position: -153px -152px;
+                            }
+
+                            &.lv5 {
+                                background-position: -153px -188px;
+                            }
+
+                            &.lv6 {
+                                background-position: -153px -224px;
+                            }
+                        }
+
+                        >progress {
+                            flex: 1;
+                            min-inline-size: 0;
+                            appearance: none;
+                            block-size: 8px;
+
+                            &::-webkit-progress-bar {
+                                background-color: #eee;
+                            }
+
+                            &::-webkit-progress-value {
+                                background-color: #f3cb85;
+                            }
+                        }
+
+                        >span {
+                            position: absolute;
+                            inset-inline-end: 0;
+                            inset-block-start: 22px;
+
+                            &::before {
+                                content: attr(data-current, '--');
+                            }
+
+                            &::after {
+                                content: attr(data-next, '--');
+                                color: #ccc;
+                            }
+                        }
+                    }
+
+                    >.member-menu {
+                        border-block-start: 1px solid #e5e9ef;
+                        padding-block: 10px;
+                        padding-inline: 20px;
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        grid-auto-rows: 26px;
+                        column-gap: 20px;
+
+                        >a {
+                            display: flex;
+                            align-items: center;
+                            column-gap: 10px;
+                            color: #222222;
+
+                            &:hover {
+                                color: #00a1d6;
+                            }
+
+                            &::before {
+                                content: '';
+                                flex: 0 0 16px;
+                                aspect-ratio: 1;
+                                background-image: url(https://static.hdslb.com/images/base/icons.png);
+                                background-repeat: no-repeat;
+                            }
+
+                            &.account {
+                                &::before {
+                                    background-position: -472px -407px;
+                                }
+
+                                &:hover::before {
+                                    background-position: -536px -407px;
+                                }
+                            }
+
+                            &.member {
+                                &::before {
+                                    background-position: -536px -1046px;
+                                }
+
+                                &:hover::before {
+                                    background-position: -601px -1046px;
+                                }
+                            }
+
+                            &.wallet {
+                                &::before {
+                                    background-position: -472px -472px;
+                                }
+
+                                &:hover::before {
+                                    background-position: -536px -472px;
+                                }
+                            }
+
+                            &.live {
+                                &::before {
+                                    background-position: -473px -855px;
+                                }
+
+                                &:hover::before {
+                                    background-position: -537px -855px;
+                                }
+                            }
+
+                            &.bml {
+                                &::before {
+                                    background-image: url(https://s1.hdslb.com/bfs/seed/jinkela/header/images/icon-ticket.png);
+                                    background-position: -3px 1px;
+                                    translate: 0 1px;
+                                }
+
+                                &:hover::before {
+                                    background-position: -3px -14px;
+                                }
+                            }
+
+                            &.cheese {
+                                &::before {
+                                    background-image: url(https://s1.hdslb.com/bfs/seed/jinkela/header/images/icon-cheese.png);
+                                }
+
+                                &:hover::before {
+                                    background-position: 0 -18px;
+                                }
+                            }
+                        }
+                    }
+
+                    >.member-bottom {
+                        flex: 0 0 30px;
+                        min-block-size: 0;
+                        background-color: #f4f5f7;
+                        display: flex;
+
+                        >button {
+                            margin-inline: auto 20px;
+                            color: #222;
+
+                            &:hover {
+                                color: #00a1d6;
+                            }
+                        }
+                    }
+                }
+
+                >#im-list-box {
+                    position-area: block-end;
+                    box-shadow: #00000029 0px 1px 2px;
+                    border-end-start-radius: 4px;
+                    border-end-end-radius: 4px;
+                    inline-size: 110px;
+
+                    &:popover-open {
+                        display: flex;
+                        flex-direction: column;
+                    }
+
+                    >a {
+                        flex: 0 0 42px;
+                        min-block-size: 0;
+                        align-content: center;
+                        text-align: center;
+
+                        &:hover {
+                            color: #00a1d6;
+                            background-color: #e5e9ef;
+                        }
+                    }
+                }
+
+                >#dynamic-m {
+                    position-area: block-end;
+                    border-end-start-radius: 4px;
+                    border-end-end-radius: 4px;
+                    inline-size: 380px;
+                    border: 1px solid #e5e9ef;
+                    box-shadow: #00000029 0px 2px 4px;
+
+                    &:popover-open {
+                        display: flex;
+                        flex-direction: column;
+                    }
+
+                    >header {
+                        align-self: center;
+                        padding-block: 16px 10px;
+                    }
+
+                    >.dyn_list {
+                        block-size: 304px;
+                        overflow-block: auto;
+                        scrollbar-width: thin;
+                        scrollbar-gutter: stable;
+
+                        >.new:empty::before {
+                            content: '暂时没有新动态了哦！';
+                            display: block;
+                            min-block-size: 30px;
+                            color: #99a2aa;
+                            text-align: center;
+                        }
+
+                        >span {
+                            display: flex;
+                            justify-content: center;
+                            margin-block: 20px 10px;
+                            border-block-start: 1px solid #e5e9ef;
+
+                            &::before {
+                                content: '历史动态';
+                                background-color: Canvas;
+                                translate: 0 -50%;
+                                padding-inline: 8px;
+                            }
+                        }
+
+                        >div>div {
+                            padding-block: 6px 10px;
+                            padding-inline: 12px;
+                            display: flex;
+                            column-gap: 10px;
+
+                            >a {
+                                flex: 0 0 40px;
+                                min-inline-size: 0;
+                                aspect-ratio: 4 / 3;
+                                border-radius: 4px;
+                                background-size: cover;
+                                background-repeat: no-repeat;
+                            }
+
+                            >div {
+                                min-inline-size: 0;
+                                display: flex;
+                                flex-direction: column;
+
+                                >div {
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    text-wrap: nowrap;
+                                    display: flex;
+                                    column-gap: 20px;
+
+                                    >a {
+                                        color: #222;
+
+                                        &:hover {
+                                            color: #00a1d6;
+                                        }
+                                    }
+
+                                    &::after {
+                                        content: attr(data-value, none);
+                                        color: #99a2aa;
+                                    }
+                                }
+
+                                >a {
+                                    align-self: self-start;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    text-wrap: nowrap;
+                                    color: #00a1d6;
+                                    max-inline-size: 100%;
+
+                                    &:hover {
+                                        text-decoration: underline;
+                                    }
+                                }
+                            }
+
+                            &:hover {
+                                background-color: #e5e9ef;
+                            }
+                        }
+
+                        >.no-data {
+                            min-block-size: 30px;
+                            color: #99a2aa;
+                            text-align: center;
+                        }
+                    }
+
+                    >a {
+                        margin-block: 10px;
+                        margin-inline: 12px;
+                        background-color: #e5e9ef;
+                        border-radius: 4px;
+                        block-size: 24px;
+                        border: 1px solid #e0e6ed;
+                        align-content: center;
+                        text-align: center;
+
+                        &:hover {
+                            background-color: #ccd0d7;
+                        }
+                    }
+                }
+
+                >#watch-later-m,
+                >#favorites-m {
+                    position-area: block-end;
+                    inline-size: 320px;
+                    padding-block: 10px;
+                    box-shadow: #00000029 0px 2px 4px;
+                    border: 1px solid #e5e9ef;
+                    border-end-start-radius: 4px;
+                    border-end-end-radius: 4px;
+
+                    >.list {
+                        display: flex;
+                        flex-direction: column;
+                        padding-inline: 26px 12px;
+
+                        >a {
+                            flex: 0 0 28px;
+                            display: list-item;
+                            list-style-position: inside;
+                            align-content: center;
+                            overflow: hidden;
+                            text-wrap: nowrap;
+                            text-overflow: ellipsis;
+                            color: #222;
+                            transition: .3s;
+
+                            &:hover {
+                                color: #00a1d6;
+                            }
+                        }
+
+                        &:empty::before {
+                            content: '列表中空空如也，赶紧去添加几个吧~';
+                            color: #aaa;
+                        }
+                    }
+
+                    >.action {
+                        padding-block-start: 4px;
+                        padding-inline: 12px;
+                        display: flex;
+                        column-gap: 12px;
+
+                        >a {
+                            flex: 1;
+                            min-inline-size: 0;
+                            block-size: 24px;
+                            border-radius: 4px;
+                            color: #222222;
+                            background-color: #e5e9ef;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            column-gap: 2px;
+
+                            &::after {
+                                content: '';
+                                flex: 0 0 6px;
+                                min-inline-size: 0;
+                                block-size: 12px;
+                                background-image: url(https://static.hdslb.com/images/base/icons.png);
+                                background-repeat: no-repeat;
+                                background-position: -478px -218px;
+                            }
+
+                            &:hover {
+                                background-color: #ccd0d7;
+                            }
+                        }
+                    }
+                }
+
+                >#history-record-m {
+                    position-area: block-end;
+                    inline-size: 400px;
+                    padding-block: 12px;
+                    box-shadow: #00000029 0px 2px 4px;
+                    border: 1px solid #e5e9ef;
+                    border-end-start-radius: 4px;
+                    border-end-end-radius: 4px;
+
+                    >.list>div {
+                        display: flex;
+                        flex-direction: column;
+                        padding-block: 10px;
+                        padding-inline: 26px 12px;
+                        border-block-start: 1px solid #e5e9ef;
+
+                        &::before {
+                            content: attr(data-value, none);
+                            translate: -26px calc(-10px - 50%);
+                            background-color: Canvas;
+                            align-self: self-start;
+                            padding-inline: 10px;
+                            color: #99a2aa;
+                        }
+
+                        >a {
+                            flex: 0 0 28px;
+                            display: flex;
+                            align-items: center;
+                            color: #222;
+                            transition: .3s;
+
+                            &:hover {
+                                color: #00a1d6;
+                            }
+
+                            >span {
+                                flex-shrink: 1;
+                                min-inline-size: 0;
+                                display: list-item;
+                                list-style-position: inside;
+                                overflow: hidden;
+                                text-wrap: nowrap;
+                                text-overflow: ellipsis;
+                            }
+
+                            &::before {
+                                content: attr(data-value, '');
+                                margin-inline-start: auto;
+                                flex-shrink: 0;
+                                min-inline-size: 0;
+                                color: #99a2aa;
+                                order: 1;
+                            }
+
+                            &::after {
+                                content: '';
+                                flex: 0 0 20px;
+                                min-inline-size: 0;
+                                aspect-ratio: 1;
+                                background-image: url(https://static.hdslb.com/images/base/icons.png);
+                                background-repeat: no-repeat;
+                                background-position: -1430px -407px;
+                                order: 2;
+                            }
+
+                            &.pc::after {
+                                background-position: -1367px -406px;
+                            }
+
+                            &.phone::after {
+                                background-position: -1367px -466px;
+                            }
+
+                            &.pad::after {
+                                background-position: -1367px -526px;
+                            }
+
+                            &.tv::after {
+                                background-position: -1430px -472px;
+                            }
+                        }
+                    }
+
+                    >.action {
+                        padding-block-start: 4px;
+                        padding-inline: 12px;
+                        display: flex;
+                        column-gap: 12px;
+
+                        >a {
+                            flex: 1;
+                            min-inline-size: 0;
+                            block-size: 24px;
+                            border-radius: 4px;
+                            color: #222222;
+                            background-color: #e5e9ef;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            column-gap: 2px;
+
+                            &::after {
+                                content: '';
+                                flex: 0 0 6px;
+                                min-inline-size: 0;
+                                block-size: 12px;
+                                background-image: url(https://static.hdslb.com/images/base/icons.png);
+                                background-repeat: no-repeat;
+                                background-position: -478px -218px;
+                            }
+
+                            &:hover {
+                                background-color: #ccd0d7;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    >.head-banner {
+        aspect-ratio: 32 / 3;
+        background-image: url(https://i0.hdslb.com/bfs/archive/9e2d4862c9a4e137514c0fac8794405ff9d61a0f.png);
+        background-color: #eee;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+
+        >.head-content {
+            inline-size: 980px;
+            margin-inline: auto;
+            position: relative;
+
+            @media screen and (width > 1400px) {
+                inline-size: 1160px;
+            }
+
+            @media screen and (width > 2160px) {
+                inline-size: 1920px;
+            }
+
+            >a {
+                position: absolute;
+                inline-size: 220px;
+                block-size: 105px;
+                inset-inline-start: 24px;
+                inset-block-start: 50%;
+                background-image: url(https://i0.hdslb.com/bfs/archive/c8fd97a40bf79f03e7b76cbc87236f612caef7b2.png);
+                background-position: left center;
+                background-repeat: no-repeat;
+                translate: 0 -50%;
+            }
+
+            >search {
+                position: absolute;
+                inset-inline-end: 0;
+                inset-block-end: 20px;
+                inline-size: 340px;
+                block-size: 32px;
+                padding: 2px;
+                display: flex;
+                column-gap: 2px;
+                background-color: #0000001f;
+                border-radius: 6px;
+                font-size: 12px;
+
+                >a {
+                    flex: 0 0 68px;
+                    min-inline-size: 0;
+                    padding-inline-end: 4px;
+                    color: #f25d8e;
+                    background-color: #ffffffe0;
+                    border-radius: 4px;
+                    transition: .2s;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    column-gap: 4px;
+
+                    &:hover {
+                        background-color: Canvas;
+                    }
+
+                    &::before {
+                        content: '';
+                        flex: 0 0 26px;
+                        min-inline-size: 0;
+                        block-size: 100%;
+                        background-image: url(https://static.hdslb.com/images/base/icons.png);
+                        background-repeat: no-repeat;
+                        background-position: -659px -655px;
+                    }
+                }
+
+                >form {
+                    flex: 1;
+                    min-inline-size: 0;
+                    background-color: #ffffffe0;
+                    border-radius: 4px;
+                    transition: 0.2s;
+                    display: flex;
+
+                    &:hover {
+                        background-color: Canvas;
+                    }
+
+                    >input {
+                        padding-block: 0;
+                        border: 0;
+                        outline: none;
+                        flex: 1;
+                        min-inline-size: 0;
+                        outline: none;
+                        color: #222;
+                        font-size: 12px;
+                        padding-inline: 12px;
+                        background-color: transparent;
+                    }
+
+                    >button {
+                        flex: 0 0 48px;
+                        min-inline-size: 0;
+                        cursor: pointer;
+                        color: #00a1d6;
+                        background-color: transparent;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        &::before {
+                            content: '\E635';
+                            font-family: "header";
+                            font-size: 2em;
+                        }
+
+                        &:hover {
+                            color: #ff4e8e;
+                        }
+                    }
+                }
+
+                >#suggest {
+                    position-area: block-end;
+                    inline-size: anchor-size();
+                    margin-block-start: 2px;
+                    padding-block: 10px 5px;
+                    border: 1px solid #e5e9ef;
+                    border-radius: 4px;
+                    box-shadow: 0 2px 4px #00000029;
+                    font-size: 12px;
+
+                    &:popover-open {
+                        display: flex;
+                        flex-direction: column;
+                        color: #222;
+                    }
+
+                    &:empty {
+                        display: none;
+                    }
+
+                    &::before {
+                        content: '';
+                        margin-inline: 10px;
+                        border-block-start: 1px solid #e5e9ef;
+                    }
+
+                    &::after {
+                        content: attr(data-value);
+                        align-self: center;
+                        color: #99a2aa;
+                        padding-inline: 10px;
+                        background-color: Canvas;
+                        translate: 0 -50%;
+                    }
+
+                    >button {
+                        order: 1;
+                        flex: 0 0 28px;
+                        min-block-size: 0;
+                        padding-inline: 10px;
+                        box-sizing: border-box;
+                        display: flex;
+                        align-items: center;
+
+                        &:hover {
+                            background-color: #e5e9ef;
+                        }
+
+                        >i {
+                            align-self: normal;
+                            margin-inline-start: auto;
+                            flex: 0 0 28px;
+                            min-inline-size: 0;
+                            background-image: url(https://static.hdslb.com/images/base/icons.png);
+                            background-repeat: no-repeat;
+                            background-position: -461px -530px;
+
+                            &:hover {
+                                background-position: -525px -530px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    >.nav {
+        inline-size: 980px;
+        margin-inline: auto;
+        padding-block: 8px 4px;
+        block-size: 50px;
+        display: flex;
+        justify-content: space-between;
+
+        @media screen and (width > 1400px) {
+            inline-size: 1160px;
+        }
+
+        @media screen and (width > 2160px) {
+            inline-size: 1920px;
+        }
+
+        >div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+
+            >a {
+                color: #222;
+                font-size: 12px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                &::before {
+                    content: attr(data-value, none);
+                    color: AccentColorText;
+                    background-color: #ffafc9;
+                    padding-inline: 3px;
+                    border-radius: 3px;
+                }
+            }
+
+            >.i::before {
+                content: '';
+                flex: 0 0 18px;
+                min-block-size: 0;
+                aspect-ratio: 1;
+                background-image: url(https://static.hdslb.com/images/base/icons.png);
+                background-repeat: no-repeat;
+                background-color: transparent;
+                padding: 0;
+                border-radius: 0;
+            }
+
+            >.home::before {
+                flex: 0 0 24px;
+                background-position: -660px -1170px;
+            }
+
+            >.zl::before {
+                background-position: -87px -1814px;
+            }
+
+            >.gc::before {
+                background-position: -87px -2006px;
+            }
+
+            >.zb::before {
+                background-position: -87px -1878px;
+            }
+
+            >.xhw::before {
+                background-position: -87px -1942px;
+            }
+
+            >.sub-nav {
+                position: absolute;
+                inset-block-start: calc(100% - 6px);
+                inset-inline-start: 0;
+                background-color: Canvas;
+                border: 1px solid #e5e9ef;
+                box-shadow: #00000029 0 2px 4px;
+                border-end-start-radius: 4px;
+                border-end-end-radius: 4px;
+                display: flex;
+                flex-direction: column;
+                z-index: 1;
+
+                >a {
+                    flex: 1 1 30px;
+                    min-block-size: 0;
+                    min-inline-size: 120px;
+                    padding-inline-start: 10px;
+                    padding-inline-end: 10px;
+                    color: #222;
+                    text-wrap: nowrap;
+                    display: flex;
+                    align-items: center;
+                    column-gap: 10px;
+                    overflow: hidden;
+                    transition: .2s;
+
+                    &::before {
+                        content: '>';
+                        color: #00a1d6;
+                        transition: .2s;
+                    }
+
+                    &::after {
+                        content: '<';
+                        color: #00a1d6;
+                        transition: .2s;
+                    }
+
+                    &:hover {
+                        background-color: #e5e9ef;
+                        padding-inline-start: 15px;
+                        padding-inline-end: 5px;
+                    }
+
+                    &:not(:hover)::after {
+                        translate: 100px;
+                        opacity: 0;
+                    }
+                }
+            }
+
+            &:not(:hover)>.sub-nav {
+                display: none;
+            }
+
+            &.side:hover>a {
+                color: #00a1d6;
+            }
+        }
+
+        >#icon {
+            flex: 0 0 69px;
+            min-inline-size: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            >img {
+                block-size: 40px;
+            }
+        }
+    }
+}
+
+::highlight(search-match) {
+    color: #f25d8e;
+}

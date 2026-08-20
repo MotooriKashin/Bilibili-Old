@@ -1,0 +1,49 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "开发：编译输出扩展到 dist 目录"
+		},
+		{
+			"type": "shell",
+			"command": [
+				"protoc",
+				"--plugin=protoc-gen-ts_proto=\".${pathSeparator}node_modules${pathSeparator}.bin${pathSeparator}protoc-gen-ts_proto.cmd\"",
+				"--ts_proto_opt=forceLong=bigint", // 所有64位数字都将作为BigInts输出。此选项仍然使用long库在protobuf.js内部进行编码/解码，但随后在ts原型生成的代码中转换为BigInt或从BigInt转换。
+				"--ts_proto_opt=outputJsonMethods=false", // 将不会输出用于处理JSON编码数据的Message.fromJSON和Message.toJSON方法。
+				"--ts_proto_opt=outputPartialMethods=false", // 将不会输出用于接受部分形成的对象/对象文字的Message.fromPart和Message.create方法。
+				"--ts_proto_opt=outputClientImpl=false", // 实现客户端（在Twirp中，请参阅grpc-web的下一个选项）RPC接口的客户端实现，即FooServiceClientImpl，将不会输出。
+				"--ts_proto_opt=annotateFilesWithVersion=false", // 生成的文件将不包含用于生成文件的protocol和ts-proto版本。
+				// "--ts_proto_opt=unknownFields=true", // 所有未知字段都将被解析并作为缓冲区数组输出。
+				"--ts_proto_opt=initializeFieldsAsUndefined=false", // 所有可选的字段初始化器都将从生成的基实例中省略。默认情况下，通过避免在增量设置字段时“更改形状”，可以理想地获得最佳的v8性能。
+				"--ts_proto_opt=useMapType=true", // 为protobuf map<key_type，value_type>生成的代码将变为使用JavaScript映射类型的Map<key_type，value_type>。
+				// "--ts_proto_opt=useReadonlyTypes=true", // 生成的类型将使用typescript的只读修饰符声明为不可变。
+				"--ts_proto_opt=oneof=unions-value",
+				"--ts_proto_out=.",
+				"${relativeFile}"
+			],
+			"problemMatcher": [],
+			"label": "ts-proto",
+			"detail": "开发：编译当前打开的 proto 文件为 typescript"
+		},
+		{
+			"type": "shell",
+			"command": [
+				"npx",
+				"tsx",
+				"${file}",
+			],
+			"problemMatcher": [],
+			"label": "tsx",
+			"detail": "开发：单独运行当前 typescript 以进行测试"
+		}
+	]
+}

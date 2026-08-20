@@ -1,0 +1,85 @@
+<video id="video"></video>
+<div class="control">
+    <div class="progress">
+        <input type="range" id="timeline" value="0" step="any">
+        <div class="poster"></div>
+        <div class="time"></div>
+    </div>
+    <div class="action">
+        <button class="play" command="--play-pause" commandfor="video"></button>
+        <button class="next" disabled></button>
+        <div class="time">/</div>
+        <div class="send"></div>
+        <div class="volume">
+            <button command="--toggle-muted" commandfor="video"></button>
+            <div>
+                <input is="bpui-slider" class="vertical" type="range" id="volume" value="1" max="1" step="any">
+            </div>
+        </div>
+        <select id="quality">
+            <button>
+                <selectedcontent></selectedcontent>
+            </button>
+            <option value="0" selected>自动</option>
+        </select>
+        <div class="danmaku">
+            <button command="--toggle-danmaku" commandfor="video" data-value="1"></button>
+            <div>
+                <div class="row" data-label="不透明度"><input name="opacity" type="range" min="0" max="1" step="any"
+                        value="1">
+                </div>
+                <div class="row" data-label="防挡字幕"><input name="subtitle" type="checkbox"></div>
+                <div class="list">
+                    <button class="top" command="--toggle-danmaku" commandfor="video" data-value="32">顶端弹幕</button>
+                    <button class="bottom" command="--toggle-danmaku" commandfor="video" data-value="16">底端弹幕</button>
+                    <button class="normal" command="--toggle-danmaku" commandfor="video" data-value="2">滚动弹幕</button>
+                </div>
+            </div>
+        </div>
+        <button class="repeat" command="--toggle-loop" commandfor="video"></button>
+        <button class="webfull" command="--toggle-webfull" commandfor="video"></button>
+        <button class="fullscreen" command="--toggle-fullscreen" commandfor="video"></button>
+    </div>
+</div>
+<div class="state">
+    <img src="//static.hdslb.com/images/loading.gif">
+    <svg viewBox="0 0 100 100">
+        <g>
+            <image style="overflow:visible;opacity:0.75;" width="80" height="70"
+                href="data:image/png;base64,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"
+                transform="matrix(1 0 0 1 10 10.5)"></image>
+            <g>
+                <path fill="#ffffff"
+                    d="M73.2,28.5h-15l6.3-6.2c0.5-0.5,0.5-1.3,0-1.8c-0.5-0.5-1.3-0.6-1.8-0.1l-8.1,8h-8.3l-8.1-8c-0.5-0.5-1.3-0.5-1.8,0c-0.5,0.5-0.5,1.3,0,1.8l6.3,6.2H26.8c-4.3,0-7.8,3.7-7.8,7.9v23.2c0,4.3,3.5,7.8,7.8,7.8h4.3c0.2,2,1.8,3.4,3.8,3.4s3.6-1.4,3.8-3.4h23.3c0.2,2,1.8,3.4,3.8,3.4c2,0,3.6-1.4,3.8-3.4h3.5c4.3,0,7.8-3.5,7.8-7.8V36.4C81,32.2,77.5,28.5,73.2,28.5z">
+                </path>
+            </g>
+        </g>
+        <path fill="#5a5a5a"
+            d="M45.9,38.2L59,45.9c1.7,1,1.7,3.5,0,4.5l-13.1,7.7c-1.7,1-3.9-0.3-3.9-2.3V40.4C42,38.4,44.2,37.2,45.9,38.2z">
+        </path>
+    </svg>
+</div>
+<div class="panel">
+    <div>
+        <div>加载视频地址...</div>
+        <div>播放器初始化...</div>
+        <div>加载视频内容...</div>
+        <div>加载用户配置...</div>
+    </div>
+</div>
+<div class="toast"></div>
+<div class="context" popover="auto">
+    <div class="rate" data-label="播放速度">
+        <button data-rate="0.5" command="--ratechange" commandfor="video">0.5</button>
+        <button data-rate="0.75" command="--ratechange" commandfor="video">0.75</button>
+        <button data-rate="1" command="--ratechange" commandfor="video">正常</button>
+        <button data-rate="1.25" command="--ratechange" commandfor="video">1.25</button>
+        <button data-rate="1.5" command="--ratechange" commandfor="video">1.5</button>
+        <button data-rate="2" command="--ratechange" commandfor="video">2.0</button>
+    </div>
+    <button command="toggle-popover" commandfor="statistic">视频统计信息</button>
+</div>
+<div id="statistic" popover="auto">
+    <button command="hide-popover" commandfor="statistic">[x]</button>
+    <div></div>
+</div>

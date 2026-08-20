@@ -1,0 +1,482 @@
+syntax = "proto3";
+
+package bilibili.community.service.dm.v1.DmWebViewReply;
+
+// 弹幕view返回
+message DmWebViewReply {
+    // 弹幕区是否关闭
+    // | 0 | 1 |
+    // | :-: | :-: |
+    // | 开启 | 关闭 |
+    optional int32 state = 1;
+
+    optional string text = 2;
+
+    optional string text_side = 3;
+    // 分段弹幕配置
+    DmSegConfig dm_sge = 4;
+    // AI云屏蔽弹幕的配置
+    DanmakuFlagConfig flag = 5;
+    // 高级弹幕链接地址 （上传到bfs）
+    repeated string special_dms = 6;
+    // check box 是否展示
+    optional bool check_box = 7;
+    // 弹幕数
+    int64 count = 8;
+    // 指令弹幕
+    repeated CommandDm commandDms = 9;
+    // 用户弹幕配置
+    optional DanmuWebPlayerConfig player_config = 10;
+    // 用户举报弹幕，cid维度屏蔽
+    repeated string report_filter_content = 11;
+    
+    repeated Expressions expressions = 12;
+    
+    repeated PostPanel post_panel = 13;
+    
+    repeated string activity_meta = 14;
+
+    repeated PostPanelV2 post_panelV2 = 15;
+
+    repeated DmSubView sub_views = 16;
+
+    optional QoeInfo qoe = 17;
+
+    repeated DmMaskWall mask_walls = 18;
+}
+
+// 分段弹幕配置
+message DmSegConfig {
+
+    int64 page_size = 1;
+
+    int64 total = 2;
+}
+
+// AI云屏蔽弹幕的配置
+message DanmakuFlagConfig {
+    // 云屏蔽等级
+    int32 rec_flag = 1;
+    // 云屏蔽文案
+    string rec_text = 2;
+    // 云屏蔽开关
+    int32 rec_switch = 3;
+}
+
+// 指令弹幕
+message CommandDm {
+    //弹幕id
+    int64 id = 1;
+    //oid
+    int64 oid = 2;
+    //mid
+    int64 mid = 3;
+    //弹幕指令
+    string command = 4;
+    //弹幕内容
+    string content = 5;
+    // 弹幕位置
+    int32 progress = 6;
+    //创建时间
+    string ctime = 7;
+    //修改时间
+    string mtime = 8;
+    // extra
+    string extra = 9;
+    //id string类型
+    string idstr = 10;
+}
+
+// 用户弹幕配置  
+//
+// [具体数值意义](https://info.bilibili.co/pages/viewpage.action?pageId=114161867)
+message DanmuWebPlayerConfig {
+
+    bool dm_switch = 1;
+
+    optional bool ai_switch = 2 ;
+
+    int32 ai_level = 3 ;
+
+    bool blocktop = 4 ;
+
+    bool blockscroll = 5 ;
+
+    bool blockbottom = 6 ;
+
+    bool blockcolor = 7 ;
+
+    bool blockspecial = 8 ;
+
+    optional bool preventshade = 9 ;
+
+    optional bool dmask = 10 ;
+
+    float opacity = 11 ;
+
+    optional int32 dmarea = 12 ;
+
+    float speedplus = 13 ;
+
+    float fontsize = 14 ;
+
+    optional bool screensync = 15 ;
+
+    optional bool speedsync = 16 ;
+
+    string fontfamily = 17 ;
+
+    bool bold = 18 ;
+
+    optional int32 fontborder = 19 ;
+
+    string draw_type = 20 ;
+}
+
+message Expressions {
+
+    repeated Expression data = 1;
+}
+
+message Expression {
+    
+    repeated string keyword = 1;
+    
+    string url = 2;
+    
+    repeated Period period = 3;
+}
+
+message Period {
+    
+    optional int64 start = 1;
+    
+    int64 end = 2;
+}
+
+message PostPanel {
+    
+    int64 start = 1;
+    
+    int64 end = 2;
+    
+    int64 priority = 3;
+    
+    int64 biz_id = 4;
+    
+    PostPanelBizType biz_type = 5;
+    
+    ClickButton click_button = 6;
+    
+    TextInput text_input = 7;
+    
+    CheckBox check_box = 8;
+    
+    Toast toast = 9;
+}
+
+enum PostPanelBizType {
+    PostPanelBizTypeNone      = 0;
+    PostPanelBizTypeEncourage = 1;
+    PostPanelBizTypeColorDM   = 2;
+    PostPanelBizTypeNFTDM     = 3;
+    PostPanelBizTypeFragClose = 4;
+    PostPanelBizTypeRecommend = 5;
+}
+
+message ClickButton {
+    
+    repeated string portrait_text = 1;
+    
+    repeated string landscape_text = 2;
+    
+    repeated string portrait_text_focus = 3;
+    
+    repeated string landscape_text_focus = 4;
+    
+    RenderType render_type = 5;
+    
+    bool show = 6;
+    
+    Bubble bubble = 7;
+}
+
+enum RenderType {
+    RenderTypeNone     = 0;
+    RenderTypeSingle   = 1;
+    RenderTypeRotation = 2;
+}
+
+message Bubble {
+    
+    string text = 1;
+    
+    string url = 2;
+}
+
+message TextInput {
+    
+    repeated string portrait_placeholder = 1;
+    
+    repeated string landscape_placeholder = 2;
+    
+    RenderType render_type = 3;
+    
+    bool placeholder_post = 4;
+    
+    bool show = 5;
+    
+    repeated Avatar avatar = 6;
+    
+    PostStatus post_status = 7;
+    
+    Label label = 8;
+}
+
+message Avatar {
+    
+    string id = 1;
+    
+    string url = 2;
+    
+    AvatarType avatar_type = 3;
+}
+
+enum AvatarType {
+    AvatarTypeNone = 0;
+    AvatarTypeNFT  = 1;
+}
+
+enum PostStatus {
+    PostStatusNormal = 0;
+    PostStatusClosed = 1;
+}
+
+message Label {
+    
+    string title = 1;
+    
+    repeated string content = 2;
+}
+
+message CheckBox {
+    
+    string text = 1;
+    
+    CheckboxType type = 2;
+    
+    bool default_value = 3;
+    
+    bool show = 4;
+}
+
+enum CheckboxType {
+    CheckboxTypeNone      = 0;
+    CheckboxTypeEncourage = 1;
+    CheckboxTypeColorDM   = 2;
+}
+
+message Toast {
+    
+    string text = 1;
+    
+    int32 duration = 2;
+    
+    bool show = 3;
+    
+    Button button = 4;
+}
+
+message Button {
+    
+    string text = 1;
+    
+    int32 action = 2;
+}
+
+enum ToastFunctionType {
+
+    ToastFunctionTypeNone = 0;
+
+    ToastFunctionTypePostPanel = 1;
+}
+
+message PostPanelV2 {
+
+    int64 start = 1;
+
+    int64 end = 2;
+
+    PostPanelBizType biz_type = 3;
+
+    ClickButtonV2 click_button = 4;
+
+    TextInputV2 text_input = 5;
+
+    CheckBoxV2 check_box = 6;
+
+    ToastV2 toast = 7;
+
+    BubbleV2 bubble = 8;
+
+    LabelV2 label = 9;
+
+    PostStatus post_status = 10;
+}
+
+message ClickButtonV2 {
+
+    repeated string portrait_text = 1;
+
+    repeated string landscape_text = 2;
+
+    repeated string portrait_text_focus = 3;
+
+    repeated string landscape_text_focus = 4;
+
+    RenderType render_type = 5;
+
+    bool text_input_post = 6;
+
+    bool exposure_once = 7;
+
+    ExposureType exposure_type = 8;
+}
+
+enum ExposureType {
+
+    ExposureTypeNone = 0;
+
+    ExposureTypeDMSend = 1;
+}
+
+message TextInputV2 {
+
+    repeated string portrait_placeholder = 1;
+
+    repeated string landscape_placeholder = 2;
+
+    RenderType render_type = 3;
+
+    bool placeholder_post = 4;
+
+    int32 text_input_limit = 6;
+}
+
+message CheckBoxV2 {
+
+    string text = 1;
+
+    CheckboxType type = 2;
+
+    bool default_value = 3;
+}
+
+message ToastV2 {
+
+    string text = 1;
+
+    int32 duration = 2;
+
+    ToastButtonV2 toast_buttonV2 = 3;
+}
+
+message ToastButtonV2 {
+
+    string text = 1;
+
+    ToastFunctionType action = 2;
+}
+
+message BubbleV2 {
+
+    string text = 1;
+
+    string url = 2;
+
+    BubbleType bubble_type = 3;
+
+    bool exposure_once = 4;
+
+    ExposureType exposure_type = 5;
+}
+
+enum BubbleType {
+
+    BubbleTypeNone = 0;
+
+    BubbleTypeClickButton = 1;
+
+    BubbleTypeDmSettingPanel = 2;
+}
+
+message LabelV2 {
+
+    string title = 1;
+
+    repeated string content = 2;
+
+    bool exposure_once = 3;
+
+    ExposureType exposure_type = 4;
+}
+
+message DmSubView {
+
+    int32 type = 1;
+
+    int64 oid = 2;
+
+    int64 pid = 3;
+
+    repeated PostPanelV2 post_panel_2 = 4;
+}
+
+message QoeInfo {
+
+    string info = 1;
+}
+
+message DmMaskWall {
+
+    int64 start = 1;
+
+    int64 end = 2;
+
+    string content = 3;
+
+    DmMaskWallContentType content_type = 4;
+
+    DmMaskWallBizType biz_type = 5;
+
+    repeated DmMaskWallContent contents = 6;
+}
+
+enum DmMaskWallContentType {
+
+    DmMaskWallContentTypeUnknown = 0;
+
+    DmMaskWallContentTypeText = 1;
+
+    DmMaskWallContentTypePic = 2;
+}
+
+enum DmMaskWallBizType {
+
+    DmMaskWallBizTypeUnknown = 0;
+
+    DmMaskWallBizTypeOGV = 1;
+
+    DmMaskWallBizTypeBizPic = 2;
+
+    DmMaskWallBizTypeMute = 3;
+
+    DmMaskWallBizTypeRecord = 4;
+}
+
+message DmMaskWallContent {
+
+    DmMaskWallContentType type = 1;
+    
+    string content = 2;
+}

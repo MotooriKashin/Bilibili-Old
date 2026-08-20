@@ -1,0 +1,134 @@
+a,
+::scroll-marker {
+    text-decoration: none;
+    outline: none;
+    color: inherit;
+}
+
+button {
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background-color: inherit;
+    color: inherit;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+pre {
+    font-family: inherit;
+    margin-block: 0;
+}
+
+input {
+    outline: none;
+}
+
+::scroll-button(*) {
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background-color: inherit;
+    color: inherit;
+    outline: none;
+    cursor: pointer;
+}
+
+:popover-open {
+    border: 0;
+    padding: 0;
+}
+
+selectedcontent {
+    text-wrap: nowrap;
+    overflow: hidden;
+}
+
+dialog.medal:open {
+    inline-size: 270px;
+    position: fixed;
+    inset: 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: block flex;
+    flex-direction: column;
+    row-gap: 1px;
+    row-rule: 1px solid #ccc;
+
+    >form {
+        block-size: 34px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        padding-inline: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
+        color: #333;
+
+        >button {
+            margin-inline-start: auto;
+            font-size: 12px;
+            color: #ccc;
+            transition: .3s;
+
+            >svg {
+
+                inline-size: 1em;
+
+                &:hover {
+                    color: #bbb;
+                }
+            }
+        }
+    }
+
+    >div {
+        padding: 10px;
+        font-size: 13px;
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+
+        >div {
+            font-size: 12px;
+            line-height: 1.6;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        >form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            column-gap: 20px;
+
+            >button {
+                min-inline-size: 60px;
+                font-size: 12px;
+                line-height: 18px;
+                color: #99a2aa;
+                border: 1px solid #ccd0d7;
+                border-radius: 4px;
+                transition: .3s;
+
+                &:hover {
+                    color: #222;
+                    border-color: #6d757a;
+                }
+            }
+        }
+    }
+
+    &::backdrop {
+        background-color: #00000040;
+        backdrop-filter: blur(4px);
+    }
+}
+
+dialog {
+    padding: 0;
+    border: 0;
+}

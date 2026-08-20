@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>选项</title>
+    <script src="./index.js" type="module"></script>
+</head>
+
+<body>
+    <div class="info">
+        <div class="watching">人正在看，</div>
+        <div class="danmaku">条弹幕</div>
+    </div>
+    <div class="filter">
+        <a href="#danmaku">弹幕列表</a>
+        <a href="#setting">设置</a>
+    </div>
+    <div class="wraplist">
+        <div id="danmaku">
+            <div class="management">
+                <button class="move">移动</button>
+                <button class="protect">保护</button>
+                <button class="ignore">忽略</button>
+                <button class="del">删除</button>
+            </div>
+            <div class="action">
+                <button>时间</button>
+                <button>弹幕内容</button>
+                <button>发送时间</button>
+            </div>
+            <div class="wrap">
+                <div>
+                    <span class="time">00:00</span>
+                    <span class="content">弹幕姬求交往</span>
+                    <span class="date">02-19 19:07</span>
+                </div>
+            </div>
+            <div class="footer">
+                <label>查看历史弹幕<input name="histoty" type="date"></label>
+            </div>
+        </div>
+        <form id="setting" data-label="播放器设置">
+            <div data-label="弹幕不透明度">
+                <input is="bpui-slider" name="opacity" type="range" value="1" min="0" max="1" step="0.01">
+            </div>
+            <div data-label="弹幕速度">
+                <input is="bpui-slider" name="speed" type="range" value="1" min="0.1" max="2" step="0.1">
+            </div>
+            <div data-label="同屏弹幕密度">
+                <input is="bpui-slider" name="number" type="range" value="32" min="0" max="32" step="1" disabled>
+            </div>
+            <div data-label="字号缩放">
+                <input is="bpui-slider" name="scale" type="range" value="1" min="0.1" max="2" step="0.1">
+            </div>
+            <div data-label="弹幕等比缩放"><input name="danmakuScale" type="checkbox" value="1" disabled></div>
+            <div data-label="边框样式">
+                <div class="border">
+                    <label><input name="border" type="radio" value="0" checked>重墨</label>
+                    <label><input name="border" type="radio" value="1">描边</label>
+                    <label><input name="border" type="radio" value="2">45°投影</label>
+                </div>
+            </div>
+            <div data-label="弹幕字体"><select name="font">
+                    <button>
+                        <selectedcontent></selectedcontent>
+                    </button>
+                    <option selected>黑体</option>
+                    <option>宋体</option>
+                    <option>新宋体</option>
+                    <option>仿宋</option>
+                    <option>微软雅黑</option>
+                </select></div>
+            <div data-label="粗体"><input name="bold" type="checkbox" checked value="1" disabled></div>
+            <div data-label="渲染类型"><select name="render" disabled>
+                    <button>
+                        <selectedcontent></selectedcontent>
+                    </button>
+                    <option selected>CSS3</option>
+                    <option>Canvas</option>
+                </select></div>
+            <div data-label="视频编码"><select name="codec">
+                    <button>
+                        <selectedcontent></selectedcontent>
+                    </button>
+                    <option value="0" selected>默认</option>
+                    <option value="7">AVC</option>
+                    <option value="12">HEVC</option>
+                    <option value="13">AV1</option>
+                </select></div>
+            <div data-label="无痕模式"><select name="history">
+                    <button>
+                        <selectedcontent></selectedcontent>
+                    </button>
+                    <option value="0" selected>关闭</option>
+                    <option value="1">上报但不记录历史</option>
+                    <option value="2">禁止心跳上报</option>
+                </select></div>
+            <div data-label="恢复默认"><button type="reset" title="需要刷新页面">恢复</button></div>
+        </form>
+    </div>
+</body>

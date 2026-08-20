@@ -1,0 +1,30 @@
+.bpui-slider {
+    appearance: none;
+    margin: 0;
+    outline: none;
+    block-size: 6px;
+    background-clip: content-box;
+    background-color: #e5e9ef;
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+        appearance: none;
+        inline-size: 14px;
+        block-size: 14px;
+        border-radius: 50%;
+        box-shadow: 0 0 3px #017cc3;
+        background-color: #fff;
+        cursor: pointer;
+        transition: box-shadow .3s;
+    }
+
+    &:hover::-webkit-slider-thumb {
+        box-shadow: 0 0 5px #017cc3;
+    }
+
+    &.vertical {
+        writing-mode: vertical-lr;
+        direction: rtl;
+        background-image: image(#00a1d6);
+    }
+}

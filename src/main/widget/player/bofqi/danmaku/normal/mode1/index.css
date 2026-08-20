@@ -1,0 +1,12 @@
+:host {
+    /* 运动处理 */
+    transform: translateY(var(--y));
+    translate: 100cqi;
+    animation: dmMode1 calc(var(--duration) * (100cqi + var(--width)) / (512px + var(--width))) linear var(--delay) both var(--playing);
+}
+
+@keyframes dmMode1 {
+    to {
+        translate: -100%;
+    }
+}

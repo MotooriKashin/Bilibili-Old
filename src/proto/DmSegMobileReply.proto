@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package bilibili.community.service.dm.v1.DmSegMobileReply;
+
+// 分段弹幕返回
+message DmSegMobileReply {
+    // elems 弹幕列表
+    repeated DanmakuElem elems = 1;
+    // state 弹幕区状态
+    // | 0 | 1 |
+    // | :=: | :=: |
+    // | 打开 | 关闭弹幕区 |
+    optional int32 state = 2;
+    // ai_flag ai打分
+    optional DanmakuAIFlag ai_flag = 3;
+    // 彩色弹幕
+    repeated DmColorful colorfulSrc = 5;
+}
+
+// 弹幕实例
+message DanmakuElem {
+    // 弹幕id
+    int64 id = 1;
+    // 弹幕位置：/ms
+    optional int32 progress = 2;
+    // 弹幕类型
+    // | 1 | 4 | 5 | 6 | 7 | 8 | 9 |
+    // | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+    // | 普通 | 底部 | 顶部 | 逆向 | 高级 | 代码 | BAS |
+    int32 mode = 3;
+    // 弹幕字体
+    int32 fontsize = 4;
+    // 弹幕颜色
+    uint32 color = 5;
+    // 弹幕发送者crc32哈希
+    string mid_hash = 6;
+    // 弹幕文本内容
+    optional string content = 7;
+    // 弹幕发送时间  时间戳
+    int64 ctime = 8;
+    // 弹幕权重 越高显示优先级越高
+    optional int32 weight = 9;
+    // 弹幕动作
+    optional string action = 10;
+    // 弹幕池
+    // | 0 | 1 | 2 |
+    // | :-: | :-: | :-: |
+    // | 普通弹幕 | 字幕弹幕 | 特殊弹幕 |
+    optional int32 pool = 11;
+    // 弹幕id_str
+    optional string id_str = 12;
+    // 弹幕属性位
+    // | 0 | 1 | 2 |
+    // | :=: | :=: | :=: |
+    // | 保护弹幕 | 直播弹幕 | 高赞弹幕 |
+    optional int32 attr = 13;
+    // 点赞数
+    optional int64 likeCount = 15;
+    optional string animation = 22;
+    // 弹幕渐变色
+    optional DmColorfulType colorful = 24;
+    // 弹幕oid
+    optional int64 oid = 26;
+    // 弹幕来源
+    optional DmFromType dmFrom = 27;
+}
+
+// AI云屏蔽弹幕的配置
+message DanmakuAIFlag {
+    // 云屏蔽等级
+    repeated DanmakuFlag dm_flags = 1;
+}
+
+// 云屏蔽等级
+message DanmakuFlag {
+    // dmid 弹幕id
+    int64 dmid = 1;
+    // 弹幕分
+    uint32 flag = 2;
+}
+
+// 彩色弹幕
+message DmColorful {
+    // 类型
+    DmColorfulType type = 1;
+    // 图片
+    string src = 2;
+}
+
+// 彩色弹幕类型
+enum DmColorfulType {
+    // 无
+    NoneType = 0;
+    // 大会员渐变色
+    VipGradualColor = 60001;
+}
+
+// 弹幕来源
+enum DmFromType {
+    // 未知
+    DmFromUnknown = 0;
+    // 一般
+    DmFromNormal = 1;
+    // 指令
+    DmFromCmd = 2;
+    // 直播
+    DmFromLive = 3;
+}

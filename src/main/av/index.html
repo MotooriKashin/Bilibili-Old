@@ -1,0 +1,116 @@
+<head>
+    <title>哔哩哔哩-bilibili</title>
+    <meta name="text=scale" value="scale">
+    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"
+        title="哔哩哔哩 (゜-゜)つロ 干杯~">
+</head>
+
+<body>
+    <bili-header-m></bili-header-m>
+    <main>
+        <div class="bili-wrapper">
+            <div class="video-info-m">
+                <h1></h1>
+                <div class="tm-info"><span></span><time></time><button>稿件投诉</button></div>
+                <div class="number">
+                    <div class="v">
+                        <span class="play"></span>
+                        <span class="dm"></span>
+                        <span class="chart"></span>
+                    </div>
+                    <div class="u">
+                        <button class="like" command="--like" commandfor="__bofqi"></button>
+                        <button class="coin" command="toggle-popover" commandfor="coin-operated-m"></button>
+                        <button class="fav" command="--fav" commandfor="__bofqi"></button>
+                        <form id="collection-m" popover="manual">
+                            <header>添加到收藏夹<button type="button" command="hide-popover"
+                                    commandfor="collection-m"></button>
+                            </header>
+                            <div></div>
+                            <button>确定</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="up-info-m">
+                <a class="u-face" target="_blank"><img fetchpriority="low" loading="lazy"
+                        src="//static.hdslb.com/images/akari.jpg"></a>
+                <div class="info">
+                    <div class="user">
+                        <a target="_blank" class="name"></a>
+                        <a target="_blank" class="message">发消息</a>
+                    </div>
+                    <div class="sign"></div>
+                    <div class="number"><span>投稿：</span><span>粉丝：</span></div>
+                    <div class="btn">
+                        <button command="--attention" commandfor="__bofqi"></button>
+                        <button title="⚠" disabled>充电</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="player-box">
+            <div class="multi-page">
+                <div></div>
+                <button command="--page" commandfor="__bofqi"></button>
+            </div>
+            <div id="__bofqi">
+                <bilibili-player></bilibili-player>
+            </div>
+            <div class="video-toolbar-module">
+                <div class="share-box">
+                    <header>分享</header>
+                    <button class="dynmic"></button>
+                    <button class="weibo"></button>
+                    <button class="zone"></button>
+                    <button class="qq"></button>
+                    <button class="tieba"></button>
+                </div>
+                <button class="fav-box" command="--fav" commandfor="__bofqi"><span></span></button>
+                <button class="coin-box" command="toggle-popover" commandfor="coin-operated-m"><span></span></button>
+                <button class="see-later-box" command="--seelater" commandfor="__bofqi"><span></span></button>
+                <button class="app-box"><span></span></button>
+            </div>
+        </div>
+        <div class="bili-wrapper">
+            <div class="l-wrapper">
+                <div class="s_tag">
+                    <div class="tag-area"></div>
+                    <div class="btn-view-tag">
+                        <a title="⚠">查看标签修改记录</a>
+                        <a title="⚠">查看标签使用说明</a>
+                    </div>
+                </div>
+                <div class="video-desc-m">
+                    <div class="reprint"></div>
+                    <pre class="info"></pre>
+                    <button command="--more" commandfor="__bofqi"></button>
+                </div>
+                <div class="video-like-m">
+                    <div class="like-list"></div>
+                </div>
+                <div class="comment-m">
+                    <bili-comment></bili-comment>
+                </div>
+            </div>
+            <div class="r-wrapper">
+                <div class="elecrank-wrapper">
+                    <div class="elecrank-header">
+                        <a target="_blank"></a>
+                        <div class="tilte"></div>
+                    </div>
+                    <div class="elecrank-content">
+                        <div class="opus">
+                            <img src="//static.hdslb.com/images/elecrank-empty.png" fetchpriority="low" loading="lazy">
+                            <pre>本月还木有人为这个作品充电
+                让我来成为第一个充电侠吧</pre>
+                            <button disabled>充电</button>
+                        </div>
+                        <div class="month"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <bili-footer></bili-footer>
+</body>
