@@ -5,6 +5,7 @@ import { durationFormat } from '../../../../utils/time';
 import { Danmaku } from './danmaku';
 import { DANMAKU_FORBID } from './danmaku/forbid';
 import '../../slider';
+import { warn } from '../../../../utils/debug';
 
 export class Bofqi extends HTMLElement {
     static get is() {
@@ -159,7 +160,7 @@ export class Bofqi extends HTMLElement {
         this.video.when('loadstart').subscribe(() => {
             this.stage.media(1);
         }, { signal: this.#implement.signal });
-        this.video.when('canplay').subscribe(() => {
+        this.video.when('loadedmetadata').subscribe(() => {
             this.#panel.style.display = 'none';
             this.stage.media(2);
         }, { signal: this.#implement.signal });
@@ -183,6 +184,47 @@ export class Bofqi extends HTMLElement {
         this.video.when('ratechange').subscribe(() => {
             this.dataset['playbackRate'] = <any>this.video.playbackRate;
         }, { signal: this.#implement.signal });
+        this.video.when('waiting').switchMap(e => {
+            if (this.video.seeking || this.video.paused || this.video.ended || !this.video.buffered.length) return Observable.from([]);
+            return new Observable(subscriber => {
+                const timer = setTimeout(() => {
+                    subscriber.next(e);
+                    subscriber.complete();
+                }, 1e3);
+                return () => clearTimeout(timer);
+            });
+        }).subscribe(() => {
+            // 全局卡顿/间隙跳跃机制
+            const { buffered, currentTime } = this.video;
+            for (let i = 0; i < buffered.length; i++) {
+                // 容许微小的浮点数误差 (0.001s)
+                if (currentTime >= buffered.start(i) - 0.001 && currentTime < buffered.end(i)) {
+                    return;
+                }
+            }
+
+            let nearestStart = 0;
+
+            for (let i = 0; i < buffered.length; i++) {
+                const start = buffered.start(i);
+                if (start > currentTime) {
+                    if (!nearestStart || start < nearestStart) {
+                        nearestStart = start;
+                    }
+                }
+            }
+
+            if (nearestStart > 0) {
+                const gapSize = nearestStart - currentTime;
+
+                if (gapSize > 0 && gapSize <= nearestStart) {
+                    const targetTime = nearestStart + 0.05;
+                    // 强制跳过 Gap
+                    warn('Gap', currentTime, '->', targetTime);
+                    this.video.currentTime = targetTime;
+                }
+            }
+        }, { signal: this.#implement.signal })
 
         this.progress.when('input').subscribe(() => {
             isDragging = true;
