@@ -1,5 +1,6 @@
 import { DANMAKU_FORBID } from './forbid';
 import style from './index.css' with {type: 'css'};
+import { Mode7 } from './mode7';
 import { Mode1 } from './normal/mode1';
 import { Space as Mode1Space } from "./normal/mode1/space";
 import { Mode4 } from './normal/mode4';
@@ -234,7 +235,10 @@ export class Danmaku extends HTMLElement {
                 this.forbid & (DANMAKU_FORBID.VISIBLE ^ DANMAKU_FORBID.REVERSE) || new Mode6(this.#shadowRoot, dm, delay);
                 break;
             }
-            case 7:
+            case 7: {
+                this.forbid & (DANMAKU_FORBID.VISIBLE ^ DANMAKU_FORBID.ADVANCE) || new Mode7(this.#shadowRoot, dm, delay);
+                break;
+            }
             case 8:
             case 9:
         }

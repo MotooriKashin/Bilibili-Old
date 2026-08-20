@@ -1,0 +1,47 @@
+:host {
+    position: absolute;
+    display: block;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+    perspective: 288.1473083496094px;
+    offset-rotate: 0deg;
+    offset-anchor: 0 0;
+
+    /* 阴影颜色 */
+    --shadow: if(style(--color: rgb(0, 0, 0)): none; else: black);
+    /* 动画补间函数 */
+    --linear-speed-up: attr(data-linear-speed-up type(*), linear);
+
+    font-size: attr(data-fontsize px, 25px);
+    color: attr(data-color type(<color>), white);
+    font-family: attr(data-family, revert);
+    opacity: attr(data-start-opacity type(<number>), 1);
+
+    animation:
+        mode7-opacity attr(data-duration s, 4.5s) linear attr(data-delay ms, 0ms) both var(--playing),
+        mode7-offset-distance attr(data-a-time ms, 500ms) var(--linear-speed-up) calc(attr(data-a-delay ms, 0ms) + attr(data-delay ms, 0ms)) both var(--playing);
+
+    >pre {
+        margin: 0;
+        font-family: inherit;
+        line-height: 1.125;
+        transform-origin: 0% 0% 0px;
+        transform: rotateZ(attr(data-z-rotate deg, 0deg)) rotateY(calc(0deg - attr(data-y-rotate deg, 0deg)));
+    }
+}
+
+:host(.stroked) {
+    text-shadow: 1px 0 1px var(--shadow), 0 1px 1px var(--shadow), 0 -1px 1px var(--shadow), -1px 0 1px var(--shadow);
+}
+
+@keyframes mode7-opacity {
+    to {
+        opacity: attr(data-end-opacity type(<number>), 1);
+    }
+}
+
+@keyframes mode7-offset-distance {
+    100% {
+        offset-distance: 99.999%;
+    }
+}

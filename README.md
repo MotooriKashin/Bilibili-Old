@@ -24,6 +24,7 @@
 ### 功能
 - [ ] 仿2019年12月9日改版前的页面。
   - [x] av
+    - [ ] 视频合集
   - [ ] bangumi
   - [ ] 稍后再看
   - [ ] 空间
@@ -44,7 +45,7 @@
       - [ ] mode9 BAS弹幕
     - [x] 实时弹幕
     - [ ] 弹幕发送
-    - [ ] 弹幕列表
+    - [ ] 弹幕列表（等待扩展消息传递的结构化克隆支持）
     - [ ] 弹幕交互
     - [ ] 弹幕发送者查询
   - [ ] 画中画模式
@@ -56,6 +57,8 @@
   - [x] 无痕模式
   - [ ] `t`参数跳转
   - [ ] CC 字幕
+  - [ ] 互动视频
+  - [ ] 下载视频及弹幕
 - [ ] 评论组件
     - [x] 评论翻页（页码总数B站不再提供，仅供参考）
     - [x] 评论楼层（只显示漏网之鱼）
@@ -97,4 +100,3 @@ npm run build
 - BV号算法原型：[如何看待 2020 年 3 月 23 日哔哩哔哩将稿件的「av 号」变更为「BV 号」？ - mcfx的回答 - 知乎](https://www.zhihu.com/question/381784377/answer/1099438784)
 - BV号算法参考：[bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/misc/bvid_desc.md)
 - 第三方数据存档：https://www.biliplus.com/ 、 https://www.jijidown.com/
-- proto定义来源：

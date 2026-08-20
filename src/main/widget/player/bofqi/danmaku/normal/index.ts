@@ -80,5 +80,5 @@ export abstract class Mode extends HTMLElement {
     }
     disconnectedCallback() {
         delete this.dm.$rendered;
-    };
+    }
 }
