@@ -2,7 +2,7 @@ import { build } from "esbuild";
 import type { PluginBuild } from "esbuild";
 import '../slogan';
 
-/** C导入属性处理插件 */
+/** 导入属性处理插件 */
 const importAttributesPlugin = {
     name: 'import attributes',
     setup(pluginBuild: PluginBuild) {

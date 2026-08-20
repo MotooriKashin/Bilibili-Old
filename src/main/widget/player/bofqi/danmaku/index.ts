@@ -149,6 +149,30 @@ export class Danmaku extends HTMLElement {
         this.rawDms = this.rawDms.concat(value);
         this.dispatchEvent(new CustomEvent('--sort', { detail: this.rawDms.length }));
     }
+    addXml(value: string) {
+        const xml = new DOMParser().parseFromString(value, 'application/xml');
+        const items = xml.querySelectorAll('d');
+        const dms: DanmakuElem[] = [];
+        items.forEach(d => {
+            const [progress, mode, fontsize, color, ctime, pool, midHash, id] = d.getAttribute('p')!.split(',');
+            const text = d.textContent || (<HTMLAnchorElement>d).text;
+            if (text) {
+                const dm = <DanmakuElem>{
+                    pool: <0>Number(pool),
+                    color: Number(color),
+                    ctime: Number(ctime),
+                    id: BigInt(id!),
+                    mode: <1>Number(mode),
+                    fontsize: Number(fontsize),
+                    progress: Number(progress) * 1000,
+                    content: String(text),
+                    midHash,
+                }
+                dms.push(dm);
+            }
+        });
+        this.add(dms);
+    }
     identify() {
         this.rawDms.length = 0;
         this.#sortedDms.length = 0;

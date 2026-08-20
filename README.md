@@ -40,7 +40,7 @@
       - [x] mode4 底端弹幕
       - [x] mode5 顶端弹幕
       - [x] mode6 逆向弹幕
-      - [ ] mode7 高级弹幕
+      - [x] mode7 高级弹幕
       - [ ] mode8 代码弹幕
       - [ ] mode9 BAS弹幕
     - [x] 实时弹幕

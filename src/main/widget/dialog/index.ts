@@ -8,6 +8,10 @@ export class Medal extends HTMLDialogElement {
     static {
         document.adoptedStyleSheets.push(style);
     }
+    /** 销毁所有弹窗 */
+    static clear() {
+        document.querySelectorAll(Medal.is).forEach(d => d.remove());
+    }
     constructor(
         /** 内容 */
         message: TMessage,

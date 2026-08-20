@@ -48,6 +48,18 @@ export class Player extends Bofqi {
         setInterval(() => {
             this.video.paused || this.dispatchEvent(new CustomEvent('--heartbeat', { detail: HEART_BEAT.DEFAULT }));
         }, 15e3);
+        // 弹幕保护计划
+        Medal.clear();
+        switch (v) {
+            case 66926n:
+            case 321744n:
+            case 329896n:
+            case 469970n:
+            case 1474616n: {
+                new Medal('检测到弹幕丢失，是否使用备份恢复？', '遗失的弹幕', { label: '替换', callback: () => { this.dispatchEvent(new CustomEvent('--lostDanmaku', { detail: true })) } }, { label: '追加', callback: () => { this.dispatchEvent(new CustomEvent('--lostDanmaku', { detail: false })) } }, { label: '取消' });
+                break;
+            }
+        }
     }
     season_id = 0n;
     ep_id = 0n;
@@ -314,6 +326,21 @@ export class Player extends Bofqi {
                 return () => abortController.abort();
             });
         }).subscribe(() => { }, { signal: this.#implement.signal });
+        this.when('--lostDanmaku').switchMap(e => {
+            return new Observable<CustomEvent<boolean>>(subscriber => {
+                const timer = setTimeout(() => {
+                    subscriber.next(<CustomEvent<boolean>>e);
+                    subscriber.complete();
+                }, 300);
+                return () => clearTimeout(timer);
+            });
+        }).subscribe(({ detail }) => {
+            import(`./danmaku/${this.#cid}.xml`, { with: { type: 'text' } }).then(d => {
+                detail && this.danmaku.identify();
+                this.danmaku.addXml(d.default);
+            })
+        }, { signal: this.#implement.signal });
+
         this.video.when('playing').subscribe(() => {
             this.dispatchEvent(new CustomEvent('--heartbeat', { detail: HEART_BEAT.PLAYING }));
         }, { signal: this.#implement.signal });
