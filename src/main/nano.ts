@@ -19,7 +19,7 @@ export class Nano {
                 }, 300);
                 return () => clearTimeout(timer);
             });
-        }).switchMap(({ detail: { seasonId, episodeId, aid, bvid, cid, kind, p } }) => {
+        }).switchMap(({ detail: { seasonId, episodeId, aid, bvid, cid, kind, p, featureList } }) => {
             return new Observable<bigint>(subscriper => {
                 const abortController = new AbortController();
                 if (seasonId || episodeId) {
@@ -165,6 +165,20 @@ export class Nano {
         this.#player.dispatchEvent(new CustomEvent('--reload', { detail: Object.assign(this.detail, detail) }));
         this.#player.dispatchEvent(new CustomEvent(EventType.Player_Initialized, { detail: 0 }));
         detail.muted !== undefined && (this.#player.video.muted = detail.muted);
+        if (detail.featureList) {
+            for (const key of detail.featureList) {
+                switch (key) {
+                    case 'noAudioStream': {
+                        this.#player.noAudioStream = true;
+                        break;
+                    }
+                    case 'noVVReport': case 'noVTReport': case 'noVTHistory': {
+                        this.#player.noVTReport = true;
+                        break;
+                    }
+                }
+            }
+        }
     }
     pause() {
         this.#player.video.pause();
@@ -278,6 +292,7 @@ interface INanoConfig {
     t?: number;
     p?: number;
     muted?: boolean;
+    featureList?: Set<string>;
 }
 
 enum GroupKind {

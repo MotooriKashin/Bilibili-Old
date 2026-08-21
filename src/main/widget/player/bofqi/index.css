@@ -71,6 +71,7 @@
         display: flex;
         flex-direction: column;
         row-gap: 6px;
+        background-image: linear-gradient(to top, #000000b3, transparent);
         backdrop-filter: blur(4px);
 
         &:not(:hover) {
@@ -312,6 +313,7 @@
                     border-start-end-radius: 4px;
                     box-shadow: #ccd0d7 0px 0px 2px;
                     border: 0;
+                    background-image: linear-gradient(to top, #000000b3, transparent);
                     backdrop-filter: blur(4px);
                 }
 
@@ -374,6 +376,7 @@
                     padding-block: 14px 24px;
                     padding-inline: 10px;
                     box-shadow: #e2e2e2 0px 0px 2px;
+                    background-image: linear-gradient(to top, #000000b3, transparent);
                     backdrop-filter: blur(4px);
 
                     >.row {

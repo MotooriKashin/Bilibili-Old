@@ -88,7 +88,7 @@ winget install openjs.nodejs --installer-type portable
 # 更新 npm 依赖
 npm update
 
-# 编译：将在项目跟目录的 dist 文件夹输出未编译的扩展
+# 编译：将在项目根目录的 dist 文件夹输出未编译的扩展
 # 浏览器【扩展程序】里打开【开发者模式】，【加载未打包的扩展程序】即可。
 # 注意每次编译后浏览器【扩展程序】里都需要点击【重新加载】
 npm run build

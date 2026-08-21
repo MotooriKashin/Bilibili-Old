@@ -1,9 +1,9 @@
 import type { IPlayer, Player } from "../index.js";
 import { log } from "../../../../utils/debug.js";
 import { https } from "../../../../utils/url.js";
-import type { IDash } from "../../../io/api.bilibili.com/x/player/playurl.js";
 import { upos } from "../upos.js";
 import { Fetch } from "./fetch.js";
+import type { IDash } from "../../../../io/api.bilibili.com/x/player/playurl";
 
 export class DashPlayer implements IPlayer {
     /**
@@ -71,7 +71,7 @@ export class DashPlayer implements IPlayer {
             return;
         }
         log(`网络错误：尝试第${this.flushing}次重连~`);
-        this.player.content.dispatchEvent(new CustomEvent('--playurl', {
+        this.player.dispatchEvent(new CustomEvent('--playurl', {
             detail: (v: boolean) => {
                 if (!v) this.flushing = 0;
             }
@@ -126,7 +126,7 @@ export class DashPlayer implements IPlayer {
         }
     }
     private async init() {
-        if (this.video?.[0] && this.audio?.[0]) {
+        if (!this.player.noAudioStream && this.video?.[0] && this.audio?.[0]) {
             this.type = 0;
             this.mediaSource = new MediaSource();
             this.player.video.src = this.disposableStack.adopt(URL.createObjectURL(this.mediaSource), URL.revokeObjectURL);

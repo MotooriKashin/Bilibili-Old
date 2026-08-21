@@ -45,7 +45,7 @@ export class Player extends Bofqi {
         this.dispatchEvent(new Event('--view'));
         this.dispatchEvent(new Event('--videoshot'));
         clearInterval(this.#heartbeat);
-        setInterval(() => {
+        this.noVTReport || setInterval(() => {
             this.video.paused || this.dispatchEvent(new CustomEvent('--heartbeat', { detail: HEART_BEAT.DEFAULT }));
         }, 15e3);
         // 弹幕保护计划
@@ -78,6 +78,8 @@ export class Player extends Bofqi {
     seasonType = 0;
     #heartbeat?: number;
     #history = 0;
+    noAudioStream = false;
+    noVTReport = false;
     constructor() {
         super();
 
@@ -309,7 +311,7 @@ export class Player extends Bofqi {
             });
         }).switchMap(({ detail }) => {
             const realtime = Math.floor(this.video.currentTime);
-            if (!realtime || !this.#cid || this.#history === 2) return Observable.from([]);
+            if (this.noVTReport || !realtime || !this.#cid || this.#history === 2) return Observable.from([]);
             return new Observable(subscriber => {
                 const abortController = new AbortController();
                 const real_played_time = Math.max(Math.floor(Date.now() / 1e3) - this.#start_ts, 0);

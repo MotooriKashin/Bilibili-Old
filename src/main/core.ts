@@ -246,5 +246,6 @@
         channelKind: ChannelKind;
         t: number;
         p: number;
+        featureList: Set<string>;
     }
 })();
