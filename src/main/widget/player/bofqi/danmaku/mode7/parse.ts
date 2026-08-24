@@ -2,7 +2,7 @@ import type { DanmakuElem } from "..";
 import { error } from "../../../../../../utils/debug";
 
 /** 解码高级弹幕（mode7） */
-export function prase(dm: DanmakuElem) {
+export function parse(dm: DanmakuElem) {
     try {
         if (dm.content) {
             // ["146","8","0-1","3","你所跑过的短暂的季节(Saison)","0","0","146","8","500","0","true","黑体","0"]

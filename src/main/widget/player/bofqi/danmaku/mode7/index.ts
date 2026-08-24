@@ -1,7 +1,7 @@
 import type { DanmakuElem } from '..';
 import { hex8 } from '../../../../../../utils/color';
 import style from './index.css' with {type: 'css'};
-import { prase } from './prase';
+import { parse } from './parse';
 
 export class Mode7 extends HTMLElement {
     static get is() {
@@ -24,7 +24,7 @@ export class Mode7 extends HTMLElement {
 
         if (!mode7) {
             // 只解码一次
-            prase(dm);
+            parse(dm);
         }
         if (dm.mode7) {
             const { text, stroked, family, zRotate, yRotate, opacity: [startOpacity = 1, endOpacity = 1], duration, aTime, aDelay, linearSpeedUp, path, startX, startY, endX, endY } = dm.mode7;
