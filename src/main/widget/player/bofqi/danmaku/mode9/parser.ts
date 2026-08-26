@@ -274,7 +274,7 @@ export function parser(tokens: Token[]) {
                 case 'Identifier': case 'Keyword': {
                     if (key.value.startsWith('Ox')) {
                         // 兼容将颜色值前缀 0 误写成 O 的笔误
-                        key.value = `0x${key.value.slice(2)}`;
+                        key.value = `#${key.value.slice(2)}`;
                         return parseColor(key);
                     }
                 }
@@ -324,7 +324,7 @@ export function parser(tokens: Token[]) {
             case 'Identifier': case 'Keyword': {
                 if (value.value.startsWith('Ox')) {
                     // 兼容将颜色值前缀 0 误写成 O 的笔误
-                    value.value = `0x${value.value.slice(2)}`;
+                    value.value = `#${value.value.slice(2)}`;
                     res = parseColor(value);
                 } else if (peek()?.type === 'Punctuation' && peek()?.value === '{') {
                     // 处理嵌套属性
@@ -379,7 +379,7 @@ export function parser(tokens: Token[]) {
             case 'Identifier': case 'Keyword': {
                 if (value.value.startsWith('Ox')) {
                     // 兼容将颜色值前缀 0 误写成 O 的笔误
-                    value.value = `0x${value.value.slice(2)}`;
+                    value.value = `#${value.value.slice(2)}`;
                     res = parseColor(value);
                 } else if (peek()?.type === 'Punctuation' && peek()?.value === '{') {
                     // 处理嵌套属性

@@ -60,7 +60,7 @@ export class Mode7 extends HTMLElement {
             }
 
             // 监听弹幕运动状态
-            this.when('animationend').filter(d => d.animationName === 'mode7-opacity').take(1).subscribe({ next: () => { this.remove(); } });
+            this.when('animationend').filter(d => d.animationName === 'mode7-opacity').take(1).subscribe(() => { this.remove(); });
 
             parent.append(this);
 

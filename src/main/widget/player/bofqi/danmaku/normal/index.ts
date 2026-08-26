@@ -69,7 +69,7 @@ export abstract class Mode extends HTMLElement {
         }
         colorful && this.classList.add('colorful');
         // 监听弹幕运动状态
-        this.when('animationend').take(1).subscribe({ next: () => { this.remove(); } });
+        this.when('animationend').take(1).subscribe(() => { this.remove(); });
         parent.append(this);
 
     }

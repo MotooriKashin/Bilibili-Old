@@ -1,0 +1,61 @@
+:host {
+    position: absolute;
+    display: block;
+    perspective: calc(100cqi / 2 / tan((3.14 / 180) * (55 / 2)));
+    transform-style: preserve-3d;
+
+    /** x 坐标，可以为百分比值【渐变】【默认0】 */
+    --x: attr(data-x type(<length-percentage>));
+    /** y 坐标，可以为百分比值【渐变】【默认0】 */
+    --y: attr(data-y type(<length-percentage>));
+    /* 层次权重，值高的对象在上层【默认0】 */
+    z-index: attr(data-z-index type(<number>));
+    /* 透明度，取值范围 [0, 1]，0 完全透明, 1 完全不透明【渐变】【默认1】 */
+    opacity: attr(data-opacity type(<number>));
+    /* 锚点，位置为长度的百分比【默认0】 */
+    --anchor-x: attr(data-anchor-x %, 0%);
+    /* 锚点，位置为宽度的百分比【默认0】 */
+    --anchor-y: attr(data-anchor-y %, 0%);
+    /* 缩放【渐变】【默认1】 */
+    --scale: attr(data-scale type(<number>));
+    /* X轴旋转【渐变】【默认0】 */
+    --rotate-x: attr(data-rotate-x deg);
+    /* Y轴旋转【渐变】【默认0】 */
+    --rotate-y: attr(data-rotate-y deg);
+    /* Z轴旋转【渐变】【默认0】 */
+    --rotate-z: attr(data-rotate-z deg);
+
+    /* 文本内容 */
+    --content: attr(data-content, '请输入内容');
+    /* 文本颜色【渐变】【默认0xffffff】 */
+    color: attr(data-color type(<color>), white);
+    /* 文本字体大小，可以为百分比（百分比字体大小为当前屏幕宽度*字体百分比px）【默认25】 */
+    font-size: attr(data-font-size type(<length>), 25px);
+    /* 文本字体，默认值为平台默认字体。如果字体不存在时，使用平台默认字体 */
+    font-family: attr(data-font-family);
+    /* 描边宽度【默认0】 */
+    -webkit-text-stroke-width: attr(data-stroke-width px, 0px);
+    /* 描边颜色【默认0xffffff】 */
+    -webkit-text-stroke-color: attr(data-stroke-color type(<color>), white);
+
+    inset-inline-start: var(--x);
+    inset-block-start: var(--y);
+    translate: calc(0% - var(--anchor-x)) calc(0% - var(--anchor-y));
+
+    &::before {
+        content: var(--content);
+        white-space: pre;
+        display: block;
+        transform-origin: var(--anchor-x) var(--anchor-y) 0px;
+        transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z)) scale(var(--scale));
+    }
+}
+
+:host(:not(.bold)) {
+    /* 是否加粗【默认1】 */
+    font-weight: bold;
+}
+
+:host(:not(.ts)) {
+    text-shadow: 1px 0 1px black, 0 1px 1px black, 0 -1px 1px black, -1px 0 1px black;
+}

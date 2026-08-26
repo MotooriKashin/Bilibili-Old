@@ -4,11 +4,10 @@
     inset-inline-start: 0;
     inset-block-start: 0;
     perspective: 288.1473083496094px;
+    transform-style: preserve-3d;
     offset-rotate: 0deg;
     offset-anchor: 0 0;
 
-    /* 阴影颜色 */
-    --shadow: if(style(--color: rgb(0, 0, 0)): none; else: black);
     /* 动画补间函数 */
     --linear-speed-up: attr(data-linear-speed-up type(*), linear);
 
@@ -31,7 +30,7 @@
 }
 
 :host(.stroked) {
-    text-shadow: 1px 0 1px var(--shadow), 0 1px 1px var(--shadow), 0 -1px 1px var(--shadow), -1px 0 1px var(--shadow);
+    text-shadow: 1px 0 1px black, 0 1px 1px black, 0 -1px 1px black, -1px 0 1px black;
 }
 
 @keyframes mode7-opacity {
@@ -41,7 +40,7 @@
 }
 
 @keyframes mode7-offset-distance {
-    100% {
+    to {
         offset-distance: 99.999%;
     }
 }

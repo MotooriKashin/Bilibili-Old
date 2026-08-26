@@ -1,0 +1,39 @@
+:host {
+    position: absolute;
+    display: block;
+    perspective: calc(100cqi / 2 / tan((3.14 / 180) * (55 / 2)));
+    transform-style: preserve-3d;
+
+    /** x 坐标，可以为百分比值【渐变】【默认0】 */
+    --x: attr(data-x type(<length-percentage>));
+    /** y 坐标，可以为百分比值【渐变】【默认0】 */
+    --y: attr(data-y type(<length-percentage>));
+    /* 层次权重，值高的对象在上层【默认0】 */
+    z-index: attr(data-z-index type(<number>));
+    /* 透明度，取值范围 [0, 1]，0 完全透明, 1 完全不透明【渐变】【默认1】 */
+    opacity: attr(data-opacity type(<number>));
+    /* 锚点，位置为长度的百分比【默认0】 */
+    --anchor-x: attr(data-anchor-x %, 0%);
+    /* 锚点，位置为宽度的百分比【默认0】 */
+    --anchor-y: attr(data-anchor-y %, 0%);
+    /* 缩放【渐变】【默认1】 */
+    --scale: attr(data-scale type(<number>));
+    /* X轴旋转【渐变】【默认0】 */
+    --rotate-x: attr(data-rotate-x deg);
+    /* Y轴旋转【渐变】【默认0】 */
+    --rotate-y: attr(data-rotate-y deg);
+    /* Z轴旋转【渐变】【默认0】 */
+    --rotate-z: attr(data-rotate-z deg);
+
+    inset-inline-start: var(--x);
+    inset-block-start: var(--y);
+    translate: calc(0% - var(--anchor-x)) calc(0% - var(--anchor-y));
+
+    >svg {
+        overflow: visible;
+        max-inline-size: 100cqi;
+        max-block-size: 100cqb;
+        transform-origin: var(--anchor-x) var(--anchor-y) 0px;
+        transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z)) scale(var(--scale));
+    }
+}

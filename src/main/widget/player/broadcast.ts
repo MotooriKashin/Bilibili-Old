@@ -20,10 +20,10 @@ export class Broadcast {
     #online?: number;
     constructor(private player: Player) {
         this.#webSocket.binaryType = 'arraybuffer';
-        this.#webSocket.when('open').subscribe({ next: this.open }, { signal: this.#abortController.signal });
-        this.#webSocket.when('message').subscribe({ next: this.message }, { signal: this.#abortController.signal });
-        this.#webSocket.when('close').subscribe({ next: this.close }, { signal: this.#abortController.signal });
-        this.#webSocket.when('error').subscribe({ next: this.error }, { signal: this.#abortController.signal });
+        this.#webSocket.when('open').subscribe(this.open, { signal: this.#abortController.signal });
+        this.#webSocket.when('message').subscribe(this.message, { signal: this.#abortController.signal });
+        this.#webSocket.when('close').subscribe(this.close, { signal: this.#abortController.signal });
+        this.#webSocket.when('error').subscribe(this.error, { signal: this.#abortController.signal });
     }
     private open = async () => {
         // 连接后必须第一时间鉴权

@@ -1,6 +1,8 @@
 import { DANMAKU_FORBID } from './forbid';
 import style from './index.css' with {type: 'css'};
+import property from './property.css' with {type: 'css'};
 import { Mode7 } from './mode7';
+import { Mode9 } from './mode9';
 import { Mode1 } from './normal/mode1';
 import { Space as Mode1Space } from "./normal/mode1/space";
 import { Mode4 } from './normal/mode4';
@@ -11,6 +13,9 @@ import { Mode6 } from './normal/mode6';
 export class Danmaku extends HTMLElement {
     static get is() {
         return 'bofqi-danmaku';
+    }
+    static {
+        document.adoptedStyleSheets.push(property);
     }
     #shadowRoot = this.attachShadow({ mode: 'closed' });
     /** 元素生命周期 */
@@ -93,21 +98,17 @@ export class Danmaku extends HTMLElement {
         this.#implement.abort();
         this.#implement = new AbortController();
 
-        this.video.when('playing').subscribe({ next: this.startRAF }, { signal: this.#implement.signal });
-        this.video.when('waiting').subscribe({ next: this.stopRAF }, { signal: this.#implement.signal });
-        this.video.when('seeked').subscribe({ next: this.flushTimeline }, { signal: this.#implement.signal });
-        this.video.when('pause').subscribe({ next: this.stopRAF }, { signal: this.#implement.signal });
-        this.video.when('ended').subscribe({
-            next: () => {
-                this.stopRAF();
-                this.flushTimeline();
-            }
+        this.video.when('playing').subscribe(this.startRAF, { signal: this.#implement.signal });
+        this.video.when('waiting').subscribe(this.stopRAF, { signal: this.#implement.signal });
+        this.video.when('seeked').subscribe(this.flushTimeline, { signal: this.#implement.signal });
+        this.video.when('pause').subscribe(this.stopRAF, { signal: this.#implement.signal });
+        this.video.when('ended').subscribe(() => {
+            this.stopRAF();
+            this.flushTimeline();
         }, { signal: this.#implement.signal });
 
-        this.video.when('ratechange').subscribe({
-            next: () => {
-                this.#rate = this.video.playbackRate;
-            }
+        this.video.when('ratechange').subscribe(() => {
+            this.#rate = this.video.playbackRate;
         }, { signal: this.#implement.signal });
         this.when('--sort').switchMap(e => {
             return new Observable(subscriber => {
@@ -133,6 +134,19 @@ export class Danmaku extends HTMLElement {
             // 重置最后一条弹幕
             this.flushTimeline();
         }, { signal: this.#implement.signal });
+
+        // 来自弹幕的跳转请求
+        this.when('--seek').switchMap(e => {
+            return new Observable<CustomEvent<number>>(subscriber => {
+                const timer = setTimeout(() => {
+                    subscriber.next(<CustomEvent<number>>e);
+                    subscriber.complete();
+                }, 300);
+                return () => clearTimeout(timer);
+            });
+        }).subscribe(({ detail }) => {
+            this.video.currentTime = detail;
+        }, { signal: this.#implement.signal })
 
         this.#resizeObserver.observe(this);
     }
@@ -241,7 +255,7 @@ export class Danmaku extends HTMLElement {
      * @param dm 要渲染的弹幕
      * @param delay 实际运动时间延迟
      */
-    private render(dm: DanmakuElem, delay = 0) {
+    private async render(dm: DanmakuElem, delay = 0) {
         switch (dm.mode) {
             case 1: {
                 this.forbid & (DANMAKU_FORBID.VISIBLE ^ DANMAKU_FORBID.NORMAL) || new Mode1(this.#shadowRoot, dm, delay);
@@ -263,8 +277,13 @@ export class Danmaku extends HTMLElement {
                 this.forbid & (DANMAKU_FORBID.VISIBLE ^ DANMAKU_FORBID.ADVANCE) || new Mode7(this.#shadowRoot, dm, delay);
                 break;
             }
-            case 8:
-            case 9:
+            case 8: {
+                break;
+            }
+            case 9: {
+                this.forbid & (DANMAKU_FORBID.VISIBLE ^ DANMAKU_FORBID.BAS) || new Mode9(this.#shadowRoot, dm, delay);
+                break;
+            }
         }
     }
 }

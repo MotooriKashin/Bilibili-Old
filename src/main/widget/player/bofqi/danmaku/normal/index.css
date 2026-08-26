@@ -8,8 +8,6 @@
 
     /* 动画延迟 */
     --delay: attr(data-delay ms, 0ms);
-    /* 阴影颜色 */
-    --shadow: if(style(--color: rgb(0, 0, 0)): none; else: black);
     /* 弹幕宽度 */
     --width: attr(data-width px, 0px);
     /* 弹幕高度 */
@@ -19,9 +17,9 @@
 
     font-size: calc(attr(data-fontsize px, 25px) * var(--scale));
     color: attr(data-color type(<color>), white);
-    text-shadow: if(style(--border: '1'):0px 0px 1px var(--shadow), 0 0 1px var(--shadow), 0 0 1px var(--shadow);
-            style(--border: '2'):1px 1px 2px var(--shadow), 0 0 1px var(--shadow);
-            else:1px 0 1px var(--shadow), 0 1px 1px var(--shadow), 0 -1px 1px var(--shadow), -1px 0 1px var(--shadow));
+    text-shadow: if(style(--border: '1'):0px 0px 1px black, 0 0 1px black, 0 0 1px black;
+            style(--border: '2'):1px 1px 2px black, 0 0 1px black;
+            else:1px 0 1px black, 0 1px 1px black, 0 -1px 1px black, -1px 0 1px black);
 
     >img {
         block-size: 1em;

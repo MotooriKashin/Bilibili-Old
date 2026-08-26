@@ -1,0 +1,58 @@
+:host {
+    position: absolute;
+    display: block;
+    perspective: calc(100cqi / 2 / tan((3.14 / 180) * (55 / 2)));
+    transform-style: preserve-3d;
+    border-radius: 3px;
+    padding: 10px 20px;
+    pointer-events: auto;
+
+    /** x 坐标，可以为百分比值【渐变】【默认0】 */
+    --x: attr(data-x type(<length-percentage>));
+    /** y 坐标，可以为百分比值【渐变】【默认0】 */
+    --y: attr(data-y type(<length-percentage>));
+    /* 层次权重，值高的对象在上层【默认0】 */
+    z-index: attr(data-z-index type(<number>));
+    /* 透明度，取值范围 [0, 1]，0 完全透明, 1 完全不透明【渐变】【默认1】 */
+    opacity: attr(data-opacity type(<number>));
+    /* 锚点，位置为长度的百分比【默认0】 */
+    --anchor-x: attr(data-anchor-x %, 0%);
+    /* 锚点，位置为宽度的百分比【默认0】 */
+    --anchor-y: attr(data-anchor-y %, 0%);
+    /* 缩放【渐变】【默认1】 */
+    --scale: attr(data-scale type(<number>));
+    /* X轴旋转【渐变】【默认0】 */
+    --rotate-x: attr(data-rotate-x deg);
+    /* Y轴旋转【渐变】【默认0】 */
+    --rotate-y: attr(data-rotate-y deg);
+    /* Z轴旋转【渐变】【默认0】 */
+    --rotate-z: attr(data-rotate-z deg);
+
+    /* 按钮标签 */
+    --text: attr(data-text, '请输入内容');
+    /* 文本字体大小，可以为百分比（百分比字体大小为当前屏幕宽度*字体百分比px）【默认25】 */
+    font-size: attr(data-font-size type(<length>), 25px);
+    /* 按钮文字颜色【默认0x000000】 */
+    --text-color: attr(data-text-color type(<color>), black);
+    /* 按钮字体透明度【默认1】 */
+    --text-alpha: attr(data-text-alpha type(<number>), 1);
+    /* 按钮填充颜色【默认0xffffff】 */
+    --fill-color: attr(data-fill-color type(<color>), white);
+    /* 按钮填充透明度【默认1】 */
+    --fill-alpha: attr(data-fill-alpha type(<number>), 1);
+
+
+    inset-inline-start: var(--x);
+    inset-block-start: var(--y);
+    background-color: color-mix(in srgb, var(--fill-color) calc(var(--fill-alpha) * 100%), transparent);
+    translate: calc(0% - var(--anchor-x)) calc(0% - var(--anchor-y));
+
+    &::before {
+        content: var(--text);
+        white-space: pre;
+        color: color-mix(in srgb, var(--text-color) calc(var(--text-alpha) * 100%), transparent);
+        display: block;
+        transform-origin: var(--anchor-x) var(--anchor-y) 0px;
+        transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z)) scale(var(--scale));
+    }
+}

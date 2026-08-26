@@ -134,7 +134,7 @@ export function tokenize(code: string) {
 
         // 4.处理颜色
         if (char === '0' && code[cursor + 1] === 'x') {
-            let value = '0x';
+            let value = '#';
             advance();
             advance();
             while (cursor < length && isHex.test(code[cursor]!)) {
@@ -158,7 +158,6 @@ export function tokenize(code: string) {
             }
             // 处理百分比
             if (code[cursor] === '%') {
-                value += code[cursor]!;
                 advance();
                 tokens.push({ type: 'Percent', value, start, end: getPos() });
                 continue;

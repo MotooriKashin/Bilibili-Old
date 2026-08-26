@@ -1,0 +1,37 @@
+/* 定义代码弹幕及BAS弹幕使用的动画变量 */
+
+@property --x {
+    syntax: "<length-percentage>";
+    inherits: true;
+    initial-value: 0px;
+}
+
+@property --y {
+    syntax: "<length-percentage>";
+    inherits: true;
+    initial-value: 0px;
+}
+
+@property --scale {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --rotate-x {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --rotate-y {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --rotate-z {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0deg;
+}

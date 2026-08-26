@@ -171,16 +171,15 @@ export class Bofqi extends HTMLElement {
         this.video.when('progress').subscribe(() => {
             this.updateProgressBackground();
         }, { signal: this.#implement.signal });
-        this.video.when('contextmenu').subscribe({
-            next: e => {
-                e.preventDefault();
+        this.video.when('contextmenu').subscribe(e => {
+            e.preventDefault();
 
-                const { offsetX, offsetY } = e;
-                this.#context.dataset['x'] = <any>offsetX;
-                this.#context.dataset['y'] = <any>offsetY;
-                this.#context.showPopover();
-            }
-        }, { signal: this.#implement.signal });
+            const { offsetX, offsetY } = e;
+            this.#context.dataset['x'] = <any>offsetX;
+            this.#context.dataset['y'] = <any>offsetY;
+            this.#context.showPopover();
+        }
+            , { signal: this.#implement.signal });
         this.video.when('ratechange').subscribe(() => {
             this.dataset['playbackRate'] = <any>this.video.playbackRate;
         }, { signal: this.#implement.signal });
