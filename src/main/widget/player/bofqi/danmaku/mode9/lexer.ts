@@ -22,7 +22,9 @@ interface Position {
 }
 
 export interface Token {
+    /** token类型 */
     type: TokenType;
+    /** 值 */
     value: string;
     /** 标记 Token 的开始位置 */
     start: Position;
@@ -148,8 +150,9 @@ export function tokenize(code: string) {
         // 5.处理数字，时间，百分比
         if (isDigit.test(char) || (char === '.' && isDigit.test(code[cursor + 1]!)) || (char === '-' && (isDigit.test(code[cursor + 1]!) || (code[cursor + 1] === '.' && isDigit.test(code[cursor + 2]!))))) {
             let nd = 0;
-            let value = '';
-            while (cursor < length && (isDigit.test(code[cursor]!) || ((code[cursor] === '.' || code[cursor] === '-') && nd < 2))) {
+            let value = char;
+            advance();
+            while (cursor < length && (isDigit.test(code[cursor]!) || (code[cursor] === '.' && nd < 2))) {
                 if (code[cursor] === '.') {
                     nd++;
                 }
