@@ -1,4 +1,4 @@
-import { type ArrayExpression, type AssignmentExpression, type AwaitExpression, type BinaryExpression, type BlockStatement, type BreakStatement, type CallExpression, type CatchClause, type ConditionalExpression, type ContinueStatement, type DebuggerStatement, type DoWhileStatement, type EmptyStatemen, type Expression, type ExpressionStatement, type ForInStatement, type ForStatement, type FunctionDeclaration, type FunctionExpression, type Identifier, type IfStatement, type LabeledStatement, type Literal, type LogicalExpression, type MemberExpression, type NewExpression, type ObjectExpression, type Program, type Property, type ReturnStatement, type SequenceExpression, type Statement, type SwitchCase, type SwitchStatement, type ThisExpression, type ThrowStatement, type TryStatement, type UnaryExpression, type UpdateExpression, type VariableDeclaration, type VariableDeclarator, type WhileStatement, type WithStatement } from "./ast";
+import { type ArrayExpression, type AssignmentExpression, type AwaitExpression, type BinaryExpression, type BlockStatement, type BreakStatement, type CallExpression, type CatchClause, type ConditionalExpression, type ContinueStatement, type DebuggerStatement, type DoWhileStatement, type EmptyStatement, type Expression, type ExpressionStatement, type ForInStatement, type ForStatement, type FunctionDeclaration, type FunctionExpression, type Identifier, type IfStatement, type LabeledStatement, type Literal, type LogicalExpression, type MemberExpression, type NewExpression, type ObjectExpression, type Program, type Property, type ReturnStatement, type SequenceExpression, type Statement, type SwitchCase, type SwitchStatement, type ThisExpression, type ThrowStatement, type TryStatement, type UnaryExpression, type UpdateExpression, type VariableDeclaration, type VariableDeclarator, type WhileStatement, type WithStatement } from "./ast";
 import type { Token } from "./lexer";
 
 /**
@@ -33,7 +33,7 @@ export function parser(tokens: Token[]) {
     function parseFunctionDeclaration(): FunctionDeclaration {
         eat(); // 消费 function
         const [id, param] = [eat(), eat()];
-        if (!id || !param) throw new Error('语法错误：函数声明不完整');
+        if (!id || !param) throw new Error('语法错误：函数声明意外结束');
         if (id.type !== 'Identifier' && id.type !== 'Keyword') {
             throw new Error(`语法错误：预期之外的 token 类型，值“${id.value}”，位置在：第${id.start.line}行，第${id.start.column}个字符，总第${id.start.index + 1}个字符`);
         }
@@ -60,7 +60,7 @@ export function parser(tokens: Token[]) {
     /** 函数体 */
     function parseFunctionExpression(): FunctionExpression {
         const [, param] = [eat(), eat()];
-        if (!param) throw new Error('语法错误：函数声明不完整');
+        if (!param) throw new Error('语法错误：函数声明意外结束');
         if (param.type !== 'Punctuation' && param.value !== '(') {
             throw new Error(`语法错误：预期之外的 token 类型，值“${param.value}”，位置在：第${param.start.line}行，第${param.start.column}个字符，总第${param.start.index + 1}个字符`);
         }
@@ -115,7 +115,7 @@ export function parser(tokens: Token[]) {
     }
 
     /** 空语句 */
-    function parseEmptyStatement(): EmptyStatemen {
+    function parseEmptyStatement(): EmptyStatement {
         eat();
         return { type: 'EmptyStatement' };
     }
@@ -130,7 +130,7 @@ export function parser(tokens: Token[]) {
     function parseWithStatement(): WithStatement {
         eat();
         const b = eat();
-        if (!b) throw new Error('语法错误：with 语句不完整');
+        if (!b) throw new Error('语法错误：with 语句意外结束');
         if (b.type !== 'Punctuation' || b.value !== '(') {
             throw new Error(`语法错误: 不支持的 token，值“${b.value}”，位置在：第${b.start.line}行，第${b.start.column}个字符，总第${b.start.index + 1}个字符`);
         }
@@ -150,7 +150,7 @@ export function parser(tokens: Token[]) {
     /** 解析表达式 */
     function parseExpression(precedence = 0): Expression {
         const token = eat();
-        if (!token) throw new Error('语法错误：非表达式');
+        if (!token) throw new Error('语法错误：表达式意外结束');
         let res: Expression;
         switch (token.type) {
             case 'Identifier':
@@ -165,10 +165,16 @@ export function parser(tokens: Token[]) {
                         res = <ThisExpression>{ type: 'ThisExpression' };
                         break;
                     }
-                    case 'true':
-                    case 'false':
+                    case 'true': {
+                        res = <Literal>{ type: 'Literal', value: true };
+                        break;
+                    }
+                    case 'false': {
+                        res = <Literal>{ type: 'Literal', value: false };
+                        break;
+                    }
                     case 'null': {
-                        res = <Literal>{ type: 'Literal', value: token.value };
+                        res = <Literal>{ type: 'Literal', value: null };
                         break;
                     }
                     case 'typeof':
@@ -210,7 +216,7 @@ export function parser(tokens: Token[]) {
                 break;
             }
             case 'Number': {
-                res = <Literal>{ type: 'Literal', value: token.value };
+                res = <Literal>{ type: 'Literal', value: Number(token.value) };
                 break;
             }
             case 'String': {
@@ -423,7 +429,7 @@ export function parser(tokens: Token[]) {
                         eat(); // 消费?
                         const consequent = parseExpression(3);
                         const o = eat();
-                        if (!o) throw new Error('语法错误：三元运算符不完整');
+                        if (!o) throw new Error('语法错误：三元运算符意外结束');
                         if (o.type !== 'Operator' || o.value !== ':') throw new Error(`语法错误: 不支持的 token，值“${o.value}”，位置在：第${o.start.line}行，第${o.start.column}个字符，总第${o.start.index + 1}个字符`);
                         const alternate = parseExpression(3);
                         prev = <ConditionalExpression>{ type: 'ConditionalExpression', test: prev, alternate, consequent }
@@ -446,7 +452,7 @@ export function parser(tokens: Token[]) {
                     case '[': {
                         if (precedence >= 18) break;
                         eat();
-                        const property = parseExpression(18);
+                        const property = parseExpression();
                         prev = <MemberExpression>{ type: 'MemberExpression', object: prev, property, computed: true };
                         eat(); // 消费]
                         prev = parseExpressionPrecedence(prev, precedence);
@@ -488,7 +494,11 @@ export function parser(tokens: Token[]) {
         eat(); // 消费 [
         const elements: (Expression | null)[] = [];
         while (cursor < length && (peek()?.type !== 'Punctuation' || peek()?.value !== ']')) {
-            elements.push(parseExpression(2));
+            if (peek() && peek()?.type === 'Punctuation' && peek()?.value === ',') {
+                elements.push(null)
+            } else {
+                elements.push(parseExpression(2));
+            }
             if (peek() && peek()?.type === 'Punctuation' && peek()?.value === ',') {
                 eat();
             }
@@ -514,7 +524,7 @@ export function parser(tokens: Token[]) {
     /** 解析对象属性 */
     function parseProperty(): Property {
         const token = eat();
-        if (!token) throw new Error('语法错误：对象属性不完整');
+        if (!token) throw new Error('语法错误：对象属性意外结束');
         let key: Literal | Identifier;
         switch (token.type) {
             case 'Keyword':
@@ -567,7 +577,7 @@ export function parser(tokens: Token[]) {
     /** 标签语句 */
     function parseLabeledStatement() {
         const token = eat();
-        if (!token) throw new Error('语法错误：语句意外结束');
+        if (!token) throw new Error('语法错误：标签语句意外结束');
         if (token.type !== 'Keyword' && token.type !== 'Identifier') throw new Error(`语法错误: 不支持的 token，值“${token.value}”，位置在：第${token.start.line}行，第${token.start.column}个字符，总第${token.start.index + 1}个字符`);
         const p = peek();
         if (p?.type === 'Operator' && p.value === ':') {
@@ -746,7 +756,7 @@ export function parser(tokens: Token[]) {
     /** 异常处理 */
     function parseCatchClause(): CatchClause {
         const [token, p, pr] = [eat(), eat(), eat(), eat()];
-        if (!token || !p || !pr) throw new Error('语法错误：语句意外结束');
+        if (!token || !p || !pr) throw new Error('语法错误：异常处理语句意外结束');
         if (token.type !== 'Keyword' && token.type !== 'Identifier' && token.value !== 'catch') throw new Error(`语法错误: 不支持的 token，值“${token.value}”，位置在：第${token.start.line}行，第${token.start.column}个字符，总第${token.start.index + 1}个字符`);
         if (p.type !== 'Punctuation' || p.value !== '(') throw new Error(`语法错误: 不支持的 token，值“${token.value}”，位置在：第${token.start.line}行，第${token.start.column}个字符，总第${token.start.index + 1}个字符`);
         if (pr.type !== 'Keyword' && pr.type !== 'Identifier') throw new Error(`语法错误: 不支持的 token，值“${pr.value}”，位置在：第${pr.start.line}行，第${pr.start.column}个字符，总第${pr.start.index + 1}个字符`);
@@ -853,7 +863,7 @@ export function parser(tokens: Token[]) {
     function parseCoroutineDeclaration(): FunctionDeclaration {
         eat(); // 消费 coroutine
         const [id, param] = [eat(), eat()];
-        if (!id || !param) throw new Error('语法错误：函数声明不完整');
+        if (!id || !param) throw new Error('语法错误：函数声明意外结束');
         if (id.type !== 'Identifier' && id.type !== 'Keyword') {
             throw new Error(`语法错误：预期之外的 token 类型，值“${id.value}”，位置在：第${id.start.line}行，第${id.start.column}个字符，总第${id.start.index + 1}个字符`);
         }
@@ -880,7 +890,7 @@ export function parser(tokens: Token[]) {
     /** 【扩展】loop循环，转转为 while(true) 循环 */
     function parseLoopStatement(): WhileStatement {
         eat();
-        const test: Literal = { type: 'Literal', value: 'true' };
+        const test: Literal = { type: 'Literal', value: true };
         const body = parseStatement();
 
         return { type: 'WhileStatement', test, body };
@@ -969,6 +979,7 @@ export function parser(tokens: Token[]) {
     const body: Statement[] = [];
     const { length } = tokens;
     while (cursor < length) {
+        // try {
         const next = parseStatement();
         if (next.type === 'SequenceExpression') {
             const prev = body.at(-1);
@@ -983,6 +994,9 @@ export function parser(tokens: Token[]) {
         } else {
             body.push(next);
         }
+        // } catch {
+        // 主循环里宽容未知语句
+        // }
     }
 
     return <Program>{ type: 'Program', body };

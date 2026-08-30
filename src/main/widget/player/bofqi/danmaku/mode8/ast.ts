@@ -84,7 +84,7 @@ export interface FunctionBody extends BlockStatement {
 }
 
 /** 一个空语句，即一个单独的分号。 */
-export interface EmptyStatemen extends Statement {
+export interface EmptyStatement extends Statement {
     type: 'EmptyStatement';
 }
 

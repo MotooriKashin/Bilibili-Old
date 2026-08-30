@@ -64,3 +64,37 @@ export function string2SuperLink(text: string) {
 
     return fragment;
 }
+
+/**
+ * 将 HTML 实体字符串解码为原始字符
+ * @param str - 包含 HTML 实体的字符串
+ * @returns 解码后的原始字符串
+ */
+export function htmlUnescape(str: string): string {
+    if (!str) return '';
+
+    // 1. 定义常见命名实体的映射表
+    const entityMap: Record<string, string> = {
+        '&amp;': '&',
+        '&lt;': '<',
+        '&gt;': '>',
+        '&quot;': '"',
+        '&#39;': "'", // 单引号的数字实体
+        '&apos;': "'", // 单引号的命名实体 (XML中常用，HTML5也支持)
+        '&nbsp;': ' ',
+    };
+
+    // 2. 替换命名实体
+    let result = str.replace(/&(amp|lt|gt|quot|apos|nbsp);/gi, (match) => {
+        return entityMap[match.toLowerCase()] || match;
+    });
+
+    // 3. 替换数字实体 (十进制 &#123; 和 十六进制 &#x7B;)
+    result = result.replace(/&#(\d+);/g, (_, dec) => {
+        return String.fromCharCode(Number(dec));
+    }).replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => {
+        return String.fromCharCode(parseInt(hex, 16));
+    });
+
+    return result.replace(/(?:\/n|\\n|\n|\r\n)/g, '\n');
+}

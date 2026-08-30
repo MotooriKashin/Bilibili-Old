@@ -104,7 +104,7 @@ export function parser(tokens: Token[]) {
         eat(); // 消费 def
         const [type, id] = [eat(), eat()];
         let data = eat();
-        if (!type || !id || !data) throw new Error('语法错误: def 定义不完整');
+        if (!type || !id || !data) throw new Error('语法错误: def 定义意外结束');
         if (type.type !== 'Identifier' && type.type !== 'Keyword') {
             // 贪婪匹配：语法并未规定关键字不能作为标识符
             throw new Error(`语法错误：预期之外的 token 类型，值“${type.value}”，位置在：第${type.start.line}行，第${type.start.column}个字符，总第${type.start.index + 1}个字符`);
@@ -141,7 +141,7 @@ export function parser(tokens: Token[]) {
         eat(); // 消费 let
         const [id, operator, type] = [eat(), eat(), eat()];
         let data = peek();
-        if (!type || !operator || !id) throw new Error('语法错误: let 定义不完整');
+        if (!type || !operator || !id) throw new Error('语法错误: let 定义意外结束');
         if (id.type !== 'Identifier' && id.type !== 'Keyword') {
             throw new Error(`语法错误：预期之外的 token 类型，值“${id.value}”，位置在：第${id.start.line}行，第${id.start.column}个字符，总第${id.start.index + 1}个字符`);
         }
@@ -178,7 +178,7 @@ export function parser(tokens: Token[]) {
     function parseSet() {
         eat(); // 消费 set
         const id = eat();
-        if (!id) throw new Error('语法错误: set 定义不完整');
+        if (!id) throw new Error('语法错误: set 定义意外结束');
         let { value, type } = id;
         if (type === 'Punctuation') {
             if (id.value !== '(') throw new Error(`语法错误：预期之外的 token 类型，值“${id.value}”，位置在：第${id.start.line}行，第${id.start.column}个字符，总第${id.start.index + 1}个字符`);
@@ -186,12 +186,12 @@ export function parser(tokens: Token[]) {
             value = crypto.randomUUID();
             type = 'Identifier';
             const typeNode = eat();
-            if (!typeNode) throw new Error('语法错误: set 定义不完整');
+            if (!typeNode) throw new Error('语法错误: set 定义意外结束');
             if (typeNode.type !== 'Identifier' && typeNode.type !== 'Keyword') {
                 throw new Error(`语法错误：预期之外的 token 类型，值“${typeNode.value}”，位置在：第${typeNode.start.line}行，第${typeNode.start.column}个字符，总第${typeNode.start.index + 1}个字符`);
             }
             let data = peek();
-            if (!data) throw new Error('语法错误: set 定义不完整');
+            if (!data) throw new Error('语法错误: set 定义意外结束');
             const params: ASTNode[] = [];
             if (data?.type === 'Punctuation' && data?.value === '(') {
                 eat(); // 消费参数前的“(”
@@ -218,7 +218,7 @@ export function parser(tokens: Token[]) {
             throw new Error(`语法错误：预期之外的 token 类型，值“${id.value}”，位置在：第${id.start.line}行，第${id.start.column}个字符，总第${id.start.index + 1}个字符`);
         }
         const data = peek();
-        if (!data) throw new Error('语法错误: set 定义不完整');
+        if (!data) throw new Error('语法错误: set 定义意外结束');
         const properties: ASTNode[] = [];
         if (data?.type === 'Punctuation' || data?.value === '{') {
             eat(); // 消费属性前的“{”
@@ -229,7 +229,7 @@ export function parser(tokens: Token[]) {
             eat(); // 消费属性末尾的“}”
         }
         const durationNode = eat();
-        if (!durationNode) throw new Error('语法错误: set 定义不完整');
+        if (!durationNode) throw new Error('语法错误: set 定义意外结束');
         if (durationNode.type !== 'Time') throw new Error(`语法错误：预期之外的 token 类型，值“${durationNode.value}”，位置在：第${durationNode.start.line}行，第${durationNode.start.column}个字符，总第${durationNode.start.index + 1}个字符`);
         const duration = parseDurationToMs(durationNode.value);
         let timeFunction = null;
@@ -248,7 +248,7 @@ export function parser(tokens: Token[]) {
     /** 解析参数 */
     function parseParam() {
         const [key, next] = [eat(), peek()];
-        if (!key || !next) throw new Error('语法错误: 参数定义不完整');
+        if (!key || !next) throw new Error('语法错误: 参数定义意外结束');
         if (key.type === 'Punctuation') {
             if (key.value !== ',') throw new Error(`语法错误：预期之外的 token 类型，值“${key.value}”，位置在：第${key.start.line}行，第${key.start.column}个字符，总第${key.start.index + 1}个字符`);
             return;
@@ -297,7 +297,7 @@ export function parser(tokens: Token[]) {
             return <SubNode>{ type: 'sub', key: key.value, value: properties };
         }
         const [operator, value] = [eat(), eat()];
-        if (!operator || !value) throw new Error('语法错误: 参数定义不完整');
+        if (!operator || !value) throw new Error('语法错误: 参数定义意外结束');
         if (operator.type !== 'Operator' && operator.value !== '=') throw new Error(`语法错误：预期之外的 token 类型，值“${operator.value}”，位置在：第${operator.start.line}行，第${operator.start.column}个字符，总第${operator.start.index + 1}个字符`);
         let res: ASTNode | undefined = undefined;
         switch (value.type) {
@@ -347,12 +347,12 @@ export function parser(tokens: Token[]) {
     /** 解析属性 */
     function parseProperty() {
         const key = eat();
-        if (!key) throw new Error('语法错误: 参数定义不完整');
+        if (!key) throw new Error('语法错误: 参数定义意外结束');
         if (key.type !== 'Identifier' && key.type !== 'Keyword') {
             throw new Error(`语法错误：预期之外的 token 类型，值“${key.value}”，位置在：第${key.start.line}行，第${key.start.column}个字符，总第${key.start.index + 1}个字符`);
         }
         const [operator, value] = [eat(), eat()];
-        if (!operator || !value) throw new Error('语法错误: 参数定义不完整');
+        if (!operator || !value) throw new Error('语法错误: 参数定义意外结束');
         if (operator.type !== 'Operator' && operator.value !== '=') throw new Error(`语法错误：预期之外的 token 类型，值“${operator.value}”，位置在：第${operator.start.line}行，第${operator.start.column}个字符，总第${operator.start.index + 1}个字符`);
         let res: ASTNode | undefined = undefined;
         switch (value.type) {
