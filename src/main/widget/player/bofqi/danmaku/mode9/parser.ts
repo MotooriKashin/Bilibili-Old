@@ -431,7 +431,6 @@ export function parser(tokens: Token[]) {
     while (cursor < length) {
         const token = peek();
         if (token) {
-            // 1.处理对象定义
             switch (token.type) {
                 case 'Keyword': {
                     switch (token.value) {
@@ -453,19 +452,19 @@ export function parser(tokens: Token[]) {
                             break;
                         }
                         default: {
-                            throw new Error(`语法错误: 不支持的“Keyword”，值“${token.value}”，位置在：第${token.start.line}行，第${token.start.column}个字符，总第${token.start.index + 1}个字符`);
+                            throw new Error(`语法错误: 不支持的 token，值“${token.value}”，位置在：第${token.start.line}行，第${token.start.column}个字符，总第${token.start.index + 1}个字符`);
                         }
                     }
                     break;
                 }
                 case 'Punctuation': {
                     // 语句组
-                    if (token.value !== '{' && token.value !== '}') throw new Error(`语法错误: 预期为“Keyword”，但获取到类型“${token.type}”，值“${token.value}”，位置在：第${token.start.line}行，第${token.start.column}个字符，总第${token.start.index + 1}个字符`);
+                    if (token.value !== '{' && token.value !== '}') throw new Error(`语法错误: 预期为 token，但获取到类型“${token.type}”，值“${token.value}”，位置在：第${token.start.line}行，第${token.start.column}个字符，总第${token.start.index + 1}个字符`);
                     eat();
                     break;
                 }
                 default: {
-                    throw new Error(`语法错误: 预期为“Keyword”，但获取到类型“${token.type}”，值“${token.value}”，位置在：第${token.start.line}行，第${token.start.column}个字符，总第${token.start.index + 1}个字符`);
+                    throw new Error(`语法错误: 预期为 token，但获取到类型“${token.type}”，值“${token.value}”，位置在：第${token.start.line}行，第${token.start.column}个字符，总第${token.start.index + 1}个字符`);
                 }
             }
         }

@@ -31,7 +31,7 @@ export interface Token {
 
 
 /** 关键字 */
-const KEYWORDS = new Set(['break', 'case', 'continue', 'default', 'delete', 'do', 'else', 'for', 'function', 'if', 'instanceof', 'new', 'return', 'switch', 'this', 'typeof', 'var', 'while', 'with', 'coroutine', 'suspend', 'yield', 'loop', 'null', 'undefined', 'true', 'false', 'void']);
+const KEYWORDS = new Set(['break', 'case', 'continue', 'default', 'delete', 'do', 'else', 'for', 'function', 'if', 'instanceof', 'new', 'return', 'switch', 'this', 'typeof', 'var', 'while', 'with', 'coroutine', 'suspend', 'yield', 'loop', 'null', 'undefined', 'true', 'false', 'void', 'throw']);
 
 export function tokenize(code: string) {
     const tokens: Token[] = [];
@@ -159,7 +159,7 @@ export function tokenize(code: string) {
         }
 
         // 5.处理十进制数字
-        if (isDigit.test(char) || (char === '.' && isDigit.test(nextChar!)) || (char === '-' && (isDigit.test(code[cursor + 1]!) || (code[cursor + 1] === '.' && isDigit.test(code[cursor + 2]!))))) {
+        if (isDigit.test(char) || (char === '.' && isDigit.test(nextChar!))) {
             let nd = 0;
             let value = char;
             advance();
