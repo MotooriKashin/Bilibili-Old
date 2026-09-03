@@ -9,6 +9,7 @@ export class Path extends HTMLElement {
         return 'mode-9-path';
     }
     #shadowRoot = this.attachShadow({ mode: 'closed' });
+    #target = this.#shadowRoot.appendChild(document.createElement('div'));
     constructor(
         private parrent: HTMLElement,
         { x, y, zIndex, alpha, anchorX, anchorY, scale, rotateX, rotateY, rotateZ, duration, d, borderWidth, borderColor, borderAlpha, fillColor, fillAlpha, viewBox, width, height, children, animation }: IMode9Path,
@@ -45,7 +46,7 @@ export class Path extends HTMLElement {
         rotateY && (this.dataset['rotateY'] = <any>rotateY.value);
         rotateZ && (this.dataset['rotateZ'] = <any>rotateZ.value);
 
-        const svg = this.#shadowRoot.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
+        const svg = this.#target.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
         const path = svg.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'path'));
         path.setAttribute('d', d.value);
         borderWidth && path.setAttribute('stroke-width', <any>borderWidth.value);
@@ -85,15 +86,15 @@ export class Path extends HTMLElement {
         (<(IMode9Text | IMode9Button | IMode9Path)[]>children)?.forEach(d => {
             switch (d.type) {
                 case 'text': {
-                    this.#shadowRoot.append(new Text(parrent, d, delay));
+                    this.#target.append(new Text(parrent, d, delay));
                     break;
                 }
                 case 'button': {
-                    this.#shadowRoot.append(new Button(parrent, d, delay));
+                    this.#target.append(new Button(parrent, d, delay));
                     break;
                 }
                 case 'path': {
-                    this.#shadowRoot.append(new Path(parrent, d, delay));
+                    this.#target.append(new Path(parrent, d, delay));
                     break;
                 }
             }
@@ -149,7 +150,7 @@ export class Path extends HTMLElement {
                         break;
                     }
                     case 'scale': {
-                        params.push(`--scale: ${(<NumberNode>value).value};`);
+                        params.push(`--scale-x: ${(<NumberNode>value).value};`);
                         break;
                     }
                     case 'rotateX': {
@@ -180,7 +181,7 @@ export class Path extends HTMLElement {
         this.#shadowRoot.adoptedStyleSheets.push(sheet, style);
     }
     disconnectedCallback() {
-        this.parrent.dispatchEvent(new CustomEvent('--remove'));
+        this.parrent.dispatchEvent(new Event('--remove'));
     }
 }
 customElements.define(Path.is, Path);

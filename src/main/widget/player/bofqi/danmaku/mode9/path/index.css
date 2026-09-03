@@ -17,7 +17,7 @@
     /* 锚点，位置为宽度的百分比【默认0】 */
     --anchor-y: attr(data-anchor-y %, 0%);
     /* 缩放【渐变】【默认1】 */
-    --scale: attr(data-scale type(<number>));
+    --scale-x: attr(data-scale type(<number>));
     /* X轴旋转【渐变】【默认0】 */
     --rotate-x: attr(data-rotate-x deg);
     /* Y轴旋转【渐变】【默认0】 */
@@ -29,11 +29,14 @@
     inset-block-start: var(--y);
     translate: calc(0% - var(--anchor-x)) calc(0% - var(--anchor-y));
 
-    >svg {
-        overflow: visible;
-        max-inline-size: 100cqi;
-        max-block-size: 100cqb;
+    >div {
         transform-origin: var(--anchor-x) var(--anchor-y) 0px;
-        transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z)) scale(var(--scale));
+        transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z)) scale(var(--scale-x));
+
+        >svg {
+            overflow: visible;
+            max-inline-size: 100cqi;
+            max-block-size: 100cqb;
+        }
     }
 }

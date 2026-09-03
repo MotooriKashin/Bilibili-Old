@@ -1,3 +1,4 @@
+import { error } from "../../../../../../utils/debug";
 import { type ArrayExpression, type AssignmentExpression, type AwaitExpression, type BinaryExpression, type BlockStatement, type BreakStatement, type CallExpression, type CatchClause, type ConditionalExpression, type ContinueStatement, type DebuggerStatement, type DoWhileStatement, type EmptyStatement, type Expression, type ExpressionStatement, type ForInStatement, type ForStatement, type FunctionDeclaration, type FunctionExpression, type Identifier, type IfStatement, type LabeledStatement, type Literal, type LogicalExpression, type MemberExpression, type NewExpression, type ObjectExpression, type Program, type Property, type ReturnStatement, type SequenceExpression, type Statement, type SwitchCase, type SwitchStatement, type ThisExpression, type ThrowStatement, type TryStatement, type UnaryExpression, type UpdateExpression, type VariableDeclaration, type VariableDeclarator, type WhileStatement, type WithStatement } from "./ast";
 import type { Token } from "./lexer";
 
@@ -11,7 +12,7 @@ import type { Token } from "./lexer";
  * 
  * 沙箱中别忘了提供全局函数`function $nextFrame: Promise<void>`
  * @example
- * function $nextFrame = () => { return new Promise(resolve => requestAnimationFrame(resolve)); }
+ * function $nextFrame ()  { return new Promise(resolve => requestAnimationFrame(resolve)); }
  */
 export function parser(tokens: Token[]) {
     let cursor = 0;
@@ -979,24 +980,25 @@ export function parser(tokens: Token[]) {
     const body: Statement[] = [];
     const { length } = tokens;
     while (cursor < length) {
-        // try {
-        const next = parseStatement();
-        if (next.type === 'SequenceExpression') {
-            const prev = body.at(-1);
-            if (prev) {
-                if (prev.type === 'SequenceExpression') {
-                    (<SequenceExpression>prev).expressions.push(next);
-                } else {
-                    (<SequenceExpression>next).expressions.unshift(prev);
-                    body[body.length - 1] = next;
+        try {
+            const next = parseStatement();
+            if (next.type === 'SequenceExpression') {
+                const prev = body.at(-1);
+                if (prev) {
+                    if (prev.type === 'SequenceExpression') {
+                        (<SequenceExpression>prev).expressions.push(next);
+                    } else {
+                        (<SequenceExpression>next).expressions.unshift(prev);
+                        body[body.length - 1] = next;
+                    }
                 }
+            } else {
+                body.push(next);
             }
-        } else {
-            body.push(next);
+        } catch (e) {
+            // 主循环里宽容未知语句
+            error('mode8', e);
         }
-        // } catch {
-        // 主循环里宽容未知语句
-        // }
     }
 
     return <Program>{ type: 'Program', body };

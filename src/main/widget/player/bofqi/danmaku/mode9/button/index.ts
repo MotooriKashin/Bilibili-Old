@@ -9,6 +9,7 @@ export class Button extends HTMLElement {
         return 'mode-9-button';
     }
     #shadowRoot = this.attachShadow({ mode: 'closed' });
+    #target = this.#shadowRoot.appendChild(document.createElement('div'));
     constructor(
         private parrent: HTMLElement,
         { x, y, zIndex, alpha, anchorX, anchorY, scale, rotateX, rotateY, rotateZ, duration, text, fontSize, textColor, textAlpha, fillColor, fillAlpha, target, children, animation }: IMode9Button,
@@ -64,15 +65,15 @@ export class Button extends HTMLElement {
         (<(IMode9Text | IMode9Button | IMode9Path)[]>children)?.forEach(d => {
             switch (d.type) {
                 case 'text': {
-                    this.#shadowRoot.append(new Text(parrent, d, delay));
+                    this.#target.append(new Text(parrent, d, delay));
                     break;
                 }
                 case 'button': {
-                    this.#shadowRoot.append(new Button(parrent, d, delay));
+                    this.#target.append(new Button(parrent, d, delay));
                     break;
                 }
                 case 'path': {
-                    this.#shadowRoot.append(new Path(parrent, d, delay));
+                    this.#target.append(new Path(parrent, d, delay));
                     break;
                 }
             }
@@ -161,7 +162,7 @@ export class Button extends HTMLElement {
                         break;
                     }
                     case 'scale': {
-                        params.push(`--scale: ${(<NumberNode>value).value};`);
+                        params.push(`--scale-x: ${(<NumberNode>value).value};`);
                         break;
                     }
                     case 'rotateX': {
@@ -216,7 +217,7 @@ export class Button extends HTMLElement {
         this.#shadowRoot.adoptedStyleSheets.push(sheet, style);
     }
     disconnectedCallback() {
-        this.parrent.dispatchEvent(new CustomEvent('--remove'));
+        this.parrent.dispatchEvent(new Event('--remove'));
     }
 }
 customElements.define(Button.is, Button);

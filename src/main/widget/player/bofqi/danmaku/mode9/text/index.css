@@ -17,7 +17,7 @@
     /* 锚点，位置为宽度的百分比【默认0】 */
     --anchor-y: attr(data-anchor-y %, 0%);
     /* 缩放【渐变】【默认1】 */
-    --scale: attr(data-scale type(<number>));
+    --scale-x: attr(data-scale type(<number>));
     /* X轴旋转【渐变】【默认0】 */
     --rotate-x: attr(data-rotate-x deg);
     /* Y轴旋转【渐变】【默认0】 */
@@ -32,7 +32,7 @@
     /* 文本字体大小，可以为百分比（百分比字体大小为当前屏幕宽度*字体百分比px）【默认25】 */
     font-size: attr(data-font-size type(<length>), 25px);
     /* 文本字体，默认值为平台默认字体。如果字体不存在时，使用平台默认字体 */
-    font-family: attr(data-font-family);
+    font-family: attr(data-font-family type(*));
     /* 描边宽度【默认0】 */
     -webkit-text-stroke-width: attr(data-stroke-width px, 0px);
     /* 描边颜色【默认0xffffff】 */
@@ -42,12 +42,15 @@
     inset-block-start: var(--y);
     translate: calc(0% - var(--anchor-x)) calc(0% - var(--anchor-y));
 
-    &::before {
-        content: var(--content);
-        white-space: pre;
-        display: block;
+    >div {
         transform-origin: var(--anchor-x) var(--anchor-y) 0px;
-        transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z)) scale(var(--scale));
+        transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z)) scale(var(--scale-x));
+
+        &::before {
+            content: var(--content);
+            white-space: pre;
+            display: block;
+        }
     }
 }
 

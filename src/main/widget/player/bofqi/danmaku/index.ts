@@ -9,6 +9,8 @@ import { Mode4 } from './normal/mode4';
 import { Space as Mode4Space } from "./normal/mode4/space";
 import { Mode5 } from './normal/mode5';
 import { Mode6 } from './normal/mode6';
+import { Mode8 } from './mode8';
+import { clearEl, clearTimer, clearTrigger } from './mode8/ScriptManager';
 
 export class Danmaku extends HTMLElement {
     static get is() {
@@ -105,6 +107,9 @@ export class Danmaku extends HTMLElement {
         this.video.when('ended').subscribe(() => {
             this.stopRAF();
             this.flushTimeline();
+            clearEl();
+            clearTimer();
+            clearTrigger();
         }, { signal: this.#implement.signal });
 
         this.video.when('ratechange').subscribe(() => {
@@ -135,8 +140,9 @@ export class Danmaku extends HTMLElement {
             this.flushTimeline();
         }, { signal: this.#implement.signal });
 
-        // 来自弹幕的跳转请求
+        // 来自弹幕的请求
         this.when('--seek').switchMap(e => {
+            e.stopPropagation();
             return new Observable<CustomEvent<number>>(subscriber => {
                 const timer = setTimeout(() => {
                     subscriber.next(<CustomEvent<number>>e);
@@ -146,7 +152,7 @@ export class Danmaku extends HTMLElement {
             });
         }).subscribe(({ detail }) => {
             this.video.currentTime = detail;
-        }, { signal: this.#implement.signal })
+        }, { signal: this.#implement.signal });
 
         this.#resizeObserver.observe(this);
     }
@@ -197,6 +203,7 @@ export class Danmaku extends HTMLElement {
         Mode4.space.identify();
         Mode5.space.identify();
         Mode6.space.identify();
+        Mode8.animation.clear();
     }
     private startRAF = () => {
         if (!this.#animationFrameId) {
@@ -208,12 +215,18 @@ export class Danmaku extends HTMLElement {
             };
             this.#animationFrameId = requestAnimationFrame(loop);
         }
+        Mode8.animation.forEach(d => {
+            d.play();
+        });
     }
     private stopRAF = () => {
         if (this.#animationFrameId) {
             cancelAnimationFrame(this.#animationFrameId);
             this.#animationFrameId = undefined;
         }
+        Mode8.animation.forEach(d => {
+            d.pause();
+        });
     }
     /** 重置弹幕时间戳锚点 */
     private flushTimeline = () => {
@@ -278,6 +291,7 @@ export class Danmaku extends HTMLElement {
                 break;
             }
             case 8: {
+                this.forbid & (DANMAKU_FORBID.VISIBLE ^ DANMAKU_FORBID.CODE) || new Mode8(this.#shadowRoot, dm, delay, this, this.video);
                 break;
             }
             case 9: {

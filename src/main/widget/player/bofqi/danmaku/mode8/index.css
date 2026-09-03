@@ -1,0 +1,6 @@
+:host {
+    position: absolute;
+    display: block;
+    inset: 0;
+    font-weight: normal;
+}

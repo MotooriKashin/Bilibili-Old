@@ -146,7 +146,7 @@ export function tokenize(code: string) {
         }
 
         // 5. 处理十六进制数字
-        if (char === '0' && nextChar === 'x') {
+        if (char === '0' && (nextChar === 'X' || nextChar === 'x')) {
             let value = '0x';
             advance();
             advance();

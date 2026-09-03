@@ -12,7 +12,25 @@
     initial-value: 0px;
 }
 
-@property --scale {
+@property --z {
+    syntax: "<length-percentage>";
+    inherits: true;
+    initial-value: 0px;
+}
+
+@property --scale-x {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --scale-y {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --scale-z {
     syntax: "<number>";
     inherits: true;
     initial-value: 1;

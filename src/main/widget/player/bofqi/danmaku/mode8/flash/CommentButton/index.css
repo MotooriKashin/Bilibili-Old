@@ -1,0 +1,7 @@
+@import url(../../../../../../indentify.css);
+
+:host {
+    font-size: 12px;
+    pointer-events: auto;
+    border-radius: 4px;
+}

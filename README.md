@@ -41,7 +41,7 @@
       - [x] mode5 顶端弹幕
       - [x] mode6 逆向弹幕
       - [x] mode7 高级弹幕
-      - [ ] mode8 代码弹幕
+      - [x] mode8 代码弹幕
       - [x] mode9 BAS弹幕
       - [ ] 指令弹幕
     - [x] 实时弹幕
@@ -76,7 +76,7 @@
 1. 专为 chrome 最新版本打造，不会兼容旧版本，更无暇顾及其他浏览器。——当前最低版本要求：150
    - 低版本浏览器或许可以在`chrome://flags/`页面启用`Experimental Web Platform features`尝试
 2. 项目还在原型阶段，随时可能推到重来，所以暂时不接受任何 issue 和 PR
-3. 开发流程
+3. 开发流程（以 Windows11 为例）
 ```
 # 安装 git
 winget install -i git.git

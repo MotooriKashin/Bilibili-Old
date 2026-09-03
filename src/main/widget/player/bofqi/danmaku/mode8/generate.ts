@@ -1,4 +1,4 @@
-import type { ArrayExpression, AssignmentExpression, AwaitExpression, BinaryExpression, BlockStatement, BreakStatement, CallExpression, ConditionalExpression, ContinueStatement, DoWhileStatement, Expression, ExpressionStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement, LabeledStatement, Literal, LogicalExpression, MemberExpression, NewExpression, ObjectExpression, Program, ReturnStatement, SequenceExpression, Statement, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UpdateExpression, VariableDeclaration, WhileStatement, WithStatement } from "./ast";
+import type { ArrayExpression, AssignmentExpression, AwaitExpression, BinaryExpression, BlockStatement, BreakStatement, CallExpression, ConditionalExpression, ContinueStatement, DoWhileStatement, Expression, ExpressionStatement, ForInStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement, LabeledStatement, Literal, LogicalExpression, MemberExpression, NewExpression, ObjectExpression, Program, ReturnStatement, SequenceExpression, Statement, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UpdateExpression, VariableDeclaration, WhileStatement, WithStatement } from "./ast";
 
 export function generate({ body }: Program) {
     return statements(body);
@@ -50,7 +50,7 @@ function statement(d: Statement): string {
         }
         case 'IfStatement': {
             const { test, consequent, alternate } = <IfStatement>d;
-            return `if (${expression(test)}) ${statement(consequent)}${alternate === null ? '' : ` ${statement(alternate)}`}`;
+            return `if (${expression(test)}) ${statement(consequent)}${alternate === null ? '' : `else ${statement(alternate)}`}`;
         }
         case 'SwitchStatement': {
             const { discriminant, cases } = <SwitchStatement>d;
@@ -82,6 +82,10 @@ function statement(d: Statement): string {
             const { init, test, update, body } = <ForStatement>d;
             return `for (${init === null ? '' : init.type === 'VariableDeclaration' ? statement(init) : expression(init)};${test === null ? '' : expression(test)};${update === null ? '' : expression(update)}) ${statement(body)}`;
         }
+        case 'ForInStatement': {
+            const { left, right, body } = <ForInStatement>d;
+            return `for ${left.type === 'VariableDeclaration' ? statement(left) : left.name} in ${expression(right)} ${statement(body)}`;
+        }
         case 'VariableDeclaration': {
             const { declarations, kind } = <VariableDeclaration>d;
             return `${kind} ${declarations.map(({ id, init }) => `${id.name}${init === null ? '' : `=${expression(init, 2)}`}`).join(', ')}`;
@@ -102,7 +106,7 @@ function statement(d: Statement): string {
             return ';\n';
         }
         default: {
-            return ''
+            return '';
         }
     }
 }
@@ -115,7 +119,7 @@ function expression(object: Expression, precedence = 0): string {
         }
         case 'Literal': {
             const { value } = <Literal>object;
-            return typeof value === 'string' ? `'${value.replaceAll("'", "\\'").replaceAll('\n', '\\n')}'` : <any>value;
+            return typeof value === 'string' ? `'${value.replaceAll("'", "\\'").replaceAll('\n', '\\n')}'` : String(value);
         }
         case 'FunctionExpression': {
             const { params, body: { body }, async } = <FunctionExpression>object;
@@ -143,7 +147,7 @@ function expression(object: Expression, precedence = 0): string {
         case 'UnaryExpression': {
             const { operator, prefix, argument } = <UnaryExpression>object;
             const children = expression(argument, 15);
-            const res = prefix ? `${operator} ${children}` : `${children} ${operator}`;
+            const res = prefix ? `${operator}${children}` : `${children} ${operator}`;
             return precedence > 15 ? `(${res})` : res;
         }
         case 'UpdateExpression': {
@@ -156,23 +160,23 @@ function expression(object: Expression, precedence = 0): string {
             const { operator, left, right } = <BinaryExpression>object;
             switch (operator) {
                 case '|': {
-                    const res = `${expression(left)} ${operator} ${expression(right, 6)}`;
-                    return precedence > 16 ? `(${res})` : res;
+                    const res = `${expression(left, 6)} ${operator} ${expression(right, 6)}`;
+                    return precedence >= 16 ? `(${res})` : res;
                 }
                 case '^': {
-                    const res = `${expression(left)} ${operator} ${expression(right, 7)}`;
-                    return precedence > 7 ? `(${res})` : res;
+                    const res = `${expression(left, 7)} ${operator} ${expression(right, 7)}`;
+                    return precedence >= 7 ? `(${res})` : res;
                 }
                 case '&': {
-                    const res = `${expression(left)} ${operator} ${expression(right, 8)}`;
-                    return precedence > 8 ? `(${res})` : res;
+                    const res = `${expression(left, 8)} ${operator} ${expression(right, 8)}`;
+                    return precedence >= 8 ? `(${res})` : res;
                 }
                 case '==':
                 case '!=':
                 case '===':
                 case '!==': {
-                    const res = `${expression(left)} ${operator} ${expression(right, 9)}`;
-                    return precedence > 9 ? `(${res})` : res;
+                    const res = `${expression(left, 9)} ${operator} ${expression(right, 9)}`;
+                    return precedence >= 9 ? `(${res})` : res;
                 }
                 case '<':
                 case '<=':
@@ -180,29 +184,29 @@ function expression(object: Expression, precedence = 0): string {
                 case '>=':
                 case 'in':
                 case 'instanceof': {
-                    const res = `${expression(left)} ${operator} ${expression(right, 10)}`;
-                    return precedence > 10 ? `(${res})` : res;
+                    const res = `${expression(left, 10)} ${operator} ${expression(right, 10)}`;
+                    return precedence >= 10 ? `(${res})` : res;
                 }
                 case '<<':
                 case '>>':
                 case '>>>': {
-                    const res = `${expression(left)} ${operator} ${expression(right, 11)}`;
-                    return precedence > 11 ? `(${res})` : res;
+                    const res = `${expression(left, 11)} ${operator} ${expression(right, 11)}`;
+                    return precedence >= 11 ? `(${res})` : res;
                 }
                 case '+':
                 case '-': {
-                    const res = `${expression(left)} ${operator} ${expression(right, 12)}`;
-                    return precedence > 12 ? `(${res})` : res;
+                    const res = `${expression(left, 12)} ${operator} ${expression(right, 12)}`;
+                    return precedence >= 12 ? `(${res})` : res;
                 }
                 case '*':
                 case '/':
                 case '%': {
-                    const res = `${expression(left)} ${operator} ${expression(right, 13)}`;
-                    return precedence > 13 ? `(${res})` : res;
+                    const res = `${expression(left, 13)} ${operator} ${expression(right, 13)}`;
+                    return precedence >= 13 ? `(${res})` : res;
                 }
                 case '**': {
-                    const res = `${expression(left)} ${operator} ${expression(right, 14)}`;
-                    return precedence > 14 ? `(${res})` : res;
+                    const res = `${expression(left, 14)} ${operator} ${expression(right, 14)}`;
+                    return precedence >= 14 ? `(${res})` : res;
                 }
                 default: {
                     return `${expression(left)} ${operator} ${expression(right)}`;
@@ -211,18 +215,18 @@ function expression(object: Expression, precedence = 0): string {
         }
         case 'AssignmentExpression': {
             const { operator, left, right } = <AssignmentExpression>object;
-            const res = `${left.type === 'Identifier' ? (<Identifier>left).name : expression(left)} ${operator} ${expression(right, 2)}`;
+            const res = `${left.type === 'Identifier' ? (<Identifier>left).name : expression(left, 2)} ${operator} ${expression(right, 2)}`;
             return precedence > 2 ? `(${res})` : res;
         }
         case 'LogicalExpression': {
             const { operator, left, right } = <LogicalExpression>object;
-            const res = `${expression(left)} ${operator} ${expression(right, operator === '&&' ? 5 : 4)}`;
+            const res = `${expression(left, operator === '&&' ? 5 : 4)} ${operator} ${expression(right, operator === '&&' ? 5 : 4)}`;
             return precedence > (operator === '&&' ? 5 : 4) ? `(${res})` : res;
         }
         case 'MemberExpression': {
             const { object: obj, property, computed } = <MemberExpression>object;
             const parrent = expression(obj);
-            const res = computed ? `${parrent}[${expression(property)}]` : `${parrent}.${expression(property, 18)}`;
+            const res = computed ? `${parrent}[${expression(property, 18)}]` : `${parrent}.${expression(property, 18)}`;
             return precedence > 18 ? `(${res})` : res;
         }
         case 'ConditionalExpression': {

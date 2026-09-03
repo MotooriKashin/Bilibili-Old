@@ -45,7 +45,7 @@ export class Mode9 extends HTMLElement {
                         }
                     }
                 })
-                parent.append(this);
+                this.#shadowRoot.childElementCount && parent.append(this);
             }
         }
     }

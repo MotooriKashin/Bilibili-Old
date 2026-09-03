@@ -1,0 +1,49 @@
+:host {
+    position: absolute;
+    display: block;
+    perspective: calc(100cqi / 2 / tan((3.14 / 180) * (55 / 2)));
+    transform-style: preserve-3d;
+    transform-origin: 0% 0% 0px;
+    font-weight: normal;
+
+    /** x 坐标【默认0】 */
+    --x: attr(data-x px, 0px);
+    /** y 坐标【默认0】 */
+    --y: attr(data-y px, 0px);
+    /** z 坐标【默认0】 */
+    --z: attr(data-z px, 0px);
+    /* 透明度，取值范围 [0, 1]，0 完全透明, 1 完全不透明【渐变】【默认1】 */
+    opacity: attr(data-opacity type(<number>), 1);
+    /* x 轴缩放比例 */
+    --scale-x: attr(data-scale-x type(<number>), 1);
+    /* y 轴缩放比例 */
+    --scale-y: attr(data-scale-y type(<number>), 1);
+    /* z 轴缩放比例 */
+    --scale-z: attr(data-scale-z type(<number>), 1);
+    /* X轴旋转【渐变】【默认0】 */
+    --rotate-x: attr(data-rotate-x deg, 0deg);
+    /* Y轴旋转【渐变】【默认0】 */
+    --rotate-y: attr(data-rotate-y deg, 0deg);
+    /* Z轴旋转【渐变】【默认0】 */
+    --rotate-z: attr(data-rotate-z deg, 0deg);
+
+    inset-inline-start: var(--x);
+    inset-block-start: var(--y);
+
+    >div {
+        transform-origin: 0% 0% 0px;
+        transform: rotateZ(var(--rotate-z)) rotateX(var(--rotate-x)) rotateY(calc(0deg - var(--rotate-y))) scaleX(var(--scale-x)) scaleY(var(--scale-y)) scaleZ(var(--scale-z));
+
+        >svg {
+            overflow: visible;
+        }
+    }
+
+    >#filter-container {
+        display: none;
+    }
+}
+
+:host(.layer) {
+    isolation: isolate;
+}
