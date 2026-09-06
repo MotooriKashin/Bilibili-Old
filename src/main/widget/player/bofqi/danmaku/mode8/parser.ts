@@ -25,6 +25,11 @@ export function parser(tokens: Token[]) {
         return tokens[cursor];
     }
 
+    /** 获取下一个token */
+    function peekNext() {
+        return tokens[cursor + 1];
+    }
+
     /** 消费当前token */
     function eat() {
         return tokens[cursor++];
@@ -619,9 +624,12 @@ export function parser(tokens: Token[]) {
         const [, token] = [eat(), eat()];
         if (!token) throw new Error('语法错误：条件语句意外结束');
         if (token.type !== 'Punctuation' || token.value !== '(') throw new Error(`语法错误: 不支持的 token，值“${token.value}”，位置在：第${token.start.line}行，第${token.start.column}个字符，总第${token.start.index + 1}个字符`);
-        const [test, , consequent, e] = [parseExpression(), eat(), parseStatement(), peek()];
+        const [test, , consequent] = [parseExpression(), eat(), parseStatement()];
         let alternate: Statement | null = null;
-        if ((e?.type === 'Keyword' || e?.type === 'Identifier') && e.value === 'else') {
+        if (peek()?.type === 'Punctuation' && peek()?.value === ';' && (peekNext()?.type === 'Keyword' || peekNext()?.type === 'Identifier') && peekNext()?.value.toLowerCase() === 'else') {
+            eat(); // 非块语句的允许有个分号
+        }
+        if ((peek()?.type === 'Keyword' || peek()?.type === 'Identifier') && peek()?.value.toLowerCase() === 'else') {
             eat();
             alternate = parseStatement();
         }

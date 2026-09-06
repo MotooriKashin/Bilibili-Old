@@ -19,6 +19,7 @@ export interface IPlayurl {
     durl?: {
         url: string;
         backup_url?: string[];
+        size: number;
     }[];
     dash?: IDash;
     support_formats: {
@@ -29,6 +30,7 @@ export interface IPlayurl {
     quality: number;
     is_drm: boolean;
     drm_type: string;
+    format: string;
 }
 
 export interface IDash {
@@ -44,6 +46,10 @@ export interface IDash {
         mime_type: string;
         base_url: string;
         backup_url?: string[];
+        width: number;
+        height: number;
+        frame_rate: string;
+        bandwidth: number;
     }[];
     audio?: IAudio[];
     flac?: {
@@ -60,4 +66,5 @@ interface IAudio {
     mime_type: string;
     base_url: string;
     backup_url?: string[];
+    bandwidth: number;
 }

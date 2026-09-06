@@ -14,6 +14,7 @@
     <div class="filter">
         <a href="#danmaku">弹幕列表</a>
         <a href="#setting">设置</a>
+        <a href="#option">操作</a>
     </div>
     <div class="wraplist">
         <div id="danmaku">
@@ -28,18 +29,21 @@
                 <button>弹幕内容</button>
                 <button>发送时间</button>
             </div>
-            <div class="wrap">
-                <div>
-                    <span class="time">00:00</span>
-                    <span class="content">弹幕姬求交往</span>
-                    <span class="date">02-19 19:07</span>
-                </div>
-            </div>
+            <div class="wrap"></div>
             <div class="footer">
                 <label>查看历史弹幕<input name="histoty" type="date"></label>
             </div>
+            <div id="context" popover="auto">
+                <div>
+                    <button disabled>屏蔽发送者</button>
+                    <button command="--copy" commandfor="context">复制选中弹幕</button>
+                    <button disabled>举报弹幕</button>
+                    <button disabled>查看该发送者的所有弹幕</button>
+                    <button command="--download-danmaku" commandfor="context">下载弹幕</button>
+                </div>
+            </div>
         </div>
-        <form id="setting" data-label="播放器设置">
+        <form id="setting">
             <div data-label="弹幕不透明度">
                 <input is="bpui-slider" name="opacity" type="range" value="1" min="0" max="1" step="0.01">
             </div>
@@ -97,5 +101,17 @@
                 </select></div>
             <div data-label="恢复默认"><button type="reset" title="需要刷新页面">恢复</button></div>
         </form>
+        <div id="option">
+            <div data-label="本地文件">
+                <div>
+                    <div>加载本地视频文件<button command="--video-file" commandfor="context">打开</button></div>
+                    <div>加载本地弹幕文件<button command="--danmaku-file" commandfor="context">打开</button></div>
+                    <div>清空当前弹幕列表<button command="--danmaku-clear" commandfor="context">清空</button></div>
+                </div>
+            </div>
+            <div class="download" data-label="视频源下载">
+                <div></div>
+            </div>
+        </div>
     </div>
 </body>

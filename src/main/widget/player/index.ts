@@ -80,6 +80,7 @@ export class Player extends Bofqi {
     #history = 0;
     noAudioStream = false;
     noVTReport = false;
+    #playurl: { label: string, url: URL }[] = [];
     constructor() {
         super();
 
@@ -164,7 +165,7 @@ export class Player extends Bofqi {
                 });
                 return () => abortController.abort();
             });
-        }).subscribe(({ dash, durl, support_formats, quality: qualityReal, is_drm, drm_type }) => {
+        }).subscribe(({ dash, durl, support_formats, quality: qualityReal, is_drm, drm_type, format }) => {
             if (dash) {
                 this.stage.playurl(2);
                 if (this.player instanceof DashPlayer) {
@@ -173,14 +174,38 @@ export class Player extends Bofqi {
                     this.player?.identify();
                     this.player = new DashPlayer(this, dash);
                 }
+                this.#playurl.length = 0;
+                dash.video?.forEach(({ base_url, backup_url, width, height, frame_rate, bandwidth, codecid }) => {
+                    this.#playurl.push({
+                        label: `${width}x${height} ${frame_rate} ${Math.floor(bandwidth * 1024)}bps ${codecid === 12 ? 'HEVC' : codecid === 13 ? 'AV1' : 'AVC'}`,
+                        url: upos(base_url, ...(backup_url || [])),
+                    });
+                });
+                [...(dash.audio ?? []), ...(dash.flac?.audio ? [dash.flac.audio] : []), ...(dash.dolby?.audio ?? [])].forEach(({ base_url, backup_url, bandwidth, codecs }) => {
+                    this.#playurl.push({
+                        label: `${Math.floor(bandwidth * 1024)}bps ${codecs.startsWith('mp4a') ? 'AAC' : codecs.toUpperCase()}`,
+                        url: upos(base_url, ...(backup_url || [])),
+                    });
+                })
+                port.postMessage({ type: 'BOFQI_PLAYURL', payload: this.#playurl });
             } else if (durl?.[0]) {
                 this.stage.playurl(2);
                 this.player?.identify();
                 this.player = new NaivePlayer(this, upos(durl[0].url, ...(durl[0].backup_url || [])).toJSON());
+                this.#playurl.length = 0;
+                durl?.forEach(({ url, backup_url, size }) => {
+                    this.#playurl.push({
+                        label: `${Math.floor(size / 1024 / 1024)}M ${format.toUpperCase()}`,
+                        url: upos(url, ...(backup_url || [])),
+                    });
+                });
+                port.postMessage({ type: 'BOFQI_PLAYURL', payload: this.#playurl });
             } else {
                 this.stage.playurl(3);
                 this.player?.identify();
                 this.player = new NaivePlayer(this, '//s1.hdslb.com/bfs/static/player/media/error.mp4');
+                this.#playurl.length = 0;
+                port.postMessage({ type: 'BOFQI_PLAYURL', payload: this.#playurl });
             }
 
             // 更新画质选项
@@ -359,19 +384,70 @@ export class Player extends Bofqi {
             this.dispatchEvent(new CustomEvent('--heartbeat', { detail: HEART_BEAT.ENDED }));
         }, { signal: this.#implement.signal });
 
+        this.danmaku.when('--sort').switchMap(e => {
+            return new Observable(subscriber => {
+                const timer = setTimeout(() => {
+                    subscriber.next(e);
+                    subscriber.complete();
+                }, 1e3);
+                return () => clearTimeout(timer);
+            });
+        }).subscribe(() => {
+            port.postMessage({ type: 'DANMAKU_LIST', payload: this.danmaku.rawDms });
+        }, { signal: this.#implement.signal });
+
         // 注册侧边栏
         portMessage('SIDE_PANEL_SET_OPTIONS', { path: '/sidePanel/player/index.html' });
 
         // 监听侧边栏消息
-        port.when('message').subscribe(({ data: { type, payload } }) => {
+        port.when('message').subscribe(async ({ data: { type, payload } }) => {
             switch (type) {
                 case 'SIDE_PANEL_CONNECT': {
                     this.online = this.#online;
+                    port.postMessage({ type: 'DANMAKU_LIST', payload: this.danmaku.rawDms });
+                    port.postMessage({ type: 'BOFQI_PLAYURL', payload: this.#playurl });
                     break;
                 }
                 case 'BOFQI_SETTING': {
                     setItem('Bofqi_Setting', payload);
                     this.initSetting(payload);
+                    break;
+                }
+                case 'BOFQI_TOAST': {
+                    this.toast(payload.message, payload.timeout);
+                    break;
+                }
+                case 'BOFQI_SEEK': {
+                    this.video.currentTime = payload / 1e3;
+                    break;
+                }
+                case 'BOFQI_COMMAND': {
+                    switch (payload) {
+                        case '--video-file': {
+                            const fileHandle = await showOpenFilePicker({ excludeAcceptAllOption: true, startIn: 'videos', types: [{ accept: { 'video/mp4': '.mp4' }, description: 'MP4' }, { accept: { 'video/ogg': '.ogg' }, description: 'Ogg' }, { accept: { 'video/webm': '.webm' }, description: 'WebM' }] });
+                            if (!fileHandle[0]) break;
+                            const file = await fileHandle[0].getFile();
+                            this.player?.identify();
+                            this.player = undefined;
+                            this.#videoshotData = undefined;
+                            this.quality.querySelectorAll('option').forEach(d => { d.remove() });
+                            this.quality.insertAdjacentHTML('beforeend', '<option value="0" selected>自动</option>');
+                            this.video.src = URL.createObjectURL(file);
+                            break;
+                        }
+                        case '--danmaku-file': {
+                            const fileHandle = await showOpenFilePicker({ excludeAcceptAllOption: true, startIn: 'documents', types: [{ accept: { 'application/protobuf': '.so' }, description: '弹幕文件' }] });
+                            if (!fileHandle[0]) break;
+                            const file = await fileHandle[0].getFile();
+                            this.danmaku.add(<any>DmSegMobileReply.decode(await file.bytes()).elems);
+                            break;
+                        }
+                        case '--danmaku-clear': {
+                            this.danmaku.identify();
+                            port.postMessage({ type: 'DANMAKU_LIST', payload: this.danmaku.rawDms });
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -393,6 +469,7 @@ export class Player extends Bofqi {
         this.quality.querySelectorAll('option').forEach(d => { d.remove() });
         this.quality.insertAdjacentHTML('beforeend', '<option value="0" selected>自动</option>');
         this.online = undefined;
+        this.#playurl.length = 0;
     }
     private async playurl(abortController: AbortController) {
         if (this.ep_id) {

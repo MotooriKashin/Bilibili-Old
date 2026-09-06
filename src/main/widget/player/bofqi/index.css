@@ -578,7 +578,7 @@
     }
 
     >.context {
-        position-anchor: --video;
+        position-anchor: auto;
         inset-inline: calc(anchor(start) + attr(data-x px, 0)) auto;
         inset-block: calc(anchor(start) + attr(data-y px, 0)) auto;
         position-try-fallbacks: --custom-inline, --custom-block, --custom--inline-block;

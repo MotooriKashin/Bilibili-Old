@@ -50,7 +50,7 @@ function statement(d: Statement): string {
         }
         case 'IfStatement': {
             const { test, consequent, alternate } = <IfStatement>d;
-            return `if (${expression(test)}) ${statement(consequent)}${alternate === null ? '' : `else ${statement(alternate)}`}`;
+            return `if (${expression(test)}) ${statement(consequent)}${alternate === null ? '' : `\n else ${statement(alternate)}`}`;
         }
         case 'SwitchStatement': {
             const { discriminant, cases } = <SwitchStatement>d;
@@ -141,7 +141,7 @@ function expression(object: Expression, precedence = 0): string {
         case 'ObjectExpression': {
             const { properties } = <ObjectExpression>object;
             return `{${properties.map(({ key, value }) => {
-                return `${key.type === 'Identifier' ? key.name : key.value}: ${expression(value)}`
+                return `${key.type === 'Identifier' ? key.name : `'${key.value}'`}: ${expression(value)}`
             }).join(', ')}}`;
         }
         case 'UnaryExpression': {

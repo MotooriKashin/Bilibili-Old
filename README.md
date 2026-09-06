@@ -46,7 +46,7 @@
       - [ ] 指令弹幕
     - [x] 实时弹幕
     - [ ] 弹幕发送
-    - [ ] 弹幕列表（等待扩展消息传递的结构化克隆支持）
+    - [x] 弹幕列表
     - [ ] 弹幕交互
     - [ ] 弹幕发送者查询
   - [ ] 画中画模式
@@ -97,7 +97,7 @@ npm run build
 
 ```
 ### 开源
-本项目使用 MIT 许可证开发所有源代码，以下是项目参考：
+本项目参考了以下资料：
 - 旧版页面存档：[Wayback Machine](https://archive.org/web/)
 - BV号算法原型：[如何看待 2020 年 3 月 23 日哔哩哔哩将稿件的「av 号」变更为「BV 号」？ - mcfx的回答 - 知乎](https://www.zhihu.com/question/381784377/answer/1099438784)
 - BV号算法参考：[bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/misc/bvid_desc.md)

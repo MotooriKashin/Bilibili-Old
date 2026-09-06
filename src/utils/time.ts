@@ -26,15 +26,7 @@ export function durationFormat(item: string | Temporal.Duration | Temporal.Durat
  */
 export function epochFormat(
     epochMS: number,
-    options: globalThis.Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-    },
+    options: globalThis.Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false },
 ) {
     const target = Temporal.Instant.fromEpochMilliseconds(epochMS);
     const now = Temporal.Now.instant();

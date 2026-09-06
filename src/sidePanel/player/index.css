@@ -168,6 +168,7 @@ body {
                     display: flex;
                     cursor: pointer;
                     color: #99a2aa;
+                    min-inline-size: 0;
 
                     &:hover {
                         color: #00a1d6;
@@ -208,7 +209,7 @@ body {
                     color: #ffa726
                 }
 
-                >.mode-p {
+                >.mode-9 {
                     background-color: #ffefd8;
                     color: #ff792b
                 }
@@ -217,9 +218,12 @@ body {
                     position: relative;
 
                     &::before {
-                        content: '左舷弹幕太稀薄了';
+                        content: "左舷弹幕太稀薄了";
                         position: absolute;
-                        margin: auto;
+                        inset: 0;
+                        align-self: center;
+                        text-align: center;
+                        color: #99a2aa;
                     }
                 }
             }
@@ -243,6 +247,43 @@ body {
 
                     >input {
                         display: none;
+                    }
+                }
+            }
+
+            >#context {
+                position-anchor: auto;
+                inset-inline: calc(anchor(start) + attr(data-x px, 0)) auto;
+                inset-block: calc(anchor(start) + attr(data-y px, 0)) auto;
+                position-try-fallbacks: --custom-inline, --custom-block, --custom--inline-block;
+                border: 1px solid #e2e2e2;
+                box-shadow: 0 0 5px #e2e2e2;
+                background-color: white;
+                border-radius: 3px;
+                font-size: 12px;
+
+                >div {
+                    display: grid;
+                    grid-auto-flow: row;
+                    grid-auto-rows: 38px;
+                    row-gap: 1px;
+                    row-rule: 1px solid #e2e2e2;
+
+                    >button {
+                        color: #444;
+                        padding: 4px 12px 4px 20px;
+                        text-align: start;
+                        min-inline-size: 222px;
+                        transition: .3s;
+
+                        &:hover {
+                            background-color: #ddd;
+                        }
+
+                        &:disabled {
+                            color: #99a2aa;
+                            pointer-events: none;
+                        }
                     }
                 }
             }
@@ -340,5 +381,79 @@ body {
                 }
             }
         }
+
+        >#option {
+            min-block-size: 0;
+            scroll-snap-align: start;
+
+            >div {
+                padding-inline: 10px;
+
+                &::before {
+                    content: attr(data-label, none);
+                    display: block;
+                    margin-block: 21px 12px;
+                    padding-block: 8px 4px;
+                    font-size: 108%;
+                }
+
+                >div {
+                    display: flex;
+                    flex-direction: column;
+                    row-gap: 1px;
+                    row-rule: 1px solid #0000000f;
+                    border-radius: 8px;
+                    box-shadow: color-mix(in srgb, black 30%, transparent) 0 1px 2px 0,
+                        color-mix(in srgb, black 15%, transparent) 0 2px 6px 2px;
+
+                    --i: calc(360 / sibling-count());
+                    --base-color: red;
+
+                    >div {
+                        padding-inline: 20px;
+                        padding-block: 12px;
+                        display: flex;
+                        align-items: center;
+
+                        >button {
+                            margin-inline-start: auto;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            min-inline-size: 5.14em;
+                            padding: 8px 16px;
+                            border: 1px solid #a8c7fa;
+                            border-radius: 1em;
+
+                            &:hover {
+                                background-color: #1f1f1f14;
+                            }
+                        }
+
+                        &:hover {
+                            background-color: #1f1f1f14;
+                        }
+                    }
+
+                    >.c {
+                        color: oklch(from var(--base-color) l c calc(h + var(--i) * sibling-index()));
+                    }
+                }
+            }
+        }
     }
+}
+
+/* 右键菜单位置回退 */
+@position-try --custom-inline {
+    inset-inline: auto calc(anchor(start) - attr(data-x px, 0));
+}
+
+@position-try --custom-block {
+    inset-block: auto calc(anchor(start) - attr(data-y px, 0));
+}
+
+@position-try --custom--inline-block {
+    inset-inline: auto calc(anchor(start) - attr(data-x px, 0));
+    inset-block: auto calc(anchor(start) - attr(data-y px, 0));
 }

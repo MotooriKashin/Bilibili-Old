@@ -11,7 +11,7 @@ export class Stage {
     #parent: ParentNode;
     #names: Record<string, DisplayObject> = {};
     get numChildren() {
-        return this.#parent.childElementCount;
+        return 0;
     }
     get alpha() {
         return 1;

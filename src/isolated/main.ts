@@ -49,7 +49,8 @@ browser.runtime.onConnect.addListener(connect => {
         port.when('message').subscribe(event => {
             const { type, payload } = event.data;
             switch (type) {
-                case 'ONLINE_NUMBER': {
+                case 'ONLINE_NUMBER':
+                case 'DANMAKU_LIST': {
                     connect.postMessage({ type, payload });
                     break
                 }

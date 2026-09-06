@@ -48,16 +48,18 @@ export class Fetch {
         }
 
         // 2. 处于缓冲区外（发生了 Seek 跳频）
-        const reference = this.reference.find(
+        const i = this.reference.findIndex(
             ({ segmentStartTime, segmentEndTime }) => segmentStartTime <= currentTime && segmentEndTime > currentTime
         );
 
-        if (!reference) {
+        if (i < 0) {
             // 如果跳到了超出视频总长或 sidx 范围的位置
             return;
         }
 
-        // 3. 中断旧请求并更新 range 为目标切片的起始字节
+        // 3. 中断旧请求并更新 range 为目标切片的起始字节（请求前一个分片）
+        const reference = this.reference[Math.max(i - 1, 0)];
+        if (!reference) return;
         this.range = reference.start;
         await this.abort();
         return this.fetch();

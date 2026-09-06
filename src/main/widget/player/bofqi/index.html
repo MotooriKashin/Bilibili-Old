@@ -25,8 +25,8 @@
         <div class="danmaku">
             <button command="--toggle-danmaku" commandfor="video" data-value="1"></button>
             <div>
-                <div class="row" data-label="不透明度"><input name="opacity" type="range" min="0" max="1" step="any"
-                        value="1">
+                <div class="row" data-label="不透明度">
+                    <input is="bpui-slider" name="opacity" type="range" min="0" max="1" step="any" value="1">
                 </div>
                 <div class="row" data-label="防挡字幕"><input name="subtitle" type="checkbox"></div>
                 <div class="list">
@@ -78,7 +78,6 @@
         <button data-rate="2" command="--ratechange" commandfor="video">2.0</button>
     </div>
     <button command="toggle-popover" commandfor="statistic">视频统计信息</button>
-    <button command="--download-danmaku" commandfor="video">下载弹幕</button>
 </div>
 <div id="statistic" popover="auto">
     <button command="hide-popover" commandfor="statistic">[x]</button>

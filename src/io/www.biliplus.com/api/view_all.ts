@@ -1,3 +1,4 @@
+import { fetch } from "../../../main/widget/fetch";
 
 /** 获取BiliPlus缓存的CID页面信息 */
 export async function view_all(

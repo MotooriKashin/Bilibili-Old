@@ -5,7 +5,7 @@ export abstract class DisplayObjectContainer extends DisplayObject {
     #names: Record<string, DisplayObject> = {};
     /** 返回此对象的子项数目。 */
     get numChildren() {
-        return this[target].div.childElementCount;
+        return Math.max(this[target].div.childElementCount - 1, 0);
     }
     /** 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中。 */
     addChild(child: DisplayObject) {

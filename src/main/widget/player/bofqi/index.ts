@@ -177,7 +177,7 @@ export class Bofqi extends HTMLElement {
             const { offsetX, offsetY } = e;
             this.#context.dataset['x'] = <any>offsetX;
             this.#context.dataset['y'] = <any>offsetY;
-            this.#context.showPopover();
+            this.#context.showPopover({ source: this.video });
         }
             , { signal: this.#implement.signal });
         this.video.when('ratechange').subscribe(() => {
@@ -262,19 +262,6 @@ export class Bofqi extends HTMLElement {
             if (target instanceof HTMLDivElement) {
                 target.remove();
             }
-        }, { signal: this.#implement.signal });
-
-        this.danmaku.when('--sort').switchMap<CustomEvent<number>>(e => {
-            this.classList.remove('hide');
-            return new Observable(subscriber => {
-                const timer = setTimeout(() => {
-                    subscriber.next(<CustomEvent<number>>e);
-                    subscriber.complete();
-                }, 1e3);
-                return () => clearTimeout(timer);
-            });
-        }).subscribe(({ detail }) => {
-            this.statistic('Danmaku:', <any>detail);
         }, { signal: this.#implement.signal });
 
         this.stage.player(2);

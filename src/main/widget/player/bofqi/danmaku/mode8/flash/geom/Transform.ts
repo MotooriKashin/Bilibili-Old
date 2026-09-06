@@ -44,6 +44,7 @@ export class Transform {
      * 如果将 matrix 属性设置为某个值（非 null），则 matrix3D 属性为 null。如果将 matrix3D 属性设置为某个值（非 null），则 matrix 属性为 null。
      */
     set matrix(v) {
+        v || (v = new Matrix());
         const { a, b, c, d, tx, ty } = v;
         this.matrix3D = new Matrix3D([a, b, 0, 0, c, d, 0, 0, 0, 0, 1, 0, tx, ty, 0, 1]);
     }
@@ -56,6 +57,7 @@ export class Transform {
      * 如果将 matrix 属性设置为某个值（非 null），则 matrix3D 属性为 null。如果将 matrix3D 属性设置为某个值（非 null），则 matrix 属性为 null。
      */
     set matrix3D(v) {
+        v || (v = new Matrix3D());
         this.#matrix3D = v;
         const { rawData } = v;
         // 提取移动因子
