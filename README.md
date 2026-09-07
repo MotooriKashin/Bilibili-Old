@@ -73,32 +73,42 @@
 - [ ] 深色模式
 
 ### 开发
-1. 专为 chrome 最新版本打造，不会兼容旧版本，更无暇顾及其他浏览器。——当前最低版本要求：150
-   - 低版本浏览器或许可以在`chrome://flags/`页面启用`Experimental Web Platform features`尝试
+1. 专为 chrome 最新版本打造，不会兼容旧版本，更无暇顾及其他浏览器。
+   - 当前最低版本要求：150
+   - 低版本浏览器可以尝试在`chrome://flags/`页面启用`Experimental Web Platform features`
 2. 项目还在原型阶段，随时可能推到重来，所以暂时不接受任何 issue 和 PR
 3. 开发流程（以 Windows11 为例）
-```
-# 安装 git
-winget install -i git.git
+   1. 安装 git
+   ```
+   winget install -i git.git
+   ```
+   2. 克隆项目到本地磁盘
+   ```
+   git clone https://github.com/MotooriKashin/Bilibili-Old.git
+   ```
+   3. 切换到 develop 分支
+   ```
+   git checkout -q develop
+   ```
+   4. 安装 node.js
+   ```
+   winget install openjs.nodejs --installer-type portable
+   ```
+   5. 更新 npm 依赖
+   ```
+   npm update
+   ```
+   6. 开发完成后运行编译命令（使用 VSCode 开发可以直接执行“运行生成任务”）
+   ```
+   npm run build
+   ```
+   7. 编译产物在 dist 目录，在浏览器到【扩展程序】页面里打开【开发者模式】，然后【加载未打包的扩展程序】即可。注意每次扩展编译后可能要在浏览器【扩展程序】页面里点击【重新加载】。
 
-# 克隆项目到本地磁盘
-git clone https://github.com/MotooriKashin/Bilibili-Old.git
-
-# 安装 node.js
-winget install openjs.nodejs --installer-type portable
-
-# 更新 npm 依赖
-npm update
-
-# 编译：将在项目根目录的 dist 文件夹输出未编译的扩展
-# 浏览器【扩展程序】里打开【开发者模式】，【加载未打包的扩展程序】即可。
-# 注意每次编译后浏览器【扩展程序】里都需要点击【重新加载】
-npm run build
-
-```
-### 开源
+### 参考
 本项目参考了以下资料：
 - 旧版页面存档：[Wayback Machine](https://archive.org/web/)
 - BV号算法原型：[如何看待 2020 年 3 月 23 日哔哩哔哩将稿件的「av 号」变更为「BV 号」？ - mcfx的回答 - 知乎](https://www.zhihu.com/question/381784377/answer/1099438784)
 - BV号算法参考：[bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/misc/bvid_desc.md)
-- 第三方数据存档：https://www.biliplus.com/ 、 https://www.jijidown.com/
+- 第三方数据存档：[biliplus](https://www.biliplus.com) 、 [jijidown](https://www.jijidown.com)
+
+另外特别鸣谢[Gemini](https://gemini.google.com)到耐心指导，古法编程也离不开好老师。
