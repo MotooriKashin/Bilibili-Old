@@ -46,7 +46,7 @@ function getBezierPoint(points: Point2D[], t: number): Point2D {
 export function generateBezierPoints(
     startPoint: Point2D,
     endPoint: Point2D,
-    controlPoints: Point2D[],
+    controlPoints: Iterable<Point2D>,
     count: number
 ): Point2D[] {
     // 参数校验与边界处理

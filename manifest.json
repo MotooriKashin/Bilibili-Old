@@ -59,7 +59,7 @@
     },
     "manifest_version": 3,
     "message_serialization": "structured_clone",
-    "minimum_chrome_version": "150",
+    "minimum_chrome_version": "153",
     "name": "__MSG_name__",
     "permissions": [
         "scripting",

@@ -46,17 +46,10 @@ export function bezier(object: DisplayObject, dest: Point, src?: Point, control 
     const keyframes: Keyframe[] = [];
     const keyframeAnimationOptions: KeyframeAnimationOptions = { fill: 'forwards', duration: duration * 1e3 };
     src || (src = new Point(object.x, object.y));
-    generateBezierPoints(src, dest, zipKeyed(control), count).forEach(({ x, y }) => {
+    generateBezierPoints(src, dest, Iterator.zipKeyed(control), count).forEach(({ x, y }) => {
         keyframes.push({ '--x': `${x}px`, '--y': `${y}px` });
     });
     return new Tween(object, keyframes, keyframeAnimationOptions);
-}
-
-// TODO：`Iterator.zipKeyed`的临时替代，[Joint Iteration](https://github.com/tc39/proposal-joint-iteration)实装后更换
-function zipKeyed({ x, y }: { x: number[], y: number[] }) {
-    return x.map((x, i) => {
-        return { x, y: y[i]! }
-    });
 }
 
 /**
