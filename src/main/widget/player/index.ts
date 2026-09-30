@@ -8,6 +8,7 @@ import { view } from '../../../io/api.bilibili.com/x/v2/dm/web/view';
 import { DanmakuElem, DmSegMobileReply } from '../../../proto/DmSegMobileReply';
 import { port, portMessage } from '../../../utils/bridge';
 import { error, log } from '../../../utils/debug';
+import { bpsFormat } from '../../../utils/number';
 import { https } from '../../../utils/url';
 import { Medal } from '../dialog/index';
 import { getItem, removeItem, setItem } from '../storage';
@@ -80,7 +81,7 @@ export class Player extends Bofqi {
     #history = 0;
     noAudioStream = false;
     noVTReport = false;
-    #playurl: { label: string, url: URL }[] = [];
+    #playurl: { label: string, url: string }[] = [];
     constructor() {
         super();
 
@@ -177,14 +178,14 @@ export class Player extends Bofqi {
                 this.#playurl.length = 0;
                 dash.video?.forEach(({ base_url, backup_url, width, height, frame_rate, bandwidth, codecid }) => {
                     this.#playurl.push({
-                        label: `${width}x${height} ${frame_rate} ${Math.floor(bandwidth * 1024)}bps ${codecid === 12 ? 'HEVC' : codecid === 13 ? 'AV1' : 'AVC'}`,
-                        url: upos(base_url, ...(backup_url || [])),
+                        label: `${width}x${height} ${frame_rate} ${bpsFormat(bandwidth)} ${codecid === 12 ? 'HEVC' : codecid === 13 ? 'AV1' : 'AVC'}`,
+                        url: upos(base_url, ...(backup_url || [])).toJSON(),
                     });
                 });
                 [...(dash.audio ?? []), ...(dash.flac?.audio ? [dash.flac.audio] : []), ...(dash.dolby?.audio ?? [])].forEach(({ base_url, backup_url, bandwidth, codecs }) => {
                     this.#playurl.push({
-                        label: `${Math.floor(bandwidth * 1024)}bps ${codecs.startsWith('mp4a') ? 'AAC' : codecs.toUpperCase()}`,
-                        url: upos(base_url, ...(backup_url || [])),
+                        label: `${bpsFormat(bandwidth)} ${codecs.startsWith('mp4a') ? 'AAC' : codecs.toUpperCase()}`,
+                        url: upos(base_url, ...(backup_url || [])).toJSON(),
                     });
                 })
                 port.postMessage({ type: 'BOFQI_PLAYURL', payload: this.#playurl });
@@ -196,7 +197,7 @@ export class Player extends Bofqi {
                 durl?.forEach(({ url, backup_url, size }) => {
                     this.#playurl.push({
                         label: `${Math.floor(size / 1024 / 1024)}M ${format.toUpperCase()}`,
-                        url: upos(url, ...(backup_url || [])),
+                        url: upos(url, ...(backup_url || [])).toJSON(),
                     });
                 });
                 port.postMessage({ type: 'BOFQI_PLAYURL', payload: this.#playurl });

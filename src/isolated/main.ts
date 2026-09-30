@@ -50,7 +50,8 @@ browser.runtime.onConnect.addListener(connect => {
             const { type, payload } = event.data;
             switch (type) {
                 case 'ONLINE_NUMBER':
-                case 'DANMAKU_LIST': {
+                case 'DANMAKU_LIST':
+                case 'BOFQI_PLAYURL': {
                     connect.postMessage({ type, payload });
                     break
                 }

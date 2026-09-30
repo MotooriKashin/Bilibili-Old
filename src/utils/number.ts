@@ -20,6 +20,26 @@ export function unitFormat(v: number) {
 }
 
 /**
+ * 格式化bps
+ * @param v 原始带宽
+ * @returns 格式化后的字符串
+ */
+export function bpsFormat(v: number) {
+    if (v < 1024) {
+        return `${v}bps`;
+    }
+
+    v /= 1024;
+
+    if (v < 1024) {
+        return `${v.toFixed(1)}Kbps`;
+    }
+
+    v /= 1024;
+    return `${v.toFixed(1)}Mbps`;
+}
+
+/**
  * 生成指定闭区间的随机整数
  * @param min 整数最小值
  * @param max 整数最大值
