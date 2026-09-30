@@ -1101,21 +1101,22 @@ export class Av extends HTMLHtmlElement {
             if (add.length || del.length) this.#__bofqi.dispatchEvent(new CustomEvent('--fids', { detail: { add, del } }));
         }, { signal: this.#implement.signal });
 
-        const av = /av\d+/i.exec(location.pathname);
-        if (!av) {
-            const bv = /[BbVv]{2}1[FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf]{9}/.exec(location.pathname);
-            if (!bv) {
-                new Medal('解码av号失败ಥ_ಥ');
-                return;
-            }
+        // 先BV后av，因为BV号内可能碰巧包含av号类似物
+        const bv = /[BbVv]{2}1[FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf]{9}/.exec(location.pathname);
+        if (bv) {
             debug(bv[0]);
             this.aid = bv2av(bv[0]);
             const url = new URL(location.href);
             url.pathname = `/video/av${this.aid}`;
             history.replaceState(undefined, '', url);
-            return;
+        } else {
+            const av = /av\d+/i.exec(location.pathname);
+            if (!av) {
+                new Medal('解码av号失败ಥ_ಥ');
+            } else {
+                this.aid = BigInt(av[0].slice(2));
+            }
         }
-        this.aid = BigInt(av[0].slice(2));
     }
     disconnectedCallback() {
         this.#implement.abort();
