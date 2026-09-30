@@ -3,7 +3,7 @@ import style from './index.css' with {type: 'css'};
 import iconfont from './iconfont.css' with {type: 'css'};
 import REPLY from './reply.html' with {type: 'text'};
 import SUBREPLY from './subreply.html' with {type: 'text'};
-import { https } from '../../../utils/url';
+import { htmlUnescape, https } from '../../../utils/url';
 import { Medal } from '../dialog';
 import { cursor } from '../../../io/api.bilibili.com/x/v2/reply/dialog/cursor';
 import { reply as subReply, type ISubReplies } from '../../../io/api.bilibili.com/x/v2/reply/reply';
@@ -997,22 +997,24 @@ export function string2SuperLink(
 ) {
     const fragment = document.createDocumentFragment();
     if (!text) return fragment;
-    // 1. 处理@
+    // 1. 还原 HTML 转义字符
+    text = htmlUnescape(text);
+    // 2. 处理@
     at_name_to_mid_str = Object.entries(at_name_to_mid_str).reduce((s, [key, value]) => {
         s[`@${key}`] = value;
         return s;
     }, <Record<string, string>>{});
-    // 2. 提取并按长度降序排序自定义 Key（优先匹配长词，防止“张三丰”被拆为“张三”+“丰”）
+    // 3. 提取并按长度降序排序自定义 Key（优先匹配长词，防止“张三丰”被拆为“张三”+“丰”）
     const customKeys = Object.keys(Object.assign({}, at_name_to_mid_str, emote))
         .filter((key) => key.length > 0)
         .sort((a, b) => b.length - a.length);
 
-    // 3. 对自定义 Key 进行正则表达式转义，防止特殊字符（如 $、*、? 等）破坏正则
+    // 4. 对自定义 Key 进行正则表达式转义，防止特殊字符（如 $、*、? 等）破坏正则
     const escapedKeys = customKeys.map(RegExp.escape);
-    // 4. 通用 URL 正则表达式（支持 http、https 以及协议相对路径 //）
+    // 5. 通用 URL 正则表达式（支持 http、https 以及协议相对路径 //）
     const urlPattern = `((?:https?|ftp|file):\\/\\/[-a-z0-9+&@#/%?=~_|!:,.;]+[-a-z0-9+&@#\\/%=~_|])|(av\\d+)|(cv\\d+)|(sm\\d+)|(ss\\d+)|(ep\\d+)`;
 
-    // 5. 组合正则表达式：优先匹配自定义关键词，再匹配通用 URL
+    // 6. 组合正则表达式：优先匹配自定义关键词，再匹配通用 URL
     const patterns = [...escapedKeys, urlPattern];
     const COMBINED_REGEX = new RegExp(patterns.join('|'), 'gi');
     text = bv2avAll(text);

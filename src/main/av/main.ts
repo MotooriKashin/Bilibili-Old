@@ -3,7 +3,7 @@ import style from './index.css' with {type: 'css'};
 import { tidNameLink } from './tid';
 import { durationFormat, epochFormat } from '../../utils/time';
 import { unitFormat } from '../../utils/number';
-import { https, string2SuperLink } from '../../utils/url';
+import { htmlUnescape, https, string2SuperLink } from '../../utils/url';
 import { detail, type IDetail, type IRelated, type ITag } from '../../io/api.bilibili.com/x/web-interface/view/detail';
 import { Medal } from '../widget/dialog';
 import { view as plus, type IView as IPlus } from '../../io/www.biliplus.com/api/view';
@@ -1009,7 +1009,7 @@ export class Av extends HTMLHtmlElement {
                 label.dataset['max'] = <any>max_count;
                 (<HTMLInputElement>label.children[0]).value = <any>fid;
                 (<HTMLInputElement>label.children[0]).checked = Boolean(favoured);
-                label.append(document.createTextNode(name));
+                label.append(document.createTextNode(htmlUnescape(name)));
                 df.append(label);
             });
             div.replaceChildren(df);
